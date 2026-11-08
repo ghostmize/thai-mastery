@@ -2,7 +2,7 @@
 <html lang="en" class="dark">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <meta name="referrer" content="no-referrer" />
     <title>Hebrew Reading &amp; Street Mastery &mdash; Letters to Everyday Spoken Hebrew</title>
 
@@ -35,11 +35,55 @@
     };
   </script>
   <style>
+    /* Ground viewport, prevent rubber-band floating and horizontal slack */
+    html {
+      -webkit-text-size-adjust: 100%;
+      text-size-adjust: 100%;
+      overscroll-behavior-y: none;
+      overscroll-behavior-x: none;
+    }
+
     body {
       background-color: #0e0f12;
       color: #f1f5f9;
       font-family: 'Inter', 'Heebo', sans-serif;
       overflow-x: hidden;
+      overscroll-behavior-y: none;
+      overscroll-behavior-x: none;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    /* Prevent accidental double-tap zoom delay & unwanted text selection while rapid-tapping */
+    button, a, [role="button"], input, select, textarea, .quiz-option, .interactive-card {
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    button:not([contenteditable]), [role="button"] {
+      -webkit-user-select: none;
+      user-select: none;
+    }
+
+    /* Tactile press response for native app feel */
+    button:active:not(:disabled), [role="button"]:active:not(:disabled) {
+      transform: scale(0.97);
+      transition: transform 0.08s ease;
+    }
+
+    /* Safe Area Insets for iOS & edge-to-edge mobile devices */
+    #main-header {
+      padding-top: env(safe-area-inset-top, 0px);
+    }
+    #lesson-overlay {
+      padding-top: env(safe-area-inset-top, 0px);
+    }
+    #lesson-footer {
+      padding-bottom: max(1rem, calc(0.75rem + env(safe-area-inset-bottom, 0px)));
+    }
+    #gemini-panel {
+      padding-top: env(safe-area-inset-top, 0px);
+      padding-bottom: env(safe-area-inset-bottom, 0px);
     }
 
     @keyframes pulseRing {
@@ -194,8 +238,8 @@
           </span>
           <span class="text-slate-600 hidden md:inline">|</span>
           <span id="stat-curve" class="text-slate-300 font-medium shrink-0 hidden md:inline" title="Memory Retention Curve">Formative 🌱</span>
-          <span class="text-slate-600">|</span>
-          <span class="text-cyan-400 font-semibold flex items-center gap-1 shrink-0" title="Solid in long-term memory">
+          <span class="text-slate-600 hidden sm:inline">|</span>
+          <span class="text-cyan-400 font-semibold hidden sm:flex items-center gap-1 shrink-0" title="Solid in long-term memory">
             <span>🧠</span>
             <span id="stat-mastered">0</span><span class="hidden sm:inline"> Solid</span>
           </span>
@@ -454,7 +498,8 @@
 
   <!-- Floating Quick Button (when collapsed) -->
   <button id="gemini-floating-btn" onclick="toggleGeminiChat()"
-    class="fixed bottom-24 right-4 sm:bottom-6 sm:right-6 z-[35] bg-gradient-to-r from-[#141722]/95 to-[#1c2233]/95 hover:from-[#1b2131] hover:to-[#242c42] backdrop-blur-md border border-sky-400/40 hover:border-sky-300 text-sky-300 hover:text-white px-3.5 py-2.5 rounded-full shadow-2xl cursor-pointer flex items-center gap-2 transition-all duration-200 hover:scale-105 active:scale-95 group font-medium text-xs"
+    class="fixed bottom-6 right-4 sm:bottom-6 sm:right-6 z-[35] bg-gradient-to-r from-[#141722]/95 to-[#1c2233]/95 hover:from-[#1b2131] hover:to-[#242c42] backdrop-blur-md border border-sky-400/40 hover:border-sky-300 text-sky-300 hover:text-white px-3.5 py-2.5 rounded-full shadow-2xl cursor-pointer flex items-center gap-2 transition-all duration-200 hover:scale-105 active:scale-95 group font-medium text-xs"
+    style="bottom: calc(1.25rem + env(safe-area-inset-bottom, 0px));"
     title="Open Gemini AI Language Tutor (Ctrl+Space)">
     <span class="text-sm">✨</span>
     <span class="font-semibold tracking-wide">Gemini AI Coach</span>
