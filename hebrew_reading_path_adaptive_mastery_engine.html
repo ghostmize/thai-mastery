@@ -123,6 +123,11 @@
     }
     .typing-dot:nth-child(2) { animation-delay: 0.2s; }
     .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
+    /* Hide floating button whenever lesson overlay is visible */
+    body:has(#lesson-overlay:not(.hidden)) #gemini-floating-btn {
+      display: none !important;
+    }
   </style>
 </head>
 <body class="min-h-screen antialiased pb-24 selection:bg-sky-500/30 selection:text-sky-200">
@@ -430,7 +435,7 @@
 
   <!-- Floating Quick Button (when collapsed) -->
   <button id="gemini-floating-btn" onclick="toggleGeminiChat()"
-    class="fixed bottom-5 right-5 z-[55] bg-gradient-to-r from-[#141722]/95 to-[#1c2233]/95 hover:from-[#1b2131] hover:to-[#242c42] backdrop-blur-md border border-sky-400/40 hover:border-sky-300 text-sky-300 hover:text-white px-3.5 py-2.5 rounded-full shadow-2xl cursor-pointer flex items-center gap-2 transition-all duration-200 hover:scale-105 active:scale-95 group font-medium text-xs"
+    class="fixed bottom-24 right-4 sm:bottom-6 sm:right-6 z-[35] bg-gradient-to-r from-[#141722]/95 to-[#1c2233]/95 hover:from-[#1b2131] hover:to-[#242c42] backdrop-blur-md border border-sky-400/40 hover:border-sky-300 text-sky-300 hover:text-white px-3.5 py-2.5 rounded-full shadow-2xl cursor-pointer flex items-center gap-2 transition-all duration-200 hover:scale-105 active:scale-95 group font-medium text-xs"
     title="Open Gemini AI Language Tutor (Ctrl+Space)">
     <span class="text-sm">✨</span>
     <span class="font-semibold tracking-wide">Gemini AI Coach</span>
@@ -567,7 +572,7 @@
     </div>
 
     <!-- Bottom Input Container -->
-    <div class="border-t border-[#1f2433] bg-[#141722] p-3 space-y-2 shrink-0">
+    <div class="border-t border-[#1f2433] bg-[#141722] p-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] space-y-2 shrink-0 z-20 relative">
       <form id="gemini-chat-form" onsubmit="handleGeminiSubmit(event)" class="relative flex items-end gap-2">
         <textarea id="gemini-user-input" rows="1" placeholder="Ask about this card, Hebrew slang, or roots..."
           onkeydown="handleGeminiInputKeydown(event)"
@@ -575,7 +580,7 @@
           class="flex-1 max-h-32 min-h-[42px] px-3.5 py-2.5 rounded-2xl bg-[#0c0e14] border border-[#252b3d] text-slate-100 placeholder-slate-500 text-xs sm:text-sm focus:outline-none focus:border-sky-400 resize-none leading-relaxed transition-all"></textarea>
 
         <button id="gemini-send-btn" type="submit"
-          class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-sky-500 to-emerald-400 hover:from-sky-400 hover:to-emerald-300 text-[#0e0f12] flex items-center justify-center font-bold shadow-md transition-all cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed shrink-0">
+          class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-sky-500 to-emerald-400 hover:from-sky-400 hover:to-emerald-300 text-[#0e0f12] flex items-center justify-center font-bold shadow-md transition-all cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed shrink-0 z-10 relative">
           <svg class="w-4 h-4 translate-x-[1px] -translate-y-[1px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
           </svg>
@@ -6972,6 +6977,8 @@
     function openLessonOverlay() {
       document.getElementById('lesson-overlay').classList.remove('hidden');
       updatePaceUI();
+      const fb = document.getElementById('gemini-floating-btn');
+      if (fb) fb.classList.add('hidden');
     }
 
     function exitLesson() {
@@ -6981,6 +6988,11 @@
       renderSkillTree();
       renderBank();
       if (typeof updateGeminiContextUI === 'function') updateGeminiContextUI();
+      const fb = document.getElementById('gemini-floating-btn');
+      const panel = document.getElementById('gemini-panel');
+      if (fb && (!panel || panel.classList.contains('translate-x-full'))) {
+        fb.classList.remove('hidden');
+      }
     }
 
 
@@ -8352,7 +8364,8 @@ Guidelines:
         panel.classList.remove('translate-x-0');
         panel.classList.add('translate-x-full');
         if (backdrop) backdrop.classList.add('hidden');
-        if (floatingBtn) floatingBtn.classList.remove('hidden');
+        const isLessonActive = document.getElementById('lesson-overlay') && !document.getElementById('lesson-overlay').classList.contains('hidden');
+        if (floatingBtn && !isLessonActive) floatingBtn.classList.remove('hidden');
       }
     }
 

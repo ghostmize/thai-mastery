@@ -18,13 +18,21 @@
           "en": "thin rice noodles"
         }
       ],
-      "situationPrompt": "The noodle cart vendor looks at you with tongs in hand and asks 'เอาเส้นอะไร?'. You want the standard thin chewy rice noodles. What 1-word code do you say?",
-      "situationCorrect": "เล็ก (lék) — Thin rice noodles",
+      "situationPrompt": "The noodle cart vendor looks at you with tongs in hand and asks 'เอาเส้นอะไร?'. You want the standard thin chewy rice noodles. How do you respond in natural everyday Thai?",
+      "situationCorrect": "เอาเล็กค่ะ / เล็กครับ (ao lék khâ / lék kháp) — Thin rice noodles",
       "situationDistractors": [
-        "แยกน้ำ (yâak nám) — Separate broth",
-        "เผ็ดน้อย (phèt nɔ́ɔi) — Less spicy",
-        "เก็บตังค์ (gèp dtang) — Bill please"
-      ]
+        "แยกน้ำค่ะ / ครับ (yâak nám khâ / kháp) — Separate broth",
+        "เผ็ดน้อยค่ะ / ครับ (phèt nɔ́ɔi khâ / kháp) — Less spicy",
+        "เก็บตังค์ด้วยค่ะ / ครับ (gèp dtang dûai khâ / kháp) — Bill please"
+      ],
+      "situationDialogue": {
+        "speaker": "Noodle Cart Vendor",
+        "thai": "เอาเส้นอะไร?",
+        "spoken": "ao sên à-rai?",
+        "meaning": "What noodles do you want / will you take?",
+        "tts": "เอาเส้นอะไร"
+      },
+      "situationEverydayTip": "When a vendor asks 'เอาเส้นอะไร?' (ao sên à-rai?), Thai speakers naturally reply with 'เอาเล็กค่ะ/ครับ' (ao lék khâ/kháp) or shorthand 'เล็กค่ะ/ครับ' (lék khâ/kháp). Adding ค่ะ (khâ) or ครับ (kháp) and 'ขอบคุณค่ะ/ครับ' turns a bare word into polite, natural everyday Thai!"
     },
     {
       "id": "ST_yaak_nam",
@@ -49,13 +57,21 @@
           "en": "soup / broth"
         }
       ],
-      "situationPrompt": "The noodle cart vendor is packing your order to go and asks how you want the soup. You want it packed separately. What do you say?",
-      "situationCorrect": "แยกน้ำ (yâak nám) — Separate broth",
+      "situationPrompt": "The noodle cart vendor is packing your order to go and asks 'แยกน้ำไหม?'. You want the soup packed separately so noodles stay bouncy. How do you reply in natural everyday Thai?",
+      "situationCorrect": "แยกน้ำค่ะ / ครับ (yâak nám khâ / kháp) — Separate broth",
       "situationDistractors": [
-        "เก็บตังค์ (gèp dtang) — Check please",
-        "หวานน้อย (wǎan nɔ́ɔi) — Less sweet",
-        "ตรงไป (drong bpai) — Go straight"
-      ]
+        "เก็บตังค์ด้วยค่ะ / ครับ (gèp dtang dûai khâ / kháp) — Check please",
+        "หวานน้อยค่ะ / ครับ (wǎan nɔ́ɔi khâ / kháp) — Less sweet",
+        "ตรงไปค่ะ / ครับ (drong bpai khâ / kháp) — Go straight"
+      ],
+      "situationDialogue": {
+        "speaker": "Noodle Cart Vendor",
+        "thai": "แยกน้ำไหม?",
+        "spoken": "yâak nám mǎi?",
+        "meaning": "Do you want the broth packed separately?",
+        "tts": "แยกน้ำไหม"
+      },
+      "situationEverydayTip": "Reply 'แยกน้ำค่ะ/ครับ' (yâak nám khâ/kháp) or 'เอาแยกน้ำค่ะ/ครับ' (ao yâak nám khâ/kháp). The vendor will bag the noodles and broth in separate plastic bags tied with rubber bands!"
     },
     {
       "id": "ST_mhii_haeng",
@@ -85,13 +101,21 @@
           "en": "extra portion"
         }
       ],
-      "situationPrompt": "You want yellow egg noodles with NO soup, and an extra-large portion with extra toppings. What shorthand do you call out?",
-      "situationCorrect": "หมี่แห้งพิเศษ (mìi hâeng phí-sèet)",
+      "situationPrompt": "You want yellow egg noodles with NO soup, and an extra-large portion with extra toppings. How do you order politely in everyday Thai?",
+      "situationCorrect": "เอาหมี่แห้งพิเศษค่ะ / ครับ (ao mìi hâeng phí-sèet khâ / kháp) — Dry egg noodles upsized",
       "situationDistractors": [
-        "เล็กน้ำไม่ชิ้น (lék nám mâi chín)",
-        "น้ำแข็งเปล่า (nám-khɛ̌ng bplào)",
-        "ไม่เอาถุง (mâi ao thǔng)"
-      ]
+        "เล็กน้ำไม่ชิ้นค่ะ / ครับ (lék nám mâi chín khâ / kháp) — Thin soup no meatballs",
+        "ขอน้ำแข็งเปล่าค่ะ / ครับ (khɔ̌ɔ nám-khɛ̌ng bplào khâ / kháp) — Plain ice cup",
+        "ไม่เอาถุงค่ะ / ครับ (mâi ao thǔng khâ / kháp) — No plastic bag"
+      ],
+      "situationDialogue": {
+        "speaker": "Customer (Ordering)",
+        "thai": "เอาหมี่แห้งพิเศษค่ะ/ครับ",
+        "spoken": "ao mìi hâeng phí-sèet khâ/kháp",
+        "meaning": "I'll take egg noodles, dry, extra-large, please",
+        "tts": "หมี่แห้งพิเศษ"
+      },
+      "situationEverydayTip": "Start your order with 'เอา...' (ao...) followed by noodle type, soup/dry, and size: 'เอาหมี่แห้งพิเศษค่ะ/ครับ' (ao mìi hâeng phí-sèet khâ/kháp)!"
     },
     {
       "id": "ST_mai_chin_mai_ngok",
@@ -116,13 +140,21 @@
           "en": "no bean sprouts"
         }
       ],
-      "situationPrompt": "You hate meatballs and dislike raw bean sprouts in your noodles. What rapid exclusion shorthand do you say?",
-      "situationCorrect": "ไม่ชิ้น ไม่งอก (mâi chín mâi ngôok)",
+      "situationPrompt": "You dislike meatballs and raw bean sprouts in your soup noodles. What rapid exclusion do you say politely to the cook?",
+      "situationCorrect": "ไม่ชิ้น ไม่งอกค่ะ / ครับ (mâi chín mâi ngôok khâ / kháp) — No meatballs, no bean sprouts",
       "situationDistractors": [
-        "ใส่ห่อ (sài hɔ̀ɔ)",
-        "เผ็ดน้อย (phèt nɔ́ɔi)",
-        "กินนี่ (kin nîi)"
-      ]
+        "ใส่ห่อค่ะ / ครับ (sài hɔ̀ɔ khâ / kháp) — To-go / takeaway",
+        "เผ็ดน้อยค่ะ / ครับ (phèt nɔ́ɔi khâ / kháp) — Less spicy",
+        "กินนี่ค่ะ / ครับ (kin nîi khâ / kháp) — Eat here"
+      ],
+      "situationDialogue": {
+        "speaker": "Customer (Exclusion)",
+        "thai": "ไม่ชิ้น ไม่งอก",
+        "spoken": "mâi chín mâi ngôok",
+        "meaning": "No meatballs, no bean sprouts",
+        "tts": "ไม่ชิ้น ไม่งอก"
+      },
+      "situationEverydayTip": "In everyday Thai, chaining 'ไม่... ไม่...' (no X, no Y) with 'ค่ะ/ครับ' is the fastest, cleanest way to customize your street order politely!"
     },
     {
       "id": "ST_noodle_shorthand",
@@ -163,7 +195,15 @@
         "Wide dry noodles with extra meatballs",
         "Clear broth soup with chicken and veggies",
         "Egg noodles dry to take home"
-      ]
+      ],
+      "situationDialogue": {
+        "speaker": "Local Customer",
+        "thai": "เล็กน้ำไม่ชิ้นไม่งอก!",
+        "spoken": "lék nám mâi chín mâi ngôok!",
+        "meaning": "Thin noodles in soup, no meatballs, no sprouts!",
+        "tts": "เล็กน้ำไม่ชิ้นไม่งอก"
+      },
+      "situationEverydayTip": "Thai noodle ordering syntax: [Noodle: เล็ก] + [Soup/Dry: น้ำ] + [Exclusions: ไม่ชิ้น ไม่งอก]. Mastering this formula unlocks every noodle stall in Thailand!"
     },
     {
       "id": "ST_phet_noi",
@@ -188,13 +228,21 @@
           "en": "little / less"
         }
       ],
-      "situationPrompt": "You are ordering Pad Krapao or Som Tum and want only a hint of chili heat. What do you tell the cook?",
-      "situationCorrect": "เผ็ดน้อย (phèt nɔ́ɔi) — Less spicy",
+      "situationPrompt": "You are ordering Pad Krapao or Som Tum and want only mild chili heat. What do you tell the cook in natural everyday Thai?",
+      "situationCorrect": "เอาเผ็ดน้อยค่ะ / ครับ (ao phèt nɔ́ɔi khâ / kháp) — Less spicy / mild",
       "situationDistractors": [
-        "เผ็ดมาก (phèt mâak) — Super spicy",
-        "หวานน้อย (wǎan nɔ́ɔi) — Less sweet",
-        "ไม่เอาถุง (mâi ao thǔng) — No bag"
-      ]
+        "เผ็ดมากค่ะ / ครับ (phèt mâak khâ / kháp) — Super spicy",
+        "หวานน้อยค่ะ / ครับ (wǎan nɔ́ɔi khâ / kháp) — Less sweet",
+        "ไม่เอาถุงค่ะ / ครับ (mâi ao thǔng khâ / kháp) — No bag"
+      ],
+      "situationDialogue": {
+        "speaker": "Customer (Customization)",
+        "thai": "เอาเผ็ดน้อยค่ะ/ครับ",
+        "spoken": "ao phèt nɔ́ɔi khâ/kháp",
+        "meaning": "Less spicy / mild, please",
+        "tts": "เผ็ดน้อย"
+      },
+      "situationEverydayTip": "Thai default spice is 4-5 bird's eye chilies! Answering 'เอาเผ็ดน้อยค่ะ/ครับ' (ao phèt nɔ́ɔi khâ/kháp) or 'พริก 1 เม็ดค่ะ/ครับ' (phrík nèung mét khâ/kháp = 1 chili please) keeps it delicious without burning your tongue."
     },
     {
       "id": "ST_mai_sai_phrik",
@@ -219,13 +267,21 @@
           "en": "chili"
         }
       ],
-      "situationPrompt": "You cannot tolerate any spicy chili at all. What is the safest, most explicit instruction to give the street vendor?",
-      "situationCorrect": "ไม่ใส่พริก (mâi sài phrík) — Put NO chilies",
+      "situationPrompt": "You cannot tolerate spicy food at all. What is the safest, most explicit instruction to give the street vendor?",
+      "situationCorrect": "ไม่ใส่พริกค่ะ / ครับ (mâi sài phrík khâ / kháp) — Put NO chilies",
       "situationDistractors": [
-        "เผ็ดน้อย (phèt nɔ́ɔi) — Less spicy",
-        "พิเศษ (phí-sèet) — Extra portion",
-        "เอาอีก (ao ìik) — Give more"
-      ]
+        "เผ็ดน้อยค่ะ / ครับ (phèt nɔ́ɔi khâ / kháp) — Less spicy",
+        "พิเศษค่ะ / ครับ (phí-sèet khâ / kháp) — Extra portion",
+        "เอาอีกค่ะ / ครับ (ao ìik khâ / kháp) — Give more"
+      ],
+      "situationDialogue": {
+        "speaker": "Customer (Exclusion)",
+        "thai": "ไม่ใส่พริกค่ะ/ครับ",
+        "spoken": "mâi sài phrík khâ/kháp",
+        "meaning": "Do not put any chilies, please",
+        "tts": "ไม่ใส่พริก"
+      },
+      "situationEverydayTip": "Saying 'ไม่ใส่พริกค่ะ/ครับ' (mâi sài phrík khâ/kháp) is far safer than 'ไม่เผ็ด' (not spicy), because Thai cooks consider 1-2 chilies 'not spicy'!"
     },
     {
       "id": "ST_mai_sai_phakchii",
@@ -250,13 +306,21 @@
           "en": "coriander / cilantro"
         }
       ],
-      "situationPrompt": "You have the genetic aversion where cilantro/coriander tastes like soap. What do you say?",
-      "situationCorrect": "ไม่ใส่ผักชี (mâi sài phàk-chii) — No coriander",
+      "situationPrompt": "You have the genetic aversion where cilantro/coriander tastes like soap. What do you say politely to the cook?",
+      "situationCorrect": "ไม่ใส่ผักชีค่ะ / ครับ (mâi sài phàk-chii khâ / kháp) — No coriander / cilantro",
       "situationDistractors": [
-        "ไม่ใส่พริก (mâi sài phrík) — No chili",
-        "ไม่ชิ้น (mâi chín) — No meatballs",
-        "หวานน้อย (wǎan nɔ́ɔi) — Less sweet"
-      ]
+        "ไม่ใส่พริกค่ะ / ครับ (mâi sài phrík khâ / kháp) — No chili",
+        "ไม่ชิ้นค่ะ / ครับ (mâi chín khâ / kháp) — No meatballs",
+        "หวานน้อยค่ะ / ครับ (wǎan nɔ́ɔi khâ / kháp) — Less sweet"
+      ],
+      "situationDialogue": {
+        "speaker": "Customer (Exclusion)",
+        "thai": "ไม่ใส่ผักชีค่ะ/ครับ",
+        "spoken": "mâi sài phàk-chii khâ/kháp",
+        "meaning": "Do not put coriander/cilantro, please",
+        "tts": "ไม่ใส่ผักชี"
+      },
+      "situationEverydayTip": "'ไม่ใส่...' (mâi sài... = don't put...) + [ingredient] + ค่ะ/ครับ is your universal exclusion formula across all street food stalls."
     },
     {
       "id": "ST_mai_sai_phongchurot",
@@ -281,13 +345,21 @@
           "en": "MSG"
         }
       ],
-      "situationPrompt": "You are sensitive to MSG and want your dish cooked without it. What do you tell the cook?",
-      "situationCorrect": "ไม่ใส่ผงชูรส (mâi sài phǒng-chuu-rót)",
+      "situationPrompt": "You are sensitive to MSG and want your dish cooked without it. What do you tell the cook politely in everyday Thai?",
+      "situationCorrect": "ไม่ใส่ผงชูรสค่ะ / ครับ (mâi sài phǒng-chuu-rót khâ / kháp) — No MSG, please",
       "situationDistractors": [
-        "ไม่ใส่น้ำตาล (mâi sài nám-dtaan)",
-        "ไม่ใส่พริก (mâi sài phrík)",
-        "ไม่เอาน้ำแข็ง (mâi ao nám-khɛ̌ng)"
-      ]
+        "ไม่ใส่น้ำตาลค่ะ / ครับ (mâi sài nám-dtaan khâ / kháp) — No sugar",
+        "ไม่ใส่พริกค่ะ / ครับ (mâi sài phrík khâ / kháp) — No chilies",
+        "ไม่เอาน้ำแข็งค่ะ / ครับ (mâi ao nám-khɛ̌ng khâ / kháp) — No ice"
+      ],
+      "situationDialogue": {
+        "speaker": "Customer (Exclusion)",
+        "thai": "ไม่ใส่ผงชูรสค่ะ/ครับ",
+        "spoken": "mâi sài phǒng-chuu-rót khâ/kháp",
+        "meaning": "Do not put MSG, please",
+        "tts": "ไม่ใส่ผงชูรส"
+      },
+      "situationEverydayTip": "Street woks often add a big spoonful of MSG (ผงชูรส). Stating 'ไม่ใส่ผงชูรสค่ะ/ครับ' clearly before they start cooking is totally normal and respected."
     },
     {
       "id": "ST_kin_nii_hor",
@@ -323,7 +395,15 @@
         "Do you want spicy soup or clear soup?",
         "Are you paying cash or scanning QR?",
         "Do you want a small bowl or large bowl?"
-      ]
+      ],
+      "situationDialogue": {
+        "speaker": "Food Stall Cook",
+        "thai": "กินนี่หรือใส่ห่อ?",
+        "spoken": "kin nîi rǔue sài hɔ̀ɔ?",
+        "meaning": "Eat here or wrap to go?",
+        "tts": "กินนี่หรือใส่ห่อ"
+      },
+      "situationEverydayTip": "The cook asks with 2 choices: 'กินนี่' (kin nîi = eat here) or 'ใส่ห่อ' (sài hɔ̀ɔ = wrap to go). You simply choose one and add ค่ะ/ครับ!"
     },
     {
       "id": "ST_sai_hor",
@@ -348,13 +428,21 @@
           "en": "wrapper / parcel"
         }
       ],
-      "situationPrompt": "You want to take your street meal back to your hotel or condo. What is the short, casual answer?",
-      "situationCorrect": "ใส่ห่อ (sài hɔ̀ɔ) — Wrap to-go",
+      "situationPrompt": "The food stall cook asks 'กินนี่หรือใส่ห่อ?' (Eat here or wrap to go?). You want to take your street meal back to your hotel or condo. How do you answer naturally in everyday Thai?",
+      "situationCorrect": "ใส่ห่อค่ะ / ครับ (sài hɔ̀ɔ khâ / kháp) — Wrap to-go / takeaway",
       "situationDistractors": [
-        "กินนี่ (kin nîi) — Eat here",
-        "ไม่เอา (mâi ao) — Don't want",
-        "เท่าไหร่ (thâo-lài) — How much"
-      ]
+        "กินนี่ค่ะ / ครับ (kin nîi khâ / kháp) — Eat here",
+        "ไม่เอาค่ะ / ครับ (mâi ao khâ / kháp) — Don't want",
+        "เท่าไหร่คะ / ครับ (thâo-lài khá / kháp) — How much"
+      ],
+      "situationDialogue": {
+        "speaker": "Food Stall Cook",
+        "thai": "กินนี่หรือใส่ห่อ?",
+        "spoken": "kin nîi rǔue sài hɔ̀ɔ?",
+        "meaning": "Eat here or wrap to go?",
+        "tts": "กินนี่หรือใส่ห่อ"
+      },
+      "situationEverydayTip": "Reply 'ใส่ห่อค่ะ/ครับ' (sài hɔ̀ɔ khâ/kháp) or 'เอาใส่ห่อค่ะ/ครับ' (ao sài hɔ̀ɔ khâ/kháp). Add 'ขอบคุณค่ะ/ครับ' (thank you) for maximum street politeness!"
     },
     {
       "id": "ST_phiseet",
@@ -374,13 +462,21 @@
           "en": "special / large portion"
         }
       ],
-      "situationPrompt": "You are hungry and the standard dish is too small. What single word upgrades your meal to extra-large?",
-      "situationCorrect": "พิเศษ (phí-sèet) — Extra portion",
+      "situationPrompt": "You are hungry and the standard dish is too small. What do you say politely to upgrade your dish to extra-large?",
+      "situationCorrect": "เอาพิเศษค่ะ / ครับ (ao phí-sèet khâ / kháp) — Extra portion / upsize",
       "situationDistractors": [
-        "ธรรมดา (tham-má-daa) — Regular size",
-        "แยกน้ำ (yâak nám) — Broth separate",
-        "เผ็ดน้อย (phèt nɔ́ɔi) — Mild heat"
-      ]
+        "ธรรมดาค่ะ / ครับ (tham-má-daa khâ / kháp) — Regular size",
+        "แยกน้ำค่ะ / ครับ (yâak nám khâ / kháp) — Broth separate",
+        "เผ็ดน้อยค่ะ / ครับ (phèt nɔ́ɔi khâ / kháp) — Mild heat"
+      ],
+      "situationDialogue": {
+        "speaker": "Customer (Upsize)",
+        "thai": "เอาพิเศษค่ะ/ครับ",
+        "spoken": "ao phí-sèet khâ/kháp",
+        "meaning": "I'll take the extra-large portion, please",
+        "tts": "พิเศษ"
+      },
+      "situationEverydayTip": "Say 'เอาพิเศษค่ะ/ครับ' (ao phí-sèet khâ/kháp). 'พิเศษ' gives you extra noodles and extra meat for usually just 10 Baht!"
     },
     {
       "id": "ST_waan_noi",
@@ -405,13 +501,21 @@
           "en": "little / less"
         }
       ],
-      "situationPrompt": "You are ordering Cha Yen (Thai Iced Tea) at an Amazon cafe or street cart and want only half the usual sugar. What do you say?",
-      "situationCorrect": "หวานน้อย (wǎan nɔ́ɔi) — Less sweet",
+      "situationPrompt": "You are ordering Cha Yen (Thai Iced Tea) at a cafe or street cart and want only half the usual sugar. What do you say politely in everyday Thai?",
+      "situationCorrect": "เอาหวานน้อยค่ะ / ครับ (ao wǎan nɔ́ɔi khâ / kháp) — Less sweet (half sugar)",
       "situationDistractors": [
-        "หวานมาก (wǎan mâak) — Very sweet",
-        "เผ็ดน้อย (phèt nɔ́ɔi) — Less spicy",
-        "แยกน้ำ (yâak nám) — Broth separate"
-      ]
+        "หวานปกติค่ะ / ครับ (wǎan bpòk-gà-dtì khâ / kháp) — Normal sweet",
+        "ไม่หวานค่ะ / ครับ (mâi wǎan khâ / kháp) — No sugar at all",
+        "แยกน้ำค่ะ / ครับ (yâak nám khâ / kháp) — Separate cup"
+      ],
+      "situationDialogue": {
+        "speaker": "Customer (Sweetness)",
+        "thai": "เอาหวานน้อยค่ะ/ครับ",
+        "spoken": "ao wǎan nɔ́ɔi khâ/kháp",
+        "meaning": "Less sweet (half sugar), please",
+        "tts": "หวานน้อย"
+      },
+      "situationEverydayTip": "Always use 'เอาหวานน้อยค่ะ/ครับ' (ao wǎan nɔ́ɔi khâ/kháp). Thai sweetened condensed milk is heavy, so 'หวานน้อย' brings it to Western normal sweetness."
     },
     {
       "id": "ST_mai_waan",
@@ -436,13 +540,21 @@
           "en": "sweet"
         }
       ],
-      "situationPrompt": "You want an iced Americano with absolutely NO syrup or sweetener. What do you specify?",
-      "situationCorrect": "ไม่หวาน (mâi wǎan) — No sugar / Unsweetened",
+      "situationPrompt": "You want an iced Americano or tea with absolutely NO syrup or sweetener. What do you specify politely?",
+      "situationCorrect": "ไม่หวานค่ะ / ครับ (mâi wǎan khâ / kháp) — No sugar / Unsweetened",
       "situationDistractors": [
-        "หวานน้อย (wǎan nɔ́ɔi) — Less sweet",
-        "หวานปกติ (wǎan bpòk-gà-dtì) — Normal sweetness",
-        "ไม่เอาน้ำแข็ง (mâi ao nám-khɛ̌ng) — No ice"
-      ]
+        "หวานน้อยค่ะ / ครับ (wǎan nɔ́ɔi khâ / kháp) — Less sweet",
+        "หวานปกติค่ะ / ครับ (wǎan bpòk-gà-dtì khâ / kháp) — Standard sweet",
+        "เผ็ดน้อยค่ะ / ครับ (phèt nɔ́ɔi khâ / kháp) — Mild heat"
+      ],
+      "situationDialogue": {
+        "speaker": "Customer (Sweetness)",
+        "thai": "เอาไม่หวานค่ะ/ครับ",
+        "spoken": "ao mâi wǎan khâ/kháp",
+        "meaning": "No sugar / zero syrup, please",
+        "tts": "ไม่หวาน"
+      },
+      "situationEverydayTip": "Say 'เอาไม่หวานเลยค่ะ/ครับ' (ao mâi wǎan loei khâ/kháp = zero sweet at all). Baristas will confirm 'ไม่หวานนะ' (no sweet, right?)."
     },
     {
       "id": "ST_nam_kheng_plao",
@@ -467,13 +579,21 @@
           "en": "plain / empty"
         }
       ],
-      "situationPrompt": "You bought a cold can of Coke at 7-Eleven and sit down at a food stall. You want an empty cup with crushed ice. What do you ask for?",
-      "situationCorrect": "น้ำแข็งเปล่า (nám-khɛ̌ng bplào) — Cup of plain ice",
+      "situationPrompt": "You bought a cold drink at 7-Eleven and sit down at a food stall. You want an empty cup with crushed ice. What do you ask for politely?",
+      "situationCorrect": "ขอน้ำแข็งเปล่าค่ะ / ครับ (khɔ̌ɔ nám-khɛ̌ng bplào khâ / kháp) — Cup of plain ice",
       "situationDistractors": [
-        "น้ำเปล่า (nám bplào) — Plain water",
-        "ไม่เอาน้ำแข็ง (mâi ao nám-khɛ̌ng) — No ice",
-        "ใส่ห่อ (sài hɔ̀ɔ) — To-go"
-      ]
+        "ไม่หวานค่ะ / ครับ (mâi wǎan khâ / kháp) — Unsweetened",
+        "ไม่เอาถุงค่ะ / ครับ (mâi ao thǔng khâ / kháp) — No bag",
+        "ใส่ห่อค่ะ / ครับ (sài hɔ̀ɔ khâ / kháp) — To-go"
+      ],
+      "situationDialogue": {
+        "speaker": "Customer (Drink)",
+        "thai": "ขอน้ำแข็งเปล่าค่ะ/ครับ",
+        "spoken": "khɔ̌ɔ nám-khɛ̌ng bplào khâ/kháp",
+        "meaning": "May I have an empty glass of ice, please?",
+        "tts": "ขอน้ำแข็งเปล่า"
+      },
+      "situationEverydayTip": "'ขอ...' (khɔ̌ɔ... = may I request...) + 'น้ำแข็งเปล่า' (cup of ice) + 'ค่ะ/ครับ' is the standard polite request at every Thai food stall (usually 2 Baht)."
     },
     {
       "id": "ST_waan_pokati",
@@ -498,13 +618,21 @@
           "en": "normal / regular"
         }
       ],
-      "situationPrompt": "The barista asks for your sweetness level and you want the drink made standard according to the house recipe. What do you answer?",
-      "situationCorrect": "หวานปกติ (wǎan bpòk-gà-dtì) — Standard sweetness",
+      "situationPrompt": "The barista asks 'หวานระดับไหนดีคะ?' (What sweetness level?). You want the drink made standard according to the house recipe. How do you reply politely?",
+      "situationCorrect": "หวานปกติค่ะ / ครับ (wǎan bpòk-gà-dtì khâ / kháp) — Standard sweetness",
       "situationDistractors": [
-        "ไม่หวาน (mâi wǎan) — No sweetness",
-        "หวานน้อย (wǎan nɔ́ɔi) — Less sweet",
-        "เผ็ดน้อย (phèt nɔ́ɔi) — Less spicy"
-      ]
+        "หวานน้อยค่ะ / ครับ (wǎan nɔ́ɔi khâ / kháp) — Less sweet",
+        "ไม่หวานค่ะ / ครับ (mâi wǎan khâ / kháp) — No sugar",
+        "พิเศษค่ะ / ครับ (phí-sèet khâ / kháp) — Extra large"
+      ],
+      "situationDialogue": {
+        "speaker": "Barista",
+        "thai": "หวานระดับไหนดีคะ?",
+        "spoken": "wǎan rá-dàp nǎi dii khá?",
+        "meaning": "What sweetness level would you like?",
+        "tts": "หวานระดับไหนดีคะ"
+      },
+      "situationEverydayTip": "Reply 'เอาหวานปกติค่ะ/ครับ' (ao wǎan bpòk-gà-dtì khâ/kháp). 'ปกติ' means standard/normal."
     },
     {
       "id": "ST_gep_dtang",
@@ -529,13 +657,21 @@
           "en": "money / cash"
         }
       ],
-      "situationPrompt": "You finish your noodles at a night market stall and raise your hand to ask for the bill. What is the most natural everyday phrase to shout?",
-      "situationCorrect": "เก็บตังค์! (gèp dtang) — Check please!",
+      "situationPrompt": "You finish your noodles at a night market stall and raise your hand to ask for the bill. What is the most natural everyday phrase to call out?",
+      "situationCorrect": "เก็บตังค์ด้วยค่ะ / ครับ! (gèp dtang dûai khâ / kháp) — Check please!",
       "situationDistractors": [
-        "ตรงไป (drong bpai) — Go straight",
-        "เอาอีก (ao ìik) — Give more",
-        "จอดที่นี่ (jɔ̀ɔt thîi nîi) — Park here"
-      ]
+        "เท่าไหร่คะ / ครับ (thâo-lài khá / kháp) — How much?",
+        "สแกนได้ไหมคะ / ครับ (sà-gaaen dâi mǎi khá / kháp) — Can I scan?",
+        "ไม่เอาถุงค่ะ / ครับ (mâi ao thǔng khâ / kháp) — No bag"
+      ],
+      "situationDialogue": {
+        "speaker": "Customer (Check)",
+        "thai": "เก็บตังค์ด้วยค่ะ/ครับ",
+        "spoken": "gèp dtang dûai khâ/kháp",
+        "meaning": "Check please! (bill please)",
+        "tts": "เก็บตังค์ด้วย"
+      },
+      "situationEverydayTip": "'เก็บตังค์ด้วยค่ะ/ครับ!' (gèp dtang dûai khâ/kháp) is what 90% of Thais say at casual street restaurants. Adding 'ด้วย' (dûai = please/also) makes it polite!"
     },
     {
       "id": "ST_thao_rai",
@@ -560,13 +696,21 @@
           "en": "much / what"
         }
       ],
-      "situationPrompt": "You pick up a fresh coconut at a market and want to ask the price in everyday casual Thai. What do you ask?",
-      "situationCorrect": "เท่าไหร่? (thâo-lài) — How much?",
+      "situationPrompt": "You pick up a fresh coconut at a market and want to ask the price in everyday casual Thai. What do you ask politely?",
+      "situationCorrect": "เท่าไหร่คะ / ครับ? (thâo-lài khá / kháp) — How much is this?",
       "situationDistractors": [
-        "ที่ไหน (thîi nǎi) — Where?",
-        "ทำไม (tham-mai) — Why?",
-        "อะไร (à-lai) — What?"
-      ]
+        "เก็บตังค์ด้วยค่ะ / ครับ (gèp dtang dûai khâ / kháp) — Bill please",
+        "มีหลอดไหมคะ / ครับ (mii lɔ̀ɔt mǎi khá / kháp) — Got a straw?",
+        "ตรงไปค่ะ / ครับ (drong bpai khâ / kháp) — Go straight"
+      ],
+      "situationDialogue": {
+        "speaker": "Customer (Price)",
+        "thai": "อันนี้เท่าไหร่คะ/ครับ?",
+        "spoken": "an níi thâo-lài khá/kháp?",
+        "meaning": "How much is this one?",
+        "tts": "เท่าไหร่"
+      },
+      "situationEverydayTip": "Say 'อันนี้เท่าไหร่คะ/ครับ?' (an níi thâo-lài khá/kháp) or simply 'เท่าไหร่คะ/ครับ?'. Women use high-tone 'คะ' (khá) for questions!"
     },
     {
       "id": "ST_scan_dai_mai",
@@ -591,13 +735,21 @@
           "en": "can I?"
         }
       ],
-      "situationPrompt": "You have no cash and want to pay the street vendor using your banking app QR code. What do you ask?",
-      "situationCorrect": "สแกนได้ไหม? (sà-gaen dâi mǎi) — Can I scan?",
+      "situationPrompt": "You have no cash and want to pay the street vendor using your banking app QR code. What do you ask politely in everyday Thai?",
+      "situationCorrect": "สแกนได้ไหมคะ / ครับ? (sà-gaaen dâi mǎi khá / kháp) — Can I pay by scan QR?",
       "situationDistractors": [
-        "เก็บตังค์ (gèp dtang) — Collect money",
-        "ไม่เอาถุง (mâi ao thǔng) — No bag",
-        "มีทอนไหม (mii thɔɔn mǎi) — Do you have change?"
-      ]
+        "เท่าไหร่คะ / ครับ (thâo-lài khá / kháp) — How much?",
+        "เก็บตังค์ด้วยค่ะ / ครับ (gèp dtang dûai khâ / kháp) — Check please",
+        "เวฟได้ไหมคะ / ครับ (wéep dâi mǎi khá / kháp) — Can you warm it up?"
+      ],
+      "situationDialogue": {
+        "speaker": "Customer (Payment)",
+        "thai": "สแกนได้ไหมคะ/ครับ?",
+        "spoken": "sà-gaaen dâi mǎi khá/kháp?",
+        "meaning": "Can I pay by scanning QR code?",
+        "tts": "สแกนได้ไหม"
+      },
+      "situationEverydayTip": "'สแกนได้ไหมคะ/ครับ?' (sà-gaaen dâi mǎi khá/kháp). Almost all street stalls in Thailand have a PromptPay QR code hanging from their cart!"
     },
     {
       "id": "ST_mai_ao_thung",
@@ -622,13 +774,21 @@
           "en": "bag"
         }
       ],
-      "situationPrompt": "You're at 7-Eleven buying a single bottle of water and already have a backpack. What do you tell the cashier?",
-      "situationCorrect": "ไม่เอาถุง (mâi ao thǔng) — No bag needed",
+      "situationPrompt": "You're at 7-Eleven buying a water bottle and already have a backpack. The cashier asks 'รับถุงไหมคะ?' (Do you want a plastic bag?). How do you reply naturally in everyday Thai?",
+      "situationCorrect": "ไม่เอาถุงค่ะ / ครับ (mâi ao thǔng khâ / kháp) — No bag needed, thank you",
       "situationDistractors": [
-        "มีหลอดไหม (mii lɔ̀ɔt mǎi) — Have straw?",
-        "เวฟได้ไหม (wéep dâi mǎi) — Microwave this?",
-        "เก็บตังค์ (gèp dtang) — Bill please"
-      ]
+        "เวฟได้ไหมคะ / ครับ (wéep dâi mǎi khá / kháp) — Heat it up?",
+        "มีหลอดไหมคะ / ครับ (mii lɔ̀ɔt mǎi khá / kháp) — Got a straw?",
+        "ใส่ห่อค่ะ / ครับ (sài hɔ̀ɔ khâ / kháp) — Wrap to go"
+      ],
+      "situationDialogue": {
+        "speaker": "7-Eleven Cashier",
+        "thai": "รับถุงไหมคะ?",
+        "spoken": "ráp thǔng mǎi khá?",
+        "meaning": "Do you want a plastic bag?",
+        "tts": "รับถุงไหมคะ"
+      },
+      "situationEverydayTip": "Answer 'ไม่เอาถุงค่ะ/ครับ' (mâi ao thǔng khâ/kháp) with 'ขอบคุณค่ะ/ครับ' (thank you). 'ไม่เอา...' (don't want) is natural and standard!"
     },
     {
       "id": "ST_mii_hlort",
@@ -658,13 +818,21 @@
           "en": "question word"
         }
       ],
-      "situationPrompt": "You bought an iced drink at a small shop but the cashier forgot to give you a straw. What do you ask?",
-      "situationCorrect": "มีหลอดไหม? (mii lɔ̀ɔt mǎi) — Do you have a straw?",
+      "situationPrompt": "You bought an iced drink at a small shop but need a straw. What do you ask politely?",
+      "situationCorrect": "ขอหลอดด้วยค่ะ / ครับ (khɔ̌ɔ lɔ̀ɔt dûai khâ / kháp) — A straw please (or 'มีหลอดไหม')",
       "situationDistractors": [
-        "ไม่เอาถุง (mâi ao thǔng) — No bag",
-        "เวฟได้ไหม (wéep dâi mǎi) — Heat this up?",
-        "เท่าไหร่ (thâo-lài) — How much?"
-      ]
+        "ไม่เอาถุงค่ะ / ครับ (mâi ao thǔng khâ / kháp) — No bag",
+        "น้ำแข็งเปล่าค่ะ / ครับ (nám-khɛ̌ng bplào khâ / kháp) — Plain ice",
+        "เท่าไหร่คะ / ครับ (thâo-lài khá / kháp) — How much?"
+      ],
+      "situationDialogue": {
+        "speaker": "Customer (Straw)",
+        "thai": "ขอหลอดด้วยค่ะ/ครับ",
+        "spoken": "khɔ̌ɔ lɔ̀ɔt dûai khâ/kháp",
+        "meaning": "A straw please (or 'มีหลอดไหม')",
+        "tts": "มีหลอดไหม"
+      },
+      "situationEverydayTip": "Say 'ขอหลอดด้วยค่ะ/ครับ' (may I have a straw please) or 'มีหลอดไหมคะ/ครับ' (do you have straws?)."
     },
     {
       "id": "ST_wen_dai_mai",
@@ -689,13 +857,21 @@
           "en": "can you?"
         }
       ],
-      "situationPrompt": "You bought a ham & cheese toastie at 7-Eleven and want them to warm it up in the toaster/microwave. What do you ask?",
-      "situationCorrect": "เวฟได้ไหม? (wéep dâi mǎi) — Can you heat it up?",
+      "situationPrompt": "You bought a ham & cheese toastie at 7-Eleven and want them to warm it up in the toaster. What do you ask politely?",
+      "situationCorrect": "เวฟได้ไหมคะ / ครับ? (wéep dâi mǎi khá / kháp) — Can you heat it up?",
       "situationDistractors": [
-        "ไม่เอาถุง (mâi ao thǔng) — No bag",
-        "มีหลอดไหม (mii lɔ̀ɔt mǎi) — Have straw?",
-        "สแกนได้ไหม (sà-gaen dâi mǎi) — Can I scan?"
-      ]
+        "ไม่เอาถุงค่ะ / ครับ (mâi ao thǔng khâ / kháp) — No bag",
+        "สแกนได้ไหมคะ / ครับ (sà-gaaen dâi mǎi khá / kháp) — Can I scan?",
+        "แยกน้ำค่ะ / ครับ (yâak nám khâ / kháp) — Separate soup"
+      ],
+      "situationDialogue": {
+        "speaker": "Customer (Microwave)",
+        "thai": "เวฟได้ไหมคะ/ครับ?",
+        "spoken": "wéep dâi mǎi khá/kháp?",
+        "meaning": "Can you warm/microwave this up?",
+        "tts": "เวฟได้ไหม"
+      },
+      "situationEverydayTip": "'เวฟ' (wéep) is the ubiquitous Thai loanword for microwaving or toasting food at 7-Eleven!"
     },
     {
       "id": "ST_phii_driver",
@@ -721,12 +897,20 @@
         }
       ],
       "situationPrompt": "You get into a taxi or approach a motorcycle taxi rank. What is the warmest, most natural title to address the driver?",
-      "situationCorrect": "พี่ครับ / พี่คะ (phîi kháp/khá) — P'Driver",
+      "situationCorrect": "พี่ครับ / พี่คะ (phîi kháp / phîi khá) — Warm respectful title ('Brother / Driver')",
       "situationDistractors": [
-        "คุณ (khun) — Formal Mr/Ms",
-        "น้อง (nɔ́ɔng) — Younger one",
-        "ลุง (lung) — Old uncle"
-      ]
+        "น้องครับ / น้องคะ (nɔ́ɔng kháp / khá) — Younger title",
+        "ตัวเอง (dtua-eeng) — Honey / Babe",
+        "คุณครับ (khun kháp) — Formal Mr/Ms"
+      ],
+      "situationDialogue": {
+        "speaker": "Customer (Addressing Driver)",
+        "thai": "พี่ครับ / พี่คะ",
+        "spoken": "phîi kháp / phîi khá",
+        "meaning": "Excuse me, Brother / Elder / Driver",
+        "tts": "พี่ครับ"
+      },
+      "situationEverydayTip": "Addressing drivers and street vendors as 'พี่' (phîi = elder sibling) instantly creates warmth and rapport!"
     },
     {
       "id": "ST_nong_staff",
@@ -751,13 +935,21 @@
           "en": "polite particle"
         }
       ],
-      "situationPrompt": "You want to wave over the young cafe waiter or waitress to order another drink. What do you call out?",
-      "situationCorrect": "น้องครับ / น้องคะ (nɔ́ɔng kháp/khá)",
+      "situationPrompt": "You want to wave over the young cafe waiter or waitress to order another drink. What do you call out politely?",
+      "situationCorrect": "น้องครับ / น้องคะ (nɔ́ɔng kháp / nɔ́ɔng khá) — Natural title for younger staff",
       "situationDistractors": [
-        "พี่ครับ (phîi kháp) — Older brother",
-        "บริกร (bɔɔ-rí-gɔɔn) — Waiter (textbook)",
-        "คุณ (khun) — Formal Mr."
-      ]
+        "พี่ครับ / พี่คะ (phîi kháp / khá) — Elder / driver title",
+        "คุณครับ (khun kháp) — Formal Sir/Madam",
+        "เฮีย (hía) — Chinese elder brother"
+      ],
+      "situationDialogue": {
+        "speaker": "Customer (Addressing Staff)",
+        "thai": "น้องครับ / น้องคะ",
+        "spoken": "nɔ́ɔng kháp / nɔ́ɔng khá",
+        "meaning": "Excuse me (younger server / barista)",
+        "tts": "น้องครับ"
+      },
+      "situationEverydayTip": "Use 'น้อง' (nɔ́ɔng) for servers and staff who appear younger than you. Follow with 'ครับ' or 'คะ'!"
     },
     {
       "id": "ST_trong_bpai",
@@ -782,13 +974,21 @@
           "en": "go"
         }
       ],
-      "situationPrompt": "Your taxi driver comes to an intersection and looks back to see which way to navigate. You want him to proceed straight ahead. What do you say?",
-      "situationCorrect": "ตรงไป (drong bpai) — Go straight",
+      "situationPrompt": "Your taxi driver comes to an intersection and asks which way to go. You want him to proceed straight ahead. What do you say politely?",
+      "situationCorrect": "ตรงไปค่ะ / ครับ (drong bpai khâ / kháp) — Go straight ahead",
       "situationDistractors": [
-        "เลี้ยวซ้าย (líaw sáai) — Turn left",
-        "เลี้ยวขวา (líaw kwǎa) — Turn right",
-        "จอดตรงนี้ (jɔ̀ɔt drong níi) — Stop here"
-      ]
+        "เลี้ยวซ้ายค่ะ / ครับ (líao sáai khâ / kháp) — Turn left",
+        "เลี้ยวขวาค่ะ / ครับ (líao khwǎa khâ / kháp) — Turn right",
+        "จอดตรงนี้ค่ะ / ครับ (jɔ̀ɔt dtrong níi khâ / kháp) — Stop here"
+      ],
+      "situationDialogue": {
+        "speaker": "Passenger",
+        "thai": "ตรงไปค่ะ/ครับ",
+        "spoken": "drong bpai khâ/kháp",
+        "meaning": "Go straight ahead, please",
+        "tts": "ตรงไป"
+      },
+      "situationEverydayTip": "'ตรงไป' (drong bpai) means straight ahead. Adding ค่ะ/ครับ keeps navigation calm and polite."
     },
     {
       "id": "ST_liao_sai",
@@ -813,13 +1013,21 @@
           "en": "left"
         }
       ],
-      "situationPrompt": "Your taxi is approaching the intersection where your condo road is on the left. What command do you give?",
-      "situationCorrect": "เลี้ยวซ้าย (líaw sáai) — Turn left",
+      "situationPrompt": "Your taxi is approaching the intersection where your destination road is on the left. What command do you give politely?",
+      "situationCorrect": "เลี้ยวซ้ายค่ะ / ครับ (líao sáai khâ / kháp) — Turn left, please",
       "situationDistractors": [
-        "เลี้ยวขวา (líaw kwǎa) — Turn right",
-        "ตรงไป (drong bpai) — Go straight",
-        "จอดตรงนี้ (jɔ̀ɔt drong níi) — Stop here"
-      ]
+        "เลี้ยวขวาค่ะ / ครับ (líao khwǎa khâ / kháp) — Turn right",
+        "ตรงไปค่ะ / ครับ (drong bpai khâ / kháp) — Go straight",
+        "ข้างหน้าค่ะ / ครับ (khâang-nâa khâ / kháp) — Ahead"
+      ],
+      "situationDialogue": {
+        "speaker": "Passenger",
+        "thai": "เลี้ยวซ้ายค่ะ/ครับ",
+        "spoken": "líao sáai khâ/kháp",
+        "meaning": "Turn left, please",
+        "tts": "เลี้ยวซ้าย"
+      },
+      "situationEverydayTip": "'เลี้ยวซ้าย' (líao sáai = turn left). Giving turn instructions 50m in advance with polite particles ensures a smooth turn!"
     },
     {
       "id": "ST_liao_kwaa",
@@ -844,13 +1052,21 @@
           "en": "right"
         }
       ],
-      "situationPrompt": "You need the driver to take the upcoming right turn onto Sukhumvit. What do you say?",
-      "situationCorrect": "เลี้ยวขวา (líaw kwǎa) — Turn right",
+      "situationPrompt": "You need the driver to take the upcoming right turn onto Sukhumvit. What do you say politely?",
+      "situationCorrect": "เลี้ยวขวาค่ะ / ครับ (líao khwǎa khâ / kháp) — Turn right, please",
       "situationDistractors": [
-        "เลี้ยวซ้าย (líaw sáai) — Turn left",
-        "ตรงไป (drong bpai) — Go straight",
-        "ข้างหน้า (khâang nâa) — Up ahead"
-      ]
+        "เลี้ยวซ้ายค่ะ / ครับ (líao sáai khâ / kháp) — Turn left",
+        "ตรงไปค่ะ / ครับ (drong bpai khâ / kháp) — Go straight",
+        "จอดตรงนี้ค่ะ / ครับ (jɔ̀ɔt dtrong níi khâ / kháp) — Stop here"
+      ],
+      "situationDialogue": {
+        "speaker": "Passenger",
+        "thai": "เลี้ยวขวาค่ะ/ครับ",
+        "spoken": "líao khwǎa khâ/kháp",
+        "meaning": "Turn right, please",
+        "tts": "เลี้ยวขวา"
+      },
+      "situationEverydayTip": "'เลี้ยวขวา' (líao khwǎa = turn right). Remember: ซ้าย (sáai) = left, ขวา (khwǎa) = right."
     },
     {
       "id": "ST_yut_trong_nii",
@@ -875,13 +1091,21 @@
           "en": "right here"
         }
       ],
-      "situationPrompt": "You see your destination 10 meters away on the side of the street. What do you tell the taxi or Grab driver to pull over?",
-      "situationCorrect": "จอดตรงนี้ (jɔ̀ɔt drong níi) — Pull over right here",
+      "situationPrompt": "You see your destination 10 meters away on the side of the street. What do you tell the taxi or Grab driver politely to pull over?",
+      "situationCorrect": "จอดตรงนี้ค่ะ / ครับ (jɔ̀ɔt dtrong níi khâ / kháp) — Pull over right here, please",
       "situationDistractors": [
-        "ตรงไป (drong bpai) — Go straight",
-        "เลี้ยวซ้าย (líaw sáai) — Turn left",
-        "เท่าไหร่ (thâo-lài) — How much"
-      ]
+        "ตรงไปค่ะ / ครับ (drong bpai khâ / kháp) — Keep going straight",
+        "เลี้ยวซ้ายค่ะ / ครับ (líao sáai khâ / kháp) — Turn left",
+        "ซอยนี้ค่ะ / ครับ (sɔɔi níi khâ / kháp) — In this alley"
+      ],
+      "situationDialogue": {
+        "speaker": "Passenger",
+        "thai": "จอดตรงนี้ค่ะ/ครับ",
+        "spoken": "jɔ̀ɔt dtrong níi khâ/kháp",
+        "meaning": "Pull over / stop right here, please",
+        "tts": "จอดตรงนี้"
+      },
+      "situationEverydayTip": "Thais rarely say 'หยุด' (stop) to a driver; instead they say 'จอดตรงนี้' (jɔ̀ɔt dtrong níi = park/pull over right here)."
     },
     {
       "id": "ST_khaang_naa",
@@ -906,13 +1130,21 @@
           "en": "front / ahead"
         }
       ],
-      "situationPrompt": "You want the taxi to stop near the 7-Eleven just a little further ahead. What location word do you use?",
-      "situationCorrect": "ข้างหน้า (khâang nâa) — Up ahead",
+      "situationPrompt": "You want the taxi to stop near the 7-Eleven just a little further ahead. What location phrase do you use politely?",
+      "situationCorrect": "ข้างหน้าค่ะ / ครับ (khâang-nâa khâ / kháp) — Up ahead, please",
       "situationDistractors": [
-        "ข้างหลัง (khâang lǎng) — Behind",
-        "เลี้ยวซ้าย (líaw sáai) — Turn left",
-        "ซอยนี้ (sɔɔi níi) — This soi"
-      ]
+        "ตรงนี้ค่ะ / ครับ (dtrong níi khâ / kháp) — Right here",
+        "เลี้ยวขวาค่ะ / ครับ (líao khwǎa khâ / kháp) — Turn right",
+        "ซอยนี้ค่ะ / ครับ (sɔɔi níi khâ / kháp) — In this soi"
+      ],
+      "situationDialogue": {
+        "speaker": "Passenger",
+        "thai": "ข้างหน้าค่ะ/ครับ",
+        "spoken": "khâang-nâa khâ/kháp",
+        "meaning": "Just up ahead, please",
+        "tts": "ข้างหน้า"
+      },
+      "situationEverydayTip": "'จอดข้างหน้าค่ะ/ครับ' (jɔ̀ɔt khâang-nâa khâ/kháp) tells the driver to pull over just a bit further ahead without making a sudden stop."
     },
     {
       "id": "ST_soi_nii",
@@ -937,13 +1169,21 @@
           "en": "this"
         }
       ],
-      "situationPrompt": "Your hotel is located down a small side street you are passing right now. What do you point to and say?",
-      "situationCorrect": "ซอยนี้ (sɔɔi níi) — This soi / alley",
+      "situationPrompt": "Your hotel is located down a small side street you are passing right now. What do you point to and say politely?",
+      "situationCorrect": "เข้าซอยนี้ค่ะ / ครับ (khâo sɔɔi níi khâ / kháp) — Turn into this alley/street",
       "situationDistractors": [
-        "ตรงไป (drong bpai) — Go straight",
-        "เก็บตังค์ (gèp dtang) — Collect money",
-        "ข้างหลัง (khâang lǎng) — Behind"
-      ]
+        "ตรงไปค่ะ / ครับ (drong bpai khâ / kháp) — Go straight",
+        "ข้างหน้าค่ะ / ครับ (khâang-nâa khâ / kháp) — Up ahead",
+        "จอดตรงนี้ค่ะ / ครับ (jɔ̀ɔt dtrong níi khâ / kháp) — Stop right here"
+      ],
+      "situationDialogue": {
+        "speaker": "Passenger",
+        "thai": "เข้าซอยนี้ค่ะ/ครับ",
+        "spoken": "khâo sɔɔi níi khâ/kháp",
+        "meaning": "Turn into this alley/street, please",
+        "tts": "ซอยนี้"
+      },
+      "situationEverydayTip": "'ซอย' (soi) is the lifeblood of Thai cities! 'เข้าซอยนี้' (enter this soi) is essential navigation."
     },
     {
       "id": "ST_song_thii_nii",
@@ -968,13 +1208,21 @@
           "en": "here"
         }
       ],
-      "situationPrompt": "You are at your stop and want to say 'Drop me off right here, please'. What phrase expresses this?",
-      "situationCorrect": "ส่งที่นี่ (sòng thîi nîi) — Drop me here",
+      "situationPrompt": "You are at your stop and want to say 'Drop me off right here, please'. What phrase expresses this politely in everyday Thai?",
+      "situationCorrect": "ส่งที่นี่ค่ะ / ครับ (sòng thîi-nîi khâ / kháp) — Drop me off right here, please",
       "situationDistractors": [
-        "ตรงไป (drong bpai) — Go straight",
-        "สแกนได้ไหม (sà-gaen dâi mǎi) — Can I scan?",
-        "รอแป๊บ (rɔɔ bpáep) — Wait a sec"
-      ]
+        "ตรงไปค่ะ / ครับ (drong bpai khâ / kháp) — Go straight",
+        "เลี้ยวขวาค่ะ / ครับ (líao khwǎa khâ / kháp) — Turn right",
+        "รอแป๊บนึงค่ะ / ครับ (rɔɔ bpáep-nɯng khâ / kháp) — Wait a sec"
+      ],
+      "situationDialogue": {
+        "speaker": "Passenger",
+        "thai": "ส่งที่นี่ค่ะ/ครับ",
+        "spoken": "sòng thîi-nîi khâ/kháp",
+        "meaning": "Drop me off right here, please",
+        "tts": "ส่งที่นี่"
+      },
+      "situationEverydayTip": "'ส่ง' (sòng) means deliver/drop off. 'ส่งที่นี่ค่ะ/ครับ' is the smoothest way to exit any ride."
     },
     {
       "id": "ST_arai",
@@ -994,13 +1242,21 @@
           "en": "what?"
         }
       ],
-      "situationPrompt": "You hear a friend say 'à-lai ná?'. Why does it sound like an 'L' sound instead of the textbook 'R' sound?",
+      "situationPrompt": "You hear a Thai friend say 'à-lai ná?'. Why does it sound like an 'L' sound instead of textbook 'R'?",
       "situationCorrect": "Everyday Thai speech routinely shifts 'r' (ร) to 'l' (ล)",
       "situationDistractors": [
-        "It is an ancient royal pronunciation",
-        "It is a regional Southern dialect",
-        "It is a mispronunciation by the speaker"
-      ]
+        "It is formal royal language",
+        "It is an insult between strangers",
+        "It indicates extreme anger"
+      ],
+      "situationDialogue": {
+        "speaker": "Friend",
+        "thai": "อะไรนะ?",
+        "spoken": "à-lai ná? (à-rai ná)",
+        "meaning": "What was that? / Say again?",
+        "tts": "อะไรนะ"
+      },
+      "situationEverydayTip": "In casual Bangkok Thai, 'ร' (R) almost universally softens to 'ล' (L). Hearing 'à-lai' instead of textbook 'à-rai' is 100% authentic!"
     },
     {
       "id": "ST_khrap",
@@ -1023,10 +1279,18 @@
       "situationPrompt": "When Thai men say 'ครับ', how does it actually sound in 99% of normal casual conversations?",
       "situationCorrect": "kháp (คับ) — the 'r' consonant cluster is dropped",
       "situationDistractors": [
-        "khrráp — with a heavy rolling Spanish R",
-        "khrap-pó — elongated two syllables",
-        "khâ — with falling female tone"
-      ]
+        "khrrr-app with a heavy rolled tongue",
+        "khrap-pá — elongated two syllables",
+        "khrá-bá — formal temple chant tone"
+      ],
+      "situationDialogue": {
+        "speaker": "Thai Male Speaker",
+        "thai": "ครับ",
+        "spoken": "kháp (khráp)",
+        "meaning": "Yes / polite male particle",
+        "tts": "ครับ"
+      },
+      "situationEverydayTip": "Thai men rarely roll or pronounce the 'r' cluster in 'ครับ' (khráp) in daily life; it becomes a clean, quick 'kháp'!"
     },
     {
       "id": "ST_aroi_aloi",
@@ -1047,12 +1311,20 @@
         }
       ],
       "situationPrompt": "A Thai vendor serves you mango sticky rice and asks if you like it. You want to say 'Very delicious!' using natural spoken phonetics. How is it pronounced?",
-      "situationCorrect": "à-lòi mâak! (อร่อย with an L sound)",
+      "situationCorrect": "a-lɔ̀i mâak — rapid everyday speech relaxes 'r' to 'l'",
       "situationDistractors": [
-        "ar-roy mak with heavy rolling R",
-        "kin dai (edible)",
-        "phet mak (too spicy)"
-      ]
+        "a-r-r-roi maak — rolling the tongue like Spanish",
+        "ar-oy-mak — English stress on the first syllable",
+        "oi-ar-maak — inverted slang order"
+      ],
+      "situationDialogue": {
+        "speaker": "Vendor & Customer",
+        "thai": "อร่อยมาก",
+        "spoken": "à-lɔ̀i mâak (à-rɔ̀ɔi mâak)",
+        "meaning": "Very delicious!",
+        "tts": "อร่อยมาก"
+      },
+      "situationEverydayTip": "Just like 'à-lai', 'à-rɔ̀ɔi' becomes 'à-lɔ̀i' in spoken Thai. Say 'อร่อยมากค่ะ/ครับ' (à-lɔ̀i mâak khâ/kháp) with a big smile!"
     },
     {
       "id": "ST_reu_plao",
@@ -1078,12 +1350,20 @@
         }
       ],
       "situationPrompt": "A friend asks 'Chob bpao?' (ชอบเปล่า). What does the ending 'bpao' mean here?",
-      "situationCorrect": "Contraction of หรือเปล่า ('...or not? / do you?')",
+      "situationCorrect": "Short for 'หรือเปล่า' (rǔue bplào) — '...or not?' tag question",
       "situationDistractors": [
-        "It means 'water' (nám bplào)",
-        "It means 'empty space'",
-        "It means 'yesterday'"
-      ]
+        "It means 'Please hurry up'",
+        "It means 'Only 20 Baht'",
+        "It is an angry exclamation"
+      ],
+      "situationDialogue": {
+        "speaker": "Friend",
+        "thai": "ชอบเปล่า?",
+        "spoken": "chɔ̂ɔp bpao? (chɔ̂ɔp rǔue bplào)",
+        "meaning": "Do you like it (or not)?",
+        "tts": "ชอบเปล่า"
+      },
+      "situationEverydayTip": "'หรือเปล่า' (rǔue bplào = or not?) is shortened to just 'ป่าว/เปล่า' (bpao) in casual Thai questions!"
     },
     {
       "id": "ST_yang_nii",
@@ -1106,10 +1386,18 @@
       "situationPrompt": "A Thai colleague demonstrates how to do something and says 'Thum ngii si!'. What is 'ngii' short for?",
       "situationCorrect": "อย่างนี้ (yàang níi) — 'Like this / in this manner'",
       "situationDistractors": [
-        "งู (nguu) — Snake",
-        "งง (ngong) — Confused",
-        "ง่าย (ngâai) — Easy"
-      ]
+        "อย่าทำ (yàa tham) — 'Do not do that'",
+        "อยากกิน (yàak kin) — 'Want to eat'",
+        "ยังไง (yang-ngai) — 'How come?'"
+      ],
+      "situationDialogue": {
+        "speaker": "Colleague",
+        "thai": "ทำงี้สิ!",
+        "spoken": "tham ngíi sì!",
+        "meaning": "Do it like this!",
+        "tts": "ทำงี้สิ"
+      },
+      "situationEverydayTip": "'อย่างนี้' (yàang níi = like this) condenses into 'งี้' (ngíi) in spoken everyday Thai!"
     },
     {
       "id": "ST_yang_nan",
@@ -1132,10 +1420,18 @@
       "situationPrompt": "Someone says 'Khao mai ma... ngan rao pai kan loei' (He's not coming... ngán let's go). What does 'ngan' signify?",
       "situationCorrect": "อย่างนั้น (yàang nán) -> 'In that case / then'",
       "situationDistractors": [
-        "เงิน (ngoen) — Money",
-        "ง่วง (ngûang) — Sleepy",
-        "งาน (ngaan) — Work"
-      ]
+        "เงิน (ngoen) — 'Money'",
+        "งาน (ngaan) — 'Office work'",
+        "งู (nguu) — 'Snake'"
+      ],
+      "situationDialogue": {
+        "speaker": "Friend",
+        "thai": "เขาไม่มา... งั้นเราไปกันเลย",
+        "spoken": "khǎo mâi maa... ngán rao bpai gan loei",
+        "meaning": "He's not coming... so let's go!",
+        "tts": "เขาไม่มา งั้นเราไปกันเลย"
+      },
+      "situationEverydayTip": "'งั้น' (ngán) is the spoken shortcut for 'อย่างนั้น' (yàang nán), meaning 'In that case / then / so'."
     },
     {
       "id": "ST_baep_nueng",
@@ -1163,10 +1459,18 @@
       "situationPrompt": "You are putting on your shoes when a friend asks if you're ready to leave. You want to say 'One second!'. What do you say?",
       "situationCorrect": "แป๊บนึง! (bpáep-nɯng ná) — One moment!",
       "situationDistractors": [
-        "ตรงไป (drong bpai) — Go straight",
-        "เก็บตังค์ (gèp dtang) — Collect money",
-        "ไม่เอา (mâi ao) — Don't want"
-      ]
+        "เดี๋ยวนี้ (dǐao-níi) — Right this second",
+        "พรุ่งนี้ (phrûng-níi) — Tomorrow",
+        "เร็วๆ (reo-reo) — Hurry up!"
+      ],
+      "situationDialogue": {
+        "speaker": "Friend",
+        "thai": "แป๊บนึงนะ",
+        "spoken": "bpáep-nɯng ná",
+        "meaning": "Just one second! / Hang on a sec!",
+        "tts": "แป๊บนึงนะ"
+      },
+      "situationEverydayTip": "'แป๊บนึง' (bpáep-nɯng = one second) is universally heard every single day across Thailand!"
     },
     {
       "id": "ST_tham_mai",
@@ -1189,10 +1493,18 @@
       "situationPrompt": "A Thai friend says they can't attend the party. You want to ask 'Why?' in casual spoken tone. What do you say?",
       "situationCorrect": "ทำไมอ่ะ? (tham-mai à?) — Why?",
       "situationDistractors": [
-        "อะไรนะ (à-lai ná) — What?",
-        "ที่ไหน (thîi nǎi) — Where?",
-        "เมื่อไหร่ (mûea-rài) — When?"
-      ]
+        "ที่ไหน (thîi-nǎi) — Where?",
+        "ใครอ่ะ (khrai à) — Who?",
+        "เมื่อไหร่ (mɯ̂a-rài) — When?"
+      ],
+      "situationDialogue": {
+        "speaker": "Friend",
+        "thai": "ทำไมอ่ะ?",
+        "spoken": "tham-mai à?",
+        "meaning": "Why? (casual spoken)",
+        "tts": "ทำไมอ่ะ"
+      },
+      "situationEverydayTip": "Adding 'อ่ะ' (à) softens questions between friends: 'ทำไมอ่ะ?' (tham-mai à?)."
     },
     {
       "id": "ST_chai_pa",
@@ -1220,10 +1532,18 @@
       "situationPrompt": "You are telling a friend that Thai mangoes are the best in the world, and seek their agreement with 'Right?!'. What particle do you use?",
       "situationCorrect": "ใช่ป่ะ? (châi bpà?) — Right?",
       "situationDistractors": [
-        "ใช่ครับ (châi kháp) — Formal yes",
-        "ไม่เอา (mâi ao) — Don't want",
-        "แป๊บนึง (bpáep nɯng) — One sec"
-      ]
+        "ไม่ใช่ (mâi châi) — Incorrect",
+        "ชอบไหม (chɔ̂ɔp mǎi) — Do you like it?",
+        "เอาอีก (ao ìik) — Want more"
+      ],
+      "situationDialogue": {
+        "speaker": "Friend",
+        "thai": "ใช่ป่ะ?",
+        "spoken": "châi bpà?",
+        "meaning": "Right?! Isn't that so?",
+        "tts": "ใช่ป่ะ"
+      },
+      "situationEverydayTip": "'ใช่ป่ะ?' (châi bpà?) is the quintessential Thai 'Right?!' tag used among peers."
     },
     {
       "id": "ST_nia",
@@ -1247,9 +1567,17 @@
       "situationCorrect": "Emphasis & personal exasperation about the immediate situation",
       "situationDistractors": [
         "It turns the sentence into a polite apology",
-        "It makes the sentence formal for news broadcast",
-        "It indicates future tense"
-      ]
+        "It means the speaker is asking for a discount",
+        "It indicates formal Buddhist prayer"
+      ],
+      "situationDialogue": {
+        "speaker": "Driver / Friend",
+        "thai": "รถติดมากเนี่ย!",
+        "spoken": "rót dtìt mâak nîa!",
+        "meaning": "Traffic is so jammed right now!",
+        "tts": "รถติดมากเนี่ย"
+      },
+      "situationEverydayTip": "'เนี่ย' (nîa) expresses immediate emotion, exasperation, or focus on the current moment."
     },
     {
       "id": "ST_nor",
@@ -1272,10 +1600,18 @@
       "situationPrompt": "You take a bite of fresh mango sticky rice and turn to your partner to share the mutual joy: 'Aroi nór!'. What does 'เนาะ' express?",
       "situationCorrect": "'Right?! Don't you agree?' — bonding consensus",
       "situationDistractors": [
-        "A stern warning not to eat it",
         "A polite refusal",
-        "A question asking what time it is"
-      ]
+        "A formal command to stop eating",
+        "A warning about food poison"
+      ],
+      "situationDialogue": {
+        "speaker": "Friend",
+        "thai": "อร่อยเนาะ!",
+        "spoken": "a-rɔ̀ɔi nɔ́ɔ!",
+        "meaning": "Delicious, isn't it?!",
+        "tts": "อร่อยเนาะ"
+      },
+      "situationEverydayTip": "'เนาะ' (nɔ́ɔ) invites mutual agreement and shared warmth, like 'Right?! Isn't it wonderful?'."
     },
     {
       "id": "ST_a",
@@ -1298,10 +1634,18 @@
       "situationPrompt": "Why do Thai native speakers attach 'อะ' (à) to the ends of questions like 'ทำไมอ่ะ' or statements like 'ก็ดีอ่ะ'?",
       "situationCorrect": "It softens the sentence and makes it naturally casual among friends",
       "situationDistractors": [
-        "It is a strict grammar requirement for negative verbs",
-        "It marks past tense actions",
-        "It is only used when angry"
-      ]
+        "It indicates an emergency",
+        "It is only used by soldiers",
+        "It makes the sentence formal legal text"
+      ],
+      "situationDialogue": {
+        "speaker": "Native Speaker",
+        "thai": "ทำไมอ่ะ? / ก็ดีอ่ะ",
+        "spoken": "tham-mai à? / gɔ̂ɔ dii à",
+        "meaning": "Why? / It's fine (soft casual tone)",
+        "tts": "ทำไมอ่ะ"
+      },
+      "situationEverydayTip": "'อ่ะ' (à) takes the edge off sentences, making questions sound gentle and casual."
     },
     {
       "id": "ST_loei",
@@ -1324,10 +1668,18 @@
       "situationPrompt": "Your friend suggests going to the night market and you enthusiastically agree: 'Pai loei!'. What does 'เลย' mean here?",
       "situationCorrect": "'Right now! / Let's go immediately!'",
       "situationDistractors": [
-        "Maybe tomorrow",
-        "I don't have money",
-        "Turn left"
-      ]
+        "Maybe next week",
+        "Only if it rains",
+        "Cancel the trip"
+      ],
+      "situationDialogue": {
+        "speaker": "Friend",
+        "thai": "ไปเลย!",
+        "spoken": "bpai loei!",
+        "meaning": "Let's go right now!",
+        "tts": "ไปเลย"
+      },
+      "situationEverydayTip": "'เลย' (loei) after a verb means immediately, right away, or totally: 'ไปเลย!' (let's go now!)."
     },
     {
       "id": "ST_roe",
@@ -1353,7 +1705,15 @@
         "Where did you hear that?",
         "Who told you?",
         "I already knew that"
-      ]
+      ],
+      "situationDialogue": {
+        "speaker": "Friend",
+        "thai": "จริงเหรอ?!",
+        "spoken": "jing rǒe?!",
+        "meaning": "Really?! For real?!",
+        "tts": "จริงเหรอ"
+      },
+      "situationEverydayTip": "'จริงเหรอ?!' (jing rǒe) is the ultimate Thai reflex for 'No way! Really?!'."
     },
     {
       "id": "ST_si",
@@ -1379,7 +1739,15 @@
         "Don't touch that food",
         "Pay for that first",
         "It is not cooked yet"
-      ]
+      ],
+      "situationDialogue": {
+        "speaker": "Friend",
+        "thai": "กินสิ!",
+        "spoken": "kin sì!",
+        "meaning": "Go ahead and eat it!",
+        "tts": "กินสิ"
+      },
+      "situationEverydayTip": "'สิ' (sì) urges someone gently: 'กินสิ!' (go ahead and eat!), 'ไปสิ!' (go ahead!)."
     },
     {
       "id": "ST_na",
@@ -1405,7 +1773,15 @@
         "It is strictly used by monks",
         "It marks government orders",
         "It indicates an angry tone"
-      ]
+      ],
+      "situationDialogue": {
+        "speaker": "Native Speaker",
+        "thai": "นะ",
+        "spoken": "ná",
+        "meaning": "Warmth / gentle agreement particle",
+        "tts": "นะ"
+      },
+      "situationEverydayTip": "'นะ' (ná) adds sweetness, warmth, and gentleness to any request or statement: 'รอนะ' (wait for me, ok?)."
     },
     {
       "id": "ST_la",
@@ -1431,7 +1807,15 @@
         "Where are you going?",
         "How much is your meal?",
         "Why aren't you eating?"
-      ]
+      ],
+      "situationDialogue": {
+        "speaker": "Friend",
+        "thai": "แล้วเธอล่ะ?",
+        "spoken": "láaeo thoe lâ?",
+        "meaning": "And what about you?",
+        "tts": "แล้วเธอล่ะ"
+      },
+      "situationEverydayTip": "'ล่ะ' (lâ) bounces questions back: 'แล้วเธอล่ะ?' = 'And what about you?'"
     },
     {
       "id": "ST_rao",
@@ -1457,7 +1841,15 @@
         "The king or royalty",
         "A stranger across the street",
         "An old teacher"
-      ]
+      ],
+      "situationDialogue": {
+        "speaker": "Thai Peer",
+        "thai": "เราอยากกินส้มตำ",
+        "spoken": "rao yàak kin sôm-dtam",
+        "meaning": "I want to eat papaya salad",
+        "tts": "เราอยากกินส้มตำ"
+      },
+      "situationEverydayTip": "While 'เรา' (rao) means 'we' in textbooks, among friends and peers it is often used as 'I / me'!"
     },
     {
       "id": "ST_khao",
@@ -1478,12 +1870,20 @@
         }
       ],
       "situationPrompt": "You hear someone say 'เค้าไม่ไป' (Kháo mâi bpai). What does 'เค้า' mean?",
-      "situationCorrect": "He / She / They are not going",
+      "situationCorrect": "He / She / They are not going (or cute 'I')",
       "situationDistractors": [
         "We are going together",
         "The car isn't moving",
         "It's not delicious"
-      ]
+      ],
+      "situationDialogue": {
+        "speaker": "Friend",
+        "thai": "เค้าไม่ไป",
+        "spoken": "kháo mâi bpai",
+        "meaning": "I'm not going / He's not going",
+        "tts": "เค้าไม่ไป"
+      },
+      "situationEverydayTip": "'เค้า' (kháo) can mean 'he/she/they', but in cute friendly speech it also means 'I / me'!"
     },
     {
       "id": "ST_dtua_eeng",
@@ -1514,7 +1914,15 @@
         "The waiter",
         "The chef",
         "Yesterday's dinner"
-      ]
+      ],
+      "situationDialogue": {
+        "speaker": "Thai Partner",
+        "thai": "ตัวเองอยากกินอะไร?",
+        "spoken": "dtua-eeng yàak kin à-rai?",
+        "meaning": "Babe / Honey, what do you want to eat?",
+        "tts": "ตัวเองอยากกินอะไร"
+      },
+      "situationEverydayTip": "'ตัวเอง' (dtua-eeng = oneself) is Thailand's sweetest term of endearment for romantic partners ('Babe / Honey')!"
     },
     {
       "id": "ST_jing_roe",
@@ -1545,7 +1953,15 @@
         "ขอบคุณครับ (khɔ̀ɔp-khun kháp) — Thank you",
         "ไม่เป็นไร (mâi bpen rai) — Never mind",
         "ตรงไป (drong bpai) — Go straight"
-      ]
+      ],
+      "situationDialogue": {
+        "speaker": "Friend & You",
+        "thai": "จริงเหรอ / จริงดิ",
+        "spoken": "jing rǒe / jing dì",
+        "meaning": "Really?! For real?!",
+        "tts": "จริงเหรอ"
+      },
+      "situationEverydayTip": "'จริงดิ?!' (jing dì) and 'จริงเหรอ?!' (jing rǒe) are the instant street reflexes for genuine surprise."
     },
     {
       "id": "ST_mai_pen_rai",
@@ -1566,12 +1982,20 @@
         }
       ],
       "situationPrompt": "Someone accidentally bumps into you at a crowded BTS station and immediately apologizes. What is the classic Thai response?",
-      "situationCorrect": "ไม่เป็นไรครับ/ค่ะ (mâi bpen rai) — No worries at all!",
+      "situationCorrect": "ไม่เป็นไรค่ะ / ครับ (mâi bpen rai khâ / kháp) — No worries at all!",
       "situationDistractors": [
-        "เก็บตังค์ (gèp dtang) — Bill please",
-        "เท่าไหร่ (thâo-lài) — How much",
+        "เก็บตังค์ด้วยค่ะ / ครับ (gèp dtang dûai khâ / kháp) — Bill please",
+        "เท่าไหร่คะ / ครับ (thâo-lài khá / kháp) — How much",
         "จริงเหรอ (jing rǒe) — Really"
-      ]
+      ],
+      "situationDialogue": {
+        "speaker": "Passerby & You",
+        "thai": "ไม่เป็นไรค่ะ/ครับ",
+        "spoken": "mâi bpen rai khâ/kháp",
+        "meaning": "No worries at all! It's all good",
+        "tts": "ไม่เป็นไรครับ"
+      },
+      "situationEverydayTip": "'ไม่เป็นไรค่ะ/ครับ' (mâi bpen rai khâ/kháp) embodies the heart of Thai culture: 'No problem, it's totally okay!'"
     },
     {
       "id": "ST_ao_di",
@@ -1602,7 +2026,15 @@
         "ไม่เอา (mâi ao) — I don't want it",
         "งงมาก (ngong mâak) — Confused",
         "ไม่เป็นไร (mâi bpen rai) — No worries"
-      ]
+      ],
+      "situationDialogue": {
+        "speaker": "Friend",
+        "thai": "เอาดิ!",
+        "spoken": "ao dì!",
+        "meaning": "I'm down! Let's do it!",
+        "tts": "เอาดิ"
+      },
+      "situationEverydayTip": "'เอาดิ!' (ao dì) is the punchy everyday slang for 'I'm down! Let's go!' among friends."
     },
     {
       "id": "ST_ngong_maak",
@@ -1633,7 +2065,15 @@
         "โคตรดี (khôot dii) — Insanely good",
         "เอาดิ (ao dì) — I'm down",
         "สุดยอด (sùt yɔ̂ɔt) — Awesome"
-      ]
+      ],
+      "situationDialogue": {
+        "speaker": "Customer",
+        "thai": "งงมาก",
+        "spoken": "ngong mâak",
+        "meaning": "So confused / totally baffled",
+        "tts": "งงมาก"
+      },
+      "situationEverydayTip": "'งง' (ngong = confused/baffled) + 'มาก' (mâak = very). Saying 'งงมากค่ะ/ครับ' with a smile makes locals chuckle and help you!"
     },
     {
       "id": "ST_khoot_dii",
@@ -1664,7 +2104,15 @@
         "งงมาก (ngong mâak) — Confused",
         "ไม่หวาน (mâi wǎan) — Unsweetened",
         "ตรงไป (drong bpai) — Go straight"
-      ]
+      ],
+      "situationDialogue": {
+        "speaker": "Friend",
+        "thai": "โคตรดี!",
+        "spoken": "khôot dii!",
+        "meaning": "Insanely good! Super dope!",
+        "tts": "โคตรดี"
+      },
+      "situationEverydayTip": "'โคตร...' (khôot...) is strong everyday slang for 'crazy / insanely / super': 'โคตรดี!' (insanely good!)."
     },
     {
       "id": "ST_sut_yoot",
@@ -1695,7 +2143,15 @@
         "ไม่เอาถุง (mâi ao thǔng) — No bag",
         "งงมาก (ngong mâak) — So confused",
         "เก็บตังค์ (gèp dtang) — Check please"
-      ]
+      ],
+      "situationDialogue": {
+        "speaker": "Customer",
+        "thai": "สุดยอด!",
+        "spoken": "sùt yɔ̂ɔt!",
+        "meaning": "Awesome! Top tier! Brilliant!",
+        "tts": "สุดยอด"
+      },
+      "situationEverydayTip": "'สุดยอด!' (sùt yɔ̂ɔt) literally means 'top of the peak' — the ultimate praise for food or talent!"
     },
     {
       "id": "ST_chill_chill",
@@ -1721,7 +2177,15 @@
         "Extremely hectic and busy",
         "Freezing cold weather",
         "Need to visit the hospital"
-      ]
+      ],
+      "situationDialogue": {
+        "speaker": "Friend",
+        "thai": "ชิลชิล",
+        "spoken": "chil-chil",
+        "meaning": "Super relaxed, easy-going, no stress",
+        "tts": "ชิลชิล"
+      },
+      "situationEverydayTip": "Borrowed from English 'chill', Thai reduplicates it as 'ชิลชิล' to mean totally stress-free and relaxed."
     },
     {
       "id": "ST_ao_ngai_dii",
@@ -1757,7 +2221,15 @@
         "Can you lend me cash?",
         "Where did you buy your umbrella?",
         "Do you want to eat noodles?"
-      ]
+      ],
+      "situationDialogue": {
+        "speaker": "Friend",
+        "thai": "เอาไงดี?",
+        "spoken": "ao ngai dii?",
+        "meaning": "What should we do now? / What's the plan?",
+        "tts": "เอาไงดี"
+      },
+      "situationEverydayTip": "'เอาไงดี?' (ao ngai dii? = what should we do?) is the #1 casual question when facing an unexpected situation!"
     }
   ],
   "curriculum": [
