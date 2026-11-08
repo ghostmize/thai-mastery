@@ -6452,7 +6452,7 @@
     }
 
     function playHebrewAudio(text, btnEl = null) {
-      const clean = (text || '').replace(/\.\.\./g, '').trim();
+      let clean = (text || '').replace(/\.\.\./g, '').trim();
       if (!clean) return;
 
       if (btnEl) {
@@ -6465,20 +6465,14 @@
         currentAudio = null;
       }
 
-      // 1. If device has registered Hebrew speech voice, use native speech
-      if ('speechSynthesis' in window && hebrewVoice) {
-        try {
-          window.speechSynthesis.cancel();
-          const utter = new SpeechSynthesisUtterance(clean);
-          utter.lang = 'he-IL';
-          utter.voice = hebrewVoice;
-          utter.rate = appState.audioSpeed || 1.0;
-          window.speechSynthesis.speak(utter);
-          return;
-        } catch(e) {}
-      }
+      // Strip transliterations in parens e.g. "(b'pita, toda)" or trailing Latin characters
+      clean = clean.replace(/\([^)]*\)/g, '').replace(/[A-Za-z]/g, '').trim();
+      // Remove leading exclamation / punctuation marks that confuse audio streams
+      clean = clean.replace(/^[\s!?,.:;]+/g, '').replace(/[\s!?,.:;]+$/g, '').trim();
+      if (!clean) return;
 
-      // 2. High-fidelity audio stream
+      // 1. PRIMARY: High-Fidelity Google Translate Neural Hebrew Stream
+      // Matches 100% with translate.google.com neural pronunciation (correct Israeli stress, p vs f, toda vs teoda)
       const url = `https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&tl=iw&q=${encodeURIComponent(clean)}`;
       const audio = new Audio();
       audio.referrerPolicy = 'no-referrer';
@@ -6487,29 +6481,15 @@
       currentAudio = audio;
 
       audio.onerror = () => {
-        if ('speechSynthesis' in window) {
-          try {
-            window.speechSynthesis.cancel();
-            const utter = new SpeechSynthesisUtterance(clean);
-            utter.lang = 'he-IL';
-            utter.rate = appState.audioSpeed || 1.0;
-            window.speechSynthesis.speak(utter);
-          } catch(e) {}
-        }
+        // Fallback to local Web Speech ONLY if offline or network error
+        speakWithWebSpeech(clean);
       };
 
       const p = audio.play();
       if (p !== undefined) {
         p.catch(() => {
-          if ('speechSynthesis' in window) {
-            try {
-              window.speechSynthesis.cancel();
-              const utter = new SpeechSynthesisUtterance(clean);
-              utter.lang = 'he-IL';
-              utter.rate = appState.audioSpeed || 1.0;
-              window.speechSynthesis.speak(utter);
-            } catch(e) {}
-          }
+          // Fallback if browser blocks autoplay
+          speakWithWebSpeech(clean);
         });
       }
     }
