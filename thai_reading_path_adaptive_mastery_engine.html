@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="referrer" content="no-referrer" />
     <title>Thai Reading &amp; Street Mastery &mdash; Letters to Everyday Spoken Thai</title>
 
   <!-- Web App Favicon, Icons & Manifest -->
@@ -4052,28 +4053,56 @@
         setTimeout(() => btnEl.classList.remove('ring-2', 'ring-sky-400', 'scale-95'), 400);
       }
 
-      if ('speechSynthesis' in window) {
+      if (currentAudio) {
+        try { currentAudio.pause(); } catch(e) {}
+        currentAudio = null;
+      }
+
+      // 1. If device has a registered Thai speech voice (e.g. iOS / Android mobile), use native speech
+      if ('speechSynthesis' in window && thaiVoice) {
         try {
           window.speechSynthesis.cancel();
           const utter = new SpeechSynthesisUtterance(clean);
           utter.lang = 'th-TH';
-          if (thaiVoice) utter.voice = thaiVoice;
+          utter.voice = thaiVoice;
           utter.rate = appState.audioSpeed || 1.0;
           window.speechSynthesis.speak(utter);
           return;
         } catch(e) {}
       }
 
-      // Fallback to audio element if speech synthesis is not supported
-      if (currentAudio) {
-        try { currentAudio.pause(); } catch(e) {}
-        currentAudio = null;
-      }
+      // 2. High-fidelity audio stream (works everywhere on desktop & web with no-referrer)
       const url = `https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&tl=th&q=${encodeURIComponent(clean)}`;
       const audio = new Audio(url);
       audio.playbackRate = appState.audioSpeed || 1.0;
       currentAudio = audio;
-      audio.play().catch(() => {});
+
+      audio.onerror = () => {
+        if ('speechSynthesis' in window) {
+          try {
+            window.speechSynthesis.cancel();
+            const utter = new SpeechSynthesisUtterance(clean);
+            utter.lang = 'th-TH';
+            utter.rate = appState.audioSpeed || 1.0;
+            window.speechSynthesis.speak(utter);
+          } catch(e) {}
+        }
+      };
+
+      const p = audio.play();
+      if (p !== undefined) {
+        p.catch(() => {
+          if ('speechSynthesis' in window) {
+            try {
+              window.speechSynthesis.cancel();
+              const utter = new SpeechSynthesisUtterance(clean);
+              utter.lang = 'th-TH';
+              utter.rate = appState.audioSpeed || 1.0;
+              window.speechSynthesis.speak(utter);
+            } catch(e) {}
+          }
+        });
+      }
     }
 
     function speakWithWebSpeech(clean) {
