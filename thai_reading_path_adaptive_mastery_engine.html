@@ -4021,6 +4021,7 @@
     let hoverAudioTimer = null;
 
     function playHoverAudio(text) {
+      if ('ontouchstart' in window || navigator.maxTouchPoints > 0) return; // Do not fire hover on touch/mobile
       clearTimeout(hoverAudioTimer);
       hoverAudioTimer = setTimeout(() => {
         playThaiAudio(text);
@@ -5857,6 +5858,653 @@
       navigator.clipboard.writeText(url).then(() => showToast('📋 Copied phone pairing link!'));
     }
 
+    // =========================================================================
+    // GEMINI AI SITUATION TUTOR ENGINE
+    // =========================================================================
+    const GEMINI_KEY_STORAGE = 'thai_gemini_api_key';
+    const GEMINI_MODEL_STORAGE = 'thai_gemini_model';
+    const GEMINI_HISTORY_STORAGE = 'thai_gemini_chat_history';
+    const GEMINI_AUTO_CONTEXT_STORAGE = 'thai_gemini_auto_context';
+
+    const GEMINI_SYSTEM_PROMPT = `You are an expert bilingual Thai language tutor & cultural coach built into the "Thai Reading & Street Mastery" learning engine.
+Your mission is to help the learner master authentic spoken Thai, tone rules, reading nuances, and real everyday situational street Thai.
+
+Guidelines:
+1. Speak warmly, encouragingly, and concisely. Keep answers easily scannable with markdown bullet points and bold text.
+2. If situation context is attached (e.g. active card, drill, spoken phrase, tone, situation prompt), immediately reference what is on the learner's screen so they get direct help for that exact situation.
+3. Always provide Thai script alongside practical Romanization (with tone markings) and clear English translation.
+4. Explain WHY: Break down tricky tones, consonant classes (Low/Mid/High), dead vs live syllables, or colloquial contractions used by native Thais in Bangkok street life (slang, particles like ครับ/ค่ะ/นะ/ด้วย/จ้ะ, casual shortening, etc.).
+5. When relevant, give 1-2 realistic mini dialogues demonstrating how locals actually talk in markets, taxis, street food stalls, cafes, or casual hangouts.
+6. When mentioning Thai words or sentences, enclose them in backticks or clear quotes so the learner can easily read and click to listen to them.`;
+
+    let geminiChatHistory = [];
+    let geminiIsThinking = false;
+
+    function getGeminiApiKey() {
+      return localStorage.getItem('gemini_user_api_key') || localStorage.getItem(GEMINI_KEY_STORAGE) || '';
+    }
+
+    function getGeminiModel() {
+      return localStorage.getItem(GEMINI_MODEL_STORAGE) || 'gemini-2.5-flash';
+    }
+
+    function isGeminiAutoContextEnabled() {
+      const stored = localStorage.getItem(GEMINI_AUTO_CONTEXT_STORAGE);
+      return stored === null ? true : stored === 'true';
+    }
+
+    function toggleGeminiChat(forceState = null) {
+      const panel = document.getElementById('gemini-panel');
+      const backdrop = document.getElementById('gemini-backdrop');
+      const floatingBtn = document.getElementById('gemini-floating-btn');
+      if (!panel) return;
+
+      const isCurrentlyOpen = !panel.classList.contains('translate-x-full');
+      const shouldOpen = (forceState !== null) ? forceState : !isCurrentlyOpen;
+
+      if (shouldOpen) {
+        panel.classList.remove('translate-x-full');
+        panel.classList.add('translate-x-0');
+        if (backdrop) backdrop.classList.remove('hidden');
+        if (floatingBtn) floatingBtn.classList.add('hidden');
+        updateGeminiContextUI();
+        renderGeminiChat();
+        setTimeout(() => {
+          const input = document.getElementById('gemini-user-input');
+          if (input && window.innerWidth >= 768) input.focus();
+        }, 300);
+      } else {
+        panel.classList.remove('translate-x-0');
+        panel.classList.add('translate-x-full');
+        if (backdrop) backdrop.classList.add('hidden');
+        if (floatingBtn) floatingBtn.classList.remove('hidden');
+      }
+    }
+
+    function toggleGeminiSettings(forceState = null) {
+      const panel = document.getElementById('gemini-settings-panel');
+      if (!panel) return;
+      const isHidden = panel.classList.contains('hidden');
+      const show = (forceState !== null) ? forceState : isHidden;
+
+      if (show) {
+        panel.classList.remove('hidden');
+        const input = document.getElementById('gemini-api-key-input');
+        const select = document.getElementById('gemini-model-select');
+        const disconnRow = document.getElementById('gemini-disconnect-row');
+        if (input) input.value = getGeminiApiKey();
+        if (select) select.value = getGeminiModel();
+        if (disconnRow) {
+          disconnRow.classList.toggle('hidden', !getGeminiApiKey());
+        }
+      } else {
+        panel.classList.add('hidden');
+      }
+    }
+
+    function toggleApiKeyVisibility() {
+      const input = document.getElementById('gemini-api-key-input');
+      if (!input) return;
+      input.type = input.type === 'password' ? 'text' : 'password';
+    }
+
+    function handleContextToggleChange() {
+      const chk = document.getElementById('gemini-context-toggle');
+      if (chk) {
+        localStorage.setItem(GEMINI_AUTO_CONTEXT_STORAGE, chk.checked ? 'true' : 'false');
+      }
+    }
+
+    function disconnectGeminiKey() {
+      if (confirm('Disconnect your Gemini API key from this device?')) {
+        localStorage.removeItem(GEMINI_KEY_STORAGE);
+        localStorage.removeItem('gemini_user_api_key');
+        const input = document.getElementById('gemini-api-key-input');
+        if (input) input.value = '';
+        updateGeminiConnectionBadge();
+        toggleGeminiSettings(false);
+        renderGeminiChat();
+        showToast('Gemini API key removed');
+      }
+    }
+
+    async function saveAndTestGeminiKey() {
+      const input = document.getElementById('gemini-api-key-input');
+      const select = document.getElementById('gemini-model-select');
+      const feedback = document.getElementById('gemini-settings-feedback');
+      const testBtn = document.getElementById('gemini-test-save-btn');
+      if (!input || !feedback) return;
+
+      const key = input.value.trim();
+      const model = select ? select.value : 'gemini-2.5-flash';
+
+      if (!key) {
+        feedback.className = 'text-[11px] text-rose-400 block pt-1';
+        feedback.innerText = 'Please enter a valid Gemini API key.';
+        return;
+      }
+
+      feedback.className = 'text-[11px] text-sky-400 block pt-1';
+      feedback.innerText = 'Verifying key with Google Gemini API...';
+      if (testBtn) {
+        testBtn.disabled = true;
+        testBtn.innerText = 'Verifying...';
+      }
+
+      try {
+        const testRes = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${key}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            contents: [{ role: 'user', parts: [{ text: 'Ping test. Reply with OK' }] }]
+          })
+        });
+
+        if (!testRes.ok) {
+          const errData = await testRes.json().catch(() => ({}));
+          const errMsg = errData.error?.message || `HTTP ${testRes.status}: Connection failed`;
+          throw new Error(errMsg);
+        }
+
+        // Save successfully
+        localStorage.setItem(GEMINI_KEY_STORAGE, key);
+        localStorage.setItem('gemini_user_api_key', key);
+        localStorage.setItem(GEMINI_MODEL_STORAGE, model);
+
+        feedback.className = 'text-[11px] text-emerald-400 block pt-1';
+        feedback.innerText = '✔ Connection verified! Saved securely to browser.';
+        updateGeminiConnectionBadge();
+        showToast('✨ Linked successfully to Gemini!');
+
+        setTimeout(() => {
+          toggleGeminiSettings(false);
+          renderGeminiChat();
+        }, 1000);
+      } catch (err) {
+        feedback.className = 'text-[11px] text-rose-400 block pt-1';
+        feedback.innerText = '❌ Error: ' + err.message;
+      } finally {
+        if (testBtn) {
+          testBtn.disabled = false;
+          testBtn.innerText = 'Save & Connect';
+        }
+      }
+    }
+
+    function updateGeminiConnectionBadge() {
+      const key = getGeminiApiKey();
+      const model = getGeminiModel();
+      const statusPill = document.getElementById('gemini-conn-status');
+      const modelBadge = document.getElementById('gemini-model-badge');
+      const floatDot = document.getElementById('gemini-status-dot');
+
+      const modelShort = model.replace('gemini-', '').replace('flash', 'Flash').replace('pro', 'Pro');
+      if (modelBadge) modelBadge.innerText = modelShort;
+
+      if (statusPill) {
+        if (key) {
+          statusPill.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span><span>Safely Linked to Gemini</span>';
+          statusPill.className = 'text-[11px] text-emerald-400 flex items-center gap-1';
+        } else {
+          statusPill.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span><span>API Key Required</span>';
+          statusPill.className = 'text-[11px] text-amber-400 flex items-center gap-1';
+        }
+      }
+      if (floatDot) {
+        floatDot.className = key ? 'w-2 h-2 rounded-full bg-emerald-400 animate-pulse' : 'w-2 h-2 rounded-full bg-amber-400';
+      }
+    }
+
+    function getCurrentSituationContext() {
+      const isLessonActive = activeSession && document.getElementById('lesson-overlay') && !document.getElementById('lesson-overlay').classList.contains('hidden');
+
+      if (isLessonActive) {
+        const stepIndex = activeSession.currentIndex || 0;
+        const totalSteps = activeSession.steps ? activeSession.steps.length : 0;
+        const step = activeSession.steps ? activeSession.steps[stepIndex] : null;
+
+        let targetThai = '';
+        let targetMeaning = '';
+        let targetRoman = '';
+        let targetTones = '';
+        let situationPrompt = '';
+        let situationCorrect = '';
+        let notes = '';
+
+        if (step && step.target) {
+          const t = step.target;
+          targetThai = t.spoken || t.thai || t.char || '';
+          targetMeaning = t.meaning || t.english || '';
+          targetRoman = t.roman || t.ro || '';
+          targetTones = t.tones || t.tone || '';
+          situationPrompt = t.situationPrompt || '';
+          situationCorrect = t.situationCorrect || '';
+          notes = t.notes || t.readingNote || '';
+          if (t.words && Array.isArray(t.words)) {
+            notes += (notes ? ' | ' : '') + 'Breakdown: ' + t.words.map(w => `${w.th} (${w.ro}): ${w.en}`).join(', ');
+          }
+        }
+
+        const displayTitle = targetThai ? `${targetThai} • ${targetRoman || targetMeaning}` : (activeSession.title || 'Lesson Card');
+        const displayDetail = `${activeSession.title || 'Lesson'} (Card ${stepIndex + 1}/${totalSteps})${situationPrompt ? ' • ' + situationPrompt : (targetMeaning ? ' • ' + targetMeaning : '')}`;
+
+        return {
+          mode: 'lesson',
+          title: activeSession.title || 'Lesson Session',
+          stepSummary: `Card ${stepIndex + 1} of ${totalSteps}`,
+          stepType: step ? step.type : 'drill',
+          targetThai,
+          targetMeaning,
+          targetRoman,
+          targetTones,
+          situationPrompt,
+          situationCorrect,
+          notes,
+          displayTitle,
+          displayDetail
+        };
+      }
+
+      // Check if in Bank
+      const isBank = document.getElementById('view-bank') && !document.getElementById('view-bank').classList.contains('hidden');
+      if (isBank) {
+        const q = document.getElementById('bank-search')?.value.trim() || '';
+        return {
+          mode: 'bank',
+          title: 'Vocabulary & Phrase Bank',
+          displayTitle: q ? `Bank Search: "${q}"` : 'Browsing Vocabulary Bank',
+          displayDetail: `Searching vocabulary database${q ? ` for '${q}'` : ''}. Ask for street mnemonics or examples.`
+        };
+      }
+
+      // Default: Path mode
+      const curTrack = (typeof appState !== 'undefined' && appState.currentTrack === 'street') ? 'Street Spoken Thai' : 'Thai Reading & Letters';
+      const grasp = document.getElementById('stat-grasp')?.innerText || '--';
+      const mastered = document.getElementById('stat-mastered')?.innerText || '0';
+      return {
+        mode: 'path',
+        title: `${curTrack} Curriculum`,
+        displayTitle: `${curTrack} Path`,
+        displayDetail: `Mastered: ${mastered} solid items • Accuracy: ${grasp}. Ask for learning guidance or real-world practice.`
+      };
+    }
+
+    function updateGeminiContextUI() {
+      const ctx = getCurrentSituationContext();
+      const titleEl = document.getElementById('gemini-situation-title');
+      const detailEl = document.getElementById('gemini-situation-detail');
+      if (titleEl) titleEl.innerText = ctx.displayTitle;
+      if (detailEl) detailEl.innerText = ctx.displayDetail;
+    }
+
+    function safeRenderMarkdown(mdText) {
+      if (window.marked && typeof window.marked.parse === 'function') {
+        try {
+          return window.marked.parse(mdText);
+        } catch (e) {}
+      }
+      // Built-in resilient fallback markdown parser
+      let s = mdText
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
+
+      s = s.replace(/```([\s\S]*?)```/g, '<pre class="bg-[#181c28] p-3 rounded-xl overflow-x-auto my-2 text-xs text-amber-200"><code>$1</code></pre>');
+      s = s.replace(/`([^`]+)`/g, '<code class="bg-[#1e2333] text-amber-300 px-1.5 py-0.5 rounded text-xs">$1</code>');
+      s = s.replace(/\*\*([^*]+)\*\*/g, '<strong class="text-sky-300 font-semibold">$1</strong>');
+      s = s.replace(/\*([^*]+)\*/g, '<em class="text-slate-300">$1</em>');
+      s = s.replace(/^\s*[-*]\s+(.+)$/gm, '<li class="ml-4 list-disc text-slate-300 text-xs my-0.5">$1</li>');
+      s = s.replace(/^\s*\d+\.\s+(.+)$/gm, '<li class="ml-4 list-decimal text-slate-300 text-xs my-0.5">$1</li>');
+      s = s.split('\n\n').map(p => {
+        if (p.startsWith('<pre') || p.startsWith('<li')) return p;
+        return `<p class="mb-2 text-xs text-slate-200 leading-relaxed">${p.replace(/\n/g, '<br/>')}</p>`;
+      }).join('');
+      return s;
+    }
+
+    function extractThaiWords(str) {
+      const matches = str.match(/[\u0E00-\u0E7F]+/g);
+      return matches ? matches.filter(w => w.length >= 1) : [];
+    }
+
+    function playMessageThaiAudio(text) {
+      const words = extractThaiWords(text);
+      if (words.length === 0) {
+        showToast('No Thai text detected to pronounce');
+        return;
+      }
+      const combined = words.join(' ');
+      if (typeof playThaiAudio === 'function') {
+        playThaiAudio(combined);
+      }
+    }
+
+    function renderGeminiChat() {
+      const container = document.getElementById('gemini-messages');
+      if (!container) return;
+
+      const key = getGeminiApiKey();
+
+      // If no key configured, show direct setup card
+      if (!key) {
+        container.innerHTML = `
+          <div class="p-4 rounded-2xl bg-[#161a26] border border-[#2a3348] space-y-3.5 shadow-xl">
+            <div class="flex items-center gap-2.5">
+              <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-sky-400 via-indigo-400 to-purple-500 flex items-center justify-center text-white font-bold text-base shadow-sm">
+                ✨
+              </div>
+              <div>
+                <h4 class="text-sm font-bold text-white tracking-tight">Connect Your Gemini Account</h4>
+                <p class="text-[11px] text-emerald-400 font-medium">🔒 100% Private · Safe Client-Side Connection</p>
+              </div>
+            </div>
+            
+            <p class="text-xs text-slate-300 leading-relaxed">
+              Connect your Google Gemini account via a free API key from Google AI Studio. This lets you ask situational questions directly about whatever card or exercise you are looking at right now!
+            </p>
+
+            <div class="space-y-1.5 text-[11px] text-slate-400 bg-[#0e1017] p-3 rounded-xl border border-[#222838]">
+              <div class="flex items-center gap-2"><span class="text-emerald-400 font-bold">✔</span> <span>Zero middleman: direct from browser to Google AI</span></div>
+              <div class="flex items-center gap-2"><span class="text-emerald-400 font-bold">✔</span> <span>Key is kept strictly in local browser storage</span></div>
+              <div class="flex items-center gap-2"><span class="text-emerald-400 font-bold">✔</span> <span>Free tier on Google AI Studio has generous quotas</span></div>
+            </div>
+
+            <button onclick="toggleGeminiSettings(true)" class="w-full py-2.5 rounded-xl bg-gradient-to-r from-sky-500 to-emerald-400 hover:from-sky-400 hover:to-emerald-300 text-[#0e0f12] text-xs font-bold transition-all cursor-pointer shadow-md flex items-center justify-center gap-2">
+              <span>🔑</span>
+              <span>Connect Gemini API Key</span>
+            </button>
+          </div>
+        `;
+        return;
+      }
+
+      // If no messages yet, show welcome tutor card
+      if (geminiChatHistory.length === 0) {
+        container.innerHTML = `
+          <div class="p-4 rounded-2xl bg-[#141824] border border-[#252d42] space-y-3 shadow-md">
+            <div class="flex items-center gap-2">
+              <span class="text-lg">🙏</span>
+              <h4 class="text-xs font-bold text-white">Sawasdee khrap! I'm your Gemini AI Coach.</h4>
+            </div>
+            <p class="text-xs text-slate-300 leading-relaxed">
+              I'm linked directly to your Google Gemini account and watching your learning session. Whenever you're stuck on a tricky card, tone rule, or slang phrase, ask me right away!
+            </p>
+            <div class="text-[11px] text-sky-300/90 bg-sky-500/10 p-2.5 rounded-xl border border-sky-500/20">
+              💡 <strong>Tip:</strong> Use the quick buttons above to instantly explain this card, compare street vs formal Thai, or break down tones!
+            </div>
+          </div>
+        `;
+        return;
+      }
+
+      // Render conversation bubbles
+      let html = '';
+      geminiChatHistory.forEach((msg, idx) => {
+        const isUser = msg.role === 'user';
+        if (isUser) {
+          html += `
+            <div class="flex justify-end">
+              <div class="max-w-[85%] bg-gradient-to-br from-sky-500/20 to-blue-600/20 border border-sky-400/40 rounded-2xl rounded-tr-xs px-3.5 py-2.5 text-xs text-slate-100 shadow-sm space-y-1">
+                <p class="leading-relaxed whitespace-pre-wrap">${escapeHtml(msg.text)}</p>
+                ${msg.hasContext ? '<span class="inline-flex items-center gap-1 text-[10px] text-sky-300/80 bg-sky-500/10 px-1.5 py-0.5 rounded">📍 Screen context attached</span>' : ''}
+              </div>
+            </div>
+          `;
+        } else {
+          const renderedContent = safeRenderMarkdown(msg.text);
+          const hasThai = extractThaiWords(msg.text).length > 0;
+          html += `
+            <div class="flex justify-start">
+              <div class="max-w-[92%] bg-[#151926] border border-[#273047] rounded-2xl rounded-tl-xs px-3.5 py-3 text-xs text-slate-200 shadow-md space-y-2.5">
+                <div class="gemini-msg-bubble">
+                  ${renderedContent}
+                </div>
+                <div class="pt-1.5 border-t border-[#222a3d] flex items-center justify-between text-[11px] text-slate-400">
+                  <div class="flex items-center gap-2">
+                    ${hasThai ? `
+                      <button onclick="playMessageThaiAudio(geminiChatHistory[${idx}].text)" class="hover:text-amber-300 flex items-center gap-1 cursor-pointer transition-colors" title="Pronounce Thai words in message">
+                        <span>🔊</span>
+                        <span>Listen Thai</span>
+                      </button>
+                    ` : ''}
+                  </div>
+                  <button onclick="copyGeminiMessage(${idx})" class="hover:text-white flex items-center gap-1 cursor-pointer transition-colors" title="Copy response">
+                    <span>📋</span>
+                    <span>Copy</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          `;
+        }
+      });
+
+      // Typing loading bubble
+      if (geminiIsThinking) {
+        html += `
+          <div class="flex justify-start">
+            <div class="bg-[#151926] border border-[#273047] rounded-2xl rounded-tl-xs px-3.5 py-3 text-xs text-slate-400 flex items-center gap-2">
+              <span>✨ Gemini is thinking</span>
+              <div class="flex items-center gap-1">
+                <span class="w-1.5 h-1.5 rounded-full bg-sky-400 typing-dot"></span>
+                <span class="w-1.5 h-1.5 rounded-full bg-indigo-400 typing-dot"></span>
+                <span class="w-1.5 h-1.5 rounded-full bg-purple-400 typing-dot"></span>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+
+      container.innerHTML = html;
+      container.scrollTop = container.scrollHeight;
+    }
+
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.innerText = text;
+      return div.innerHTML;
+    }
+
+    function copyGeminiMessage(idx) {
+      const msg = geminiChatHistory[idx];
+      if (!msg) return;
+      navigator.clipboard.writeText(msg.text).then(() => showToast('📋 Response copied to clipboard!'));
+    }
+
+    function clearGeminiChatHistory() {
+      if (geminiChatHistory.length === 0) return;
+      if (confirm('Clear chat history?')) {
+        geminiChatHistory = [];
+        localStorage.removeItem(GEMINI_HISTORY_STORAGE);
+        renderGeminiChat();
+        showToast('Chat history cleared');
+      }
+    }
+
+    function autoResizeGeminiInput(textarea) {
+      textarea.style.height = 'auto';
+      textarea.style.height = Math.min(textarea.scrollHeight, 128) + 'px';
+    }
+
+    function handleGeminiInputKeydown(e) {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        handleGeminiSubmit(e);
+      }
+    }
+
+    function askGeminiQuickPrompt(type) {
+      const ctx = getCurrentSituationContext();
+      let prompt = '';
+      if (type === 'explain_situation') {
+        prompt = ctx.targetThai 
+          ? `Please explain this card and situation: "${ctx.targetThai}" (${ctx.targetRoman || ctx.targetMeaning}). Why is it phrased this way, how do the words connect, and how can I remember it?`
+          : `Please explain this current learning section: ${ctx.displayTitle} - ${ctx.displayDetail}. What are the key rules and nuances?`;
+      } else if (type === 'street_slang') {
+        prompt = ctx.targetThai
+          ? `For "${ctx.targetThai}" (${ctx.targetMeaning}), how would a native speaker say this casually on the street with friends versus politely to an elder or stranger? Any street slang or particle nuances?`
+          : `What are the most common casual Bangkok street phrases or slang related to this topic (${ctx.displayTitle})?`;
+      } else if (type === 'tones') {
+        prompt = ctx.targetThai
+          ? `Please break down the exact tone rules, vowel length, consonant classes, and pronunciation for "${ctx.targetThai}" (${ctx.targetRoman}). Why does it have this tone?`
+          : `Can you explain the key tone and pronunciation rules I need to watch out for in this topic (${ctx.displayTitle})?`;
+      } else if (type === 'dialogue') {
+        prompt = ctx.targetThai
+          ? `Give me a realistic 2-person mini dialogue using "${ctx.targetThai}" in an authentic everyday situation (e.g. food cart, taxi, 7-Eleven, or chatting with a friend). Include Thai script, romanization, and English.`
+          : `Give me a realistic 2-person everyday dialogue using the concepts in this lesson (${ctx.displayTitle}).`;
+      }
+      sendGeminiMessage(prompt);
+    }
+
+    function handleGeminiSubmit(e) {
+      if (e && e.preventDefault) e.preventDefault();
+      const input = document.getElementById('gemini-user-input');
+      if (!input) return;
+      const text = input.value.trim();
+      if (!text || geminiIsThinking) return;
+      input.value = '';
+      input.style.height = 'auto';
+      sendGeminiMessage(text);
+    }
+
+    async function sendGeminiMessage(userText) {
+      const key = getGeminiApiKey();
+      if (!key) {
+        toggleGeminiSettings(true);
+        showToast('Please enter your Gemini API key first');
+        return;
+      }
+
+      const model = getGeminiModel();
+      const autoContext = isGeminiAutoContextEnabled();
+      const ctx = getCurrentSituationContext();
+
+      // Format payload prompt
+      let fullPromptForGemini = userText;
+      let hasAttachedContext = false;
+
+      if (autoContext) {
+        hasAttachedContext = true;
+        let ctxInfo = `[CURRENT LEARNER SCREEN CONTEXT]\n- Learning Mode: ${ctx.mode}\n- Topic/Card: ${ctx.displayTitle}\n- Context Details: ${ctx.displayDetail}`;
+        if (ctx.targetThai) ctxInfo += `\n- Target Thai: ${ctx.targetThai}`;
+        if (ctx.targetRoman) ctxInfo += `\n- Romanization: ${ctx.targetRoman}`;
+        if (ctx.targetTones) ctxInfo += `\n- Tone Marks: ${ctx.targetTones}`;
+        if (ctx.targetMeaning) ctxInfo += `\n- English Meaning: ${ctx.targetMeaning}`;
+        if (ctx.situationPrompt) ctxInfo += `\n- Situation Prompt: ${ctx.situationPrompt}`;
+        if (ctx.situationCorrect) ctxInfo += `\n- Correct Target Answer: ${ctx.situationCorrect}`;
+        if (ctx.notes) ctxInfo += `\n- Grammar/Notes: ${ctx.notes}`;
+
+        fullPromptForGemini = `${ctxInfo}\n\n[USER QUESTION / SITUATION REQUEST]:\n${userText}`;
+      }
+
+      // Add to UI history
+      geminiChatHistory.push({
+        role: 'user',
+        text: userText,
+        hasContext: hasAttachedContext
+      });
+
+      geminiIsThinking = true;
+      renderGeminiChat();
+
+      const sendBtn = document.getElementById('gemini-send-btn');
+      if (sendBtn) sendBtn.disabled = true;
+
+      try {
+        // Construct API messages
+        // We pass past history (up to last 6 turns) + current prompt
+        const apiContents = [];
+        const recentHistory = geminiChatHistory.slice(-6);
+
+        recentHistory.forEach((msg, idx) => {
+          const isLatest = (idx === recentHistory.length - 1);
+          apiContents.push({
+            role: msg.role === 'user' ? 'user' : 'model',
+            parts: [{ text: (isLatest && msg.role === 'user') ? fullPromptForGemini : msg.text }]
+          });
+        });
+
+        const body = {
+          contents: apiContents,
+          systemInstruction: {
+            parts: [{ text: GEMINI_SYSTEM_PROMPT }]
+          },
+          generationConfig: {
+            temperature: 0.7,
+            maxOutputTokens: 1200
+          }
+        };
+
+        const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${key}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body)
+        });
+
+        if (!res.ok) {
+          const errData = await res.json().catch(() => ({}));
+          const errMsg = errData.error?.message || `HTTP ${res.status}: ${res.statusText}`;
+          throw new Error(errMsg);
+        }
+
+        const data = await res.json();
+        const responseText = data.candidates?.[0]?.content?.parts?.[0]?.text || 'No response returned from Gemini.';
+
+        geminiChatHistory.push({
+          role: 'model',
+          text: responseText
+        });
+
+        // Save history in session
+        try {
+          localStorage.setItem(GEMINI_HISTORY_STORAGE, JSON.stringify(geminiChatHistory.slice(-20)));
+        } catch (e) {}
+
+      } catch (err) {
+        console.error('Gemini error:', err);
+        geminiChatHistory.push({
+          role: 'model',
+          text: `⚠️ **Gemini Connection Error**: ${err.message}\n\nPlease check your Gemini API key in ⚙️ Settings or verify your network connection.`
+        });
+      } finally {
+        geminiIsThinking = false;
+        renderGeminiChat();
+        if (sendBtn) sendBtn.disabled = false;
+      }
+    }
+
+    function initGeminiTutor() {
+      // Load saved history if available
+      try {
+        const savedHist = localStorage.getItem(GEMINI_HISTORY_STORAGE);
+        if (savedHist) {
+          geminiChatHistory = JSON.parse(savedHist);
+        }
+      } catch (e) {}
+
+      // Init toggle states
+      const chk = document.getElementById('gemini-context-toggle');
+      if (chk) {
+        chk.checked = isGeminiAutoContextEnabled();
+      }
+
+      updateGeminiConnectionBadge();
+      updateGeminiContextUI();
+
+      // Keyboard shortcuts: Ctrl+Space or Alt+G to toggle
+      window.addEventListener('keydown', (e) => {
+        if ((e.ctrlKey && e.code === 'Space') || (e.altKey && (e.key === 'g' || e.key === 'G'))) {
+          e.preventDefault();
+          toggleGeminiChat();
+        } else if (e.key === 'Escape') {
+          const panel = document.getElementById('gemini-panel');
+          if (panel && !panel.classList.contains('translate-x-full')) {
+            toggleGeminiChat(false);
+          }
+        }
+      });
+    }
+
     window.addEventListener('visibilitychange', () => {
       if (document.visibilityState === 'visible') syncWithCloud(false);
     });
@@ -5869,6 +6517,7 @@
       updateTopMetricsUI();
       updateTrackUI();
       renderSkillTree();
+      initGeminiTutor();
       syncWithCloud(false);
       if ('serviceWorker' in navigator && window.location.protocol.startsWith('http')) {
         navigator.serviceWorker.register('./sw.js').catch(() => {});
