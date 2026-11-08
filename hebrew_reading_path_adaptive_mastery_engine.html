@@ -124,6 +124,25 @@
     .typing-dot:nth-child(2) { animation-delay: 0.2s; }
     .typing-dot:nth-child(3) { animation-delay: 0.4s; }
 
+    /* Audio Clip Card styling */
+    .gemini-audio-card {
+      transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .gemini-audio-card:hover {
+      transform: translateY(-1px);
+    }
+    .gemini-audio-card:active {
+      transform: scale(0.98);
+    }
+    @keyframes wavePulse {
+      0%, 100% { opacity: 0.35; transform: scaleY(0.85); }
+      50% { opacity: 1; transform: scaleY(1.4); }
+    }
+    .clip-wave {
+      animation: wavePulse 0.75s infinite ease-in-out;
+      display: inline-block;
+    }
+
     /* Hide floating button whenever lesson overlay is visible */
     body:has(#lesson-overlay:not(.hidden)) #gemini-floating-btn {
       display: none !important;
@@ -449,120 +468,114 @@
   <aside id="gemini-panel"
     class="fixed top-0 right-0 h-[100dvh] w-full sm:w-[440px] lg:w-[460px] z-[70] bg-[#0f1117] border-l border-[#242938] shadow-2xl flex flex-col transition-transform duration-300 ease-in-out translate-x-full">
 
-    <!-- Top Bar -->
-    <div class="h-14 px-4 border-b border-[#1f2433] bg-[#141722]/90 flex items-center justify-between gap-2 shrink-0">
-      <div class="flex items-center gap-2.5 min-w-0">
-        <div class="w-8 h-8 rounded-xl bg-gradient-to-br from-sky-400 via-indigo-400 to-purple-500 flex items-center justify-center text-white font-bold text-sm shadow-md shrink-0">
+    <!-- Slim Modern Top Bar (Clean & Uncluttered) -->
+    <div class="h-12 px-3.5 border-b border-[#1c2130] bg-[#121520]/95 backdrop-blur-md flex items-center justify-between gap-2 shrink-0">
+      <div class="flex items-center gap-2 min-w-0">
+        <div class="w-7 h-7 rounded-lg bg-gradient-to-br from-sky-400 via-indigo-500 to-purple-500 flex items-center justify-center text-white font-bold text-xs shadow-xs shrink-0">
           ✨
         </div>
-        <div class="min-w-0">
-          <div class="flex items-center gap-1.5">
-            <h3 class="text-sm font-bold text-white tracking-tight truncate">Gemini Hebrew Coach</h3>
-            <span id="gemini-model-badge" class="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-sky-500/15 text-sky-300 border border-sky-500/30">2.5-Flash</span>
-          </div>
-          <p id="gemini-conn-status" class="text-[11px] text-emerald-400 flex items-center gap-1">
-            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
-            <span>Safely Linked to Gemini</span>
-          </p>
+        <div class="min-w-0 flex items-center gap-2">
+          <h3 class="text-xs font-bold text-white tracking-tight truncate">Gemini Coach</h3>
+          <span id="gemini-conn-dot" class="w-2 h-2 rounded-full bg-amber-400" title="API Status"></span>
+          <span id="gemini-model-badge" class="px-1.5 py-0.5 rounded text-[9px] font-semibold bg-sky-500/10 text-sky-300 border border-sky-500/25 hidden sm:inline">2.5-Flash</span>
         </div>
       </div>
 
       <div class="flex items-center gap-1 shrink-0">
-        <button onclick="toggleGeminiSettings()" class="w-8 h-8 rounded-lg bg-[#1a1e2b] hover:bg-[#252b3d] border border-[#2b3245] text-slate-300 hover:text-white flex items-center justify-center text-xs transition-colors cursor-pointer" title="Gemini Account & API Settings">
+        <button onclick="toggleGeminiSettings()" class="w-7 h-7 rounded-lg bg-[#181c28] hover:bg-[#222838] border border-[#273044] text-slate-300 hover:text-white flex items-center justify-center text-xs transition-colors cursor-pointer" title="Settings / API Key">
           ⚙️
         </button>
-        <button onclick="clearGeminiChatHistory()" class="w-8 h-8 rounded-lg bg-[#1a1e2b] hover:bg-[#252b3d] border border-[#2b3245] text-slate-300 hover:text-white flex items-center justify-center text-xs transition-colors cursor-pointer" title="Clear Chat History">
+        <button onclick="clearGeminiChatHistory()" class="w-7 h-7 rounded-lg bg-[#181c28] hover:bg-[#222838] border border-[#273044] text-slate-300 hover:text-white flex items-center justify-center text-xs transition-colors cursor-pointer" title="Clear Chat">
           🧹
         </button>
-        <button onclick="toggleGeminiChat(false)" class="w-8 h-8 rounded-lg bg-[#1a1e2b] hover:bg-[#252b3d] border border-[#2b3245] text-slate-400 hover:text-white flex items-center justify-center text-sm font-semibold transition-colors cursor-pointer" title="Collapse Panel (Esc)">
+        <button onclick="toggleGeminiChat(false)" class="w-7 h-7 rounded-lg bg-[#181c28] hover:bg-[#222838] border border-[#273044] text-slate-400 hover:text-white flex items-center justify-center text-xs font-semibold transition-colors cursor-pointer" title="Close Panel (Esc)">
           ✕
         </button>
       </div>
     </div>
 
     <!-- Collapsible Settings Sub-panel (Account Key setup) -->
-    <div id="gemini-settings-panel" class="hidden border-b border-[#242938] bg-[#161a26] p-4 text-xs space-y-3 shrink-0">
+    <div id="gemini-settings-panel" class="hidden border-b border-[#242938] bg-[#161a26] p-3.5 text-xs space-y-2.5 shrink-0">
       <div class="flex items-center justify-between">
-        <span class="font-bold text-slate-100 flex items-center gap-1.5">
-          <span>🔒</span> Direct Gemini Account Link
+        <span class="font-bold text-slate-100 flex items-center gap-1.5 text-xs">
+          <span>🔒</span> Direct Gemini Connection
         </span>
         <button onclick="toggleGeminiSettings(false)" class="text-slate-400 hover:text-white text-xs cursor-pointer">✕ Close</button>
       </div>
-      <p class="text-slate-400 leading-relaxed text-[11px]">
-        Your key is stored <strong class="text-slate-200">only in your local browser storage</strong> and sent directly to Google Gemini API with zero third-party middleman servers.
-      </p>
-
       <div>
         <div class="flex items-center justify-between mb-1">
           <label class="text-[11px] font-medium text-slate-300">Gemini API Key</label>
-          <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener noreferrer" class="text-[11px] text-sky-400 hover:underline flex items-center gap-1">
+          <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener noreferrer" class="text-[11px] text-sky-400 hover:underline">
             Get Free Key ↗
           </a>
         </div>
         <div class="relative">
-          <input id="gemini-api-key-input" type="password" placeholder="AIzaSy..." class="w-full pl-3 pr-8 py-2 rounded-xl bg-[#0e1017] border border-[#2b3245] text-slate-100 font-mono text-xs focus:outline-none focus:border-sky-400" />
-          <button type="button" onclick="toggleApiKeyVisibility()" class="absolute right-2.5 top-2.5 text-slate-400 hover:text-white text-xs cursor-pointer">👁️</button>
+          <input id="gemini-api-key-input" type="password" placeholder="AIzaSy..." class="w-full pl-3 pr-8 py-1.5 rounded-xl bg-[#0e1017] border border-[#2b3245] text-slate-100 font-mono text-xs focus:outline-none focus:border-sky-400" />
+          <button type="button" onclick="toggleApiKeyVisibility()" class="absolute right-2.5 top-2 text-slate-400 hover:text-white text-xs cursor-pointer">👁️</button>
         </div>
       </div>
 
       <div class="grid grid-cols-2 gap-2">
         <div>
-          <label class="text-[11px] font-medium text-slate-300 mb-1 block">Model</label>
-          <select id="gemini-model-select" class="w-full px-2.5 py-1.5 rounded-xl bg-[#0e1017] border border-[#2b3245] text-slate-200 text-xs focus:outline-none focus:border-sky-400">
-            <option value="gemini-2.5-flash">Gemini 2.5 Flash (Recommended)</option>
+          <select id="gemini-model-select" class="w-full px-2 py-1.5 rounded-xl bg-[#0e1017] border border-[#2b3245] text-slate-200 text-xs focus:outline-none focus:border-sky-400">
+            <option value="gemini-2.5-flash">Gemini 2.5 Flash</option>
             <option value="gemini-1.5-flash">Gemini 1.5 Flash</option>
             <option value="gemini-2.0-flash">Gemini 2.0 Flash</option>
-            <option value="gemini-2.5-pro">Gemini 2.5 Pro (Deep)</option>
+            <option value="gemini-2.5-pro">Gemini 2.5 Pro</option>
           </select>
         </div>
-        <div class="flex items-end">
-          <button id="gemini-test-save-btn" onclick="saveAndTestGeminiKey()" class="w-full py-1.5 rounded-xl bg-gradient-to-r from-sky-500 to-emerald-400 hover:from-sky-400 hover:to-emerald-300 text-[#0e0f12] text-xs font-bold transition-all cursor-pointer shadow-sm">
-            Save & Connect
-          </button>
-        </div>
+        <button id="gemini-test-save-btn" onclick="saveAndTestGeminiKey()" class="w-full py-1.5 rounded-xl bg-gradient-to-r from-sky-500 to-emerald-400 hover:from-sky-400 hover:to-emerald-300 text-[#0e0f12] text-xs font-bold transition-all cursor-pointer shadow-xs">
+          Save & Connect
+        </button>
       </div>
-      <div id="gemini-settings-feedback" class="text-[11px] hidden pt-1"></div>
-      <div id="gemini-disconnect-row" class="hidden pt-1 flex justify-end">
-        <button onclick="disconnectGeminiKey()" class="text-[11px] text-rose-400 hover:underline cursor-pointer">Remove saved API key</button>
+      <div id="gemini-settings-feedback" class="text-[11px] hidden pt-0.5"></div>
+      <div id="gemini-disconnect-row" class="hidden pt-0.5 flex justify-end">
+        <button onclick="disconnectGeminiKey()" class="text-[10px] text-rose-400 hover:underline cursor-pointer">Disconnect saved key</button>
       </div>
     </div>
 
-    <!-- Live Situation Context Header Card -->
-    <div id="gemini-context-card" class="bg-[#121520] border-b border-[#1f2433] px-3.5 py-2.5 space-y-2 shrink-0">
-      <div class="flex items-center justify-between gap-2">
-        <div class="flex items-center gap-1.5 text-[11px] font-bold text-sky-300 truncate">
-          <span>📍</span>
-          <span class="uppercase tracking-wider text-[10px]">Current Situation Context</span>
-        </div>
-        <label class="flex items-center gap-1.5 text-[11px] text-slate-400 hover:text-slate-200 cursor-pointer shrink-0 select-none">
-          <input id="gemini-context-toggle" type="checkbox" checked onchange="handleContextToggleChange()" class="rounded border-slate-600 text-sky-500 focus:ring-0 cursor-pointer" />
-          <span>Auto-attach</span>
-        </label>
+    <!-- Slim Modern Situation Bar (Clean & Focused) -->
+    <div id="gemini-context-card" class="bg-[#121520] border-b border-[#1e2332] px-3 py-1.5 flex items-center justify-between gap-2 shrink-0">
+      <!-- Active Situation Chip -->
+      <div id="gemini-current-situation-pill" class="flex items-center gap-1.5 text-xs text-slate-300 min-w-0 flex-1 truncate" title="Current situation context">
+        <span class="text-xs shrink-0">🎯</span>
+        <span id="gemini-situation-title" class="font-bold text-slate-200 text-xs truncate">Ready on Path</span>
       </div>
 
-      <!-- Current Situation Description Badge -->
-      <div id="gemini-current-situation-pill" class="p-2 rounded-xl bg-[#181d2c] border border-[#262e45] text-xs flex items-start gap-2">
-        <span class="text-sm shrink-0">🎯</span>
-        <div class="min-w-0 flex-1">
-          <div id="gemini-situation-title" class="font-bold text-white text-xs truncate">Ready on Path</div>
-          <div id="gemini-situation-detail" class="text-[11px] text-slate-400 line-clamp-2 mt-0.5">Click any lesson or card to load situation details.</div>
-        </div>
-      </div>
+      <!-- Clean Action Chips -->
+      <div class="flex items-center gap-1.5 shrink-0">
+        <button id="btn-explain-card" onclick="askGeminiQuickPrompt('explain_situation')" 
+          class="px-2.5 py-1 rounded-xl bg-gradient-to-r from-sky-500/20 to-purple-500/20 hover:from-sky-500/30 hover:to-purple-500/30 border border-sky-400/40 hover:border-sky-300 text-sky-300 hover:text-white text-[11px] font-semibold flex items-center gap-1 cursor-pointer transition-all shadow-xs active:scale-95 whitespace-nowrap"
+          title="Break down this exact card with on-the-fly audio clips">
+          <span>💡</span>
+          <span>Explain this card</span>
+        </button>
 
-      <!-- Situational Quick Chips -->
-      <div class="flex flex-wrap gap-1.5 pt-0.5">
-        <button onclick="askGeminiQuickPrompt('explain_situation')" class="px-2 py-1 rounded-lg bg-[#181d2a] hover:bg-[#232a3d] border border-[#2b334a] hover:border-sky-400/60 text-slate-300 hover:text-white text-[11px] font-medium transition-all cursor-pointer flex items-center gap-1">
-          💡 <span>Explain this card</span>
-        </button>
-        <button onclick="askGeminiQuickPrompt('street_slang')" class="px-2 py-1 rounded-lg bg-[#181d2a] hover:bg-[#232a3d] border border-[#2b334a] hover:border-amber-400/60 text-slate-300 hover:text-white text-[11px] font-medium transition-all cursor-pointer flex items-center gap-1">
-          🗣️ <span>Israeli street slang</span>
-        </button>
-        <button onclick="askGeminiQuickPrompt('roots')" class="px-2 py-1 rounded-lg bg-[#181d2a] hover:bg-[#232a3d] border border-[#2b334a] hover:border-emerald-400/60 text-slate-300 hover:text-white text-[11px] font-medium transition-all cursor-pointer flex items-center gap-1">
-          🇮🇱 <span>Roots & vowels (Nikud)</span>
-        </button>
-        <button onclick="askGeminiQuickPrompt('dialogue')" class="px-2 py-1 rounded-lg bg-[#181d2a] hover:bg-[#232a3d] border border-[#2b334a] hover:border-purple-400/60 text-slate-300 hover:text-white text-[11px] font-medium transition-all cursor-pointer flex items-center gap-1">
-          💬 <span>Real dialogue</span>
-        </button>
+        <!-- Dropdown for extra situational prompts -->
+        <div class="relative group">
+          <button type="button" class="w-6 h-6 rounded-lg bg-[#181d2a] hover:bg-[#232a3d] border border-[#2b334a] text-slate-400 hover:text-white text-xs flex items-center justify-center cursor-pointer transition-colors" title="More prompts (Audio, Slang, Dialogue)">
+            ⋯
+          </button>
+          <div class="absolute right-0 top-full mt-1 w-48 bg-[#141824] border border-[#262f44] rounded-xl shadow-2xl py-1 hidden group-hover:block hover:block z-50 text-xs">
+            <button onclick="askGeminiQuickPrompt('audio_clips')" class="w-full text-left px-3 py-1.5 hover:bg-[#1f2538] text-slate-300 hover:text-white flex items-center gap-2 cursor-pointer">
+              <span>🔊</span> <span>Generate 3-4 Audio Clips</span>
+            </button>
+            <button onclick="askGeminiQuickPrompt('street_slang')" class="w-full text-left px-3 py-1.5 hover:bg-[#1f2538] text-slate-300 hover:text-white flex items-center gap-2 cursor-pointer">
+              <span>🗣️</span> <span>Israeli Street Slang</span>
+            </button>
+            <button onclick="askGeminiQuickPrompt('roots')" class="w-full text-left px-3 py-1.5 hover:bg-[#1f2538] text-slate-300 hover:text-white flex items-center gap-2 cursor-pointer">
+              <span>🇮🇱</span> <span>Roots & Nikud</span>
+            </button>
+            <button onclick="askGeminiQuickPrompt('dialogue')" class="w-full text-left px-3 py-1.5 hover:bg-[#1f2538] text-slate-300 hover:text-white flex items-center gap-2 cursor-pointer">
+              <span>💬</span> <span>Mini Dialogue</span>
+            </button>
+            <div class="border-t border-[#23293a] my-1"></div>
+            <label class="px-3 py-1.5 text-slate-400 flex items-center gap-2 cursor-pointer hover:bg-[#1f2538]">
+              <input id="gemini-context-toggle" type="checkbox" checked onchange="handleContextToggleChange()" class="rounded border-slate-600 text-sky-500 focus:ring-0 cursor-pointer" />
+              <span>Auto-attach context</span>
+            </label>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -8316,13 +8329,23 @@
     const GEMINI_SYSTEM_PROMPT = `You are an expert bilingual Hebrew language tutor & cultural coach built into the "Hebrew Reading & Street Mastery" learning engine.
 Your mission is to help the learner master authentic Israeli spoken Hebrew, modern street slang, roots (shoresh / binyanim), reading nuances with/without Nikud (vowel marks), and everyday situational conversational Hebrew.
 
+AUDIO CLIPS ON-THE-FLY GENERATION (CRITICAL CAPABILITY):
+You have built-in audio functionality! Whenever your answer involves vocabulary, pronunciation, situational phrases, or dialogue (usually 1 to 4 key clips), format each audio clip on its own line using this exact syntax:
+[audio: HebrewScript | Transliteration | English Translation]
+
+Examples:
+[audio: סבבה לגמרי | sababa legamrey | Totally fine / completely cool]
+[audio: יאללה ביי | yalla bye | Alright, see you later!]
+[audio: כמה זה עולה? | kama ze ole? | How much does this cost?]
+[audio: אפשר חשבון בבקשה? | efshar kheshbon bevakasha? | Can I get the check please?]
+
+The app automatically turns each [audio: ...] tag into an interactive, tap-to-play audio card so the learner can listen to native pronunciation instantly!
+
 Guidelines:
-1. Speak warmly, encouragingly, and concisely. Keep answers scannable with markdown bullet points and bold text.
-2. If situation context is attached (e.g. active card, drill, spoken phrase, Nikud, situation prompt), immediately reference what is on the learner's screen so they get direct help for that exact situation.
-3. Always provide Hebrew script alongside practical phonetic transliteration and clear English translation.
-4. Explain WHY: Break down root letters (shoresh), vowel patterns, verb forms (binyanim), prefixes (ב, ל, מ, ש, ה), and colloquial contractions used by native Israelis in daily street life (Sababa, Dugri, Yalla, Magniv, Davka, Walla, slang, etc.).
-5. When relevant, give 1-2 realistic mini dialogues demonstrating how locals talk in Shuk HaCarmel, cafes, buses, or casual hangouts.
-6. When mentioning Hebrew words or sentences, enclose them in backticks or clear quotes so the learner can easily read and click to listen to them.`;
+1. Speak warmly, encouragingly, and concisely. Keep answers clean, direct, and well-structured.
+2. If situation context is attached (e.g. active card, drill, spoken phrase, Nikud), immediately explain that exact situation.
+3. Always provide 1 to 4 [audio: ...] clips generously so the user can listen and pronounce like a local!
+4. Explain WHY: Break down root letters (shoresh), vowel patterns, verb forms (binyanim), and everyday Israeli slang.`;
 
     let geminiChatHistory = [];
     let geminiIsThinking = false;
@@ -8482,21 +8505,16 @@ Guidelines:
     function updateGeminiConnectionBadge() {
       const key = getGeminiApiKey();
       const model = getGeminiModel();
-      const statusPill = document.getElementById('gemini-conn-status');
+      const dot = document.getElementById('gemini-conn-dot');
       const modelBadge = document.getElementById('gemini-model-badge');
       const floatDot = document.getElementById('gemini-status-dot');
 
       const modelShort = model.replace('gemini-', '').replace('flash', 'Flash').replace('pro', 'Pro');
       if (modelBadge) modelBadge.innerText = modelShort;
 
-      if (statusPill) {
-        if (key) {
-          statusPill.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span><span>Safely Linked to Gemini</span>';
-          statusPill.className = 'text-[11px] text-emerald-400 flex items-center gap-1';
-        } else {
-          statusPill.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span><span>API Key Required</span>';
-          statusPill.className = 'text-[11px] text-amber-400 flex items-center gap-1';
-        }
+      if (dot) {
+        dot.className = key ? 'w-2 h-2 rounded-full bg-emerald-400' : 'w-2 h-2 rounded-full bg-amber-400 animate-pulse';
+        dot.title = key ? 'Connected to Gemini' : 'API Key Setup Required';
       }
       if (floatDot) {
         floatDot.className = key ? 'w-2 h-2 rounded-full bg-emerald-400 animate-pulse' : 'w-2 h-2 rounded-full bg-amber-400';
@@ -8582,28 +8600,104 @@ Guidelines:
       if (detailEl) detailEl.innerText = ctx.displayDetail;
     }
 
-    function safeRenderMarkdown(mdText) {
+    function playGeminiAudioClip(text, uid, lang = 'he') {
+      if (!text) return;
+      const clean = text.replace(/[\u200B-\u200D\uFEFF]/g, '').trim();
+      const btn = document.getElementById('btn_' + uid);
+      const wave = document.getElementById('anim_' + uid);
+
+      if (btn) btn.innerHTML = '<span>■</span>';
+      if (wave) wave.classList.remove('hidden');
+
+      if (lang === 'he' && typeof playHebrewAudio === 'function') {
+        playHebrewAudio(clean);
+      } else if (lang === 'th' && typeof playThaiAudio === 'function') {
+        playThaiAudio(clean);
+      } else if ('speechSynthesis' in window) {
+        const utter = new SpeechSynthesisUtterance(clean);
+        utter.lang = lang === 'he' ? 'he-IL' : 'th-TH';
+        window.speechSynthesis.speak(utter);
+      }
+
+      const dur = Math.max(1200, Math.min(clean.length * 150, 4000));
+      setTimeout(() => {
+        if (btn) btn.innerHTML = '<span>▶</span>';
+        if (wave) wave.classList.add('hidden');
+      }, dur);
+    }
+
+    async function saveQuickGeminiKey() {
+      const input = document.getElementById('gemini-quick-key-input');
+      if (!input) return;
+      const key = input.value.trim();
+      if (!key) {
+        showToast('Please paste a Gemini API key');
+        return;
+      }
+      const settingsInput = document.getElementById('gemini-api-key-input');
+      if (settingsInput) settingsInput.value = key;
+      await saveAndTestGeminiKey();
+    }
+
+    function safeRenderMarkdown(mdText, lang = 'he') {
+      let s = mdText;
+
+      // 1. Transform audio clip tags [audio: HebrewScript | Translit | English Meaning]
+      const clipRegex = /\[audio:\s*([^|\]]+)\s*\|\s*([^|\]]+)(?:\s*\|\s*([^\]]+))?\]/gi;
+      s = s.replace(clipRegex, (match, script, phonetic, meaning) => {
+        const cleanScript = (script || '').trim();
+        const cleanPhonetic = (phonetic || '').trim();
+        const cleanMeaning = (meaning || '').trim();
+        const uid = 'clip_' + Math.random().toString(36).substr(2, 9);
+        const scriptEsc = cleanScript.replace(/'/g, "\\'");
+
+        return `
+          <div class="gemini-audio-card my-2 p-2.5 rounded-xl bg-[#151926] hover:bg-[#1c2234] border border-[#263148] hover:border-sky-400/50 flex items-center justify-between gap-3 transition-all cursor-pointer shadow-sm group select-none" onclick="playGeminiAudioClip('${scriptEsc}', '${uid}', '${lang}')">
+            <button type="button" id="btn_${uid}" class="w-8 h-8 rounded-lg bg-gradient-to-tr from-sky-500/20 to-emerald-400/20 group-hover:from-sky-500 group-hover:to-emerald-400 border border-sky-400/40 group-hover:border-transparent text-sky-300 group-hover:text-[#0e0f12] flex items-center justify-center font-bold text-xs transition-all shrink-0">
+              ▶
+            </button>
+            <div class="min-w-0 flex-1">
+              <div class="flex items-center gap-2 flex-wrap">
+                <span class="font-bold text-sm text-white font-hebrew tracking-wide">${cleanScript}</span>
+                ${cleanPhonetic ? `<span class="text-xs text-amber-300 font-medium">${cleanPhonetic}</span>` : ''}
+              </div>
+              ${cleanMeaning ? `<div class="text-[11px] text-slate-400 truncate mt-0.5">${cleanMeaning}</div>` : ''}
+            </div>
+            <div class="text-[10px] text-sky-400/90 font-mono bg-sky-500/10 px-2 py-0.5 rounded-full border border-sky-500/20 flex items-center gap-1 shrink-0">
+              <span id="anim_${uid}" class="clip-wave hidden text-emerald-400 font-bold">ılı</span>
+              <span>🔊 Listen</span>
+            </div>
+          </div>
+        `;
+      });
+
       if (window.marked && typeof window.marked.parse === 'function') {
         try {
-          return window.marked.parse(mdText);
+          return window.marked.parse(s);
         } catch (e) {}
       }
-      let s = mdText
+
+      let html = s
         .replace(/&/g, '&amp;')
         .replace(/</g, '&lt;')
         .replace(/>/g, '&gt;');
 
-      s = s.replace(/```([\s\S]*?)```/g, '<pre class="bg-[#181c28] p-3 rounded-xl overflow-x-auto my-2 text-xs text-amber-200"><code>$1</code></pre>');
-      s = s.replace(/`([^`]+)`/g, '<code class="bg-[#1e2333] text-amber-300 px-1.5 py-0.5 rounded text-xs">$1</code>');
-      s = s.replace(/\*\*([^*]+)\*\*/g, '<strong class="text-sky-300 font-semibold">$1</strong>');
-      s = s.replace(/\*([^*]+)\*/g, '<em class="text-slate-300">$1</em>');
-      s = s.replace(/^\s*[-*]\s+(.+)$/gm, '<li class="ml-4 list-disc text-slate-300 text-xs my-0.5">$1</li>');
-      s = s.replace(/^\s*\d+\.\s+(.+)$/gm, '<li class="ml-4 list-decimal text-slate-300 text-xs my-0.5">$1</li>');
-      s = s.split('\n\n').map(p => {
-        if (p.startsWith('<pre') || p.startsWith('<li')) return p;
+      // Restore raw HTML for our audio cards
+      html = html.replace(/&lt;div class="gemini-audio-card([\s\S]*?)&lt;\/div&gt;/gi, (m) => {
+        return m.replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&');
+      });
+
+      html = html.replace(/```([\s\S]*?)```/g, '<pre class="bg-[#181c28] p-3 rounded-xl overflow-x-auto my-2 text-xs text-amber-200"><code>$1</code></pre>');
+      html = html.replace(/`([^`]+)`/g, '<code class="bg-[#1e2333] text-amber-300 px-1.5 py-0.5 rounded text-xs">$1</code>');
+      html = html.replace(/\*\*([^*]+)\*\*/g, '<strong class="text-sky-300 font-semibold">$1</strong>');
+      html = html.replace(/\*([^*]+)\*/g, '<em class="text-slate-300">$1</em>');
+      html = html.replace(/^\s*[-*]\s+(.+)$/gm, '<li class="ml-4 list-disc text-slate-300 text-xs my-0.5">$1</li>');
+      html = html.replace(/^\s*\d+\.\s+(.+)$/gm, '<li class="ml-4 list-decimal text-slate-300 text-xs my-0.5">$1</li>');
+      html = html.split('\n\n').map(p => {
+        if (p.startsWith('<pre') || p.startsWith('<li') || p.startsWith('<div')) return p;
         return `<p class="mb-2 text-xs text-slate-200 leading-relaxed">${p.replace(/\n/g, '<br/>')}</p>`;
       }).join('');
-      return s;
+      return html;
     }
 
     function extractHebrewWords(str) {
@@ -8629,34 +8723,34 @@ Guidelines:
 
       const key = getGeminiApiKey();
 
-      // If no key configured, show direct setup card
+      // If no key configured, show compact direct setup card
       if (!key) {
         container.innerHTML = `
-          <div class="p-4 rounded-2xl bg-[#161a26] border border-[#2a3348] space-y-3.5 shadow-xl">
-            <div class="flex items-center gap-2.5">
-              <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-sky-400 via-indigo-400 to-purple-500 flex items-center justify-center text-white font-bold text-base shadow-sm">
-                ✨
+          <div class="p-3.5 rounded-2xl bg-[#141824] border border-[#252f44] space-y-2.5 shadow-lg">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-1.5">
+                <span class="text-sm">✨</span>
+                <h4 class="text-xs font-bold text-white">Connect Gemini Account</h4>
               </div>
-              <div>
-                <h4 class="text-sm font-bold text-white tracking-tight">Connect Your Gemini Account</h4>
-                <p class="text-[11px] text-emerald-400 font-medium">🔒 100% Private · Safe Client-Side Connection</p>
-              </div>
+              <span class="text-[10px] text-emerald-400 font-medium">🔒 100% Private</span>
             </div>
-            
-            <p class="text-xs text-slate-300 leading-relaxed">
-              Connect your Google Gemini account via a free API key from Google AI Studio. This lets you ask situational questions directly about whatever card or exercise you are looking at right now!
+            <p class="text-[11px] text-slate-300 leading-relaxed">
+              Paste your free Gemini API key to ask situational questions and get on-the-fly audio clips:
             </p>
-
-            <div class="space-y-1.5 text-[11px] text-slate-400 bg-[#0e1017] p-3 rounded-xl border border-[#222838]">
-              <div class="flex items-center gap-2"><span class="text-emerald-400 font-bold">✔</span> <span>Zero middleman: direct from browser to Google AI</span></div>
-              <div class="flex items-center gap-2"><span class="text-emerald-400 font-bold">✔</span> <span>Key is kept strictly in local browser storage</span></div>
-              <div class="flex items-center gap-2"><span class="text-emerald-400 font-bold">✔</span> <span>Free tier on Google AI Studio has generous quotas</span></div>
+            <div class="flex items-center gap-2">
+              <input id="gemini-quick-key-input" type="password" placeholder="Paste AIzaSy... key" 
+                class="flex-1 px-3 py-1.5 rounded-xl bg-[#0c0e14] border border-[#263045] text-slate-100 font-mono text-xs focus:outline-none focus:border-sky-400" />
+              <button onclick="saveQuickGeminiKey()" 
+                class="px-3 py-1.5 rounded-xl bg-gradient-to-r from-sky-500 to-emerald-400 hover:from-sky-400 hover:to-emerald-300 text-[#0e0f12] text-xs font-bold transition-all cursor-pointer shadow-xs shrink-0">
+                Connect
+              </button>
             </div>
-
-            <button onclick="toggleGeminiSettings(true)" class="w-full py-2.5 rounded-xl bg-gradient-to-r from-sky-500 to-emerald-400 hover:from-sky-400 hover:to-emerald-300 text-[#0e0f12] text-xs font-bold transition-all cursor-pointer shadow-md flex items-center justify-center gap-2">
-              <span>🔑</span>
-              <span>Connect Gemini API Key</span>
-            </button>
+            <div class="flex items-center justify-between text-[11px] pt-0.5">
+              <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener noreferrer" class="text-sky-400 hover:underline">
+                Get free key at Google AI Studio ↗
+              </a>
+              <span class="text-slate-500 text-[10px]">Stored locally in browser</span>
+            </div>
           </div>
         `;
         return;
@@ -8665,17 +8759,14 @@ Guidelines:
       // If no messages yet, show welcome tutor card
       if (geminiChatHistory.length === 0) {
         container.innerHTML = `
-          <div class="p-4 rounded-2xl bg-[#141824] border border-[#252d42] space-y-3 shadow-md">
+          <div class="p-3.5 rounded-2xl bg-[#141824] border border-[#222a3d] space-y-2 shadow-sm">
             <div class="flex items-center gap-2">
-              <span class="text-lg">🇮🇱</span>
+              <span class="text-base">🇮🇱</span>
               <h4 class="text-xs font-bold text-white">Shalom! I'm your Gemini Hebrew Coach.</h4>
             </div>
             <p class="text-xs text-slate-300 leading-relaxed">
-              I'm linked directly to your Google Gemini account and watching your learning session. Whenever you're stuck on Nikud, verb roots (shoresh), or Israeli street slang, ask me right away!
+              I'm watching your active card in real time. Click <strong>💡 Explain this card</strong> above for a breakdown with 1-4 playable audio clips on the fly!
             </p>
-            <div class="text-[11px] text-sky-300/90 bg-sky-500/10 p-2.5 rounded-xl border border-sky-500/20">
-              💡 <strong>Tip:</strong> Use the quick buttons above to instantly explain this card, get street slang, or break down roots!
-            </div>
           </div>
         `;
         return;
@@ -8695,11 +8786,11 @@ Guidelines:
             </div>
           `;
         } else {
-          const renderedContent = safeRenderMarkdown(msg.text);
+          const renderedContent = safeRenderMarkdown(msg.text, 'he');
           const hasHebrew = extractHebrewWords(msg.text).length > 0;
           html += `
             <div class="flex justify-start">
-              <div class="max-w-[92%] bg-[#151926] border border-[#273047] rounded-2xl rounded-tl-xs px-3.5 py-3 text-xs text-slate-200 shadow-md space-y-2.5">
+              <div class="max-w-[95%] bg-[#151926] border border-[#273047] rounded-2xl rounded-tl-xs px-3.5 py-3 text-xs text-slate-200 shadow-md space-y-2.5">
                 <div class="gemini-msg-bubble">
                   ${renderedContent}
                 </div>
@@ -8708,7 +8799,7 @@ Guidelines:
                     ${hasHebrew ? `
                       <button onclick="playMessageHebrewAudio(geminiChatHistory[${idx}].text)" class="hover:text-amber-300 flex items-center gap-1 cursor-pointer transition-colors" title="Pronounce Hebrew words in message">
                         <span>🔊</span>
-                        <span>Listen Hebrew</span>
+                        <span>Listen All</span>
                       </button>
                     ` : ''}
                   </div>
@@ -8782,20 +8873,24 @@ Guidelines:
       let prompt = '';
       if (type === 'explain_situation') {
         prompt = ctx.targetHebrew 
-          ? `Please explain this card and situation: "${ctx.targetHebrew}" (${ctx.targetTranslit || ctx.targetMeaning}). Why is it phrased this way, how do the words connect, and how can I remember it?`
-          : `Please explain this current learning section: ${ctx.displayTitle} - ${ctx.displayDetail}. What are the key rules and nuances?`;
+          ? `Please explain this card: "${ctx.targetHebrew}" (${ctx.targetTranslit || ctx.targetMeaning}). Give a clear breakdown of meaning, nuances, and 2-4 playable audio clips using [audio: Hebrew | Transliteration | English] showing the core phrase and how Israelis say it casually.`
+          : `Please explain this current learning section: ${ctx.displayTitle} - ${ctx.displayDetail}. Provide 3 to 4 spoken audio clips using [audio: Hebrew | Transliteration | English] so I can listen and practice.`;
+      } else if (type === 'audio_clips') {
+        prompt = ctx.targetHebrew
+          ? `Generate 3 to 4 practical spoken audio clips for "${ctx.targetHebrew}" (${ctx.targetMeaning}) in real everyday situations (casual with friends, polite, street market) formatted as [audio: Hebrew | Transliteration | English].`
+          : `Generate 3 to 4 practical spoken audio clips for this lesson (${ctx.displayTitle}) using [audio: Hebrew | Transliteration | English].`;
       } else if (type === 'street_slang') {
         prompt = ctx.targetHebrew
-          ? `For "${ctx.targetHebrew}" (${ctx.targetMeaning}), how would an Israeli say this casually on the street with friends versus politely? Any slang (Sababa, Walla, Yalla, etc.)?`
-          : `What are the most common casual Israeli street phrases or slang related to this topic (${ctx.displayTitle})?`;
+          ? `For "${ctx.targetHebrew}" (${ctx.targetMeaning}), how would an Israeli say this casually on the street with friends versus politely? Any slang (Sababa, Walla, Yalla, etc.)? Include 2-4 audio clips formatted as [audio: Hebrew | Transliteration | English].`
+          : `What are the most common casual Israeli street phrases or slang related to this topic (${ctx.displayTitle})? Include [audio: Hebrew | Transliteration | English] clips.`;
       } else if (type === 'roots') {
         prompt = ctx.targetHebrew
-          ? `Please break down the root letters (shoresh), vowel pattern (binyan/mishkal), and pronunciation with Nikud for "${ctx.targetHebrew}" (${ctx.targetTranslit}).`
-          : `Can you explain the key root and pronunciation patterns for this topic (${ctx.displayTitle})?`;
+          ? `Please break down the root letters (shoresh), vowel pattern (binyan/mishkal), and pronunciation with Nikud for "${ctx.targetHebrew}" (${ctx.targetTranslit}). Include [audio: Hebrew | Transliteration | English] clips.`
+          : `Can you explain the key root and pronunciation patterns for this topic (${ctx.displayTitle})? Include [audio: Hebrew | Transliteration | English] clips.`;
       } else if (type === 'dialogue') {
         prompt = ctx.targetHebrew
-          ? `Give me a realistic 2-person mini dialogue using "${ctx.targetHebrew}" in an authentic Israeli situation (e.g. Shuk, cafe, bus, or hanging out). Include Hebrew, phonetic transliteration, and English.`
-          : `Give me a realistic 2-person everyday dialogue using the concepts in this lesson (${ctx.displayTitle}).`;
+          ? `Give me a realistic 2-person mini dialogue using "${ctx.targetHebrew}" in an authentic Israeli situation (e.g. Shuk, cafe, bus, or hanging out). Format each spoken line with [audio: Hebrew | Transliteration | English] so I can tap to listen!`
+          : `Give me a realistic 2-person everyday dialogue using the concepts in this lesson (${ctx.displayTitle}) with [audio: Hebrew | Transliteration | English] clips.`;
       }
       sendGeminiMessage(prompt);
     }

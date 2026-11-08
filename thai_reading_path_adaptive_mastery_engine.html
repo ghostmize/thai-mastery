@@ -7053,34 +7053,34 @@ Guidelines:
 
       const key = getGeminiApiKey();
 
-      // If no key configured, show direct setup card
+      // If no key configured, show compact direct setup card
       if (!key) {
         container.innerHTML = `
-          <div class="p-4 rounded-2xl bg-[#161a26] border border-[#2a3348] space-y-3.5 shadow-xl">
-            <div class="flex items-center gap-2.5">
-              <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-sky-400 via-indigo-400 to-purple-500 flex items-center justify-center text-white font-bold text-base shadow-sm">
-                ✨
+          <div class="p-3.5 rounded-2xl bg-[#141824] border border-[#252f44] space-y-2.5 shadow-lg">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-1.5">
+                <span class="text-sm">✨</span>
+                <h4 class="text-xs font-bold text-white">Connect Gemini Account</h4>
               </div>
-              <div>
-                <h4 class="text-sm font-bold text-white tracking-tight">Connect Your Gemini Account</h4>
-                <p class="text-[11px] text-emerald-400 font-medium">🔒 100% Private · Safe Client-Side Connection</p>
-              </div>
+              <span class="text-[10px] text-emerald-400 font-medium">🔒 100% Private</span>
             </div>
-            
-            <p class="text-xs text-slate-300 leading-relaxed">
-              Connect your Google Gemini account via a free API key from Google AI Studio. This lets you ask situational questions directly about whatever card or exercise you are looking at right now!
+            <p class="text-[11px] text-slate-300 leading-relaxed">
+              Paste your free Gemini API key to ask situational questions and get on-the-fly audio clips:
             </p>
-
-            <div class="space-y-1.5 text-[11px] text-slate-400 bg-[#0e1017] p-3 rounded-xl border border-[#222838]">
-              <div class="flex items-center gap-2"><span class="text-emerald-400 font-bold">✔</span> <span>Zero middleman: direct from browser to Google AI</span></div>
-              <div class="flex items-center gap-2"><span class="text-emerald-400 font-bold">✔</span> <span>Key is kept strictly in local browser storage</span></div>
-              <div class="flex items-center gap-2"><span class="text-emerald-400 font-bold">✔</span> <span>Free tier on Google AI Studio has generous quotas</span></div>
+            <div class="flex items-center gap-2">
+              <input id="gemini-quick-key-input" type="password" placeholder="Paste AIzaSy... key" 
+                class="flex-1 px-3 py-1.5 rounded-xl bg-[#0c0e14] border border-[#263045] text-slate-100 font-mono text-xs focus:outline-none focus:border-sky-400" />
+              <button onclick="saveQuickGeminiKey()" 
+                class="px-3 py-1.5 rounded-xl bg-gradient-to-r from-sky-500 to-emerald-400 hover:from-sky-400 hover:to-emerald-300 text-[#0e0f12] text-xs font-bold transition-all cursor-pointer shadow-xs shrink-0">
+                Connect
+              </button>
             </div>
-
-            <button onclick="toggleGeminiSettings(true)" class="w-full py-2.5 rounded-xl bg-gradient-to-r from-sky-500 to-emerald-400 hover:from-sky-400 hover:to-emerald-300 text-[#0e0f12] text-xs font-bold transition-all cursor-pointer shadow-md flex items-center justify-center gap-2">
-              <span>🔑</span>
-              <span>Connect Gemini API Key</span>
-            </button>
+            <div class="flex items-center justify-between text-[11px] pt-0.5">
+              <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener noreferrer" class="text-sky-400 hover:underline">
+                Get free key at Google AI Studio ↗
+              </a>
+              <span class="text-slate-500 text-[10px]">Stored locally in browser</span>
+            </div>
           </div>
         `;
         return;
@@ -7089,17 +7089,14 @@ Guidelines:
       // If no messages yet, show welcome tutor card
       if (geminiChatHistory.length === 0) {
         container.innerHTML = `
-          <div class="p-4 rounded-2xl bg-[#141824] border border-[#252d42] space-y-3 shadow-md">
+          <div class="p-3.5 rounded-2xl bg-[#141824] border border-[#222a3d] space-y-2 shadow-sm">
             <div class="flex items-center gap-2">
-              <span class="text-lg">🙏</span>
-              <h4 class="text-xs font-bold text-white">Sawasdee khrap! I'm your Gemini AI Coach.</h4>
+              <span class="text-base">🙏</span>
+              <h4 class="text-xs font-bold text-white">Sawasdee khrap! I'm your Gemini Coach.</h4>
             </div>
             <p class="text-xs text-slate-300 leading-relaxed">
-              I'm linked directly to your Google Gemini account and watching your learning session. Whenever you're stuck on a tricky card, tone rule, or slang phrase, ask me right away!
+              I'm watching your active card in real time. Click <strong>💡 Explain this card</strong> above for a breakdown with 1-4 playable audio clips on the fly!
             </p>
-            <div class="text-[11px] text-sky-300/90 bg-sky-500/10 p-2.5 rounded-xl border border-sky-500/20">
-              💡 <strong>Tip:</strong> Use the quick buttons above to instantly explain this card, compare street vs formal Thai, or break down tones!
-            </div>
           </div>
         `;
         return;
@@ -7119,20 +7116,20 @@ Guidelines:
             </div>
           `;
         } else {
-          const renderedContent = safeRenderMarkdown(msg.text);
+          const renderedContent = safeRenderMarkdown(msg.text, 'th');
           const hasThai = extractThaiWords(msg.text).length > 0;
           html += `
             <div class="flex justify-start">
-              <div class="max-w-[92%] bg-[#151926] border border-[#273047] rounded-2xl rounded-tl-xs px-3.5 py-3 text-xs text-slate-200 shadow-md space-y-2.5">
+              <div class="max-w-[95%] bg-[#151926] border border-[#273047] rounded-2xl rounded-tl-xs px-3.5 py-3 text-xs text-slate-200 shadow-md space-y-2.5">
                 <div class="gemini-msg-bubble">
                   ${renderedContent}
                 </div>
                 <div class="pt-1.5 border-t border-[#222a3d] flex items-center justify-between text-[11px] text-slate-400">
                   <div class="flex items-center gap-2">
                     ${hasThai ? `
-                      <button onclick="playMessageThaiAudio(geminiChatHistory[${idx}].text)" class="hover:text-amber-300 flex items-center gap-1 cursor-pointer transition-colors" title="Pronounce Thai words in message">
+                      <button onclick="playMessageThaiAudio(geminiChatHistory[${idx}].text)" class="hover:text-amber-300 flex items-center gap-1 cursor-pointer transition-colors" title="Pronounce all Thai text">
                         <span>🔊</span>
-                        <span>Listen Thai</span>
+                        <span>Listen All</span>
                       </button>
                     ` : ''}
                   </div>
@@ -7206,20 +7203,24 @@ Guidelines:
       let prompt = '';
       if (type === 'explain_situation') {
         prompt = ctx.targetThai 
-          ? `Please explain this card and situation: "${ctx.targetThai}" (${ctx.targetRoman || ctx.targetMeaning}). Why is it phrased this way, how do the words connect, and how can I remember it?`
-          : `Please explain this current learning section: ${ctx.displayTitle} - ${ctx.displayDetail}. What are the key rules and nuances?`;
+          ? `Please explain this card: "${ctx.targetThai}" (${ctx.targetRoman || ctx.targetMeaning}). Give a clear, crisp breakdown of meaning, when to use it, and 2-4 playable audio clips using [audio: Thai | Roman | English] showing the core phrase and how locals say it on the street.`
+          : `Please explain this current topic: ${ctx.displayTitle}. Provide 3 to 4 spoken audio clips using [audio: Thai | Roman | English] so I can listen and practice.`;
+      } else if (type === 'audio_clips') {
+        prompt = ctx.targetThai
+          ? `Generate 3 to 4 practical spoken audio clips for "${ctx.targetThai}" (${ctx.targetMeaning}) in real situations (e.g. casual with friends, polite to strangers, ordering) formatted as [audio: Thai | Roman | English].`
+          : `Generate 3 to 4 practical spoken audio clips for this lesson (${ctx.displayTitle}) using [audio: Thai | Roman | English].`;
       } else if (type === 'street_slang') {
         prompt = ctx.targetThai
-          ? `For "${ctx.targetThai}" (${ctx.targetMeaning}), how would a native speaker say this casually on the street with friends versus politely to an elder or stranger? Any street slang or particle nuances?`
-          : `What are the most common casual Bangkok street phrases or slang related to this topic (${ctx.displayTitle})?`;
+          ? `For "${ctx.targetThai}" (${ctx.targetMeaning}), how would a native speaker say this casually on the street with friends versus politely to an elder or stranger? Any street slang or particle nuances? Include 2-4 audio clips formatted as [audio: Thai | Roman | English].`
+          : `What are the most common casual Bangkok street phrases or slang related to this topic (${ctx.displayTitle})? Include [audio: Thai | Roman | English] clips.`;
       } else if (type === 'tones') {
         prompt = ctx.targetThai
-          ? `Please break down the exact tone rules, vowel length, consonant classes, and pronunciation for "${ctx.targetThai}" (${ctx.targetRoman}). Why does it have this tone?`
-          : `Can you explain the key tone and pronunciation rules I need to watch out for in this topic (${ctx.displayTitle})?`;
+          ? `Please break down the exact tone rules, vowel length, consonant classes, and pronunciation for "${ctx.targetThai}" (${ctx.targetRoman}). Include [audio: Thai | Roman | English] clips.`
+          : `Can you explain the key tone and pronunciation rules I need to watch out for in this topic (${ctx.displayTitle})? Include [audio: Thai | Roman | English] clips.`;
       } else if (type === 'dialogue') {
         prompt = ctx.targetThai
-          ? `Give me a realistic 2-person mini dialogue using "${ctx.targetThai}" in an authentic everyday situation (e.g. food cart, taxi, 7-Eleven, or chatting with a friend). Include Thai script, romanization, and English.`
-          : `Give me a realistic 2-person everyday dialogue using the concepts in this lesson (${ctx.displayTitle}).`;
+          ? `Give me a realistic 2-person mini dialogue using "${ctx.targetThai}" in an authentic everyday situation (e.g. food cart, taxi, 7-Eleven). Format each spoken line with [audio: Thai | Roman | English] so I can tap to listen!`
+          : `Give me a realistic 2-person everyday dialogue using the concepts in this lesson (${ctx.displayTitle}) with [audio: Thai | Roman | English] clips.`;
       }
       sendGeminiMessage(prompt);
     }
