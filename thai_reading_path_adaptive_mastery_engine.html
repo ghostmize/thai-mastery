@@ -7001,64 +7001,61 @@ Guidelines:
     }
 
     function safeRenderMarkdown(mdText, lang = 'th') {
-      let s = mdText;
+      if (!mdText) return '';
 
-      // 1. Transform audio clip tags [audio: ThaiScript | Romanization | English Meaning]
-      const clipRegex = /\[audio:\s*([^|\]]+)\s*\|\s*([^|\]]+)(?:\s*\|\s*([^\]]+))?\]/gi;
-      s = s.replace(clipRegex, (match, script, phonetic, meaning) => {
+      // 1. Parse standard markdown first (handles lists, bold, headings, paragraphs)
+      let html = '';
+      if (window.marked && typeof window.marked.parse === 'function') {
+        try {
+          html = window.marked.parse(mdText);
+        } catch (e) {
+          html = escapeHtml(mdText).replace(/\n\n/g, '<br><br>');
+        }
+      } else {
+        html = escapeHtml(mdText)
+          .replace(/```([\s\S]*?)```/g, '<pre class="bg-[#181c28] p-3 rounded-xl overflow-x-auto my-2 text-xs text-amber-200"><code>$1</code></pre>')
+          .replace(/`([^`]+)`/g, '<code class="bg-[#1e2333] text-amber-300 px-1.5 py-0.5 rounded text-xs">$1</code>')
+          .replace(/\*\*([^*]+)\*\*/g, '<strong class="text-sky-300 font-semibold">$1</strong>')
+          .replace(/\*([^*]+)\*/g, '<em class="text-slate-300">$1</em>')
+          .replace(/^\s*[-*]\s+(.+)$/gm, '<li class="ml-4 list-disc text-slate-300 text-xs my-0.5">$1</li>')
+          .replace(/^\s*\d+\.\s+(.+)$/gm, '<li class="ml-4 list-decimal text-slate-300 text-xs my-0.5">$1</li>')
+          .split('\n\n').map(p => {
+            if (p.startsWith('<pre') || p.startsWith('<li')) return p;
+            return `<p class="mb-2 text-xs text-slate-200 leading-relaxed">${p.replace(/\n/g, '<br/>')}</p>`;
+          }).join('');
+      }
+
+      // 2. Helper to construct clean HTML audio card widget with zero indentation
+      function createAudioCardHtml(script, phonetic, meaning) {
         const cleanScript = (script || '').trim();
         const cleanPhonetic = (phonetic || '').trim();
         const cleanMeaning = (meaning || '').trim();
         const uid = 'clip_' + Math.random().toString(36).substr(2, 9);
         const scriptEsc = cleanScript.replace(/'/g, "\\'");
+        const fontClass = lang === 'th' ? 'font-thai' : 'font-hebrew';
 
-        return `
-          <div class="gemini-audio-card my-2 p-2.5 rounded-xl bg-[#151926] hover:bg-[#1c2234] border border-[#263148] hover:border-sky-400/50 flex items-center justify-between gap-3 transition-all cursor-pointer shadow-sm group select-none" onclick="playGeminiAudioClip('${scriptEsc}', '${uid}', '${lang}')">
-            <button type="button" id="btn_${uid}" class="w-8 h-8 rounded-lg bg-gradient-to-tr from-sky-500/20 to-emerald-400/20 group-hover:from-sky-500 group-hover:to-emerald-400 border border-sky-400/40 group-hover:border-transparent text-sky-300 group-hover:text-[#0e0f12] flex items-center justify-center font-bold text-xs transition-all shrink-0">
-              ▶
-            </button>
-            <div class="min-w-0 flex-1">
-              <div class="flex items-center gap-2 flex-wrap">
-                <span class="font-bold text-sm text-white ${lang === 'th' ? 'font-thai' : 'font-hebrew'} tracking-wide">${cleanScript}</span>
-                ${cleanPhonetic ? `<span class="text-xs text-amber-300 font-medium">${cleanPhonetic}</span>` : ''}
-              </div>
-              ${cleanMeaning ? `<div class="text-[11px] text-slate-400 truncate mt-0.5">${cleanMeaning}</div>` : ''}
-            </div>
-            <div class="text-[10px] text-sky-400/90 font-mono bg-sky-500/10 px-2 py-0.5 rounded-full border border-sky-500/20 flex items-center gap-1 shrink-0">
-              <span id="anim_${uid}" class="clip-wave hidden text-emerald-400 font-bold">ılı</span>
-              <span>🔊 Listen</span>
-            </div>
-          </div>
-        `;
-      });
-
-      if (window.marked && typeof window.marked.parse === 'function') {
-        try {
-          return window.marked.parse(s);
-        } catch (e) {}
+        return `<div class="gemini-audio-card my-2 p-2.5 rounded-xl bg-[#151926] hover:bg-[#1c2234] border border-[#263148] hover:border-sky-400/50 flex items-center justify-between gap-3 transition-all cursor-pointer shadow-sm group select-none" onclick="playGeminiAudioClip('${scriptEsc}', '${uid}', '${lang}')"><button type="button" id="btn_${uid}" class="w-8 h-8 rounded-lg bg-gradient-to-tr from-sky-500/20 to-emerald-400/20 group-hover:from-sky-500 group-hover:to-emerald-400 border border-sky-400/40 group-hover:border-transparent text-sky-300 group-hover:text-[#0e0f12] flex items-center justify-center font-bold text-xs transition-all shrink-0">▶</button><div class="min-w-0 flex-1"><div class="flex items-center gap-2 flex-wrap"><span class="font-bold text-sm text-white ${fontClass} tracking-wide">${cleanScript}</span>${cleanPhonetic ? `<span class="text-xs text-amber-300 font-medium">${cleanPhonetic}</span>` : ''}</div>${cleanMeaning ? `<div class="text-[11px] text-slate-400 truncate mt-0.5">${cleanMeaning}</div>` : ''}</div><div class="text-[10px] text-sky-400/90 font-mono bg-sky-500/10 px-2 py-0.5 rounded-full border border-sky-500/20 flex items-center gap-1 shrink-0"><span id="anim_${uid}" class="clip-wave hidden text-emerald-400 font-bold">ılı</span><span>🔊 Listen</span></div></div>`;
       }
 
-      // Built-in resilient fallback markdown parser
-      let html = s
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;');
+      // 3. Transform [audio: Script | Phonetic | Meaning] tags (handles <p>[audio: ...]</p> and inline)
+      const clipRegex = /(?:<p>\s*)?\[audio:\s*([^|\]]+)\s*\|\s*([^|\]]+)(?:\s*\|\s*([^\]]+))?\](?:\s*<\/p>)?/gi;
+      html = html.replace(clipRegex, (match, script, phonetic, meaning) => {
+        return createAudioCardHtml(script, phonetic, meaning);
+      });
 
-      // Restore raw HTML for our audio cards
-      html = html.replace(/&lt;div class="gemini-audio-card([\s\S]*?)&lt;\/div&gt;/gi, (m) => {
+      // 4. Auto-heal: If marked or a code block wrapped raw audio card HTML in <pre><code>, unwrap it into a live widget
+      html = html.replace(/<pre><code[^>]*>([\s\S]*?)<\/code><\/pre>/gi, (match, inner) => {
+        if (inner.includes('gemini-audio-card')) {
+          return inner.replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&').replace(/&quot;/g, '"');
+        }
+        return match;
+      });
+
+      // 5. Unescape any raw escaped gemini-audio-card tags in text
+      html = html.replace(/&lt;div class="gemini-audio-card[\s\S]*?&lt;\/div&gt;/gi, (m) => {
         return m.replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&');
       });
 
-      html = html.replace(/```([\s\S]*?)```/g, '<pre class="bg-[#181c28] p-3 rounded-xl overflow-x-auto my-2 text-xs text-amber-200"><code>$1</code></pre>');
-      html = html.replace(/`([^`]+)`/g, '<code class="bg-[#1e2333] text-amber-300 px-1.5 py-0.5 rounded text-xs">$1</code>');
-      html = html.replace(/\*\*([^*]+)\*\*/g, '<strong class="text-sky-300 font-semibold">$1</strong>');
-      html = html.replace(/\*([^*]+)\*/g, '<em class="text-slate-300">$1</em>');
-      html = html.replace(/^\s*[-*]\s+(.+)$/gm, '<li class="ml-4 list-disc text-slate-300 text-xs my-0.5">$1</li>');
-      html = html.replace(/^\s*\d+\.\s+(.+)$/gm, '<li class="ml-4 list-decimal text-slate-300 text-xs my-0.5">$1</li>');
-      html = html.split('\n\n').map(p => {
-        if (p.startsWith('<pre') || p.startsWith('<li') || p.startsWith('<div')) return p;
-        return `<p class="mb-2 text-xs text-slate-200 leading-relaxed">${p.replace(/\n/g, '<br/>')}</p>`;
-      }).join('');
       return html;
     }
 
