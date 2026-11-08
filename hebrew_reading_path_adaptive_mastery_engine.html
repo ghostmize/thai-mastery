@@ -6152,37 +6152,33 @@
       const clean = (text || '').replace(/\.\.\./g, '').trim();
       if (!clean) return;
 
-      if (currentAudio) {
-        try { currentAudio.pause(); } catch(e) {}
-        currentAudio = null;
-      }
-      if ('speechSynthesis' in window) {
-        try { window.speechSynthesis.cancel(); } catch(e) {}
-      }
-
       if (btnEl) {
         btnEl.classList.add('ring-2', 'ring-amber-400', 'scale-95');
         setTimeout(() => btnEl.classList.remove('ring-2', 'ring-amber-400', 'scale-95'), 400);
       }
 
-      // Primary: Google TTS Hebrew Voice ('iw')
+      if ('speechSynthesis' in window) {
+        try {
+          window.speechSynthesis.cancel();
+          const utter = new SpeechSynthesisUtterance(clean);
+          utter.lang = 'he-IL';
+          if (hebrewVoice) utter.voice = hebrewVoice;
+          utter.rate = appState.audioSpeed || 1.0;
+          window.speechSynthesis.speak(utter);
+          return;
+        } catch(e) {}
+      }
+
+      // Fallback
+      if (currentAudio) {
+        try { currentAudio.pause(); } catch(e) {}
+        currentAudio = null;
+      }
       const url = `https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&tl=iw&q=${encodeURIComponent(clean)}`;
       const audio = new Audio(url);
       audio.playbackRate = appState.audioSpeed || 1.0;
       currentAudio = audio;
-
-      let hasFallbackRun = false;
-      const fallback = () => {
-        if (hasFallbackRun) return;
-        hasFallbackRun = true;
-        speakWithWebSpeech(clean);
-      };
-
-      audio.onerror = fallback;
-      const p = audio.play();
-      if (p !== undefined) {
-        p.catch(() => fallback());
-      }
+      audio.play().catch(() => {});
     }
 
     function speakWithWebSpeech(clean) {

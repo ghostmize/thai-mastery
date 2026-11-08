@@ -15,6 +15,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-title" content="Thai Mastery" />
   <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet" />
@@ -75,6 +76,51 @@
     ::-webkit-scrollbar-track { background: #0e0f12; }
     ::-webkit-scrollbar-thumb { background: #262932; border-radius: 9999px; }
     ::-webkit-scrollbar-thumb:hover { background: #373c49; }
+
+    /* Gemini Chat styling */
+    .gemini-msg-bubble {
+      word-break: break-word;
+    }
+    .gemini-msg-bubble p {
+      margin-bottom: 0.5rem;
+    }
+    .gemini-msg-bubble p:last-child {
+      margin-bottom: 0;
+    }
+    .gemini-msg-bubble ul, .gemini-msg-bubble ol {
+      margin-left: 1.25rem;
+      margin-bottom: 0.5rem;
+    }
+    .gemini-msg-bubble li {
+      margin-bottom: 0.25rem;
+    }
+    .gemini-msg-bubble strong {
+      color: #38bdf8;
+      font-weight: 600;
+    }
+    .gemini-msg-bubble code {
+      background-color: #171a25;
+      color: #fcd34d;
+      padding: 0.15rem 0.35rem;
+      border-radius: 0.375rem;
+      font-size: 0.85em;
+    }
+    .gemini-msg-bubble pre code {
+      display: block;
+      padding: 0.75rem;
+      overflow-x: auto;
+      border-radius: 0.5rem;
+      margin: 0.5rem 0;
+    }
+    @keyframes typingPulse {
+      0%, 100% { opacity: 0.25; transform: scale(0.85); }
+      50% { opacity: 1; transform: scale(1.15); }
+    }
+    .typing-dot {
+      animation: typingPulse 1.2s infinite ease-in-out;
+    }
+    .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+    .typing-dot:nth-child(3) { animation-delay: 0.4s; }
   </style>
 </head>
 <body class="min-h-screen antialiased pb-24 selection:bg-sky-500/30 selection:text-sky-200">
@@ -140,6 +186,10 @@
         <button id="nav-bank-btn" onclick="switchMainView(document.getElementById('view-bank').classList.contains('hidden') ? 'bank' : 'path')" class="px-2.5 sm:px-3 py-1.5 rounded-xl bg-[#14161f] hover:bg-[#202433] border border-[#242735] text-slate-300 hover:text-white text-xs font-semibold transition-all cursor-pointer flex items-center gap-1.5 whitespace-nowrap shrink-0" title="Letter & Word Bank">
           <span>📖</span>
           <span class="hidden sm:inline">Bank</span>
+        </button>
+        <button id="header-gemini-btn" onclick="toggleGeminiChat()" class="px-2.5 sm:px-3 py-1.5 rounded-xl bg-gradient-to-r from-sky-500/15 via-purple-500/15 to-emerald-500/15 hover:from-sky-500/25 hover:to-purple-500/25 border border-sky-400/40 hover:border-sky-300 text-sky-300 hover:text-white text-xs font-semibold transition-all cursor-pointer flex items-center gap-1.5 whitespace-nowrap shrink-0 shadow-sm" title="Ask Gemini AI Tutor (Ctrl+Space)">
+          <span class="text-xs">✨</span>
+          <span class="hidden sm:inline">Gemini AI</span>
         </button>
         <button id="nav-path-btn" class="hidden"></button>
         <button id="smart-review-btn" class="hidden"></button>
@@ -244,6 +294,10 @@
         <div class="text-xs font-semibold text-emerald-400 bg-emerald-500/10 border border-emerald-500/25 px-2 sm:px-2.5 py-1 rounded-full">
           <span id="lesson-step-counter">1 / 8</span>
         </div>
+        <button id="lesson-gemini-btn" onclick="toggleGeminiChat()" class="px-2.5 py-1 rounded-full bg-gradient-to-r from-sky-500/20 to-purple-500/20 hover:from-sky-500/30 hover:to-purple-500/30 border border-sky-400/40 text-xs font-semibold text-sky-300 hover:text-white transition-all flex items-center gap-1.5 cursor-pointer shadow-sm" title="Ask Gemini about this card (Ctrl+Space)">
+          <span class="text-xs">✨</span>
+          <span class="hidden sm:inline">Ask Gemini</span>
+        </button>
       </div>
     </div>
 
@@ -367,6 +421,171 @@
       </div>
     </div>
   </div>
+
+  <!-- ===================================================================== -->
+  <!-- GEMINI AI SITUATION TUTOR (COLLAPSIBLE RIGHT PANEL)                    -->
+  <!-- ===================================================================== -->
+
+  <!-- Floating Quick Button (when collapsed) -->
+  <button id="gemini-floating-btn" onclick="toggleGeminiChat()"
+    class="fixed bottom-5 right-5 z-[55] bg-gradient-to-r from-[#141722]/95 to-[#1c2233]/95 hover:from-[#1b2131] hover:to-[#242c42] backdrop-blur-md border border-sky-400/40 hover:border-sky-300 text-sky-300 hover:text-white px-3.5 py-2.5 rounded-full shadow-2xl cursor-pointer flex items-center gap-2 transition-all duration-200 hover:scale-105 active:scale-95 group font-medium text-xs"
+    title="Open Gemini AI Language Tutor (Ctrl+Space)">
+    <span class="text-sm">✨</span>
+    <span class="font-semibold tracking-wide">Gemini AI Coach</span>
+    <span id="gemini-status-dot" class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+  </button>
+
+  <!-- Mobile Backdrop Overlay -->
+  <div id="gemini-backdrop" onclick="toggleGeminiChat(false)" class="fixed inset-0 bg-black/60 backdrop-blur-xs z-[65] hidden lg:hidden transition-opacity"></div>
+
+  <!-- Collapsible Right-Side Panel -->
+  <aside id="gemini-panel"
+    class="fixed top-0 right-0 h-[100dvh] w-full sm:w-[440px] lg:w-[460px] z-[70] bg-[#0f1117] border-l border-[#242938] shadow-2xl flex flex-col transition-transform duration-300 ease-in-out translate-x-full">
+
+    <!-- Top Bar -->
+    <div class="h-14 px-4 border-b border-[#1f2433] bg-[#141722]/90 flex items-center justify-between gap-2 shrink-0">
+      <div class="flex items-center gap-2.5 min-w-0">
+        <div class="w-8 h-8 rounded-xl bg-gradient-to-br from-sky-400 via-indigo-400 to-purple-500 flex items-center justify-center text-white font-bold text-sm shadow-md shrink-0">
+          ✨
+        </div>
+        <div class="min-w-0">
+          <div class="flex items-center gap-1.5">
+            <h3 class="text-sm font-bold text-white tracking-tight truncate">Gemini Situation Tutor</h3>
+            <span id="gemini-model-badge" class="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-sky-500/15 text-sky-300 border border-sky-500/30">2.5-Flash</span>
+          </div>
+          <p id="gemini-conn-status" class="text-[11px] text-emerald-400 flex items-center gap-1">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+            <span>Safely Linked to Gemini</span>
+          </p>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-1 shrink-0">
+        <button onclick="toggleGeminiSettings()" class="w-8 h-8 rounded-lg bg-[#1a1e2b] hover:bg-[#252b3d] border border-[#2b3245] text-slate-300 hover:text-white flex items-center justify-center text-xs transition-colors cursor-pointer" title="Gemini Account & API Settings">
+          ⚙️
+        </button>
+        <button onclick="clearGeminiChatHistory()" class="w-8 h-8 rounded-lg bg-[#1a1e2b] hover:bg-[#252b3d] border border-[#2b3245] text-slate-300 hover:text-white flex items-center justify-center text-xs transition-colors cursor-pointer" title="Clear Chat History">
+          🧹
+        </button>
+        <button onclick="toggleGeminiChat(false)" class="w-8 h-8 rounded-lg bg-[#1a1e2b] hover:bg-[#252b3d] border border-[#2b3245] text-slate-400 hover:text-white flex items-center justify-center text-sm font-semibold transition-colors cursor-pointer" title="Collapse Panel (Esc)">
+          ✕
+        </button>
+      </div>
+    </div>
+
+    <!-- Collapsible Settings Sub-panel (Account Key setup) -->
+    <div id="gemini-settings-panel" class="hidden border-b border-[#242938] bg-[#161a26] p-4 text-xs space-y-3 shrink-0">
+      <div class="flex items-center justify-between">
+        <span class="font-bold text-slate-100 flex items-center gap-1.5">
+          <span>🔒</span> Direct Gemini Account Link
+        </span>
+        <button onclick="toggleGeminiSettings(false)" class="text-slate-400 hover:text-white text-xs cursor-pointer">✕ Close</button>
+      </div>
+      <p class="text-slate-400 leading-relaxed text-[11px]">
+        Your key is stored <strong class="text-slate-200">only in your local browser storage</strong> and sent directly to Google Gemini API with zero third-party middleman servers.
+      </p>
+
+      <div>
+        <div class="flex items-center justify-between mb-1">
+          <label class="text-[11px] font-medium text-slate-300">Gemini API Key</label>
+          <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener noreferrer" class="text-[11px] text-sky-400 hover:underline flex items-center gap-1">
+            Get Free Key ↗
+          </a>
+        </div>
+        <div class="relative">
+          <input id="gemini-api-key-input" type="password" placeholder="AIzaSy..." class="w-full pl-3 pr-8 py-2 rounded-xl bg-[#0e1017] border border-[#2b3245] text-slate-100 font-mono text-xs focus:outline-none focus:border-sky-400" />
+          <button type="button" onclick="toggleApiKeyVisibility()" class="absolute right-2.5 top-2.5 text-slate-400 hover:text-white text-xs cursor-pointer">👁️</button>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-2 gap-2">
+        <div>
+          <label class="text-[11px] font-medium text-slate-300 mb-1 block">Model</label>
+          <select id="gemini-model-select" class="w-full px-2.5 py-1.5 rounded-xl bg-[#0e1017] border border-[#2b3245] text-slate-200 text-xs focus:outline-none focus:border-sky-400">
+            <option value="gemini-2.5-flash">Gemini 2.5 Flash (Recommended)</option>
+            <option value="gemini-1.5-flash">Gemini 1.5 Flash</option>
+            <option value="gemini-2.0-flash">Gemini 2.0 Flash</option>
+            <option value="gemini-2.5-pro">Gemini 2.5 Pro (Deep)</option>
+          </select>
+        </div>
+        <div class="flex items-end">
+          <button id="gemini-test-save-btn" onclick="saveAndTestGeminiKey()" class="w-full py-1.5 rounded-xl bg-gradient-to-r from-sky-500 to-emerald-400 hover:from-sky-400 hover:to-emerald-300 text-[#0e0f12] text-xs font-bold transition-all cursor-pointer shadow-sm">
+            Save & Connect
+          </button>
+        </div>
+      </div>
+      <div id="gemini-settings-feedback" class="text-[11px] hidden pt-1"></div>
+      <div id="gemini-disconnect-row" class="hidden pt-1 flex justify-end">
+        <button onclick="disconnectGeminiKey()" class="text-[11px] text-rose-400 hover:underline cursor-pointer">Remove saved API key</button>
+      </div>
+    </div>
+
+    <!-- Live Situation Context Header Card -->
+    <div id="gemini-context-card" class="bg-[#121520] border-b border-[#1f2433] px-3.5 py-2.5 space-y-2 shrink-0">
+      <div class="flex items-center justify-between gap-2">
+        <div class="flex items-center gap-1.5 text-[11px] font-bold text-sky-300 truncate">
+          <span>📍</span>
+          <span class="uppercase tracking-wider text-[10px]">Current Situation Context</span>
+        </div>
+        <label class="flex items-center gap-1.5 text-[11px] text-slate-400 hover:text-slate-200 cursor-pointer shrink-0 select-none">
+          <input id="gemini-context-toggle" type="checkbox" checked onchange="handleContextToggleChange()" class="rounded border-slate-600 text-sky-500 focus:ring-0 cursor-pointer" />
+          <span>Auto-attach</span>
+        </label>
+      </div>
+
+      <!-- Current Situation Description Badge -->
+      <div id="gemini-current-situation-pill" class="p-2 rounded-xl bg-[#181d2c] border border-[#262e45] text-xs flex items-start gap-2">
+        <span class="text-sm shrink-0">🎯</span>
+        <div class="min-w-0 flex-1">
+          <div id="gemini-situation-title" class="font-bold text-white text-xs truncate">Ready on Path</div>
+          <div id="gemini-situation-detail" class="text-[11px] text-slate-400 line-clamp-2 mt-0.5">Click any lesson or card to load situation details.</div>
+        </div>
+      </div>
+
+      <!-- Situational Quick Chips -->
+      <div class="flex flex-wrap gap-1.5 pt-0.5">
+        <button onclick="askGeminiQuickPrompt('explain_situation')" class="px-2 py-1 rounded-lg bg-[#181d2a] hover:bg-[#232a3d] border border-[#2b334a] hover:border-sky-400/60 text-slate-300 hover:text-white text-[11px] font-medium transition-all cursor-pointer flex items-center gap-1">
+          💡 <span>Explain this card</span>
+        </button>
+        <button onclick="askGeminiQuickPrompt('street_slang')" class="px-2 py-1 rounded-lg bg-[#181d2a] hover:bg-[#232a3d] border border-[#2b334a] hover:border-amber-400/60 text-slate-300 hover:text-white text-[11px] font-medium transition-all cursor-pointer flex items-center gap-1">
+          🗣️ <span>Street vs polite</span>
+        </button>
+        <button onclick="askGeminiQuickPrompt('tones')" class="px-2 py-1 rounded-lg bg-[#181d2a] hover:bg-[#232a3d] border border-[#2b334a] hover:border-emerald-400/60 text-slate-300 hover:text-white text-[11px] font-medium transition-all cursor-pointer flex items-center gap-1">
+          🇹🇭 <span>Tones & grammar</span>
+        </button>
+        <button onclick="askGeminiQuickPrompt('dialogue')" class="px-2 py-1 rounded-lg bg-[#181d2a] hover:bg-[#232a3d] border border-[#2b334a] hover:border-purple-400/60 text-slate-300 hover:text-white text-[11px] font-medium transition-all cursor-pointer flex items-center gap-1">
+          💬 <span>Real dialogue</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Chat Message List -->
+    <div id="gemini-messages" class="flex-1 overflow-y-auto p-4 space-y-3.5 scroll-smooth">
+      <!-- Injected dynamically -->
+    </div>
+
+    <!-- Bottom Input Container -->
+    <div class="border-t border-[#1f2433] bg-[#141722] p-3 space-y-2 shrink-0">
+      <form id="gemini-chat-form" onsubmit="handleGeminiSubmit(event)" class="relative flex items-end gap-2">
+        <textarea id="gemini-user-input" rows="1" placeholder="Ask about this situation or anything in Thai..."
+          onkeydown="handleGeminiInputKeydown(event)"
+          oninput="autoResizeGeminiInput(this)"
+          class="flex-1 max-h-32 min-h-[42px] px-3.5 py-2.5 rounded-2xl bg-[#0c0e14] border border-[#252b3d] text-slate-100 placeholder-slate-500 text-xs sm:text-sm focus:outline-none focus:border-sky-400 resize-none leading-relaxed transition-all"></textarea>
+
+        <button id="gemini-send-btn" type="submit"
+          class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-sky-500 to-emerald-400 hover:from-sky-400 hover:to-emerald-300 text-[#0e0f12] flex items-center justify-center font-bold shadow-md transition-all cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed shrink-0">
+          <svg class="w-4 h-4 translate-x-[1px] -translate-y-[1px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+          </svg>
+        </button>
+      </form>
+      <div class="flex items-center justify-between text-[10px] text-slate-500 px-1">
+        <span>Enter to send · Shift+Enter for newline · Ctrl+Space to toggle</span>
+        <span id="gemini-token-indicator" class="text-sky-400/70">Google Gemini Live</span>
+      </div>
+    </div>
+
+  </aside>
 
   <script>
     // =========================================================================
@@ -3429,9 +3648,9 @@
       appState.currentTrack = track;
       saveState();
       updateTrackUI();
-      updateTrackUI();
       renderSkillTree();
       showToast(track === 'street' ? 'Switched to Street Thai Track ⚡' : 'Switched to Reading Path 📚');
+      if (typeof updateGeminiContextUI === 'function') updateGeminiContextUI();
     }
 
     function updateTrackUI() {
@@ -3816,7 +4035,7 @@
       if ('speechSynthesis' in window) {
         const load = () => {
           const voices = window.speechSynthesis.getVoices();
-          thaiVoice = voices.find(v => v.lang && v.lang.toLowerCase().includes('th')) || null;
+          thaiVoice = voices.find(v => v.lang && (v.lang.toLowerCase().includes('th') || v.lang.toLowerCase() === 'th-th')) || null;
         };
         load();
         window.speechSynthesis.onvoiceschanged = load;
@@ -3827,30 +4046,33 @@
       const clean = (text || '').replace(/\.\.\./g, '').trim();
       if (!clean) return;
 
-      if (currentAudio) {
-        currentAudio.pause();
-        currentAudio = null;
-      }
-      if ('speechSynthesis' in window) {
-        window.speechSynthesis.cancel();
-      }
-
       if (btnEl) {
         btnEl.classList.add('ring-2', 'ring-sky-400', 'scale-95');
-        setTimeout(() => btnEl.classList.remove('ring-2', 'ring-sky-400', 'scale-95'), 550);
+        setTimeout(() => btnEl.classList.remove('ring-2', 'ring-sky-400', 'scale-95'), 400);
       }
 
-      // Primary: Natural Thai voice stream
+      if ('speechSynthesis' in window) {
+        try {
+          window.speechSynthesis.cancel();
+          const utter = new SpeechSynthesisUtterance(clean);
+          utter.lang = 'th-TH';
+          if (thaiVoice) utter.voice = thaiVoice;
+          utter.rate = appState.audioSpeed || 1.0;
+          window.speechSynthesis.speak(utter);
+          return;
+        } catch(e) {}
+      }
+
+      // Fallback to audio element if speech synthesis is not supported
+      if (currentAudio) {
+        try { currentAudio.pause(); } catch(e) {}
+        currentAudio = null;
+      }
       const url = `https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&tl=th&q=${encodeURIComponent(clean)}`;
       const audio = new Audio(url);
-      audio.playbackRate = appState.audioSpeed;
+      audio.playbackRate = appState.audioSpeed || 1.0;
       currentAudio = audio;
-
-      audio.onerror = () => speakWithWebSpeech(clean);
-      const p = audio.play();
-      if (p !== undefined) {
-        p.catch(() => speakWithWebSpeech(clean));
-      }
+      audio.play().catch(() => {});
     }
 
     function speakWithWebSpeech(clean) {
@@ -4043,6 +4265,7 @@
 
       openLessonOverlay();
       renderCurrentLessonStep();
+      if (typeof updateGeminiContextUI === 'function') updateGeminiContextUI();
     }
 
     function startWeakSpotsSession() {
@@ -4077,6 +4300,7 @@
 
       openLessonOverlay();
       renderCurrentLessonStep();
+      if (typeof updateGeminiContextUI === 'function') updateGeminiContextUI();
     }
 
     // Cumulative Spiral Retrieval: Fetch past learned phrases to interleave into future lessons
@@ -4378,6 +4602,7 @@
       updateTrackUI();
       renderSkillTree();
       renderBank();
+      if (typeof updateGeminiContextUI === 'function') updateGeminiContextUI();
     }
 
 
@@ -4423,6 +4648,7 @@
       // Check if session finished
       if (activeSession.currentIndex >= activeSession.steps.length) {
         renderSessionComplete();
+        if (typeof updateGeminiContextUI === 'function') updateGeminiContextUI();
         return;
       }
 
@@ -4435,6 +4661,7 @@
       const pct = Math.round(((activeSession.currentIndex) / activeSession.steps.length) * 100);
       document.getElementById('lesson-progress-bar').style.width = `${Math.max(8, pct)}%`;
       document.getElementById('lesson-step-counter').textContent = `${activeSession.currentIndex + 1} / ${activeSession.steps.length}`;
+      if (typeof updateGeminiContextUI === 'function') updateGeminiContextUI();
 
       // Update Navigation Arrows & Back Button States
       const prevArrow = document.getElementById('lesson-prev-arrow');
@@ -5410,6 +5637,7 @@
         pathBtn.className = 'px-3.5 py-1.5 rounded-full text-xs font-medium text-slate-400 hover:text-slate-200 transition-all cursor-pointer';
         renderBank();
       }
+      if (typeof updateGeminiContextUI === 'function') updateGeminiContextUI();
     }
 
     let toastTimer = null;
