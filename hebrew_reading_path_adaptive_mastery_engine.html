@@ -266,6 +266,44 @@
       </div>
 
     </div>
+
+    <!-- Always-Visible Dynamic Course Level Control Bar (Path & Bank Views) -->
+    <div class="border-t border-[#191c26] bg-[#0b0d12]/95">
+      <div class="max-w-6xl mx-auto px-2.5 sm:px-6 py-1.5 flex flex-wrap items-center justify-between gap-2">
+        <div class="flex items-center gap-1.5 sm:gap-2 flex-wrap">
+          <span class="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1">
+            <span>🎚️</span>
+            <span class="hidden xs:inline">Course</span><span>Level:</span>
+          </span>
+
+          <div class="inline-flex items-center bg-[#14161f] p-0.5 rounded-xl border border-[#25293a] gap-0.5">
+            <button type="button" onclick="stepCourseLevel(-1)" class="w-6 h-6 rounded-lg bg-[#1b1f2c] hover:bg-[#282e42] text-slate-300 hover:text-white text-xs font-extrabold flex items-center justify-center cursor-pointer active:scale-95 transition-all" title="Lower Course Level (Same Theme, Simpler Sentences)">−</button>
+            <button type="button" id="global-lvl-btn-1" onclick="setCourseLevel(1, true)" class="px-2 py-1 rounded-lg text-[11px] font-bold transition-all cursor-pointer flex items-center gap-1 text-slate-400 hover:text-white" title="Level 1: Core Survival Chunks • Slower Audio (0.80x) • Easier Questions">
+              <span>🌱</span><span>Lv.1</span>
+            </button>
+            <button type="button" id="global-lvl-btn-2" onclick="setCourseLevel(2, true)" class="px-2 py-1 rounded-lg text-[11px] font-bold transition-all cursor-pointer flex items-center gap-1 bg-amber-400 text-[#0e0f12] shadow-xs" title="Level 2: Everyday Polite Street Sentences • Native Speed (1.0x)">
+              <span>⚡</span><span>Lv.2</span>
+            </button>
+            <button type="button" id="global-lvl-btn-3" onclick="setCourseLevel(3, true)" class="px-2 py-1 rounded-lg text-[11px] font-bold transition-all cursor-pointer flex items-center gap-1 text-slate-400 hover:text-white" title="Level 3: Longer Sentences + Israeli Street Slang + Bonus Theme Words + Harder Convo Questions">
+              <span>🔥</span><span>Lv.3</span>
+            </button>
+            <button type="button" id="global-lvl-btn-overdrive" onclick="toggleOverdriveLevel(true)" class="px-2 py-1 rounded-lg text-[11px] font-bold transition-all cursor-pointer flex items-center gap-1 text-slate-400 hover:text-white" title="Lv.3+ Overdrive: Rapid Native Flow (1.18x) + Multi-Clause Slang + 5-Exchange Convo">
+              <span>🚀</span><span class="hidden sm:inline">Overdrive</span><span class="sm:hidden">3+</span>
+            </button>
+            <button type="button" onclick="stepCourseLevel(1)" class="w-6 h-6 rounded-lg bg-[#1b1f2c] hover:bg-[#282e42] text-slate-300 hover:text-white text-xs font-extrabold flex items-center justify-center cursor-pointer active:scale-95 transition-all" title="Raise Course Level (More Slang, Longer Sentences, Harder Questions)">+</button>
+          </div>
+
+          <button type="button" id="global-auto-lvl-btn" onclick="toggleAutoLevel()" class="px-2.5 py-1 rounded-xl border text-[11px] font-bold transition-all cursor-pointer flex items-center gap-1 bg-emerald-500/15 border-emerald-500/40 text-emerald-300" title="Auto-Adapt: Automatically raises level on fast streaks or lowers on misses while keeping the same lesson theme">
+            <span>🔄</span>
+            <span>Auto: ON</span>
+          </button>
+        </div>
+
+        <div id="global-level-desc-badge" class="text-[11px] text-slate-400 font-medium truncate max-w-full sm:max-w-md">
+          ⚡ Lv.2 Everyday Street • Full sentences, 1.0x audio &amp; balanced 6-line convo
+        </div>
+      </div>
+    </div>
   </header>
 
   <!-- ===================================================================== -->
@@ -364,10 +402,47 @@
         <div class="text-xs font-semibold text-emerald-400 bg-emerald-500/10 border border-emerald-500/25 px-2 sm:px-2.5 py-1 rounded-full">
           <span id="lesson-step-counter">1 / 8</span>
         </div>
+        <button id="lesson-jump-convo-btn" onclick="jumpToLessonConversation()" class="px-2.5 py-1 rounded-full bg-amber-500/15 hover:bg-amber-500/30 border border-amber-400/40 text-xs font-semibold text-amber-300 hover:text-white transition-all flex items-center gap-1 cursor-pointer shadow-sm" title="Jump straight to this lesson's 2-Person Quick Conversation & Comprehension module">
+          <span>🎧</span>
+          <span class="hidden sm:inline">2-Person Convo</span>
+        </button>
         <button id="lesson-gemini-btn" onclick="toggleGeminiChat()" class="px-2.5 py-1 rounded-full bg-gradient-to-r from-sky-500/20 to-purple-500/20 hover:from-sky-500/30 hover:to-purple-500/30 border border-sky-400/40 text-xs font-semibold text-sky-300 hover:text-white transition-all flex items-center gap-1.5 cursor-pointer shadow-sm" title="Ask Gemini about this card (Ctrl+Space)">
           <span class="text-xs">✨</span>
           <span class="hidden sm:inline">Ask Gemini</span>
         </button>
+      </div>
+    </div>
+
+    <!-- Live In-Lesson Dynamic Level Control Strip (Raise/Lower Anytime Without Leaving Theme!) -->
+    <div class="max-w-2xl w-full mx-auto px-3 sm:px-4 pb-1.5">
+      <div class="bg-[#13151e] border border-[#232736] rounded-2xl px-2.5 py-1.5 flex flex-wrap items-center justify-between gap-2 shadow-sm">
+        <div class="flex items-center gap-1.5 flex-wrap">
+          <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1">
+            <span>🎚️</span><span>Level:</span>
+          </span>
+          <div class="inline-flex items-center bg-[#0d0f15] p-0.5 rounded-xl border border-[#222636] gap-0.5">
+            <button type="button" onclick="stepCourseLevel(-1)" class="w-6 h-6 rounded-lg bg-[#181c28] hover:bg-[#252b3d] text-slate-300 hover:text-white text-xs font-extrabold flex items-center justify-center cursor-pointer active:scale-95" title="Lower Level (Simpler sentences & easier questions, same theme)">−</button>
+            <button type="button" id="lesson-lvl-btn-1" onclick="setCourseLevel(1, true)" class="px-2 py-0.5 rounded-lg text-[11px] font-bold transition-all cursor-pointer flex items-center gap-1 text-slate-400 hover:text-white">
+              <span>🌱</span><span>Lv.1</span>
+            </button>
+            <button type="button" id="lesson-lvl-btn-2" onclick="setCourseLevel(2, true)" class="px-2 py-0.5 rounded-lg text-[11px] font-bold transition-all cursor-pointer flex items-center gap-1 bg-amber-400 text-[#0e0f12]">
+              <span>⚡</span><span>Lv.2</span>
+            </button>
+            <button type="button" id="lesson-lvl-btn-3" onclick="setCourseLevel(3, true)" class="px-2 py-0.5 rounded-lg text-[11px] font-bold transition-all cursor-pointer flex items-center gap-1 text-slate-400 hover:text-white">
+              <span>🔥</span><span>Lv.3</span>
+            </button>
+            <button type="button" id="lesson-lvl-btn-overdrive" onclick="toggleOverdriveLevel(true)" class="px-2 py-0.5 rounded-lg text-[11px] font-bold transition-all cursor-pointer flex items-center gap-1 text-slate-400 hover:text-white" title="Lv.3+ Overdrive: Maximum Street Speed, Multi-Clause Slang & 5-Turn Convo">
+              <span>🚀</span><span>3+</span>
+            </button>
+            <button type="button" onclick="stepCourseLevel(1)" class="w-6 h-6 rounded-lg bg-[#181c28] hover:bg-[#252b3d] text-slate-300 hover:text-white text-xs font-extrabold flex items-center justify-center cursor-pointer active:scale-95" title="Raise Level (Longer sentences, more street slang, bonus words & harder questions)">+</button>
+          </div>
+          <button type="button" id="lesson-auto-lvl-btn" onclick="toggleAutoLevel()" class="px-2 py-0.5 rounded-lg border text-[10px] font-bold transition-all cursor-pointer flex items-center gap-1 bg-emerald-500/15 border-emerald-500/40 text-emerald-300" title="Toggle Auto-Adapt on streaks/misses">
+            <span>🔄</span><span>Auto: ON</span>
+          </button>
+        </div>
+        <span id="lesson-level-status-pill" class="text-[10px] sm:text-[11px] text-amber-300/90 font-semibold truncate">
+          ⚡ Lv.2 • Everyday Polite Street
+        </span>
       </div>
     </div>
 
@@ -6016,6 +6091,12 @@
       streak: 1,
       lastActiveDate: '',
       pace: 'standard', // 'chill' | 'standard' | 'intensive'
+      courseLevel: 2, // 1 | 2 | 3
+      levelOverdrive: false, // true when Lv.3+ Overdrive is active
+      autoLevel: true, // Dynamic auto-shift on fast streaks / misses
+      levelStreak: 0,
+      levelStruggle: 0,
+      convoDifficulty: 'standard', // 'easier' | 'standard' | 'harder' | 'overdrive'
       audioSpeed: 1.0,
       completedNodes: [],
       itemStats: {}, // { [id]: { exposures, correct, wrong, avgMs, masteryScore, status } }
@@ -6033,6 +6114,11 @@
             currentTrack: parsed.currentTrack || 'reading',
             streak: parsed.streak || 1,
             lastActiveDate: parsed.lastActiveDate || '',
+            courseLevel: [1, 2, 3].includes(Number(parsed.courseLevel)) ? Number(parsed.courseLevel) : (parsed.pace === 'chill' ? 1 : parsed.pace === 'intensive' ? 3 : 2),
+            levelOverdrive: !!parsed.levelOverdrive,
+            autoLevel: parsed.autoLevel !== undefined ? !!parsed.autoLevel : true,
+            levelStreak: Number(parsed.levelStreak) || 0,
+            levelStruggle: Number(parsed.levelStruggle) || 0,
             itemStats: parsed.itemStats || {},
             completedNodes: parsed.completedNodes || [],
             customWords: parsed.customWords || []
@@ -6350,14 +6436,21 @@
         } else if (e.key === 'Escape') {
           exitLesson();
         } else if (e.key === 'Enter') {
-          if (activeSession && activeSession.stepAnswered) {
-            handleLessonNext();
+          if (activeSession) {
+            const curStep = activeSession.steps?.[activeSession.currentIndex];
+            if (curStep && curStep.type === 'live_conversation' && curStep.turnAnswered && !curStep.allTurnsCompleted) {
+              advanceLiveConvoTurn();
+            } else if (activeSession.stepAnswered) {
+              handleLessonNext();
+            }
           }
         } else if (e.code === 'Space' && e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA') {
           e.preventDefault();
           if (activeSession && activeSession.currentIndex < activeSession.steps.length) {
             const step = activeSession.steps[activeSession.currentIndex];
-            if (step.type === 'street_listen_spotlight' && step.item) {
+            if (step.type === 'live_conversation') {
+              replayCurrentConvoPartnerAudio();
+            } else if (step.type === 'street_listen_spotlight' && step.item) {
               playStreetItemAudio(step.item.id, 'main');
             } else if (step.type === 'street_listening_drill' && step.target) {
               playStreetItemAudio(step.target.id, 'drill_prompt');
@@ -6471,6 +6564,9 @@
         st.status = 'new';
       }
 
+      // Dynamic Auto-Leveling based on streaks & hesitations/errors
+      checkDynamicAutoLevel(isCorrect, responseTimeMs);
+
       saveState();
     }
 
@@ -6535,7 +6631,7 @@
       }
     }
 
-    function playHebrewAudio(text, btnEl = null) {
+    function playHebrewAudio(text, btnEl = null, customRate = null) {
       let clean = (text || '').replace(/\.\.\./g, '').trim();
       if (!clean) return;
 
@@ -6555,36 +6651,38 @@
       clean = clean.replace(/^[\s!?,.:;]+/g, '').replace(/[\s!?,.:;]+$/g, '').trim();
       if (!clean) return;
 
+      const targetRate = customRate !== null ? customRate : (appState.audioSpeed || 1.0);
+
       // 1. PRIMARY: High-Fidelity Google Translate Neural Hebrew Stream
       // Matches 100% with translate.google.com neural pronunciation (correct Israeli stress, p vs f, toda vs teoda)
       const url = `https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&tl=iw&q=${encodeURIComponent(clean)}`;
       const audio = new Audio();
       audio.referrerPolicy = 'no-referrer';
       audio.src = url;
-      audio.playbackRate = appState.audioSpeed || 1.0;
+      audio.playbackRate = targetRate;
       currentAudio = audio;
 
       audio.onerror = () => {
         // Fallback to local Web Speech ONLY if offline or network error
-        speakWithWebSpeech(clean);
+        speakWithWebSpeech(clean, targetRate);
       };
 
       const p = audio.play();
       if (p !== undefined) {
         p.catch(() => {
           // Fallback if browser blocks autoplay
-          speakWithWebSpeech(clean);
+          speakWithWebSpeech(clean, targetRate);
         });
       }
     }
 
-    function speakWithWebSpeech(clean) {
+    function speakWithWebSpeech(clean, customRate = null) {
       if ('speechSynthesis' in window) {
         const utter = new SpeechSynthesisUtterance(clean);
         if (hebrewVoice) utter.voice = hebrewVoice;
         else if (thaiVoice) utter.voice = thaiVoice;
         utter.lang = 'he-IL';
-        utter.rate = appState.audioSpeed || 1.0;
+        utter.rate = customRate !== null ? customRate : (appState.audioSpeed || 1.0);
         window.speechSynthesis.speak(utter);
       }
     }
@@ -6619,21 +6717,403 @@
     }
 
     // =========================================================================
-    // 4. PACE / DIFFICULTY CONTROLLER (Chill / Standard / Intensive)
+    // 4. DYNAMIC COURSE LEVEL & PACE ENGINE (Lv.1 | Lv.2 | Lv.3 + Overdrive 🚀)
     // =========================================================================
-    function setPace(mode) {
-      appState.pace = mode;
-      if (mode === 'chill') {
-        appState.audioSpeed = 0.8;
-      } else if (mode === 'standard') {
+    function getEffectiveCourseLevel() {
+      const base = [1, 2, 3].includes(Number(appState.courseLevel)) ? Number(appState.courseLevel) : 2;
+      return base;
+    }
+
+    function syncPaceAndConvoFromCourseLevel() {
+      const lvl = getEffectiveCourseLevel();
+      if (lvl === 1) {
+        appState.pace = 'chill';
+        appState.audioSpeed = 0.80;
+        appState.convoDifficulty = 'easier';
+        appState.levelOverdrive = false;
+      } else if (lvl === 2) {
+        appState.pace = 'standard';
         appState.audioSpeed = 1.0;
-      } else if (mode === 'intensive') {
-        appState.audioSpeed = 1.1;
+        appState.convoDifficulty = 'standard';
+        appState.levelOverdrive = false;
+      } else {
+        appState.pace = 'intensive';
+        if (appState.levelOverdrive) {
+          appState.audioSpeed = 1.15;
+          appState.convoDifficulty = 'overdrive';
+        } else {
+          appState.audioSpeed = 1.08;
+          appState.convoDifficulty = 'harder';
+        }
       }
+    }
+
+    function setCourseLevel(lvl, isManual = true, overdriveOverride = false) {
+      const targetLvl = Math.max(1, Math.min(3, Number(lvl) || 2));
+      appState.courseLevel = targetLvl;
+      appState.levelOverdrive = targetLvl === 3 ? !!overdriveOverride : false;
+      appState.levelStreak = 0;
+      appState.levelStruggle = 0;
+
+      syncPaceAndConvoFromCourseLevel();
       saveState();
       updatePaceUI();
       renderBank();
-      showToast(`Pace set to ${mode.charAt(0).toUpperCase() + mode.slice(1)}`);
+      renderSkillTree();
+
+      if (activeSession) {
+        rebuildRemainingLessonStepsForLevel();
+      }
+
+      if (isManual) {
+        const toastMap = {
+          '1': '🌱 Level 1 Set • Core Survival Chunks, Slower 0.80x Audio & 4-Line Convo',
+          '2': '⚡ Level 2 Set • Everyday Polite Sentences, 1.0x Audio & 6-Line Convo',
+          '3': '🔥 Level 3 Set • Longer Sentences, Israeli Slang, Bonus Theme Words & 8-Line Convo',
+          '3+': '🚀 Lv.3+ Overdrive • Rapid Native Flow (1.15x), Multi-Clause Slang & 10-Line Convo!'
+        };
+        const key = (targetLvl === 3 && appState.levelOverdrive) ? '3+' : String(targetLvl);
+        showToast(toastMap[key] || toastMap['2']);
+      }
+    }
+
+    function toggleOverdriveLevel(isManual = true) {
+      if (appState.courseLevel === 3 && appState.levelOverdrive) {
+        setCourseLevel(3, isManual, false);
+      } else {
+        setCourseLevel(3, isManual, true);
+      }
+    }
+
+    function stepCourseLevel(delta) {
+      const cur = getEffectiveCourseLevel();
+      const isOverdrive = !!appState.levelOverdrive;
+      if (delta > 0) {
+        if (cur < 3) {
+          setCourseLevel(cur + 1, true, false);
+        } else if (cur === 3 && !isOverdrive) {
+          setCourseLevel(3, true, true);
+        } else {
+          showToast('🚀 Already at Maximum Level (Lv.3+ Overdrive)!');
+        }
+      } else if (delta < 0) {
+        if (cur === 3 && isOverdrive) {
+          setCourseLevel(3, true, false);
+        } else if (cur > 1) {
+          setCourseLevel(cur - 1, true, false);
+        } else {
+          showToast('🌱 Already at Level 1 (Core Survival Mode)');
+        }
+      }
+    }
+
+    function toggleAutoLevel() {
+      appState.autoLevel = !appState.autoLevel;
+      appState.levelStreak = 0;
+      appState.levelStruggle = 0;
+      saveState();
+      updatePaceUI();
+      showToast(appState.autoLevel
+        ? '🔄 Auto-Adapt Level ON • Raises on fast streaks, lowers on misses (same theme!)'
+        : '🔒 Auto-Adapt Level OFF • Level locked to your manual choice');
+    }
+
+    function checkDynamicAutoLevel(isCorrect, responseTimeMs) {
+      if (!appState.autoLevel) return;
+      const cur = getEffectiveCourseLevel();
+      const isOverdrive = !!appState.levelOverdrive;
+
+      if (isCorrect && responseTimeMs < 6500) {
+        appState.levelStreak = (appState.levelStreak || 0) + 1;
+        appState.levelStruggle = 0;
+
+        // Auto-raise thresholds: 3 fast correct in a row for Lv.1->Lv.2 or Lv.2->Lv.3; 4 fast correct for Lv.3->Lv.3+ Overdrive
+        if (cur < 3 && appState.levelStreak >= 3) {
+          const nextLvl = cur + 1;
+          appState.levelStreak = 0;
+          setCourseLevel(nextLvl, false, false);
+          showToast(`🚀 Auto-Level Up → Lv.${nextLvl}! Same theme, longer sentences & richer street talk!`);
+        } else if (cur === 3 && !isOverdrive && appState.levelStreak >= 4) {
+          appState.levelStreak = 0;
+          setCourseLevel(3, false, true);
+          showToast('🚀 Auto-Adapt Overdrive Activated (Lv.3+)! Maximum street slang & 5-turn convo unlocked!');
+        }
+      } else if (!isCorrect) {
+        appState.levelStruggle = (appState.levelStruggle || 0) + 1;
+        appState.levelStreak = 0;
+
+        // Auto-lower after 2 consecutive misses
+        if (appState.levelStruggle >= 2) {
+          appState.levelStruggle = 0;
+          if (cur === 3 && isOverdrive) {
+            setCourseLevel(3, false, false);
+            showToast('🌱 Auto-Adapted → Lv.3 (Stepped down from Overdrive to consolidate this theme)');
+          } else if (cur > 1) {
+            const prevLvl = cur - 1;
+            setCourseLevel(prevLvl, false, false);
+            showToast(`🌱 Auto-Adapted → Lv.${prevLvl} • Shorter sentences & clearer audio for this theme`);
+          }
+        }
+      } else {
+        // Correct but slow hesitation (> 6.5s) resets fast streak without penalizing struggle
+        appState.levelStreak = 0;
+      }
+    }
+
+    function rebuildRemainingLessonStepsForLevel() {
+      if (!activeSession || !activeSession.steps) return;
+      const curIdx = activeSession.currentIndex || 0;
+      const curStep = activeSession.steps[curIdx];
+      if (!curStep) return;
+
+      const allCurricula = [...STREET_CURRICULUM, ...UNITS_CURRICULUM];
+      const node = activeSession.nodeId
+        ? allCurricula.flatMap(u => u.nodes).find(n => n.id === activeSession.nodeId)
+        : null;
+
+      // If currently inside the 2-Person Live Conversation step, rebuild it in-place for the new level!
+      if (curStep.type === 'live_conversation') {
+        stopFullConversationPlayback();
+        const targetNode = node || allCurricula.flatMap(u => u.nodes).find(n => n.id === curStep.nodeId) || allCurricula[0].nodes[0];
+        activeSession.steps[curIdx] = createLiveConversationStep(targetNode, appState.convoDifficulty, curStep.remixSeed || 0);
+        renderCurrentLessonStep();
+        return;
+      }
+
+      // Update any upcoming (and current if unanswered) steps to reflect the new Course Level
+      const pastLearned = node ? getPastLearnedStreetItems(node) : [];
+      for (let i = curIdx; i < activeSession.steps.length; i++) {
+        const s = activeSession.steps[i];
+        if (i === curIdx && activeSession.stepAnswered) continue;
+
+        if (s.type === 'street_listening_drill' && s.target) {
+          const updatedDrill = createStreetListeningDrillStep(s.target, pastLearned);
+          updatedDrill.isSpiralReview = s.isSpiralReview;
+          updatedDrill.reviewBadge = s.reviewBadge;
+          activeSession.steps[i] = updatedDrill;
+        } else if (s.type === 'live_conversation') {
+          const targetNode = node || allCurricula.flatMap(u => u.nodes).find(n => n.id === s.nodeId) || allCurricula[0].nodes[0];
+          activeSession.steps[i] = createLiveConversationStep(targetNode, appState.convoDifficulty, s.remixSeed || 0);
+        }
+      }
+
+      // If user raised to Lv.3 or Overdrive mid-lesson, ensure bonus theme word & drill are present before the finale!
+      if (node && (node.type === 'street' || node.itemIds) && getEffectiveCourseLevel() >= 3) {
+        const bonusItems = getBonusThemeItemsForNode(node);
+        bonusItems.forEach(bItem => {
+          const alreadyHas = activeSession.steps.some(st => st.itemId === bItem.id);
+          if (!alreadyHas) {
+            const convoIdx = activeSession.steps.findIndex(st => st.type === 'live_conversation');
+            const insertAt = convoIdx >= 0 ? convoIdx : activeSession.steps.length;
+            const bonusSpotlight = {
+              type: 'street_listen_spotlight',
+              itemId: bItem.id,
+              item: bItem,
+              isBonusThemeWord: true
+            };
+            const bonusDrill = createStreetListeningDrillStep(bItem, pastLearned);
+            bonusDrill.isBonusThemeWord = true;
+            activeSession.steps.splice(insertAt, 0, bonusSpotlight, bonusDrill);
+          }
+        });
+      }
+
+      if (!activeSession.stepAnswered) {
+        renderCurrentLessonStep();
+      } else {
+        const counterEl = document.getElementById('lesson-step-counter');
+        if (counterEl) counterEl.textContent = `${activeSession.currentIndex + 1} / ${activeSession.steps.length}`;
+      }
+    }
+
+    // Fetch 1-2 extra vocabulary/phrases from sibling lessons in the SAME Unit/Theme when at Lv.3 / Overdrive
+    function getBonusThemeItemsForNode(node) {
+      const lvl = getEffectiveCourseLevel();
+      if (lvl < 3) return [];
+      const countNeeded = appState.levelOverdrive ? 2 : 1;
+
+      if (node.type === 'street' || node.itemIds) {
+        const currentIds = new Set(node.itemIds || []);
+        const unit = STREET_CURRICULUM.find(u => u.nodes.some(n => n.id === node.id));
+        const unitItemIds = unit ? unit.nodes.flatMap(n => n.itemIds || []) : [];
+        let candidates = unitItemIds
+          .filter(id => !currentIds.has(id))
+          .map(id => STREET_DB.find(s => s.id === id))
+          .filter(Boolean);
+        if (candidates.length < countNeeded) {
+          const extra = STREET_DB.filter(s => !currentIds.has(s.id) && !candidates.some(c => c.id === s.id));
+          candidates = [...candidates, ...extra];
+        }
+        return candidates.slice(0, countNeeded);
+      }
+      return [];
+    }
+
+    // Theme-Matched Hebrew Street Expansion Generator: Longer Real-Life Sentences + Israeli Street Slang + Bonus Theme Vocab
+    function getHebrewLevelExpansion(item) {
+      if (!item) return null;
+      const theme = (item.theme || item.category || '').toLowerCase();
+      const baseHebrew = (item.hebrew || item.tts || '').trim();
+      const baseSpoken = (item.spoken || item.roman || '').trim();
+      const baseMeaning = (item.meaning || '').replace(/\.$/, '').trim();
+
+      let longerHebrew = '';
+      let longerSpoken = '';
+      let longerMeaning = '';
+      let slangChips = [];
+      let drillTwist = '';
+      let drillCompoundSuffix = { spoken: 'be-vakasha, toda raba', he: 'בְּבַקָּשָׁה, תּוֹדָה רַבָּה', meaning: '(natural polite Israeli flow)' };
+
+      if (theme.includes('cafe') || theme.includes('coffee') || theme.includes('drink') || theme.includes('קפה') || theme.includes('מאפה')) {
+        longerHebrew = `סְלִיחָה, אֶפְשָׁר ${baseHebrew} הָפוּךְ חָזָק עִם חֲלָב שׁוּמְשׁוּם וּלְקַחַת בְּבַקָּשָׁה?`;
+        longerSpoken = `slicha, efshar ${baseSpoken} hafuch chazak im chalav shumshum u'lakachat be-vakasha?`;
+        longerMeaning = `Excuse me, could I get ${baseMeaning.toLowerCase()} — strong cappuccino with oat milk to-go please?`;
+        slangChips = [
+          { he: 'הָפוּךְ חָזָק', ro: 'hafuch chazak', en: 'Strong cappuccino (everyday Israeli cafe staple)' },
+          { he: 'לָקַחַת', ro: 'lakachat', en: 'To-go / takeaway' }
+        ];
+        drillTwist = '🔥 Lv.3 Cafe Twist: Morning rush at Aroma — place a natural multi-part order with milk type & takeaway cue!';
+        drillCompoundSuffix = { spoken: 'u-lakachat be-vakasha', he: 'וּלְקַחַת בְּבַקָּשָׁה', meaning: '+ to-go please' };
+      } else if (theme.includes('food') || theme.includes('falafel') || theme.includes('shawarma') || theme.includes('restaurant') || theme.includes('אוכל')) {
+        longerHebrew = `אָחִי, תַּעֲשֶׂה לִי ${baseHebrew} כָּל הַסָּלָטִים, הַרְבֵּה טְחִינָה וּקְצָת חָרִיף בַּצַּד`;
+        longerSpoken = `achi, ta'ase li ${baseSpoken} kol ha-salatim, harbe tchina u-ktzat charif ba-tzad`;
+        longerMeaning = `My friend, make me ${baseMeaning.toLowerCase()} with all the salads, lots of tahini and spicy sauce on the side!`;
+        slangChips = [
+          { he: 'אָחִי', ro: 'achi', en: 'My brother / friend (warm Israeli street address)' },
+          { he: 'כָּל הַסָּלָטִים', ro: 'kol ha-salatim', en: 'All the salads (falafel counter staple)' }
+        ];
+        drillTwist = '🔥 Lv.3 Street Food Twist: The counter is buzzing — call the vendor smoothly and customize toppings!';
+        drillCompoundSuffix = { spoken: 'kol ha-salatim ve-tchina', he: 'כָּל הַסָּלָטִים וּטְחִינָה', meaning: '+ all salads & tahini' };
+      } else if (theme.includes('taxi') || theme.includes('bus') || theme.includes('transport') || theme.includes('מונית') || theme.includes('תחבורה')) {
+        longerHebrew = `נַהָג, ${baseHebrew} עִם מוֹנֶה בְּבַקָּשָׁה וְתַעֲצוֹר לִי בַּפִּנָּה מֵאַחֲרֵי הָרַמְזוֹר`;
+        longerSpoken = `nahag, ${baseSpoken} im mone be-vakasha ve-ta'atzor li ba-pina me-acharey ha-ramzor`;
+        longerMeaning = `Driver, ${baseMeaning.toLowerCase()} — with the meter on please, and drop me off at the corner after the light!`;
+        slangChips = [
+          { he: 'תַּפְעִיל מוֹנֶה', ro: 'taf\'il mone', en: 'Turn on the meter (essential Israeli taxi rule)' },
+          { he: 'בַּפִּנָּה', ro: 'ba-pina', en: 'At the corner (driver shortcut drop-off)' }
+        ];
+        drillTwist = '🔥 Lv.3 Taxi Twist: Fast-paced traffic — ask to run the meter and specify the exact corner drop-off!';
+        drillCompoundSuffix = { spoken: 'im mone be-vakasha', he: 'עִם מוֹנֶה בְּבַקָּשָׁה', meaning: '+ on the meter please' };
+      } else if (theme.includes('market') || theme.includes('shuk') || theme.includes('price') || theme.includes('שוק') || theme.includes('קניות')) {
+        longerHebrew = `סְלִיחָה, ${baseHebrew} — אֶפְשָׁר הֲנָחָה קְטַנָּה אִם אֲנִי לוֹקֵחַ שְׁנַיִם וּמְשַׁלֵּם בְּבִיט?`;
+        longerSpoken = `slicha, ${baseSpoken} — efshar hanacha ktana im ani loke'ach shnayim u-meshalem be-Bit?`;
+        longerMeaning = `Excuse me, ${baseMeaning.toLowerCase()} — can you do a small discount if I take two and pay via Bit?`;
+        slangChips = [
+          { he: 'בְּבִיט', ro: 'be-Bit', en: 'Pay via Bit app (universal Israeli mobile payment)' },
+          { he: 'כַּמָּה יַחַד?', ro: 'kama yachad?', en: 'How much for both combined?' }
+        ];
+        drillTwist = '🔥 Lv.3 Shuk Twist: Shuk Carmel bargaining — negotiate a friendly bundle deal and confirm payment!';
+        drillCompoundSuffix = { spoken: 'efshar be-Bit?', he: 'אֶפְשָׁר בְּבִיט?', meaning: '+ can I pay via Bit?' };
+      } else {
+        longerHebrew = `תוֹדָה רַבָּה לְךָ אָחִי, ${baseHebrew} — אֵין עָלֶיךָ וְשֶׁיִּהְיֶה לְךָ יוֹם מְצוּיָּן!`;
+        longerSpoken = `toda raba lecha achi, ${baseSpoken} — ein alecha ve-sheyihye lecha yom metzuyan!`;
+        longerMeaning = `Thank you so much my friend, ${baseMeaning.toLowerCase()} — you are the best, have a great day!`;
+        slangChips = [
+          { he: 'אֵין עָלֶיךָ', ro: 'ein alecha', en: 'You are the best! (warmest Israeli street slang)' },
+          { he: 'הַכֹּל טוֹב', ro: 'hakol tov', en: 'All good / no worries' }
+        ];
+        drillTwist = '🔥 Lv.3 Everyday Flow: Respond with authentic Israeli rhythm and warm street particles!';
+      }
+
+      if (appState.levelOverdrive) {
+        slangChips.push({
+          he: 'יַאלְלָה בַּלָאגָן',
+          ro: 'yalla balagan',
+          en: "Let's roll! / Total energy! (classic Israeli street energy)"
+        });
+      }
+
+      // Extract 1-2 word core survival chunk for Level 1 focus
+      const coreWord = (item.words && item.words.length > 0)
+        ? item.words[0]
+        : { he: baseHebrew, ro: baseSpoken, en: baseMeaning };
+
+      return {
+        coreWord,
+        longerHebrew,
+        longerSpoken,
+        longerMeaning,
+        slangChips,
+        drillTwist,
+        drillCompoundSuffix
+      };
+    }
+
+    function setPace(mode) {
+      if (mode === 'chill') {
+        setCourseLevel(1, true, false);
+      } else if (mode === 'standard') {
+        setCourseLevel(2, true, false);
+      } else if (mode === 'intensive') {
+        setCourseLevel(3, true, false);
+      }
+    }
+
+    function updateCourseLevelUI() {
+      const lvl = getEffectiveCourseLevel();
+      const isOverdrive = (lvl === 3 && !!appState.levelOverdrive);
+      const isAuto = !!appState.autoLevel;
+
+      // Update Global Header & Lesson Overlay Level Buttons
+      [1, 2, 3].forEach(n => {
+        const gBtn = document.getElementById(`global-lvl-btn-${n}`);
+        const lBtn = document.getElementById(`lesson-lvl-btn-${n}`);
+        const active = (lvl === n && !(n === 3 && isOverdrive));
+        const activeClass = n === 1
+          ? 'bg-emerald-400 text-[#0e0f12] shadow-xs'
+          : n === 2
+          ? 'bg-amber-400 text-[#0e0f12] shadow-xs'
+          : 'bg-rose-500 text-white shadow-xs';
+        const inactiveClass = 'text-slate-400 hover:text-white';
+
+        if (gBtn) gBtn.className = `px-2 py-1 rounded-lg text-[11px] font-bold transition-all cursor-pointer flex items-center gap-1 ${active ? activeClass : inactiveClass}`;
+        if (lBtn) lBtn.className = `px-2 py-0.5 rounded-lg text-[11px] font-bold transition-all cursor-pointer flex items-center gap-1 ${active ? activeClass : inactiveClass}`;
+      });
+
+      const gOver = document.getElementById('global-lvl-btn-overdrive');
+      const lOver = document.getElementById('lesson-lvl-btn-overdrive');
+      const overActiveClass = 'bg-gradient-to-r from-fuchsia-500 to-amber-400 text-[#0e0f12] shadow-sm';
+      const overInactiveClass = 'text-slate-400 hover:text-white';
+      if (gOver) gOver.className = `px-2 py-1 rounded-lg text-[11px] font-bold transition-all cursor-pointer flex items-center gap-1 ${isOverdrive ? overActiveClass : overInactiveClass}`;
+      if (lOver) lOver.className = `px-2 py-0.5 rounded-lg text-[11px] font-bold transition-all cursor-pointer flex items-center gap-1 ${isOverdrive ? overActiveClass : overInactiveClass}`;
+
+      // Auto-Adapt button state
+      const gAuto = document.getElementById('global-auto-lvl-btn');
+      const lAuto = document.getElementById('lesson-auto-lvl-btn');
+      const autoClass = isAuto
+        ? 'bg-emerald-500/15 border-emerald-500/40 text-emerald-300'
+        : 'bg-[#14161f] border-[#262a3a] text-slate-400 hover:text-white';
+      if (gAuto) {
+        gAuto.className = `px-2.5 py-1 rounded-xl border text-[11px] font-bold transition-all cursor-pointer flex items-center gap-1 ${autoClass}`;
+        gAuto.innerHTML = `<span>🔄</span><span>Auto: ${isAuto ? 'ON' : 'OFF'}</span>`;
+      }
+      if (lAuto) {
+        lAuto.className = `px-2 py-0.5 rounded-lg border text-[10px] font-bold transition-all cursor-pointer flex items-center gap-1 ${autoClass}`;
+        lAuto.innerHTML = `<span>🔄</span><span>Auto: ${isAuto ? 'ON' : 'OFF'}</span>`;
+      }
+
+      // Descriptive status pills (same theme, different depth)
+      const gDesc = document.getElementById('global-level-desc-badge');
+      const lDesc = document.getElementById('lesson-level-status-pill');
+      let globalText = '';
+      let lessonText = '';
+
+      if (lvl === 1) {
+        globalText = '🌱 Lv.1 Core Survival • Short 1–2 word chunks, 0.80x audio, hints on & 4-line convo';
+        lessonText = '🌱 Lv.1 • Short Survival Chunks & 0.80x Audio';
+      } else if (lvl === 2) {
+        globalText = '⚡ Lv.2 Everyday Street • Full polite sentences, 1.0x native audio & 6-line convo';
+        lessonText = '⚡ Lv.2 • Full Polite Sentences & 1.0x Audio';
+      } else if (!isOverdrive) {
+        globalText = '🔥 Lv.3 Street Flow • Longer sentences, Israeli slang, +1 bonus theme word & 8-line convo';
+        lessonText = '🔥 Lv.3 • Longer Sentences + Israeli Slang + Harder Qs';
+      } else {
+        globalText = '🚀 Lv.3+ Overdrive • Rapid 1.15x flow, multi-clause slang, +2 bonus words & 10-line convo';
+        lessonText = '🚀 Lv.3+ Overdrive • Max Israeli Slang & 5-Turn Convo';
+      }
+
+      if (gDesc) gDesc.textContent = globalText;
+      if (lDesc) lDesc.textContent = lessonText;
     }
 
     function updatePaceUI() {
@@ -6652,7 +7132,7 @@
         const labels = {
           chill: 'Chill Pace • Hints & Romanization On • 0.8x',
           standard: 'Standard Pace • Balanced Decoding • 1.0x',
-          intensive: 'Intensive Pace • Pure Thai Script (No Romanization) • 1.1x'
+          intensive: 'Intensive Pace • Pure Hebrew Script (No Romanization) • 1.1x'
         };
         badge.textContent = labels[appState.pace] || labels.standard;
       }
@@ -6661,6 +7141,8 @@
       if (lessonSpeedBtn) {
         lessonSpeedBtn.textContent = `${appState.audioSpeed}x`;
       }
+
+      updateCourseLevelUI();
     }
 
     // =========================================================================
@@ -6762,6 +7244,14 @@
                         ${node.title}
                       </div>
                       <p class="text-[10px] text-slate-500 mt-0.5 line-clamp-2 leading-tight">${node.description}</p>
+                      <button
+                        type="button"
+                        onclick="event.stopPropagation(); startNodeConversationOnly('${node.id}')"
+                        class="mt-1.5 inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-[#181b24] hover:bg-amber-400/20 border border-[#2c3244] hover:border-amber-400/50 text-[10px] font-bold text-amber-300 transition-all cursor-pointer active:scale-95 shadow-sm"
+                        title="Launch 2-Person Quick Conversation & Comprehension Module (overhear two locals using New + Old known words)">
+                        <span>🎧</span>
+                        <span>2-Person Convo</span>
+                      </button>
                     </div>
                   </div>
                 `;
@@ -6793,6 +7283,45 @@
       renderCurrentLessonStep();
     }
 
+    function startNodeConversationOnly(nodeId) {
+      const allCurricula = [...UNITS_CURRICULUM, ...STREET_CURRICULUM];
+      const node = allCurricula.flatMap(u => u.nodes).find(n => n.id === nodeId);
+      if (!node) return;
+
+      const convoStep = createLiveConversationStep(node);
+      activeSession = {
+        nodeId: node.id,
+        title: `${node.title} • Live Conversation`,
+        isWeakReview: false,
+        steps: [convoStep],
+        currentIndex: 0,
+        correctCount: 0,
+        stepAnswered: false,
+        stepStartTime: Date.now(),
+        selectedTiles: []
+      };
+
+      openLessonOverlay();
+      renderCurrentLessonStep();
+    }
+
+    function jumpToLessonConversation() {
+      if (!activeSession || !Array.isArray(activeSession.steps)) return;
+      const convoIdx = activeSession.steps.findIndex(s => s.type === 'live_conversation');
+      if (convoIdx !== -1) {
+        activeSession.currentIndex = convoIdx;
+        renderCurrentLessonStep();
+        showToast('Jumped to Live Real-Life Conversation 🗣️');
+      } else {
+        const allCurricula = [...UNITS_CURRICULUM, ...STREET_CURRICULUM];
+        const fallbackNode = allCurricula.flatMap(u => u.nodes).find(n => n.id === activeSession.nodeId) || STREET_CURRICULUM[0].nodes[0];
+        activeSession.steps.push(createLiveConversationStep(fallbackNode));
+        activeSession.currentIndex = activeSession.steps.length - 1;
+        renderCurrentLessonStep();
+        showToast('Launched Live Real-Life Conversation 🗣️');
+      }
+    }
+
     function startWeakSpotsSession() {
       const weak = getWeakItems();
       const pool = weak.length > 0
@@ -6811,11 +7340,15 @@
         }
       });
 
+      const finalSteps = steps.slice(0, 7);
+      const fallbackConvoNode = appState.currentTrack === 'street' ? STREET_CURRICULUM[0].nodes[0] : UNITS_CURRICULUM[0].nodes[2];
+      finalSteps.push(createLiveConversationStep(fallbackConvoNode));
+
       activeSession = {
         nodeId: null,
         title: 'Smart Review: Weak Spots',
         isWeakReview: true,
-        steps: steps.slice(0, 8),
+        steps: finalSteps,
         currentIndex: 0,
         correctCount: 0,
         stepAnswered: false,
@@ -6878,10 +7411,12 @@
 
     function buildStepsForNode(node) {
       const steps = [];
+      const lvl = getEffectiveCourseLevel();
 
       // 1. Street Hebrew Node: PURE HEARING & UNDERSTANDING IN NATURAL COMMUNICATIVE CONTEXT
       if (node.type === 'street' || node.itemIds) {
         const streetItems = (node.itemIds || []).map(id => STREET_DB.find(s => s.id === id)).filter(Boolean);
+        const bonusThemeItems = getBonusThemeItemsForNode(node);
         const pastLearned = getPastLearnedStreetItems(node);
         
         // Phase 1: Progressive Sentence & Dialogue Buildup
@@ -6890,17 +7425,34 @@
           steps.push({
             type: 'street_listen_spotlight',
             itemId: item.id,
-            item
+            item,
+            isBonusThemeWord: false
+          });
+        });
+
+        // At Level 3 / Overdrive: Add 1-2 Bonus Theme Words from the SAME Scenario/Unit!
+        bonusThemeItems.forEach(bItem => {
+          steps.push({
+            type: 'street_listen_spotlight',
+            itemId: bItem.id,
+            item: bItem,
+            isBonusThemeWord: true
           });
         });
 
         // Phase 2: Spaced Situational & Communicative Challenges with Cumulative Spiral Review
-        // Generate drills for current node items, blending past learned phrases into distractors
-        const currentDrills = streetItems.map(item => createStreetListeningDrillStep(item, pastLearned));
+        // Generate drills for current node items (+ bonus theme items at Lv.3), blending past learned phrases into distractors
+        const allLessonItems = [...streetItems, ...bonusThemeItems];
+        const currentDrills = allLessonItems.map((item, idx) => {
+          const d = createStreetListeningDrillStep(item, pastLearned);
+          if (idx >= streetItems.length) d.isBonusThemeWord = true;
+          return d;
+        });
 
-        // Interleave 1-2 Spiral Review challenges from past learned phrases
+        // Interleave 1-3 Spiral Review challenges from past learned phrases (scaled by Course Level)
         if (pastLearned.length > 0) {
-          const reviewCount = Math.min(2, pastLearned.length);
+          const maxReviews = lvl === 1 ? 1 : (lvl === 3 ? 3 : 2);
+          const reviewCount = Math.min(maxReviews, pastLearned.length);
           const reviewItems = pastLearned.slice(0, reviewCount);
           const reviewDrills = reviewItems.map(pItem => {
             const rDrill = createStreetListeningDrillStep(pItem, pastLearned);
@@ -6914,7 +7466,7 @@
           let rIdx = 0;
           currentDrills.forEach((cDrill, cIdx) => {
             interleaved.push(cDrill);
-            if ((cIdx === 1 || cIdx === 3) && rIdx < reviewDrills.length) {
+            if ((cIdx === 1 || cIdx === 3 || cIdx === 4) && rIdx < reviewDrills.length) {
               interleaved.push(reviewDrills[rIdx++]);
             }
           });
@@ -6927,10 +7479,21 @@
           currentDrills.forEach(d => steps.push(d));
         }
 
+        // Phase 3: Adaptive Live Real-Life Conversation Finale (New + Old Known Words Woven Together)
+        steps.push(createLiveConversationStep(node));
+
         return steps;
       }
       const letters = node.letterIds.map(id => LETTERS_DB.find(l => l.id === id)).filter(Boolean);
-      const words = node.wordIds.map(id => getAllWords().find(w => w.id === id)).filter(Boolean);
+      let words = node.wordIds.map(id => getAllWords().find(w => w.id === id)).filter(Boolean);
+
+      // At Level 3 / Overdrive on Word Nodes: Add 1 bonus word from the same Unit/Theme
+      if (node.type === 'words' && lvl >= 3) {
+        const unitObj = UNITS_CURRICULUM.find(u => u.nodes.some(n => n.id === node.id));
+        const siblingWordIds = unitObj ? unitObj.nodes.flatMap(n => n.wordIds || []).filter(id => !(node.wordIds || []).includes(id)) : [];
+        const bonusWords = siblingWordIds.map(id => getAllWords().find(w => w.id === id)).filter(Boolean).slice(0, appState.levelOverdrive ? 2 : 1);
+        words = [...words, ...bonusWords];
+      }
 
       // 1. Letter-focused node: Spotlight each new letter -> Sound-to-Letter drills
       if (node.type === 'letters') {
@@ -6964,10 +7527,14 @@
       }
 
       // Pace adjustment: Intensive trims spotlight hand-holding, Chill keeps full guidance
+      let finalReadingSteps = steps;
       if (appState.pace === 'intensive' && steps.length > 4) {
-        return steps.filter((s, idx) => s.type !== 'letter_spotlight' || idx === 0);
+        finalReadingSteps = steps.filter((s, idx) => s.type !== 'letter_spotlight' || idx === 0);
       }
-      return steps;
+
+      // Culminate every Reading Path lesson with a Live Real-Life Conversation using unit words + known words
+      finalReadingSteps.push(createLiveConversationStep(node));
+      return finalReadingSteps;
     }
 
 
@@ -7050,12 +7617,25 @@
       return { primary: raw.trim(), secondary: '' };
     }
 
-    // Situational & Communicative Drill generator with Intelligent Distractor Blending
+    // Situational & Communicative Drill generator with Intelligent Distractor Blending + Course Level Scaling
     function createStreetListeningDrillStep(targetItem, pastItems = []) {
+      const lvl = getEffectiveCourseLevel();
+      const isOverdrive = (lvl === 3 && !!appState.levelOverdrive);
+      const distractorCount = lvl === 1 ? 2 : (isOverdrive ? 4 : 3); // 3 options at Lv.1, 4 at Lv.2/Lv.3, 5 at Lv.3+ Overdrive
+      const exp = lvl >= 3 ? getHebrewLevelExpansion(targetItem) : null;
+
       if (targetItem.situationPrompt && targetItem.situationCorrect && targetItem.situationDistractors) {
+        let correctText = targetItem.situationCorrect;
+        if (lvl >= 3 && exp && exp.drillCompoundSuffix) {
+          const parsedBase = parseDrillOption(targetItem.situationCorrect);
+          if (parsedBase.primary && parsedBase.secondary) {
+            correctText = `${parsedBase.primary}, ${exp.drillCompoundSuffix.spoken} (${parsedBase.secondary} ${exp.drillCompoundSuffix.he})`;
+          }
+        }
+
         const correctOpt = {
           id: targetItem.id,
-          text: targetItem.situationCorrect,
+          text: correctText,
           isCorrect: true
         };
         
@@ -7073,6 +7653,25 @@
           }
         }
 
+        // If Overdrive (5 options total = 4 distractors), pull 1 extra close distractor from STREET_DB
+        if (distractorTexts.length < distractorCount && typeof STREET_DB !== 'undefined') {
+          const extraCand = STREET_DB.find(s => s.id !== targetItem.id && !distractorTexts.some(dt => dt.includes(s.spoken || '')));
+          if (extraCand) {
+            distractorTexts.push(extraCand.situationCorrect || `${extraCand.hebrew || ''} (${extraCand.spoken || extraCand.roman})`);
+          }
+        }
+
+        distractorTexts = distractorTexts.slice(0, distractorCount);
+        if (lvl >= 3 && exp && exp.drillCompoundSuffix) {
+          distractorTexts = distractorTexts.map(dt => {
+            const p = parseDrillOption(dt);
+            if (p.primary && p.secondary) {
+              return `${p.primary}, ${exp.drillCompoundSuffix.spoken} (${p.secondary} ${exp.drillCompoundSuffix.he})`;
+            }
+            return dt;
+          });
+        }
+
         const distractorOpts = distractorTexts.map((dText, idx) => ({
           id: `dist_${targetItem.id}_${idx}`,
           text: dText,
@@ -7085,6 +7684,7 @@
           itemId: targetItem.id,
           target: targetItem,
           prompt: targetItem.situationPrompt,
+          levelTwist: lvl >= 3 && exp ? exp.drillTwist : null,
           options
         };
       }
@@ -7094,13 +7694,13 @@
       if (pastItems && pastItems.length > 0) {
         distractorCandidates = pastItems.filter(p => p.id !== targetItem.id && p.meaning !== targetItem.meaning);
       }
-      if (distractorCandidates.length < 3) {
+      if (distractorCandidates.length < distractorCount) {
         const otherDb = STREET_DB.filter(s => s.id !== targetItem.id && s.meaning !== targetItem.meaning && !distractorCandidates.some(d => d.id === s.id));
         distractorCandidates = [...distractorCandidates, ...otherDb];
       }
       const distractors = distractorCandidates
         .sort(() => Math.random() - 0.5)
-        .slice(0, 3)
+        .slice(0, distractorCount)
         .map(s => ({ id: s.id, text: `${s.hebrew || ''} (${s.spoken || s.roman})`, isCorrect: false }));
       const correctOpt = { id: targetItem.id, text: `${targetItem.hebrew || ''} (${targetItem.spoken || targetItem.roman})`, isCorrect: true };
       const options = [correctOpt, ...distractors].sort(() => Math.random() - 0.5);
@@ -7110,15 +7710,18 @@
         itemId: targetItem.id,
         target: targetItem,
         prompt: `Listen carefully: What does the speaker mean?`,
+        levelTwist: lvl >= 3 && exp ? exp.drillTwist : null,
         options
       };
     }
 
     function createSoundToLetterStep(targetLetter) {
+      const lvl = getEffectiveCourseLevel();
+      const distCount = lvl === 1 ? 2 : (appState.levelOverdrive ? 4 : 3);
       const distractors = LETTERS_DB
         .filter(l => l.id !== targetLetter.id)
         .sort(() => Math.random() - 0.5)
-        .slice(0, 3);
+        .slice(0, distCount);
       const options = [targetLetter, ...distractors].sort(() => Math.random() - 0.5);
       return {
         type: 'sound_to_letter',
@@ -7129,11 +7732,13 @@
     }
 
     function createWordDecodeStep(targetWord) {
+      const lvl = getEffectiveCourseLevel();
+      const distCount = lvl === 1 ? 2 : (appState.levelOverdrive ? 4 : 3);
       const allW = getAllWords();
       const distractors = allW
         .filter(w => w.id !== targetWord.id)
         .sort(() => Math.random() - 0.5)
-        .slice(0, 3);
+        .slice(0, distCount);
       const options = [targetWord, ...distractors].sort(() => Math.random() - 0.5);
       return {
         type: 'word_decode',
@@ -7264,20 +7869,46 @@
       footerMsg.innerHTML = '';
 
       // ---------------------------------------------------------------------
-      // STEP S1: STREAMLINED STREET THAI SPOTLIGHT (Clean, Compact, Minimal)
+      // STEP S1: STREAMLINED STREET THAI SPOTLIGHT (Clean, Compact, Minimal + Dynamic Level Scaling)
       // ---------------------------------------------------------------------
       if (step.type === 'street_listen_spotlight') {
         const item = step.item;
+        const lvl = getEffectiveCourseLevel();
+        const isOverdrive = (lvl === 3 && !!appState.levelOverdrive);
+        const exp = getHebrewLevelExpansion(item);
+
         stage.innerHTML = `
           <div class="max-w-xl mx-auto bg-[#14161d] border border-[#232735] rounded-3xl p-5 sm:p-7 space-y-4 shadow-2xl">
             <!-- Header: Theme Badge & Scene Context -->
-            <div class="flex items-center justify-between text-xs pb-1 border-b border-[#1f2330]">
-              <span class="text-amber-400 font-semibold uppercase tracking-wider text-[11px] flex items-center gap-1.5">
-                <span>⚡</span>
-                <span>${item.theme || 'Everyday Hebrew'} • ${item.category || 'Spoken'}</span>
-              </span>
+            <div class="flex flex-wrap items-center justify-between gap-2 text-xs pb-1 border-b border-[#1f2330]">
+              <div class="flex items-center gap-1.5 flex-wrap">
+                <span class="text-amber-400 font-semibold uppercase tracking-wider text-[11px] flex items-center gap-1.5">
+                  <span>⚡</span>
+                  <span>${item.theme || 'Everyday Hebrew'} • ${item.category || 'Spoken'}</span>
+                </span>
+                ${step.isBonusThemeWord ? `
+                  <span class="px-2 py-0.5 rounded-full bg-rose-500/20 border border-rose-400/40 text-rose-300 text-[10px] font-bold">
+                    🔥 Lv.3 Bonus Theme Phrase
+                  </span>
+                ` : ''}
+              </div>
               <span class="text-slate-400 text-[11px]">Card ${activeSession.currentIndex + 1} of ${activeSession.steps.length}</span>
             </div>
+
+            ${lvl === 1 && exp && exp.coreWord ? `
+              <!-- Level 1 Core Survival Chunk Focus Box -->
+              <div class="bg-emerald-500/10 border border-emerald-500/30 rounded-2xl px-4 py-2.5 flex flex-wrap items-center justify-between gap-2 text-left">
+                <div class="text-xs">
+                  <span class="text-emerald-300 font-extrabold uppercase tracking-wider text-[10px] block">🌱 Lv.1 Core Survival Anchor (Start with this 1–2 word chunk):</span>
+                  <span class="text-white font-bold font-mono">${exp.coreWord.ro}</span>
+                  <span class="text-amber-300 font-hebrew font-bold mx-1" dir="rtl">(${exp.coreWord.he})</span>
+                  <span class="text-emerald-200">= "${exp.coreWord.en}"</span>
+                </div>
+                <button type="button" onclick="playHebrewAudio('${exp.coreWord.he}', this)" class="px-2.5 py-1 rounded-xl bg-emerald-400/20 hover:bg-emerald-400/35 border border-emerald-400/40 text-emerald-200 text-xs font-bold cursor-pointer shrink-0">
+                  🔊 Slow Chunk
+                </button>
+              </div>
+            ` : ''}
 
             ${item.scene ? `
               <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-400/10 border border-amber-400/20 text-amber-300 text-xs font-medium">
@@ -7297,6 +7928,49 @@
               </button>
               <div class="text-base sm:text-lg font-bold text-emerald-300">${item.meaning}</div>
             </div>
+
+            <!-- Words Breakdown (shown for compound phrases) -->
+            ${item.words && item.words.length > 1 ? `
+              <div class="pt-2 border-t border-[#1f2330] text-center">
+                <div class="text-[11px] text-slate-400 mb-1.5">Words breakdown (hover to hear &amp; translate):</div>
+                ${renderInteractiveWords(item)}
+              </div>
+            ` : ''}
+
+            ${lvl >= 3 && exp ? `
+              <!-- Level 3 / Overdrive Street Expansion: Longer Real-Life Sentence + Street Slang & Bonus Vocab -->
+              <div class="bg-gradient-to-br from-rose-500/12 via-[#191622] to-amber-500/10 border border-rose-400/35 rounded-2xl p-4 text-left space-y-3 shadow-lg">
+                <div class="flex items-center justify-between gap-2">
+                  <span class="text-[11px] font-extrabold uppercase tracking-wider ${isOverdrive ? 'text-fuchsia-300' : 'text-rose-300'} flex items-center gap-1.5">
+                    <span>${isOverdrive ? '🚀' : '🔥'}</span>
+                    <span>${isOverdrive ? 'Lv.3+ Overdrive: Full Israeli Street Flow & Slang' : 'Lv.3 Expansion: Longer Sentence & Israeli Slang'}</span>
+                  </span>
+                  <button type="button" onclick="playHebrewAudio('${exp.longerHebrew}', this)" class="px-2.5 py-1 rounded-xl bg-rose-500/25 hover:bg-rose-500/40 border border-rose-400/40 text-rose-200 text-xs font-bold flex items-center gap-1 cursor-pointer active:scale-95 shrink-0">
+                    <span>🔊</span><span>Hear Longer Sentence</span>
+                  </button>
+                </div>
+
+                <div class="bg-[#11131b]/90 border border-[#282c3e] rounded-xl p-3 space-y-1">
+                  <div class="text-xs sm:text-sm font-extrabold text-white font-mono tracking-wide">${exp.longerSpoken}</div>
+                  <div class="text-xs sm:text-sm font-bold text-amber-300 font-hebrew text-right" dir="rtl">${exp.longerHebrew}</div>
+                  <div class="text-xs text-emerald-300 font-medium">"${exp.longerMeaning}"</div>
+                </div>
+
+                <div class="space-y-1.5">
+                  <div class="text-[10px] font-bold uppercase tracking-wider text-amber-300/90">💬 Extra Israeli Slang &amp; Theme Modifiers (Tap to Hear):</div>
+                  <div class="flex flex-wrap gap-1.5">
+                    ${exp.slangChips.map(sc => `
+                      <button type="button" onclick="playHebrewAudio('${sc.he}', this)" class="px-2.5 py-1.5 rounded-xl bg-[#161925] hover:bg-[#22273a] border border-[#2d344c] text-left text-xs flex items-center gap-1.5 cursor-pointer active:scale-95 transition-all">
+                        <span class="text-amber-400">🔊</span>
+                        <span class="font-bold text-white font-mono">${sc.ro}</span>
+                        <span class="font-hebrew text-amber-300 font-semibold" dir="rtl">(${sc.he})</span>
+                        <span class="text-slate-300 text-[11px]">• ${sc.en}</span>
+                      </button>
+                    `).join('')}
+                  </div>
+                </div>
+              </div>
+            ` : ''}
 
             <!-- Authentic Spoken Micro-Dialogue / Sentence in Action (SLA Science: Comprehensible Input in Context) -->
             ${item.dialogue ? `
@@ -7353,14 +8027,6 @@
               </div>
             ` : ''}
 
-            <!-- Words Breakdown (shown for compound phrases) -->
-            ${item.words && item.words.length > 1 ? `
-              <div class="pt-2 border-t border-[#1f2330] text-center">
-                <div class="text-[11px] text-slate-400 mb-1.5">Words breakdown (hover to hear &amp; translate):</div>
-                ${renderInteractiveWords(item)}
-              </div>
-            ` : ''}
-
             <!-- Real-World Background / How Locals Use It -->
             ${item.streetShift ? `
               <div class="bg-[#181a24] border border-[#24293a] rounded-2xl p-4 text-xs space-y-1 text-left">
@@ -7381,6 +8047,7 @@
       }
       else if (step.type === 'street_listening_drill') {
         const item = step.target;
+        const lvl = getEffectiveCourseLevel();
         const promptRaw = step.prompt || 'Listen carefully: What does the speaker mean?';
         const diag = item.dialogue;
         const isSelf = diag && diag.speakerB && diag.speakerB.includes('You');
@@ -7413,6 +8080,11 @@
                   <span>🔄</span>
                   <span>Spiral Review • Re-using Past Phrase</span>
                 </span>
+              ` : step.isBonusThemeWord ? `
+                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-rose-500/15 border border-rose-500/35 text-rose-300 text-xs font-bold tracking-wide uppercase">
+                  <span>🔥</span>
+                  <span>Lv.3 Bonus Theme Scenario</span>
+                </span>
               ` : `
                 <span class="text-xs font-semibold uppercase tracking-wider text-amber-400">⚡ Real Street Scenario</span>
               `}
@@ -7435,6 +8107,12 @@
               <div class="text-base sm:text-lg font-semibold text-white leading-relaxed">
                 ${formattedPrompt}
               </div>
+
+              ${step.levelTwist ? `
+                <div class="px-3 py-2 rounded-xl bg-rose-500/15 border border-rose-400/35 text-xs text-rose-200 font-semibold leading-snug">
+                  ${step.levelTwist}
+                </div>
+              ` : ''}
 
               ${hasIncomingDialogue ? `
                 <!-- Clean, Compact Hints for Incoming Dialogue -->
@@ -7461,8 +8139,8 @@
                     </button>
                   </div>
 
-                  <!-- Revealed Hints -->
-                  <div id="box-hint-lettering" class="hidden px-3.5 py-2.5 rounded-xl bg-amber-400/10 border border-amber-400/30 text-xs flex items-center gap-2.5">
+                  <!-- Revealed Hints (Auto-opened at Level 1 for gentle onboarding) -->
+                  <div id="box-hint-lettering" class="${lvl === 1 ? '' : 'hidden '}px-3.5 py-2.5 rounded-xl bg-amber-400/10 border border-amber-400/30 text-xs flex items-center gap-2.5">
                     <span class="text-amber-400 font-bold shrink-0">🔤 Lettering:</span>
                     <span class="text-amber-200 font-bold text-sm tracking-wide font-mono break-words leading-snug">${dialogueSpoken}</span>
                   </div>
@@ -7649,9 +8327,25 @@
                 </div>
                 <div id="tile-inspector-hint" class="text-xs text-sky-300 mt-2 min-h-[1.25rem]"></div>
               </div>
+
+              ${getEffectiveCourseLevel() >= 3 ? `
+                <!-- Level 3 Sentence Context Expansion for Reading Words -->
+                <div class="pt-3 border-t border-[#1c1f28] text-left">
+                  <div class="flex items-center justify-between gap-2 bg-rose-500/10 border border-rose-400/30 rounded-xl px-3.5 py-2.5">
+                    <div class="text-xs space-y-0.5">
+                      <span class="text-[10px] font-extrabold uppercase tracking-wider text-rose-300 block">🔥 Lv.3 Real-Life Sentence Context:</span>
+                      <span class="font-hebrew text-amber-300 font-bold text-base" dir="rtl">סְלִיחָה, אֶפְשָׁר אֶת הַ${w.thai || w.hebrew} הַזֶּה בְּבַקָּשָׁה?</span>
+                      <span class="text-slate-300 font-mono text-[11px] block">slicha, efshar et ha-${w.roman} haze bevakasha?</span>
+                    </div>
+                    <button type="button" onclick="playHebrewAudio('סליחה, אפשר את ה${w.thai || w.hebrew} הזה בבקשה', this)" class="px-2.5 py-1.5 rounded-xl bg-rose-500/25 hover:bg-rose-500/40 border border-rose-400/40 text-rose-200 text-xs font-bold cursor-pointer shrink-0">
+                      🔊 Sentence
+                    </button>
+                  </div>
+                </div>
+              ` : ''}
             </div>
 
-            <!-- 4 Meaning Choices -->
+            <!-- Meaning Choices -->
             <div class="space-y-2.5">
               ${step.options.map(opt => `
                 <button
@@ -7754,6 +8448,1340 @@
         actionBtn.textContent = 'Continue →';
         actionBtn.className = 'px-6 py-3 rounded-2xl bg-emerald-400 hover:bg-emerald-300 text-[#0e0f12] text-sm font-semibold transition-all cursor-pointer shrink-0';
         actionBtn.disabled = false;
+      }
+
+      // ---------------------------------------------------------------------
+      // STEP F / S3: ADAPTIVE REAL-LIFE STREET CONVERSATION FINALE
+      //   - Weaves 75% NEW words (current situation) + 25% OLD known words
+      //   - Live Difficulty Controller: Easier (0.8x Guided) | Standard (1.0x Ear-First) | Harder (1.15x + 2-Stage Ear Check + Compound Mix)
+      //   - Tests the RIGHT thing: Hearing comprehension of connected speech + Real-life spoken turn-taking
+      // ---------------------------------------------------------------------
+      else if (step.type === 'live_conversation') {
+        renderLiveConversationStep(step, stage, actionBtn, footerMsg);
+      }
+    }
+
+    // =========================================================================
+    // SMART ADAPTIVE LIVE CONVERSATION ENGINE (HEBREW)
+    //   - Replaces static end-of-lesson dialogues with an ear-first, adaptive,
+    //     multi-turn real-life exchange that weaves New + Old known words.
+    // =========================================================================
+    const HEBREW_CONVO_TURNS_MAP = {
+      // Explicit partner-first turns for the STREET_DB items where speakerA was originally "You"
+      ST_efshar_cheshbon: {
+        role: '💁‍♀️ מֶלְצָרִית (Waitress)',
+        partner: { script: 'הַכֹּל הָיָה טָעִים חֲבֵרִים? תִּרְצוּ עוֹד מַשֶּׁהוּ אוֹ קִנּוּחַ?', spoken: 'Hakol haya taim chaverim? Tirtzu od mashehu o kinuach?', meaning: 'Was everything delicious, friends? Would you like anything else or dessert?', tts: 'הַכֹּל הָיָה טָעִים? תִּרְצוּ עוֹד מַשֶּׁהוּ?' },
+        user: { script: 'הָיָה מְעֻלֶּה! אֶפְשָׁר חֶשְׁבּוֹן בְּבַקָּשָׁה?', spoken: 'Haya me\'ule! Efshár cheshbón bevakashá?', meaning: 'It was excellent! Can we get the bill please?', tts: 'אֶפְשָׁר חֶשְׁבּוֹן בְּבַקָּשָׁה?' },
+        intentCue: '🧾 Politely ask the server for the bill (אֶפְשָׁר חֶשְׁבּוֹן)',
+        earDistractors: ['Order a lafa wrap with everything inside', 'Ask the taxi driver to turn on the meter', 'Ask if the bus stops at the beach']
+      },
+      ST_tisgor_li: {
+        role: '🍸 בַּרְמֵן (Bartender)',
+        partner: { script: 'אָחִי, לְהָבִיא לְךָ עוֹד שְׁלִישׁ בִּירָה קָרָה?', spoken: 'Achi, lehavi lecha od shlish bira kara?', meaning: 'Bro, should I bring you another third-liter of cold beer?', tts: 'לְהָבִיא לְךָ עוֹד בִּירָה קָרָה?' },
+        user: { script: 'לֹא תּוֹדָה אָחִי, תִּסְגֹּר לִי אֶת הַחֶשְׁבּוֹן בְּבַקָּשָׁה!', spoken: 'Lo toda achi, tisgór li et hacheshbón bevakasha!', meaning: 'No thanks bro, close out my tab please!', tts: 'תִּסְגֹּר לִי אֶת הַחֶשְׁבּוֹן בְּבַקָּשָׁה' },
+        intentCue: '💳 Ask the bartender to close out your tab (תִּסְגֹּר לִי אֶת הַחֶשְׁבּוֹן)',
+        earDistractors: ['Ask for extra spicy schug in your pita', 'Tell the driver to turn left at the traffic light', 'Order a large cappuccino with oat milk']
+      },
+      ST_ata_panoi: {
+        role: '🚕 נַהַג מוֹנִית (Taxi Driver)',
+        partner: { script: 'עֶרֶב טוֹב! הַמּוֹנִית עוֹצֶרֶת לְיָדְךָ בְּרֹטְשִׁילְד — צָרִיךְ מוֹנִית?', spoken: 'Erev tov! Hamonit otzeret leyadcha beRotshild — tzarich monit?', meaning: 'Good evening! The cab pulls up next to you on Rothschild — need a taxi?', tts: 'עֶרֶב טוֹב, צָרִיךְ מוֹנִית?' },
+        user: { script: 'שָׁלוֹם, אַתָּה פָּנוּי?', spoken: 'Shalom, atá panúi?', meaning: 'Hello, are you free / available?', tts: 'שָׁלוֹם, אַתָּה פָּנוּי?' },
+        intentCue: '🚕 Ask the taxi driver if he is available (אַתָּה פָּנוּי?)',
+        earDistractors: ['Ask for no mango pickle on your shawarma', 'Ask for the receipt via SMS', 'Order a cold iced coffee without sugar']
+      },
+      ST_kama_ze_ad: {
+        role: '🚕 נַהַג מוֹנִית (Taxi Driver)',
+        partner: { script: 'כֵּן אָחִי, אֲנִי פָּנוּי! לְאָן אַתָּה צָרִיךְ לְהַגִּיעַ?', spoken: 'Ken achi, ani panui! Le\'an ata tzarich lehagia?', meaning: 'Yes bro, I am available! Where do you need to get to?', tts: 'כֵּן אָחִי, לְאָן אַתָּה צָרִיךְ לְהַגִּיעַ?' },
+        user: { script: 'כַּמָּה זֶה עַד שׁוּק הַכַּרְמֶל?', spoken: 'Káma ze ad Shuk HaKarmel?', meaning: 'How much is it to the Carmel Market?', tts: 'כַּמָּה זֶה עַד שׁוּק הַכַּרְמֶל?' },
+        intentCue: '💰 Ask how much the ride costs to Carmel Market (כַּמָּה זֶה עַד...)',
+        earDistractors: ['Ask for tahini only on your falafel', 'Say the tip is included inside', 'Decline a plastic grocery bag']
+      },
+      ST_sherut: {
+        role: '🚐 נַהַג מוֹנִית שֵׁרוּת (Sherut Driver)',
+        partner: { script: 'קוֹו 4 לְתַחֲנָה מֶרְכָּזִית וְאַלֶּנְבִּי! עוֹלֶה חָבֵר?', spoken: 'Kav arba letachana merkazit ve\'Allenby! Ole chaver?', meaning: 'Line 4 to Central Station and Allenby! Hopping on, friend?', tts: 'קוֹו אַרְבַּע לְאַלֶּנְבִּי, עוֹלֶה חָבֵר?' },
+        user: { script: 'מוֹנִית שֵׁרוּת זֶה הֲכִי מָהִיר! עוֹצֵר בְּאַלֶּנְבִּי?', spoken: 'Monít sherút ze hachi mahir! Otzer be\'Allenby?', meaning: 'The shared sherut minivan is fastest! Do you stop on Allenby?', tts: 'מוֹנִית שֵׁרוּת עוֹצֶרֶת בְּאַלֶּנְבִּי?' },
+        intentCue: '🚐 Confirm the shared minivan route (מוֹנִית שֵׁרוּת)',
+        earDistractors: ['Order a weak cappuccino with no sugar', 'Ask the waiter for the check', 'Ask to pay with Bit']
+      },
+      ST_tagid: {
+        role: '👨‍💼 מְאַבְטֵחַ (Security Guard)',
+        partner: { script: 'שָׁלוֹם אָחִי, בָּרוּךְ הַבָּא! אֶפְשָׁר לַעֲזֹר לְךָ בְּמַשֶּׁהוּ?', spoken: 'Shalom achi, baruch haba! Efshar la\'azor lecha bemashehu?', meaning: 'Hello bro, welcome! Can I help you with something?', tts: 'שָׁלוֹם אָחִי, אֶפְשָׁר לַעֲזֹר לְךָ?' },
+        user: { script: 'תַּגִּיד אָחִי, אֵיפֹה הַכְּנִיסָה לָרַכֶּבֶת?', spoken: 'Tagíd achi, eifo haknisa larakevet?', meaning: 'Say bro, where is the entrance to the train?', tts: 'תַּגִּיד אָחִי, אֵיפֹה הַכְּנִיסָה?' },
+        intentCue: '🗣️ Open your question to a guy naturally with תַּגִּיד (tagíd — "Say / tell me...")',
+        earDistractors: ['Order pita with everything and extra spicy', 'Ask to pay by cash or credit', 'Tell the driver to stop at the corner']
+      },
+      ST_tagidi: {
+        role: '👩‍💼 מוֹכֶרֶת בַּחֲנוּת (Female Shopkeeper)',
+        partner: { script: 'הַי! אֲנחנוּ עוֹד מְעַט סוֹגְרִים, רָצִיתָ לִשְׁאֹל מַשֶּׁהוּ?', spoken: 'Hai! Anachnu od me\'at sogrim, ratzita lish\'ol mashehu?', meaning: 'Hey! We are closing soon, did you want to ask something?', tts: 'הַי, רָצִיתָ לִשְׁאֹל מַשֶּׁהוּ?' },
+        user: { script: 'תַּגִּידִי, הַמָּקוֹם הַזֶּה פָּתוּחַ גַּם בְּשַׁבָּת?', spoken: 'Tagídi, hamakom haze patuach gam beshabat?', meaning: 'Tell me (fem.), is this place also open on Saturday?', tts: 'תַּגִּידִי, הַמָּקוֹם פָּתוּחַ בְּשַׁבָּת?' },
+        intentCue: '🗣️ Open your question to a woman naturally with תַּגִּידִי (tagídi — "Tell me...")',
+        earDistractors: ['Ask the taxi driver to turn on the meter', 'Order a large cappuccino to go', 'Ask for tahini only on your falafel']
+      },
+      ST_achi: {
+        role: '🙋 בָּחוּר בַּתּוֹר (Guy in Line)',
+        partner: { script: 'סְלִיחָה, הַכִּסֵּא הַזֶּה פָּנוּי אוֹ שֶׁמִּישֶׁהוּ יוֹשֵׁב פֹּה?', spoken: 'Slicha, hakise haze panui o shemishehu yoshev po?', meaning: 'Excuse me, is this chair free or is someone sitting here?', tts: 'סְלִיחָה, הַכִּסֵּא הַזֶּה פָּנוּי?' },
+        user: { script: 'כֵּן אָחִי, פָּנוּי לְגַמְרֵי, תֵּשֵׁב בְּכֵיף!', spoken: 'Ken achí, panui legamrei, teshev bekef!', meaning: 'Yes bro (אָחִי), totally free, sit down with pleasure!', tts: 'כֵּן אָחִי, פָּנוּי לְגַמְרֵי' },
+        intentCue: '🤝 Reply warmly like a local using אָחִי (achí — "bro")',
+        earDistractors: ['Ask the waiter for the bill', 'Tell the vendor no mango pickle', 'Ask how much the taxi fare is']
+      },
+      ST_gever: {
+        role: '👨‍💼 שָׁכֵן בַּמַּעֲלִית (Neighbor in Elevator)',
+        partner: { script: 'רֶגַע, אֲנִי מַחְזִיק לְךָ אֶת הַדֶּלֶת שֶׁל הַמַּעֲלִית — כָּנס!', spoken: 'Rega, ani machzik lecha et hadelet shel hama\'alit — kanes!', meaning: 'Hold on, I’m holding the elevator door for you — come on in!', tts: 'אֲנִי מַחְזִיק לְךָ אֶת הַדֶּלֶת, כָּנס!' },
+        user: { script: 'תּוֹדָה רַבָּה, גֶּבֶר!', spoken: 'Toda raba, gé-ver!', meaning: 'Thanks so much, man / champ (גֶּבֶר)!', tts: 'תּוֹדָה רַבָּה, גֶּבֶר!' },
+        intentCue: '🙌 Thank him warmly using גֶּבֶר (gé-ver — "man / champ")',
+        earDistractors: ['Order a cold coffee with oat milk', 'Ask the driver to turn right at the light', 'Decline a plastic bag']
+      },
+
+      // READING PATH WORDS (24 Core Words across Units 1–6)
+      W_shalom: {
+        role: '🙋 שָׁכֵן יִשְׂרְאֵלִי (Israeli Neighbor)',
+        partner: { script: 'שָׁלוֹם! בָּרוּךְ הַבָּא לְתֵל אָבִיב!', spoken: 'Shalóm! Baruch haba leTel Aviv!', meaning: 'Hello / Peace! Welcome to Tel Aviv!', tts: 'שָׁלוֹם, בָּרוּךְ הַבָּא לְתֵל אָבִיב' },
+        user: { script: 'שָׁלוֹם! נָעִים מְאֹד', spoken: 'Shalóm! Na\'im me\'od', meaning: 'Hello! Very nice to meet you.', tts: 'שָׁלוֹם, נָעִים מְאֹד' },
+        intentCue: '👋 Greet them back with שָׁלוֹם (shalóm — "Hello / Peace")',
+        earDistractors: ['Ask for the restaurant check', 'Order a fish sandwich', 'Ask where the exit sign is']
+      },
+      W_shem: {
+        role: '👩‍💼 פְּקִידַת קַבָּלָה (Receptionist)',
+        partner: { script: 'שָׁלוֹם, מָה הַשֵּׁם שֶׁלְּךָ בְּבַקָּשָׁה?', spoken: 'Shalom, ma ha-shém shelcha bevakasha?', meaning: 'Hello, what is your name (שֵׁם) please?', tts: 'מָה הַשֵּׁם שֶׁלְּךָ בְּבַקָּשָׁה?' },
+        user: { script: 'הַשֵּׁם שֶׁלִּי דָּוִד, נָעִים מְאֹד!', spoken: 'Ha-shém sheli David, na\'im me\'od!', meaning: 'My name (שֵׁם) is David, nice to meet you!', tts: 'הַשֵּׁם שֶׁלִּי דָּוִד' },
+        intentCue: '🪪 Introduce your name using שֵׁם (shém — "name")',
+        earDistractors: ['Order cold orange juice', 'Ask how much time is left', 'Say the food is delicious']
+      },
+      W_ima: {
+        role: '🙋 חָבֵר (Friend)',
+        partner: { script: 'מִי מִתְקַשֵּׁר אֵלֶיךָ עַכְשָׁו בַּטֶּלֶפוֹן?', spoken: 'Mi mitkasher elecha achshav batelefon?', meaning: 'Who is calling you on the phone right now?', tts: 'מִי מִתְקַשֵּׁר אֵלֶיךָ עַכְשָׁו?' },
+        user: { script: 'זֹאת אִמָּא שֶׁלִּי! שְׁנִיָּה אֶחָת', spoken: 'Zot í-ma sheli! Shniya echat', meaning: 'That’s my mom (אִמָּא)! One second.', tts: 'זֹאת אִמָּא שֶׁלִּי' },
+        intentCue: '👩 Tell your friend: "That’s my mom (אִמָּא)!"',
+        earDistractors: ['Ask for a loaf of fresh bread', 'Ask where the city center is', 'Order one coffee']
+      },
+      W_sham: {
+        role: '🚶 עוֹבֵר אֹרַח (Passerby)',
+        partner: { script: 'סְלִיחָה, אֵיפֹה בֵּית הַקָּפֶה הֶחָדָשׁ?', spoken: 'Slicha, eifo beit hakafe hechadash?', meaning: 'Excuse me, where is the new coffee shop?', tts: 'סְלִיחָה, אֵיפֹה בֵּית הַקָּפֶה?' },
+        user: { script: 'הִנֵּה, הוּא נִמְצָא שָׁם בַּפִּנָּה!', spoken: 'Hine, hu nimtza shám bapina!', meaning: 'Look, it is right over there (שָׁם) on the corner!', tts: 'הוּא נִמְצָא שָׁם בַּפִּנָּה' },
+        intentCue: '👉 Point and say: "Over there (שָׁם)!"',
+        earDistractors: ['Ask for the check please', 'Say good morning', 'Order fresh fish']
+      },
+      W_kafe: {
+        role: '☕ בָּרִיסְטָה (Barista)',
+        partner: { script: 'בֹּקֶר טוֹב! מָה תִּרְצֶה לִשְׁתּוֹת הַבֹּקֶר?', spoken: 'Boker tov! Ma tirtze lishtot haboker?', meaning: 'Good morning! What would you like to drink this morning?', tts: 'בֹּקֶר טוֹב, מָה תִּרְצֶה לִשְׁתּוֹת?' },
+        user: { script: 'אֶפְשָׁר קָפֶה חַם בְּבַקָּשָׁה?', spoken: 'Efshar ka-fé cham bevakasha?', meaning: 'Can I have a hot coffee (קָפֶה) please?', tts: 'אֶפְשָׁר קָפֶה חַם בְּבַקָּשָׁה?' },
+        intentCue: '☕ Order a coffee using קָפֶה (ka-fé)',
+        earDistractors: ['Ask where the exit is', 'Say you are going home', 'Ask for the time']
+      },
+      W_boker: {
+        role: '☕ שְׁכֵנָה בַּבִּנְיָן (Neighbor)',
+        partner: { script: 'בֹּקֶר טוֹב! יוֹצֵא לָעֲבוֹדָה מֻקְדָּם הַיּוֹם?', spoken: 'Bó-ker tov! Yotze la\'avoda mukdam hayom?', meaning: 'Good morning! Heading out to work early today?', tts: 'בֹּקֶר טוֹב, יוֹצֵא לָעֲבוֹדָה?' },
+        user: { script: 'בֹּקֶר טוֹב! כֵּן, יוֹם נָעִים!', spoken: 'Bó-ker tov! Ken, yom na\'im!', meaning: 'Good morning (בֹּקֶר טוֹב)! Yes, have a nice day!', tts: 'בֹּקֶר טוֹב, יוֹם נָעִים' },
+        intentCue: '☀️ Greet your neighbor with בֹּקֶר טוֹב (bó-ker tov — "Good morning")',
+        earDistractors: ['Ask for the restaurant bill', 'Order a cheese sandwich', 'Point to the exit sign']
+      },
+      W_po: {
+        role: '🛵 שָׁלִיחַ ווֹלְט (Wolt Courier)',
+        partner: { script: 'הַי אָחִי, הִגַּעְתִּי לָרְחוֹב שֶׁלְּךָ — אֵיפֹה אַתָּה עוֹמֵד?', spoken: 'Hai achi, higati larechov shelcha — eifo ata omed?', meaning: 'Hey bro, I arrived on your street — where are you standing?', tts: 'אֵיפֹה אַתָּה עוֹמֵד?' },
+        user: { script: 'אֲנִי מַמָּשׁ פֹּה לְיַד הַכְּנִיסָה!', spoken: 'Ani mamash pó leyad haknisa!', meaning: 'I am right here (פֹּה) next to the entrance!', tts: 'אֲנִי מַמָּשׁ פֹּה לְיַד הַכְּנִיסָה' },
+        intentCue: '📍 Tell the courier: "I am right here (פֹּה)!"',
+        earDistractors: ['Order fresh bread from the bakery', 'Say your mom is calling', 'Ask for cold juice']
+      },
+      W_kol: {
+        role: '🎸 חָבֵר בַּהֲפָעָה (Friend at Concert)',
+        partner: { script: 'שָׁמַעְתָּ אֶת הַזַּמָּר הַזֶּה שָׁר עַכְשָׁו?', spoken: 'Shamata et hazamar haze shar achshav?', meaning: 'Did you hear this singer singing right now?', tts: 'שָׁמַעְתָּ אֶת הַזַּמָּר הַזֶּה?' },
+        user: { script: 'וָואוּ, יֵשׁ לוֹ קוֹל מַדְהִים!', spoken: 'Wow, yesh lo kól madhim!', meaning: 'Wow, he has an amazing voice (קוֹל)!', tts: 'יֵשׁ לוֹ קוֹל מַדְהִים' },
+        intentCue: '🎤 Compliment the singer’s voice using קוֹל (kól — "voice / sound")',
+        earDistractors: ['Ask for the bill at the cafe', 'Ask which road goes to Tel Aviv', 'Order one sandwich']
+      },
+      W_toda: {
+        role: '🥐 מוֹכֵר בַּמַּאֲפִיָּה (Bakery Seller)',
+        partner: { script: 'בְּבַקָּשָׁה, הִנֵּה הַקָּפֶה וְהַמַּאֲפֶה הַחַם שֶׁלְּךָ!', spoken: 'Bevakasha, hine hakafe vehama\'afe hacham shelcha!', meaning: 'Here you go, here is your coffee and warm pastry!', tts: 'בְּבַקָּשָׁה, הִנֵּה הַקָּפֶה שֶׁלְּךָ' },
+        user: { script: 'תּוֹדָה רַבָּה!', spoken: 'To-dá raba!', meaning: 'Thank you (תּוֹדָה) very much!', tts: 'תּוֹדָה רַבָּה' },
+        intentCue: '🙏 Thank the seller warmly with תּוֹדָה (to-dá)',
+        earDistractors: ['Ask where the exit is', 'Say you do not have time', 'Ask what their name is']
+      },
+      W_chaver: {
+        role: '🙋 מְאָרֵחַ בַּמִּסְעָדָה (Restaurant Host)',
+        partner: { script: 'עֶרֶב טוֹב! שֻׁלְחָן לְיָחִיד אוֹ שֶׁאַתָּה מְחַכֶּה לְמִישֶׁהוּ?', spoken: 'Erev tov! Shulchan leyachid o she\'ata mechake lemishehu?', meaning: 'Good evening! Table for one, or are you waiting for someone?', tts: 'אַתָּה מְחַכֶּה לְמִישֶׁהוּ?' },
+        user: { script: 'אֲנִי מְחַכֶּה לְחָבֵר שֶׁלִּי, שֻׁלְחָן לִשְׁנַיִם!', spoken: 'Ani mechake le-cha-vér sheli, shulchan lishnayim!', meaning: 'I’m waiting for my friend (חָבֵר), table for two!', tts: 'אֲנִי מְחַכֶּה לְחָבֵר שֶׁלִּי' },
+        intentCue: '🤝 Explain you are waiting for a friend (חָבֵר)',
+        earDistractors: ['Order fresh fish for dinner', 'Ask where the exit door is', 'Say good morning']
+      },
+      W_bayit: {
+        role: '🙋 חָבֵר בַּטֶּלֶפוֹן (Friend on Phone)',
+        partner: { script: 'אָחִי, סִיַּמְתָּ לַעֲבֹד? לְאָן אַתָּה הוֹלֵךְ עַכְשָׁו?', spoken: 'Achi, siyamta la\'avod? Le\'an ata holech achshav?', meaning: 'Bro, did you finish working? Where are you going now?', tts: 'לְאָן אַתָּה הוֹלֵךְ עַכְשָׁו?' },
+        user: { script: 'אֲנִי בַּדֶּרֶךְ לַבַּיִת לָנוּחַ קְצָת!', spoken: 'Ani baderech la-bá-yit lanuach ktzat!', meaning: 'I’m on the way home (בַּיִת) to rest a bit!', tts: 'אֲנִי בַּדֶּרֶךְ לַבַּיִת' },
+        intentCue: '🏠 Say you are heading home using בַּיִת (bá-yit — "home / house")',
+        earDistractors: ['Order a cup of orange juice', 'Ask for the check at the bar', 'Ask what the singer’s name is']
+      },
+      W_lechem: {
+        role: '🥖 אֹפֶה בַּשּׁוּק (Market Baker)',
+        partner: { script: 'יָצָא עַכְשָׁו מֵהַתַּנּוּר חַם וְטָרִי — מָה תִּרְצֶה לִקְנוֹת?', spoken: 'Yatza achshav mehatanur cham vetari — ma tirtze liknot?', meaning: 'Just came out of the oven hot and fresh — what would you like to buy?', tts: 'מָה תִּרְצֶה לִקְנוֹת מֵהַתַּנּוּר?' },
+        user: { script: 'תֵּן לִי לֶחֶם חַם אֶחָד בְּבַקָּשָׁה!', spoken: 'Ten li lé-chem cham echad bevakasha!', meaning: 'Give me one warm loaf of bread (לֶחֶם) please!', tts: 'תֵּן לִי לֶחֶם חַם בְּבַקָּשָׁה' },
+        intentCue: '🥖 Ask for warm bread using לֶחֶם (lé-chem)',
+        earDistractors: ['Ask where the train exit is', 'Say that is my mom', 'Ask for the restaurant bill']
+      },
+      W_ken: {
+        role: '☕ מֶלְצַר (Waiter)',
+        partner: { script: 'סְלִיחָה, הַשֻּׁלְחָן הַזֶּה בַּחוּץ פָּנוּי?', spoken: 'Slicha, hashulchan haze bachutz panui?', meaning: 'Excuse me, is this table outside free?', tts: 'הַשֻּׁלְחָן הַזֶּה פָּנוּי?' },
+        user: { script: 'כֵּן, בֶּטַח! תְּשְׁבוּ בְּכֵיף', spoken: 'Kén, betach! Teshvu bekef', meaning: 'Yes (כֵּן), sure! Sit down with pleasure.', tts: 'כֵּן, בֶּטַח, תְּשְׁבוּ בְּכֵיף' },
+        intentCue: '✅ Confirm positively with כֵּן (kén — "yes")',
+        earDistractors: ['Ask for a fish dish', 'Say you have no time', 'Order fresh bread']
+      },
+      W_derech: {
+        role: '🚗 נַהַג מוֹנִית (Taxi Driver)',
+        partner: { script: 'יֵשׁ פְּקָקִים בָּאַיָּלוֹן — מֵאֵיפֹה כְּדַאי לִנְסֹעַ?', spoken: 'Yesh pkakim ba\'Ayalon — me\'eifo kedai linsoa?', meaning: 'There’s traffic on the Ayalon highway — which way should we drive?', tts: 'מֵאֵיפֹה כְּדַאי לִנְסֹעַ?' },
+        user: { script: 'נִסַּע דֶּרֶךְ הַיָּם, זֹאת הַדֶּרֶךְ הֲכִי יָפָה!', spoken: 'Nisa dé-rech hayam, zot ha-dé-rech hachi yafa!', meaning: 'Let’s drive via the sea, that’s the nicest road / way (דֶּרֶךְ)!', tts: 'זֹאת הַדֶּרֶךְ הֲכִי יָפָה' },
+        intentCue: '🛣️ Suggest the best route / road using דֶּרֶךְ (dé-rech)',
+        earDistractors: ['Order a cold glass of juice', 'Introduce your name', 'Ask for the check']
+      },
+      W_karich: {
+        role: '🥪 מוֹכֵר בְּבֵית קָפֶה (Cafe Seller)',
+        partner: { script: 'רָעֵב? יֵשׁ לָנוּ אוֹכֶל טָרִי לַבֹּקֶר — מָה תִּרְצֶה לֶאֱכֹל?', spoken: 'Ra\'ev? Yesh lanu ochel tari laboker — ma tirtze le\'echol?', meaning: 'Hungry? We have fresh food for the morning — what would you like to eat?', tts: 'מָה תִּרְצֶה לֶאֱכֹל הַבֹּקֶר?' },
+        user: { script: 'אֶפְשָׁר כָּרִיךְ חֲבִיתָה וְקָפֶה בְּבַקָּשָׁה?', spoken: 'Efshar ka-rích chavita vekafe bevakasha?', meaning: 'Can I have an omelet sandwich (כָּרִיךְ) and coffee please?', tts: 'אֶפְשָׁר כָּרִיךְ חֲבִיתָה בְּבַקָּשָׁה?' },
+        intentCue: '🥪 Order a sandwich using כָּרִיךְ (ka-rích)',
+        earDistractors: ['Ask where the building exit is', 'Say that is my mom on the phone', 'Say you are going home']
+      },
+      W_dag: {
+        role: '🐟 מֶלְצַר בְּנָמֵל יָפוֹ (Jaffa Port Waiter)',
+        partner: { script: 'בָּרוּךְ הַבָּא לְנָמֵל יָפוֹ! מָה תַּזְמִין לָאֲרוּחָה הָעִקָּרִית?', spoken: 'Baruch haba lenamel Yafo! Ma tazmin la\'arucha ha\'ikarit?', meaning: 'Welcome to Jaffa Port! What will you order for the main course?', tts: 'מָה תַּזְמִין לָאֲרוּחָה הָעִקָּרִית?' },
+        user: { script: 'אֲנִי אֶקַּח דָּג טָרִי עַל הַגְּרִיל, תּוֹדָה!', spoken: 'Ani ekach dág tari al hagril, toda!', meaning: 'I’ll take fresh fish (דָּג) on the grill, thanks!', tts: 'אֲנִי אֶקַּח דָּג טָרִי, תּוֹדָה' },
+        intentCue: '🐟 Order the fresh fish using דָּג (dág)',
+        earDistractors: ['Say good morning to your neighbor', 'Ask what the person’s name is', 'Point to the exit sign']
+      },
+      W_beseder: {
+        role: '🙋 חָבֵר (Friend)',
+        partner: { script: 'נִפָּגֵשׁ הָעֶרֶב בְּשָׁעָה שְׁמוֹנֶה בְּרוֹטְשִׁילְד, מתאים לְךָ?', spoken: 'Nipagesh ha\'erev besha\'a shmone beRotshild, mat\'im lecha?', meaning: 'Let’s meet tonight at 8:00 on Rothschild, does that work for you?', tts: 'נִפָּגֵשׁ הָעֶרֶב בִּשְׁמוֹנֶה, מַתְאִים לְךָ?' },
+        user: { script: 'בְּסֵדֶר גָּמוּר! נִפָּגֵשׁ שָׁם', spoken: 'Be-sé-der gamur! Nipagesh sham', meaning: 'Totally alright / okay (בְּסֵדֶר גָּמוּר)! See you there.', tts: 'בְּסֵדֶר גָּמוּר, נִפָּגֵשׁ שָׁם' },
+        intentCue: '👌 Confirm the plan with בְּסֵדֶר (be-sé-der — "Alright / Okay")',
+        earDistractors: ['Ask for a loaf of warm bread', 'Order fresh grilled fish', 'Ask for the restaurant bill']
+      },
+      W_ir: {
+        role: '🚕 נַהַג מוֹנִית (Taxi Driver)',
+        partner: { script: 'אַתָּה אוֹהֵב לָגוּר בְּתֵל אָבִיב?', spoken: 'Ata ohev lagur beTel Aviv?', meaning: 'Do you like living in Tel Aviv?', tts: 'אַתָּה אוֹהֵב לָגוּר בְּתֵל אָבִיב?' },
+        user: { script: 'כֵּן, זֹאת עִיר מַדְהִימָה שֶׁלֹּא יְשֵׁנָה!', spoken: 'Ken, zot ír madhima shelo yeshena!', meaning: 'Yes, it is an amazing city (עִיר) that never sleeps!', tts: 'כֵּן, זֹאת עִיר מַדְהִימָה' },
+        intentCue: '🏙️ Praise the city using עִיר (ír — "city")',
+        earDistractors: ['Order a sandwich and coffee', 'Say your mom is calling', 'Ask for the check']
+      },
+      W_mitz: {
+        role: '🍊 דּוּכַן מִיצִים בַּשּׁוּק (Shuk Juice Stand)',
+        partner: { script: 'חַם הַיּוֹם בַּשּׁוּק! לִסְחֹט לְךָ תַּפּוּזִים אוֹ רִמּוֹנִים קָרִים?', spoken: 'Cham hayom bashuk! Lischot lecha tapuzim o rimonim karim?', meaning: 'It’s hot today in the market! Should I squeeze cold oranges or pomegranates for you?', tts: 'לִסְחֹט לְךָ תַּפּוּזִים קָרִים?' },
+        user: { script: 'כּוֹס מִיץ תַּפּוּזִים טָרִי בְּבַקָּשָׁה!', spoken: 'Kos mítz tapuzim tari bevakasha!', meaning: 'A cup of fresh orange juice (מִיץ) please!', tts: 'כּוֹס מִיץ תַּפּוּזִים בְּבַקָּשָׁה' },
+        intentCue: '🍊 Order fresh juice using מִיץ (mítz)',
+        earDistractors: ['Ask where the train exit is', 'Say you are going home now', 'Ask what their name is']
+      },
+      W_zman: {
+        role: '🙋 חָבֵר בַּתַּחֲנָה (Friend at Station)',
+        partner: { script: 'הָרַכֶּבֶת יוֹצֵאת בְּעוֹד עֶשֶׂר דַּקּוֹת — נַסְפִּיק לִקְנוֹת קָפֶה?', spoken: 'Harakevet yotzet be\'od eser dakot — naspik liknot kafe?', meaning: 'The train leaves in 10 minutes — will we make it in time to buy coffee?', tts: 'נַסְפִּיק לִקְנוֹת קָפֶה?' },
+        user: { script: 'כֵּן, יֵשׁ לָנוּ מַסְפִּיק זְמַן!', spoken: 'Ken, yesh lanu maspik zmán!', meaning: 'Yes, we have enough time (זְמַן)!', tts: 'כֵּן, יֵשׁ לָנוּ מַסְפִּיק זְמַן' },
+        intentCue: '⏱️ Reassure your friend using זְמַן (zmán — "time")',
+        earDistractors: ['Order fresh grilled fish', 'Ask for warm bread', 'Say that is my mom']
+      },
+      W_cheshbon: {
+        role: '💁‍♂️ מֶלְצַר (Waiter)',
+        partner: { script: 'סִיַּמְתֶּם לֶאֱכֹל חֲבֵרִים? אֶפְשָׁר לְפַנּוֹת אֶת הַשֻּׁלְחָן?', spoken: 'Siyamtem le\'echol chaverim? Efshar lefanot et hashulchan?', meaning: 'Finished eating, friends? May I clear the table?', tts: 'סִיַּמְתֶּם לֶאֱכֹל? אֶפְשָׁר לְפַנּוֹת?' },
+        user: { script: 'כֵּן תּוֹדָה, וְאֶפְשָׁר חֶשְׁבּוֹן בְּבַקָּשָׁה?', spoken: 'Ken toda, ve\'efshar chesh-bón bevakasha?', meaning: 'Yes thanks, and can we have the bill (חֶשְׁבּוֹן) please?', tts: 'כֵּן תּוֹדָה, אֶפְשָׁר חֶשְׁבּוֹן בְּבַקָּשָׁה?' },
+        intentCue: '🧾 Ask for the bill / check using חֶשְׁבּוֹן (chesh-bón)',
+        earDistractors: ['Say good morning', 'Order cold orange juice', 'Ask where the city center is']
+      },
+      W_taim: {
+        role: '👨‍🍳 שֶׁף בַּמִּסְעָדָה (Restaurant Chef)',
+        partner: { script: 'נוּ, אֵיךְ הַשַּׁקְשׁוּקָה וְהַפִּיתָה הַחַמָּה שֶׁהֵכַנְנוּ לְךָ?', spoken: 'Nu, eich hashakshuka vehapita hachama shehechanu lecha?', meaning: 'Well, how is the shakshuka and warm pita we made for you?', tts: 'אֵיךְ הָאוֹכֶל שֶׁהֵכַנְנוּ לְךָ?' },
+        user: { script: 'וָואוּ, טָעִים מְאֹד! תּוֹדָה רַבָּה', spoken: 'Wow, ta-ím me\'od! Toda raba', meaning: 'Wow, very delicious (טָעִים מְאֹד)! Thank you so much.', tts: 'טָעִים מְאֹד, תּוֹדָה רַבָּה' },
+        intentCue: '😋 Praise the food with טָעִים (ta-ím — "delicious / tasty")',
+        earDistractors: ['Ask where the exit door is', 'Say you have no time', 'Ask what their name is']
+      },
+      W_yetsia: {
+        role: '👮 סַדְרָן בַּתַּחֲנָה (Station Attendant)',
+        partner: { script: 'הִגַּעְנוּ לְתַחֲנַת הָרַכֶּבֶת — אֵיךְ אֶפְשָׁר לַעֲזֹר לְךָ?', spoken: 'Higanu letachanat harakevet — eich efshar la\'azor lecha?', meaning: 'We arrived at the train station — how can I help you?', tts: 'אֵיךְ אֶפְשָׁר לַעֲזֹר לְךָ בַּתַּחֲנָה?' },
+        user: { script: 'סְלִיחָה, אֵיפֹה הַיְּצִיאָה לָרְחוֹב?', spoken: 'Slicha, eifo ha-ye-tzi-á larechov?', meaning: 'Excuse me, where is the exit (יְצִיאָה) to the street?', tts: 'סְלִיחָה, אֵיפֹה הַיְּצִיאָה?' },
+        intentCue: '🚪 Ask where the exit is using יְצִיאָה (ye-tzi-á)',
+        earDistractors: ['Order a sandwich and coffee', 'Say the shakshuka is delicious', 'Say good morning']
+      },
+      W_echad: {
+        role: '🥙 מוֹכֵר פָלָאפֶל (Falafel Vendor)',
+        partner: { script: 'שָׁלוֹם אָחִי! כַּמָּה מָנוֹת פָלָאפֶל לְהָכִין לְךָ עַכְשָׁו?', spoken: 'Shalom achi! Kama manot falafel lehachin lecha achshav?', meaning: 'Hello bro! How many portions of falafel should I prepare for you right now?', tts: 'כַּמָּה מָנוֹת פָלָאפֶל לְהָכִין לְךָ?' },
+        user: { script: 'רק אֶחָד בְּפִּיתָה בְּבַקָּשָׁה, תּוֹדָה!', spoken: 'Rak e-chád bepita bevakasha, toda!', meaning: 'Just one (אֶחָד) in a pita please, thanks!', tts: 'רַק אֶחָד בְּבַקָּשָׁה, תּוֹדָה' },
+        intentCue: '1️⃣ Order "just one" using אֶחָד (e-chád)',
+        earDistractors: ['Ask where the exit is', 'Ask for the bill at the table', 'Say you are on your way home']
+      }
+    };
+
+    function getConvoTurnForItem(itemId, isSpiral = false, spiralSourceTitle = '') {
+      // 1. Check explicit override / word map first
+      const mapped = HEBREW_CONVO_TURNS_MAP[itemId];
+      const stItem = (typeof STREET_DB !== 'undefined' && STREET_DB.find(s => s.id === itemId)) || null;
+      const wItem = (!stItem && typeof getAllWords === 'function' ? getAllWords().find(w => w.id === itemId) : null);
+      const rawItem = stItem || wItem || {};
+
+      if (mapped) {
+        return {
+          itemId,
+          isSpiral,
+          spiralSourceTitle: isSpiral ? (spiralSourceTitle || 'Past Known Word') : 'New in This Lesson',
+          role: mapped.role,
+          partner: { ...mapped.partner },
+          user: { ...mapped.user },
+          intentCue: mapped.intentCue,
+          earDistractors: [...(mapped.earDistractors || [])],
+          targetPhrase: rawItem.hebrew || rawItem.thai || mapped.user.script,
+          targetSpoken: rawItem.spoken || rawItem.roman || mapped.user.spoken,
+          targetMeaning: rawItem.meaning || mapped.user.meaning
+        };
+      }
+
+      // 2. For the 54 STREET_DB items where dialogue.speakerA is already the partner (Vendor/Driver/Friend)
+      if (stItem && stItem.dialogue && stItem.dialogue.lineHebrewA && stItem.dialogue.lineHebrewB) {
+        const d = stItem.dialogue;
+        return {
+          itemId,
+          isSpiral,
+          spiralSourceTitle: isSpiral ? (spiralSourceTitle || 'Past Known Phrase') : 'New in This Lesson',
+          role: d.speakerA || '🗣️ מְקוֹמִי (Local)',
+          partner: {
+            script: d.lineHebrewA,
+            spoken: d.lineSpokenA || stItem.spoken,
+            meaning: d.lineEnglishA || stItem.meaning,
+            tts: d.ttsA || d.lineHebrewA
+          },
+          user: {
+            script: d.lineHebrewB,
+            spoken: d.lineSpokenB || stItem.spoken,
+            meaning: d.lineEnglishB || stItem.meaning,
+            tts: d.ttsB || d.lineHebrewB
+          },
+          intentCue: `💬 Respond using ${stItem.hebrew} (${stItem.spoken} — ${stItem.meaning})`,
+          earDistractors: [
+            'Ask where the nearest train exit is located',
+            'Tell you that the restaurant kitchen is already closed',
+            'Ask if you want to buy a monthly Rav-Kav bus pass'
+          ],
+          targetPhrase: stItem.hebrew,
+          targetSpoken: stItem.spoken,
+          targetMeaning: stItem.meaning
+        };
+      }
+
+      // 3. Fallback
+      return {
+        itemId,
+        isSpiral,
+        spiralSourceTitle: isSpiral ? 'Past Known Word' : 'New in This Lesson',
+        role: '🗣️ חָבֵר יִשְׂרְאֵלִי (Israeli Friend)',
+        partner: {
+          script: 'שָׁלוֹם אָחִי, מָה קוֹרֶה הַיּוֹם?',
+          spoken: 'Shalom achi, ma kore hayom?',
+          meaning: 'Hello bro, what is going on today?',
+          tts: 'שָׁלוֹם אָחִי, מָה קוֹרֶה הַיּוֹם?'
+        },
+        user: {
+          script: rawItem.hebrew || rawItem.thai || 'הַכֹּל סַבָּבָה, תּוֹדָה!',
+          spoken: rawItem.spoken || rawItem.roman || 'Hakol sababa, toda!',
+          meaning: rawItem.meaning || 'Everything is cool, thanks!',
+          tts: rawItem.tts || rawItem.hebrew || rawItem.thai || 'הַכֹּל סַבָּבָה, תּוֹדָה'
+        },
+        intentCue: `💬 Respond naturally using ${rawItem.spoken || rawItem.roman || 'this phrase'}`,
+        earDistractors: [
+          'Ask for the bill at the table',
+          'Tell the taxi driver to stop at the corner',
+          'Order a large coffee with oat milk'
+        ],
+        targetPhrase: rawItem.hebrew || rawItem.thai || '',
+        targetSpoken: rawItem.spoken || rawItem.roman || '',
+        targetMeaning: rawItem.meaning || ''
+      };
+    }
+
+    // Collects OLD / KNOWN items from earlier nodes and appState.itemStats
+    function getKnownPoolForConversation(node) {
+      const isStreet = node.type === 'street' || Array.isArray(node.itemIds);
+      const currentIds = new Set(isStreet ? (node.itemIds || []) : (node.wordIds || []));
+      const pool = [];
+
+      if (isStreet) {
+        let reached = false;
+        for (const u of STREET_CURRICULUM) {
+          for (const n of (u.nodes || [])) {
+            if (n.id === node.id) { reached = true; break; }
+            (n.itemIds || []).forEach(id => {
+              if (!currentIds.has(id) && !pool.some(p => p.id === id)) {
+                pool.push({ id, sourceTitle: n.title });
+              }
+            });
+          }
+          if (reached) break;
+        }
+        // Also check any STREET_DB item with exposures > 0 or mastered status
+        if (appState && appState.itemStats) {
+          Object.keys(appState.itemStats).forEach(id => {
+            if (id.startsWith('ST_') && !currentIds.has(id) && !pool.some(p => p.id === id)) {
+              const st = appState.itemStats[id];
+              if (st && (st.exposures > 0 || st.status === 'mastered' || st.status === 'learning')) {
+                pool.push({ id, sourceTitle: 'Known Bank' });
+              }
+            }
+          });
+        }
+      } else {
+        let reached = false;
+        for (const u of UNITS_CURRICULUM) {
+          for (const n of (u.nodes || [])) {
+            if (n.id === node.id) { reached = true; break; }
+            (n.wordIds || []).forEach(id => {
+              if (!currentIds.has(id) && !pool.some(p => p.id === id)) {
+                pool.push({ id, sourceTitle: n.title });
+              }
+            });
+          }
+          if (reached) break;
+        }
+        if (appState && appState.itemStats) {
+          Object.keys(appState.itemStats).forEach(id => {
+            if (id.startsWith('W_') && !currentIds.has(id) && !pool.some(p => p.id === id)) {
+              const st = appState.itemStats[id];
+              if (st && (st.exposures > 0 || st.status === 'mastered' || st.status === 'learning')) {
+                pool.push({ id, sourceTitle: 'Known Bank' });
+              }
+            }
+          });
+        }
+      }
+      return pool;
+    }
+
+    // Creates a Compound Turn that weaves an OLD known phrase + a NEW phrase into a single spoken exchange!
+    function createCompoundOldNewTurn(newTurn, oldTurn) {
+      if (!newTurn || !oldTurn) return newTurn;
+      const oldCleanScript = (oldTurn.targetPhrase || oldTurn.user.script).replace(/[?!.]+$/g, '').trim();
+      const newCleanScript = (newTurn.user.script || '').trim();
+      const oldCleanSpoken = (oldTurn.targetSpoken || oldTurn.user.spoken).replace(/[?!.]+$/g, '').trim();
+      const newCleanSpoken = (newTurn.user.spoken || '').trim();
+
+      const combinedUserScript = `${oldCleanScript}, וְ${newCleanScript}`;
+      const combinedUserSpoken = `${oldCleanSpoken}, ve-${newCleanSpoken}`;
+      const combinedUserMeaning = `${oldTurn.targetMeaning || oldTurn.user.meaning} + ${newTurn.user.meaning}`;
+      const combinedUserTts = `${oldTurn.user.tts} וְ${newTurn.user.tts}`;
+
+      return {
+        ...newTurn,
+        isCompoundMix: true,
+        wovenOldId: oldTurn.itemId,
+        wovenOldPhrase: oldTurn.targetPhrase || oldTurn.user.script,
+        wovenOldSpoken: oldTurn.targetSpoken || oldTurn.user.spoken,
+        wovenOldMeaning: oldTurn.targetMeaning || oldTurn.user.meaning,
+        spiralSourceTitle: `New + Known (${oldTurn.targetSpoken || oldTurn.user.spoken})`,
+        user: {
+          script: combinedUserScript,
+          spoken: combinedUserSpoken,
+          meaning: combinedUserMeaning,
+          tts: combinedUserTts
+        },
+        intentCue: `🔗 Combine Known + New: "${oldTurn.targetSpoken}" + ${newTurn.intentCue.replace(/^[^\s]+\s*/, '')}`
+      };
+    }
+
+    // Determines the two local Israeli characters (Speaker A & Speaker B) for the 2-person quick conversation
+    function getHebrewTwoPersonCast(node, rawTurns) {
+      const id = node.id || '';
+      const firstRole = (rawTurns && rawTurns[0]?.role) || '🥙 מוֹכֵר בַּשּׁוּק (Vendor)';
+      if (id.startsWith('s1')) {
+        return { speakerA: '🥙 מוֹכֵר בַּשּׁוּק (Shuk Vendor)', speakerB: '🙋‍♀️ נוֹעָה (Noa — Local Customer)' };
+      } else if (id.startsWith('s2')) {
+        return { speakerA: '☕ בָּרִיסְטָה / קֻפַּאי (Barista / Cashier)', speakerB: '🙋‍♂️ עוֹמֶר (Omer — Local Customer)' };
+      } else if (id.startsWith('s3')) {
+        return { speakerA: '🚕 נַהַג מוֹנִית (Taxi Driver)', speakerB: '🙋‍♀️ נוֹעָה (Noa — Passenger)' };
+      } else if (id.startsWith('s4') || id.startsWith('s5') || id.startsWith('s6')) {
+        return { speakerA: '🙋‍♂️ עוֹמֶר (Omer — Israeli Friend)', speakerB: '🙋‍♀️ נוֹעָה (Noa — Israeli Friend)' };
+      } else {
+        return { speakerA: firstRole, speakerB: '🙋‍♀️ נוֹעָה (Noa — Local Speaker)' };
+      }
+    }
+
+    function createLiveConversationStep(node, customDifficulty = null, remixSeed = 0) {
+      const defaultDiff = appState.courseLevel === 1
+        ? 'easier'
+        : appState.courseLevel === 3
+        ? (appState.levelOverdrive ? 'overdrive' : 'harder')
+        : 'standard';
+      const difficulty = customDifficulty || appState.convoDifficulty || defaultDiff;
+      appState.convoDifficulty = difficulty;
+      const isStreet = node.type === 'street' || Array.isArray(node.itemIds);
+
+      // 1. Gather NEW items for this lesson node (+ bonus theme items if Lv.3 / Overdrive!)
+      let newIds = [];
+      if (isStreet) {
+        newIds = [...(node.itemIds || [])];
+        if (difficulty === 'harder' || difficulty === 'overdrive') {
+          const bonus = getBonusThemeItemsForNode(node);
+          bonus.forEach(b => {
+            if (!newIds.includes(b.id)) newIds.push(b.id);
+          });
+        }
+      } else {
+        newIds = [...(node.wordIds || [])];
+        if (newIds.length === 0) {
+          const parentUnit = UNITS_CURRICULUM.find(u => u.nodes.some(n => n.id === node.id));
+          if (parentUnit) {
+            newIds = parentUnit.nodes.flatMap(n => n.wordIds || []);
+          }
+          if (newIds.length === 0) {
+            newIds = ['W_shalom', 'W_shem', 'W_ima', 'W_sham'];
+          }
+        }
+      }
+
+      // 2. Gather OLD / KNOWN items from earlier lessons & user mastery stats
+      const knownPool = getKnownPoolForConversation(node);
+      const shuffledKnown = [...knownPool].sort((a, b) => {
+        if (remixSeed > 0) return Math.sin(remixSeed + a.id.length) - 0.5;
+        return 0;
+      });
+      const shuffledNew = remixSeed > 0 ? [...newIds].sort(() => Math.random() - 0.5) : [...newIds];
+
+      // 3. Build Exchange Pairs (~75% New to fit recent situation + ~25% Old/Known Spiral Recall)
+      //    - Easier (Lv.1): 2 exchanges = 4 lines
+      //    - Standard (Lv.2): 3 exchanges = 6 lines (weaves New + Old Known + 1 Compound Old+New turn)
+      //    - Harder (Lv.3): 4 exchanges = 8 rapid lines (New + Old + Compound Old+New sentences)
+      //    - Overdrive (Lv.3+): 5 exchanges = 10 rapid lines (New + Bonus Theme + Old + 3 Compound Old+New turns!)
+      const selectedTurns = [];
+      if (difficulty === 'easier') {
+        shuffledNew.slice(0, 2).forEach(id => selectedTurns.push(getConvoTurnForItem(id, false, 'New in This Lesson')));
+        if (selectedTurns.length < 2 && shuffledKnown.length > 0) {
+          selectedTurns.push(getConvoTurnForItem(shuffledKnown[0].id, true, `Known • ${shuffledKnown[0].sourceTitle}`));
+        }
+      } else if (difficulty === 'standard') {
+        shuffledNew.slice(0, 2).forEach(id => selectedTurns.push(getConvoTurnForItem(id, false, 'New in This Lesson')));
+        if (shuffledKnown.length > 0 && shuffledNew.length >= 3) {
+          const tNew = getConvoTurnForItem(shuffledNew[2], false, 'New in This Lesson');
+          const tOld = getConvoTurnForItem(shuffledKnown[0].id, true, `Known • ${shuffledKnown[0].sourceTitle}`);
+          selectedTurns.push(createCompoundOldNewTurn(tNew, tOld));
+        } else if (shuffledKnown.length > 0) {
+          selectedTurns.push(getConvoTurnForItem(shuffledKnown[0].id, true, `Known • ${shuffledKnown[0].sourceTitle}`));
+        } else if (shuffledNew.length >= 3) {
+          selectedTurns.push(getConvoTurnForItem(shuffledNew[2], false, 'New in This Lesson'));
+        }
+      } else if (difficulty === 'overdrive') {
+        // Lv.3+ Overdrive: Up to 5 exchanges (10 lines) with multiple compound turns
+        shuffledNew.slice(0, 4).forEach(id => selectedTurns.push(getConvoTurnForItem(id, false, 'New in This Lesson')));
+        if (shuffledKnown.length > 0) {
+          selectedTurns.splice(1, 0, getConvoTurnForItem(shuffledKnown[0].id, true, `Known • ${shuffledKnown[0].sourceTitle}`));
+        }
+        if (selectedTurns.length < 5 && shuffledKnown.length > 1) {
+          selectedTurns.push(getConvoTurnForItem(shuffledKnown[1].id, true, `Known • ${shuffledKnown[1].sourceTitle}`));
+        }
+        if (selectedTurns.length > 5) selectedTurns.length = 5;
+        // Upgrade up to 2 exchanges into compound turns
+        if (selectedTurns.length >= 3 && shuffledKnown.length > 0) {
+          const lastIdx = selectedTurns.length - 1;
+          selectedTurns[lastIdx] = createCompoundOldNewTurn(selectedTurns[lastIdx], getConvoTurnForItem(shuffledKnown[0].id, true, shuffledKnown[0].sourceTitle));
+          if (selectedTurns.length >= 4 && shuffledKnown.length > 1) {
+            selectedTurns[lastIdx - 1] = createCompoundOldNewTurn(selectedTurns[lastIdx - 1], getConvoTurnForItem(shuffledKnown[1].id, true, shuffledKnown[1].sourceTitle));
+          }
+        }
+      } else {
+        // Harder (Lv.3): 4 exchanges (8 lines) with Compound Old+New sentences!
+        shuffledNew.slice(0, 3).forEach(id => selectedTurns.push(getConvoTurnForItem(id, false, 'New in This Lesson')));
+        if (shuffledKnown.length > 0) {
+          selectedTurns.splice(1, 0, getConvoTurnForItem(shuffledKnown[0].id, true, `Known • ${shuffledKnown[0].sourceTitle}`));
+        }
+        if (selectedTurns.length > 4) selectedTurns.length = 4;
+        if (selectedTurns.length >= 2) {
+          const lastIdx = selectedTurns.length - 1;
+          const oldTurn = shuffledKnown.length > 0
+            ? getConvoTurnForItem(shuffledKnown[0].id, true, shuffledKnown[0].sourceTitle)
+            : selectedTurns[0];
+          selectedTurns[lastIdx] = createCompoundOldNewTurn(selectedTurns[lastIdx], oldTurn);
+        }
+      }
+
+      const validExchanges = selectedTurns.filter(Boolean);
+      const cast = getHebrewTwoPersonCast(node, validExchanges);
+
+      // 4. Flatten exchanges into a continuous 2-person back-and-forth dialogue (Speaker A <-> Speaker B)
+      const dialogueLines = [];
+      validExchanges.forEach((ex, exIdx) => {
+        dialogueLines.push({
+          lineIdx: dialogueLines.length,
+          exchangeIdx: exIdx,
+          speaker: 'A',
+          speakerName: cast.speakerA,
+          script: ex.partner.script,
+          spoken: ex.partner.spoken,
+          meaning: ex.partner.meaning,
+          tts: ex.partner.tts,
+          isSpiral: !!ex.isSpiral,
+          isCompound: !!ex.isCompoundMix,
+          itemId: ex.itemId,
+          secondaryItemId: ex.wovenOldId || null,
+          peekScript: false
+        });
+        dialogueLines.push({
+          lineIdx: dialogueLines.length,
+          exchangeIdx: exIdx,
+          speaker: 'B',
+          speakerName: cast.speakerB,
+          script: ex.user.script,
+          spoken: ex.user.spoken,
+          meaning: ex.user.meaning,
+          tts: ex.user.tts,
+          isSpiral: !!ex.isSpiral,
+          isCompound: !!ex.isCompoundMix,
+          itemId: ex.itemId,
+          secondaryItemId: ex.wovenOldId || null,
+          peekScript: false
+        });
+      });
+
+      // 5. Build Comprehension Questions that test UNDERSTANDING the 2-person interaction!
+      const allTurnKeys = Object.keys(HEBREW_CONVO_TURNS_MAP);
+      const allStreetIds = (typeof STREET_DB !== 'undefined' ? STREET_DB.map(s => s.id) : []);
+      const distractorIdPool = [...new Set([...shuffledKnown.map(k => k.id), ...newIds, ...allStreetIds, ...allTurnKeys])];
+      const optionCount = difficulty === 'easier' ? 3 : (difficulty === 'overdrive' ? 5 : 4);
+
+      const questions = validExchanges.map((ex, qIdx) => {
+        const lineAIdx = qIdx * 2;
+        const lineBIdx = qIdx * 2 + 1;
+        const testSpeakerA = ((difficulty === 'harder' || difficulty === 'overdrive') && (qIdx === 1 || qIdx === 3));
+        const targetMeaning = testSpeakerA ? ex.partner.meaning : ex.user.meaning;
+        const targetScript = testSpeakerA ? ex.partner.script : ex.user.script;
+        const targetSpoken = testSpeakerA ? ex.partner.spoken : ex.user.spoken;
+        const targetTts = testSpeakerA ? ex.partner.tts : ex.user.tts;
+        const targetLineNum = testSpeakerA ? (lineAIdx + 1) : (lineBIdx + 1);
+
+        let qPrompt = '';
+        let qBadge = '';
+        if (qIdx === 0) {
+          qBadge = '🎯 Part 1 • Opening Exchange (New Words)';
+          qPrompt = `In the opening exchange (Lines 1–2), what did ${cast.speakerB.split('(')[0].trim()} say or ask for?`;
+        } else if (qIdx === validExchanges.length - 1 && validExchanges.length >= 3) {
+          qBadge = ex.isCompoundMix ? `🔗 Part ${qIdx + 1} • Final Twist (New + Old Combined)` : `🎧 Part ${qIdx + 1} • Closing Exchange`;
+          qPrompt = `At the end of the conversation (Line ${targetLineNum}), what did ${cast.speakerB.split('(')[0].trim()} decide or say?`;
+        } else {
+          qBadge = ex.isSpiral ? `🔄 Part ${qIdx + 1} • Known Word in Context` : `⚡ Part ${qIdx + 1} • Follow-Up Detail`;
+          qPrompt = testSpeakerA
+            ? `In Line ${targetLineNum}, what did ${cast.speakerA.split('(')[0].trim()} ask or tell ${cast.speakerB.split('(')[0].trim()}?`
+            : `In the follow-up (Line ${targetLineNum}), how did ${cast.speakerB.split('(')[0].trim()} respond?`;
+        }
+
+        const correctOpt = {
+          id: `q_${qIdx}_ok`,
+          text: targetMeaning,
+          script: targetScript,
+          spoken: targetSpoken,
+          isCorrect: true
+        };
+
+        let distOpts = [];
+        if (testSpeakerA) {
+          distOpts = (ex.earDistractors || [
+            'Asked where the train exit is',
+            'Ordered a cold coffee with oat milk',
+            'Asked the waiter for the bill',
+            'Offered extra spicy dip and tehina'
+          ]).slice(0, optionCount - 1).map((dTxt, dIdx) => ({
+            id: `q_${qIdx}_dist_${dIdx}`,
+            text: dTxt,
+            isCorrect: false
+          }));
+        } else {
+          const chosenDistIds = distractorIdPool
+            .filter(cid => cid !== ex.itemId && cid !== ex.wovenOldId)
+            .sort(() => Math.random() - 0.5)
+            .slice(0, optionCount - 1);
+
+          distOpts = chosenDistIds.map((dId, dIdx) => {
+            const dTurn = getConvoTurnForItem(dId, false);
+            if (ex.isCompoundMix && shuffledNew.length > 0) {
+              const altTurn = getConvoTurnForItem(shuffledNew[(qIdx + dIdx) % shuffledNew.length], false);
+              if (altTurn.itemId !== dTurn.itemId) {
+                const compDist = createCompoundOldNewTurn(dTurn, altTurn);
+                return {
+                  id: `q_${qIdx}_dist_${dIdx}`,
+                  text: compDist.user.meaning,
+                  script: compDist.user.script,
+                  spoken: compDist.user.spoken,
+                  isCorrect: false
+                };
+              }
+            }
+            return {
+              id: `q_${qIdx}_dist_${dIdx}`,
+              text: dTurn.user.meaning,
+              script: dTurn.user.script,
+              spoken: dTurn.user.spoken,
+              isCorrect: false
+            };
+          });
+        }
+
+        return {
+          qIdx,
+          badge: qBadge,
+          prompt: qPrompt,
+          targetLineNum,
+          targetTts,
+          targetScript,
+          targetSpoken,
+          targetMeaning,
+          itemId: ex.itemId,
+          secondaryItemId: ex.wovenOldId || null,
+          options: [correctOpt, ...distOpts].sort(() => Math.random() - 0.5),
+          answered: false,
+          isCorrect: null,
+          chosenOptId: null
+        };
+      });
+
+      const newCount = validExchanges.filter(t => !t.isSpiral).length;
+      const oldCount = validExchanges.filter(t => t.isSpiral || t.isCompoundMix).length;
+
+      return {
+        type: 'live_conversation',
+        nodeId: node.id,
+        nodeTitle: node.title,
+        sceneTitle: isStreet ? `🎧 2-Person Quick Convo • ${node.title}` : `🎧 2-Person Mini Dialogue • ${node.title}`,
+        cast,
+        difficulty,
+        remixSeed,
+        newCount,
+        oldCount,
+        dialogueLines,
+        questions,
+        turns: questions, // compatibility alias for accuracy counting
+        transcriptUnlocked: false,
+        allTurnsCompleted: false,
+        correctTurnsCount: 0,
+        _autoPlayedOnce: false
+      };
+    }
+
+    function getConvoAudioSpeed(difficulty) {
+      if (difficulty === 'easier') return 0.80;
+      if (difficulty === 'overdrive') return 1.18;
+      if (difficulty === 'harder') return 1.12;
+      return 1.0;
+    }
+
+    function replayCurrentConvoPartnerAudio(slowOverride = false) {
+      playFullConversationThread(slowOverride);
+    }
+
+    function handleConvoDifficultyChange(newDiff) {
+      if (!activeSession) return;
+      const step = activeSession.steps?.[activeSession.currentIndex];
+      if (!step || step.type !== 'live_conversation') return;
+      stopFullConversationPlayback();
+
+      appState.convoDifficulty = newDiff;
+      if (newDiff === 'easier') {
+        appState.courseLevel = 1;
+        appState.levelOverdrive = false;
+      } else if (newDiff === 'standard') {
+        appState.courseLevel = 2;
+        appState.levelOverdrive = false;
+      } else if (newDiff === 'harder') {
+        appState.courseLevel = 3;
+        appState.levelOverdrive = false;
+      } else if (newDiff === 'overdrive') {
+        appState.courseLevel = 3;
+        appState.levelOverdrive = true;
+      }
+      syncPaceAndConvoFromCourseLevel();
+      saveState();
+      updatePaceUI();
+
+      const allCurricula = [...UNITS_CURRICULUM, ...STREET_CURRICULUM];
+      const node = allCurricula.flatMap(u => u.nodes).find(n => n.id === step.nodeId) || STREET_CURRICULUM[0].nodes[0];
+      const rebuilt = createLiveConversationStep(node, newDiff, step.remixSeed);
+      activeSession.steps[activeSession.currentIndex] = rebuilt;
+
+      const labels = {
+        easier: '🌱 Lv.1 Easier Convo • 4 Lines at 0.80x + Visible Script & Phonetics',
+        standard: '⚡ Lv.2 Standard Convo • 6 Lines at 1.0x Ear-First Audio + Old & New Mix',
+        harder: '🔥 Lv.3 Harder Convo • 8 Lines at 1.12x + Compound Mix + Pure Ear Lock',
+        overdrive: '🚀 Lv.3+ Overdrive Convo • 10 Rapid Lines (1.18x) + 3 Compound Turns + 5-Choice Qs!'
+      };
+      showToast(labels[newDiff] || 'Difficulty updated');
+      renderCurrentLessonStep();
+    }
+
+    function toggleConvoTranscriptReveal() {
+      if (!activeSession) return;
+      const step = activeSession.steps?.[activeSession.currentIndex];
+      if (!step || step.type !== 'live_conversation') return;
+      step.transcriptUnlocked = !step.transcriptUnlocked;
+      renderLiveConversationStep(
+        step,
+        document.getElementById('lesson-stage'),
+        document.getElementById('lesson-action-btn'),
+        document.getElementById('lesson-feedback-msg'),
+        true
+      );
+    }
+
+    function toggleConvoLinePeek(lineIdx) {
+      if (!activeSession) return;
+      const step = activeSession.steps?.[activeSession.currentIndex];
+      if (!step || step.type !== 'live_conversation') return;
+      const line = step.dialogueLines?.[lineIdx];
+      if (!line) return;
+      line.peekScript = !line.peekScript;
+      renderLiveConversationStep(
+        step,
+        document.getElementById('lesson-stage'),
+        document.getElementById('lesson-action-btn'),
+        document.getElementById('lesson-feedback-msg'),
+        true
+      );
+    }
+
+    function remixLiveConversation() {
+      if (!activeSession) return;
+      const step = activeSession.steps?.[activeSession.currentIndex];
+      if (!step || step.type !== 'live_conversation') return;
+      stopFullConversationPlayback();
+      const allCurricula = [...UNITS_CURRICULUM, ...STREET_CURRICULUM];
+      const node = allCurricula.flatMap(u => u.nodes).find(n => n.id === step.nodeId) || STREET_CURRICULUM[0].nodes[0];
+      const remixed = createLiveConversationStep(node, step.difficulty, (step.remixSeed || 0) + 1);
+      activeSession.steps[activeSession.currentIndex] = remixed;
+      showToast('🔄 Remixed 2-person conversation with a fresh blend of New + Known words!');
+      renderCurrentLessonStep();
+    }
+
+    function handleConvoQuestionSelect(qIdx, optId) {
+      if (!activeSession) return;
+      const step = activeSession.steps?.[activeSession.currentIndex];
+      if (!step || step.type !== 'live_conversation') return;
+      const q = step.questions?.[qIdx];
+      if (!q || q.answered) return;
+
+      const chosen = q.options.find(o => o.id === optId);
+      if (!chosen) return;
+
+      const elapsed = Date.now() - (activeSession.stepStartTime || Date.now());
+      const isRight = !!chosen.isCorrect;
+
+      q.answered = true;
+      q.isCorrect = isRight;
+      q.chosenOptId = optId;
+
+      if (isRight) {
+        step.correctTurnsCount = (step.correctTurnsCount || 0) + 1;
+        activeSession.correctCount = (activeSession.correctCount || 0) + 1;
+      }
+
+      recordItemAttempt(q.itemId, isRight, elapsed);
+      if (q.secondaryItemId) {
+        recordItemAttempt(q.secondaryItemId, isRight, elapsed);
+      }
+
+      playHebrewAudio(q.targetTts, null, getConvoAudioSpeed(step.difficulty));
+
+      if (step.questions.every(item => item.answered)) {
+        step.allTurnsCompleted = true;
+        step.transcriptUnlocked = true;
+        activeSession.stepAnswered = true;
+      }
+
+      renderLiveConversationStep(
+        step,
+        document.getElementById('lesson-stage'),
+        document.getElementById('lesson-action-btn'),
+        document.getElementById('lesson-feedback-msg'),
+        true
+      );
+    }
+
+    function advanceLiveConvoTurn() {
+      if (!activeSession) return;
+      const step = activeSession.steps?.[activeSession.currentIndex];
+      if (!step || step.type !== 'live_conversation') return;
+      stopFullConversationPlayback();
+      step.allTurnsCompleted = true;
+      activeSession.stepAnswered = true;
+      handleLessonNext();
+    }
+
+    let fullConvoPlaybackTimer = null;
+    let isFullConvoPlaying = false;
+
+    function stopFullConversationPlayback() {
+      clearTimeout(fullConvoPlaybackTimer);
+      fullConvoPlaybackTimer = null;
+      isFullConvoPlaying = false;
+      document.querySelectorAll('.convo-playing-ring').forEach(el => {
+        el.classList.remove('ring-2', 'ring-amber-400', 'bg-[#1f263b]', 'convo-playing-ring');
+      });
+      const playBtnLabel = document.getElementById('convo-master-play-label');
+      if (playBtnLabel) playBtnLabel.textContent = 'Play Full Conversation';
+    }
+
+    function playFullConversationThread(slowOverride = false) {
+      if (!activeSession) return;
+      const step = activeSession.steps?.[activeSession.currentIndex];
+      if (!step || step.type !== 'live_conversation') return;
+
+      if (isFullConvoPlaying && !slowOverride) {
+        stopFullConversationPlayback();
+        return;
+      }
+
+      stopFullConversationPlayback();
+      isFullConvoPlaying = true;
+      const playBtnLabel = document.getElementById('convo-master-play-label');
+      if (playBtnLabel) playBtnLabel.textContent = 'Playing Dialogue... (Tap to Stop)';
+
+      const rate = slowOverride ? 0.72 : getConvoAudioSpeed(step.difficulty);
+      const lines = step.dialogueLines || [];
+      let lIdx = 0;
+
+      const playNextLine = () => {
+        document.querySelectorAll('.convo-playing-ring').forEach(el => {
+          el.classList.remove('ring-2', 'ring-amber-400', 'bg-[#1f263b]', 'convo-playing-ring');
+        });
+        if (!isFullConvoPlaying || lIdx >= lines.length) {
+          stopFullConversationPlayback();
+          return;
+        }
+        const line = lines[lIdx++];
+        const bubbleEl = document.getElementById(`convo-line-bubble-${line.lineIdx}`);
+        if (bubbleEl) {
+          bubbleEl.classList.add('ring-2', 'ring-amber-400', 'bg-[#1f263b]', 'convo-playing-ring');
+          bubbleEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+        playHebrewAudio(line.tts, null, rate);
+        const estDuration = Math.max(1850, Math.round((line.tts.length * 145) / rate));
+        fullConvoPlaybackTimer = setTimeout(playNextLine, estDuration);
+      };
+
+      playNextLine();
+    }
+
+    // Optional AI-Powered Dynamic 2-Person Conversation Remix using Gemini API (with instant procedural fallback)
+    async function generateAiLiveConversation() {
+      if (!activeSession) return;
+      const step = activeSession.steps?.[activeSession.currentIndex];
+      if (!step || step.type !== 'live_conversation') return;
+
+      const apiKey = typeof getGeminiApiKey === 'function' ? getGeminiApiKey() : '';
+      if (!apiKey) {
+        remixLiveConversation();
+        return;
+      }
+
+      const btn = document.getElementById('btn-ai-live-convo');
+      if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = '<span>⏳</span><span>Generating 2-Person Scene...</span>';
+      }
+
+      try {
+        const allCurricula = [...UNITS_CURRICULUM, ...STREET_CURRICULUM];
+        const node = allCurricula.flatMap(u => u.nodes).find(n => n.id === step.nodeId) || STREET_CURRICULUM[0].nodes[0];
+        const knownPool = getKnownPoolForConversation(node).slice(0, 6);
+        const newSummary = (node.itemIds || []).map(id => STREET_DB.find(s => s.id === id)).filter(Boolean).map(t => `${t.hebrew} (${t.spoken} = ${t.meaning})`).join(', ');
+        const oldSummary = knownPool.map(k => {
+          const kt = getConvoTurnForItem(k.id, true);
+          return `${kt.targetPhrase} (${kt.targetSpoken} = ${kt.targetMeaning})`;
+        }).join(', ');
+
+        const prompt = `Create a short, fast-paced, realistic 6-line (3-exchange) Israeli Hebrew conversation between Speaker A (${step.cast.speakerA}) and Speaker B (${step.cast.speakerB}) for the lesson "${node.title}".
+Weave together NEW phrases from this lesson: [${newSummary}] and OLD known phrases: [${oldSummary || 'שָׁלוֹם, תּוֹדָה, סַבָּבָה'}].
+Difficulty level: ${step.difficulty}.
+Return ONLY valid JSON array of 3 exchange objects with keys:
+"partnerScript" (Hebrew with nikud), "partnerSpoken" (phonetics), "partnerMeaning" (English),
+"userScript" (Hebrew with nikud), "userSpoken" (phonetics), "userMeaning" (English),
+"isSpiral" (boolean),
+"distractorMeanings" (array of 3 plausible but wrong English meanings for what Speaker B said).`;
+
+        const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${ typeof getGeminiModel === 'function' ? getGeminiModel() : 'gemini-2.5-flash' }:generateContent?key=${encodeURIComponent(apiKey)}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            contents: [{ role: 'user', parts: [{ text: prompt }] }],
+            generationConfig: { temperature: 0.7, responseMimeType: 'application/json' }
+          })
+        });
+        const data = await res.json();
+        const rawText = data?.candidates?.[0]?.content?.parts?.[0]?.text || '';
+        const parsed = JSON.parse(rawText);
+        if (Array.isArray(parsed) && parsed.length >= 2) {
+          const rebuilt = createLiveConversationStep(node, step.difficulty, (step.remixSeed || 0) + 1);
+          rebuilt.sceneTitle = `✨ AI 2-Person Quick Convo • ${node.title}`;
+          const newLines = [];
+          const newQs = [];
+          parsed.slice(0, 3).forEach((item, exIdx) => {
+            newLines.push({
+              lineIdx: newLines.length,
+              exchangeIdx: exIdx,
+              speaker: 'A',
+              speakerName: rebuilt.cast.speakerA,
+              script: item.partnerScript,
+              spoken: item.partnerSpoken,
+              meaning: item.partnerMeaning,
+              tts: item.partnerScript,
+              isSpiral: !!item.isSpiral,
+              isCompound: false,
+              peekScript: false
+            });
+            newLines.push({
+              lineIdx: newLines.length,
+              exchangeIdx: exIdx,
+              speaker: 'B',
+              speakerName: rebuilt.cast.speakerB,
+              script: item.userScript,
+              spoken: item.userSpoken,
+              meaning: item.userMeaning,
+              tts: item.userScript,
+              isSpiral: !!item.isSpiral,
+              isCompound: false,
+              peekScript: false
+            });
+            const opts = [
+              { id: `ai_q_${exIdx}_ok`, text: item.userMeaning, script: item.userScript, spoken: item.userSpoken, isCorrect: true },
+              ...(item.distractorMeanings || ['Asked for the check', 'Told the driver to stop here', 'Ordered a cold coffee']).slice(0, rebuilt.difficulty === 'easier' ? 2 : 3).map((d, di) => ({
+                id: `ai_q_${exIdx}_d_${di}`, text: d, isCorrect: false
+              }))
+            ].sort(() => Math.random() - 0.5);
+            newQs.push({
+              qIdx: exIdx,
+              badge: exIdx === 0 ? '🎯 Opening Exchange' : exIdx === 1 ? '⚡ Follow-Up Detail' : '🎧 Closing Exchange',
+              prompt: `In Line ${exIdx * 2 + 2}, what did ${rebuilt.cast.speakerB.split('(')[0].trim()} say or ask for?`,
+              targetLineNum: exIdx * 2 + 2,
+              targetTts: item.userScript,
+              targetScript: item.userScript,
+              targetSpoken: item.userSpoken,
+              targetMeaning: item.userMeaning,
+              itemId: rebuilt.questions[0]?.itemId || null,
+              options: opts,
+              answered: false,
+              isCorrect: null
+            });
+          });
+          rebuilt.dialogueLines = newLines;
+          rebuilt.questions = newQs;
+          rebuilt.turns = newQs;
+          activeSession.steps[activeSession.currentIndex] = rebuilt;
+          showToast('✨ Generated fresh AI 2-Person Israeli Conversation!');
+          renderCurrentLessonStep();
+          return;
+        }
+      } catch (e) {
+        console.warn('AI Live Convo fallback to procedural remix:', e);
+      }
+      remixLiveConversation();
+    }
+
+    function renderLiveConversationStep(step, stage, actionBtn, footerMsg, skipAutoAudio = false) {
+      const diff = step.difficulty || 'standard';
+      const speedRate = getConvoAudioSpeed(diff);
+      const showRomanGlobal = diff !== 'harder' && appState.pace !== 'intensive';
+
+      // Auto-play the full 2-person conversation when the module first opens!
+      if (!skipAutoAudio && !step._autoPlayedOnce && !step.allTurnsCompleted) {
+        step._autoPlayedOnce = true;
+        setTimeout(() => {
+          playFullConversationThread(false);
+        }, 280);
+      }
+
+      // Render the 2-person back-and-forth dialogue bubbles (Speaker A on Left, Speaker B on Right)
+      const linesHtml = (step.dialogueLines || []).map((line, idx) => {
+        const isSpeakerA = line.speaker === 'A';
+        const showScript = step.transcriptUnlocked || diff === 'easier' || (diff === 'standard' && line.peekScript);
+        const showMeaning = step.transcriptUnlocked || step.allTurnsCompleted;
+
+        return `
+          <div class="flex ${isSpeakerA ? 'justify-start' : 'justify-end'}">
+            <div id="convo-line-bubble-${idx}"
+                 class="w-[90%] sm:w-[84%] rounded-2xl ${
+                   isSpeakerA
+                     ? 'bg-[#171b28] border border-[#283149] rounded-tl-sm'
+                     : 'bg-gradient-to-br from-[#192428] to-[#141c24] border border-emerald-500/35 rounded-tr-sm'
+                 } p-3.5 space-y-2 text-left transition-all shadow-md">
+              <!-- Speaker Header + Line Number + Replay Button -->
+              <div class="flex items-center justify-between gap-2">
+                <div class="flex items-center gap-1.5 min-w-0">
+                  <span class="px-2 py-0.5 rounded-md text-[10px] font-extrabold ${
+                    isSpeakerA ? 'bg-amber-400/15 text-amber-300' : 'bg-emerald-400/15 text-emerald-300'
+                  }">
+                    Line ${idx + 1}
+                  </span>
+                  <span class="text-xs font-bold ${isSpeakerA ? 'text-slate-200' : 'text-emerald-200'} truncate">
+                    ${line.speakerName}
+                  </span>
+                  ${!isSpeakerA ? `
+                    <span class="px-1.5 py-0.5 rounded text-[9px] font-bold uppercase ${
+                      line.isCompound
+                        ? 'bg-purple-500/20 text-purple-300 border border-purple-400/30'
+                        : line.isSpiral
+                        ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-400/30'
+                        : 'bg-amber-400/20 text-amber-300 border border-amber-400/30'
+                    }">
+                      ${line.isCompound ? '🔗 Old+New' : line.isSpiral ? '🔄 Known' : '🆕 New'}
+                    </span>
+                  ` : ''}
+                </div>
+
+                <div class="flex items-center gap-1 shrink-0">
+                  <button type="button"
+                          onclick="stopFullConversationPlayback(); playHebrewAudio('${line.tts.replace(/'/g, "\\'")}', this, ${speedRate})"
+                          class="px-2.5 py-1 rounded-xl ${
+                            isSpeakerA
+                              ? 'bg-amber-400/20 hover:bg-amber-400/35 text-amber-300 border border-amber-400/40'
+                              : 'bg-emerald-400/20 hover:bg-emerald-400/35 text-emerald-200 border border-emerald-400/40'
+                          } text-[11px] font-bold flex items-center gap-1 cursor-pointer active:scale-95 transition-all"
+                          title="Listen to Line ${idx + 1}">
+                    <span>🔊</span><span>Listen</span>
+                  </button>
+                  <button type="button"
+                          onclick="stopFullConversationPlayback(); playHebrewAudio('${line.tts.replace(/'/g, "\\'")}', this, 0.72)"
+                          class="px-2 py-1 rounded-xl bg-[#111520] hover:bg-[#1d2336] border border-[#2a324b] text-slate-300 text-[10px] font-semibold cursor-pointer active:scale-95"
+                          title="Play Line ${idx + 1} slowly (0.72x)">
+                    🐢
+                  </button>
+                  ${!showScript && diff === 'standard' ? `
+                    <button type="button"
+                            onclick="toggleConvoLinePeek(${idx})"
+                            class="px-2 py-1 rounded-xl bg-[#111520] hover:bg-[#1d2336] border border-[#2a324b] text-sky-300 text-[10px] font-semibold cursor-pointer"
+                            title="Peek at the script for this line">
+                      👁️ Peek
+                    </button>
+                  ` : ''}
+                </div>
+              </div>
+
+              <!-- Bubble Body: Either Visible Script/Phonetics OR Ear-First Audio Waveform -->
+              ${showScript ? `
+                <div class="space-y-0.5 pt-1 border-t border-white/5">
+                  <div class="text-base sm:text-lg font-bold text-amber-300 font-hebrew text-right" dir="rtl">${line.script}</div>
+                  ${showRomanGlobal ? `<div class="text-xs sm:text-sm font-extrabold text-white font-mono tracking-wide">${line.spoken}</div>` : ''}
+                  ${showMeaning ? `<div class="text-xs text-slate-300 italic pt-0.5">"${line.meaning}"</div>` : ''}
+                </div>
+              ` : `
+                <div onclick="stopFullConversationPlayback(); playHebrewAudio('${line.tts.replace(/'/g, "\\'")}', this, ${speedRate})"
+                     class="py-2 px-3 rounded-xl bg-[#0e111a] hover:bg-[#141926] border border-dashed border-[#28314a] flex items-center justify-between gap-2 cursor-pointer group">
+                  <div class="flex items-center gap-2">
+                    <div class="flex items-end gap-1 h-3.5">
+                      <span class="w-1 h-2 bg-amber-400 rounded-full wave-bar"></span>
+                      <span class="w-1 h-3.5 bg-amber-300 rounded-full wave-bar" style="animation-delay:0.15s"></span>
+                      <span class="w-1 h-1.5 bg-sky-400 rounded-full wave-bar" style="animation-delay:0.3s"></span>
+                      <span class="w-1 h-3 bg-emerald-400 rounded-full wave-bar" style="animation-delay:0.45s"></span>
+                    </div>
+                    <span class="text-xs text-slate-400 group-hover:text-slate-200 font-medium">
+                      ${diff === 'harder' ? '🔒 Pure Ear Mode — Tap to hear this line' : '🎧 Ear-First Audio — Tap to replay line'}
+                    </span>
+                  </div>
+                  <span class="text-[10px] text-amber-300/80 font-semibold">${speedRate}x</span>
+                </div>
+              `}
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      // Render the Comprehension Check Questions below the 2-person conversation
+      const questionsHtml = (step.questions || []).map((q, qIdx) => {
+        return `
+          <div class="bg-[#161924] border ${
+            q.answered
+              ? (q.isCorrect ? 'border-emerald-500/45' : 'border-amber-500/45')
+              : 'border-[#293147]'
+          } rounded-2xl p-4 space-y-2.5 text-left shadow-md">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <span class="px-2.5 py-0.5 rounded-full bg-sky-500/15 border border-sky-400/35 text-sky-300 text-[10px] font-bold uppercase tracking-wider">
+                ${q.badge}
+              </span>
+              <button type="button"
+                      onclick="stopFullConversationPlayback(); playHebrewAudio('${q.targetTts.replace(/'/g, "\\'")}', this, ${speedRate})"
+                      class="px-2.5 py-1 rounded-xl bg-amber-400/15 hover:bg-amber-400/25 border border-amber-400/35 text-amber-300 text-[11px] font-bold flex items-center gap-1 cursor-pointer active:scale-95">
+                <span>🔊</span>
+                <span>Replay Line ${q.targetLineNum}</span>
+              </button>
+            </div>
+
+            <div class="text-xs sm:text-sm font-bold text-white">
+              ${qIdx + 1}. ${q.prompt}
+            </div>
+
+            <div class="grid grid-cols-1 gap-2">
+              ${q.options.map(opt => {
+                const isChosen = q.chosenOptId === opt.id;
+                let btnStyle = 'bg-[#0f121b] hover:bg-[#1a1f2e] border-[#262d42] text-slate-200';
+                if (q.answered) {
+                  if (opt.isCorrect) {
+                    btnStyle = 'bg-emerald-500/20 border-emerald-400 text-emerald-200 font-bold';
+                  } else if (isChosen && !opt.isCorrect) {
+                    btnStyle = 'bg-rose-500/20 border-rose-400 text-rose-200';
+                  } else {
+                    btnStyle = 'bg-[#0c0e15] border-[#1c2130] text-slate-500 opacity-65';
+                  }
+                }
+                return `
+                  <button type="button"
+                          ${q.answered ? 'disabled' : ''}
+                          onclick="handleConvoQuestionSelect(${qIdx}, '${opt.id}')"
+                          class="w-full p-3 rounded-xl border text-left text-xs sm:text-sm transition-all ${q.answered ? 'cursor-default' : 'cursor-pointer active:scale-[0.99]'} flex items-center justify-between gap-2 ${btnStyle}">
+                    <span>${opt.text}</span>
+                    ${q.answered && opt.isCorrect ? `<span class="text-emerald-300 font-bold shrink-0">✓</span>` : ''}
+                    ${q.answered && isChosen && !opt.isCorrect ? `<span class="text-rose-300 font-bold shrink-0">✗</span>` : ''}
+                  </button>
+                `;
+              }).join('')}
+            </div>
+
+            ${q.answered ? `
+              <div class="pt-1.5 border-t border-white/10 flex flex-wrap items-center justify-between gap-2 text-xs">
+                <div class="flex flex-wrap items-center gap-2">
+                  <span class="${q.isCorrect ? 'text-emerald-300' : 'text-amber-300'} font-bold">
+                    ${q.isCorrect ? '✓ Understood!' : '💡 In Line ' + q.targetLineNum + ' they said:'}
+                  </span>
+                  <span class="text-white font-mono font-bold">${q.targetSpoken}</span>
+                  <bdi dir="rtl"><span class="font-hebrew text-amber-300 font-bold" dir="rtl">(${q.targetScript})</span></bdi>
+                </div>
+              </div>
+            ` : ''}
+          </div>
+        `;
+      }).join('');
+
+      stage.innerHTML = `
+        <div class="max-w-xl mx-auto bg-[#12141c] border border-[#252a3a] rounded-3xl p-4 sm:p-6 space-y-4 shadow-2xl">
+          <!-- Top Header: Title + Cast + Remix/AI -->
+          <div class="space-y-2.5 pb-3 border-b border-[#1f2433]">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <div class="flex items-center gap-2">
+                <span class="text-xl">🎧</span>
+                <div>
+                  <h3 class="text-sm sm:text-base font-extrabold text-white leading-tight">${step.sceneTitle}</h3>
+                  <p class="text-[11px] text-slate-400">
+                    Overhear 2 Locals &amp; Test Your Understanding • <span class="text-amber-300 font-semibold">${step.newCount} New</span> + <span class="text-cyan-300 font-semibold">${step.oldCount} Known</span>
+                  </p>
+                </div>
+              </div>
+
+              <div class="flex items-center gap-1.5">
+                <button type="button" onclick="remixLiveConversation()"
+                        class="px-2.5 py-1.5 rounded-xl bg-[#191d2b] hover:bg-[#23293d] border border-[#2c344d] text-slate-200 hover:text-white text-[11px] font-semibold flex items-center gap-1 cursor-pointer active:scale-95 transition-all"
+                        title="Remix this 2-person conversation with different known words">
+                  <span>🔄</span><span>Remix</span>
+                </button>
+                <button type="button" id="btn-ai-live-convo" onclick="generateAiLiveConversation()"
+                        class="px-2.5 py-1.5 rounded-xl bg-gradient-to-r from-sky-500/20 to-purple-500/20 hover:from-sky-500/30 hover:to-purple-500/30 border border-sky-400/40 text-sky-300 hover:text-white text-[11px] font-semibold flex items-center gap-1 cursor-pointer active:scale-95 transition-all"
+                        title="Generate a brand-new 2-person conversation using your known + new words">
+                  <span>✨</span><span>AI Convo</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- LIVE DIFFICULTY CONTROLLER (Make the Conversation Easier or Harder!) -->
+            <div class="flex flex-wrap items-center justify-between gap-2 bg-[#0c0e14] p-1.5 rounded-2xl border border-[#1f2434]">
+              <div class="flex items-center gap-1 flex-1 flex-wrap">
+                <button type="button" onclick="handleConvoDifficultyChange('easier')"
+                        class="flex-1 min-w-[70px] py-1.5 px-2 rounded-xl text-[11px] font-bold transition-all cursor-pointer flex items-center justify-center gap-1 ${
+                          diff === 'easier'
+                            ? 'bg-emerald-400 text-[#0e0f12] shadow-sm'
+                            : 'text-slate-400 hover:text-white'
+                        }"
+                        title="Easier: 4 lines at 0.80x slower audio, visible script & phonetics">
+                  <span>🌱</span><span>Lv.1 Easy (0.8x)</span>
+                </button>
+                <button type="button" onclick="handleConvoDifficultyChange('standard')"
+                        class="flex-1 min-w-[70px] py-1.5 px-2 rounded-xl text-[11px] font-bold transition-all cursor-pointer flex items-center justify-center gap-1 ${
+                          diff === 'standard'
+                            ? 'bg-amber-400 text-[#0e0f12] shadow-sm'
+                            : 'text-slate-400 hover:text-white'
+                        }"
+                        title="Standard: 6 lines at 1.0x native speed, Ear-First audio, weaves New + Known Old words">
+                  <span>⚡</span><span>Lv.2 Std (1.0x)</span>
+                </button>
+                <button type="button" onclick="handleConvoDifficultyChange('harder')"
+                        class="flex-1 min-w-[70px] py-1.5 px-2 rounded-xl text-[11px] font-bold transition-all cursor-pointer flex items-center justify-center gap-1 ${
+                          diff === 'harder'
+                            ? 'bg-rose-500 text-white shadow-sm'
+                            : 'text-slate-400 hover:text-white'
+                        }"
+                        title="Harder: Rapid street speed (1.12x), 8 lines, compound Old+New sentences, pure audio lock">
+                  <span>🔥</span><span>Lv.3 Hard (1.12x)</span>
+                </button>
+                <button type="button" onclick="handleConvoDifficultyChange('overdrive')"
+                        class="flex-1 min-w-[85px] py-1.5 px-2 rounded-xl text-[11px] font-bold transition-all cursor-pointer flex items-center justify-center gap-1 ${
+                          diff === 'overdrive'
+                            ? 'bg-gradient-to-r from-fuchsia-500 to-amber-400 text-[#0e0f12] shadow-sm font-extrabold'
+                            : 'text-slate-400 hover:text-white'
+                        }"
+                        title="Lv.3+ Overdrive: 10 rapid lines (1.18x), 3 compound turns, 5 choices per question">
+                  <span>🚀</span><span>Lv.3+ Overdrive</span>
+                </button>
+              </div>
+
+              ${diff === 'standard' && !step.allTurnsCompleted ? `
+                <button type="button" onclick="toggleConvoTranscriptReveal()"
+                        class="px-2.5 py-1.5 rounded-xl text-[10px] font-bold border transition-all cursor-pointer ${
+                          step.transcriptUnlocked
+                            ? 'bg-amber-400/20 border-amber-400/50 text-amber-300'
+                            : 'bg-[#151822] border-[#262c3e] text-slate-400 hover:text-white'
+                        }">
+                  ${step.transcriptUnlocked ? '🙈 Hide Script' : '👁️ Show Script'}
+                </button>
+              ` : ''}
+            </div>
+
+            <!-- MASTER 2-PERSON AUDIO PLAYER BAR -->
+            <div class="flex flex-wrap items-center justify-between gap-2 bg-gradient-to-r from-[#181d2c] to-[#141a26] p-3 rounded-2xl border border-[#2c3550]">
+              <div class="flex items-center gap-2">
+                <button type="button"
+                        onclick="playFullConversationThread(false)"
+                        class="px-4 py-2 rounded-xl bg-amber-400 hover:bg-amber-300 text-[#0e0f12] text-xs font-extrabold flex items-center gap-2 cursor-pointer shadow-md active:scale-95 transition-all">
+                  <span>▶</span>
+                  <span id="convo-master-play-label">Play Full Conversation (${speedRate}x)</span>
+                </button>
+                <button type="button"
+                        onclick="playFullConversationThread(true)"
+                        class="px-3 py-2 rounded-xl bg-[#1f2537] hover:bg-[#283048] border border-[#343e5c] text-sky-300 text-xs font-bold flex items-center gap-1 cursor-pointer active:scale-95 transition-all"
+                        title="Listen to the full 2-person conversation slowly at 0.72x">
+                  <span>🐢</span>
+                  <span>Slow Flow</span>
+                </button>
+              </div>
+              <span class="text-[11px] text-slate-400">
+                ${step.dialogueLines.length} lines • Spacebar to replay
+              </span>
+            </div>
+          </div>
+
+          <!-- 2-PERSON BACK-AND-FORTH DIALOGUE STREAM -->
+          <div class="space-y-2.5 max-h-[38vh] overflow-y-auto pr-1 scroll-smooth" id="live-convo-thread">
+            ${linesHtml}
+          </div>
+
+          <!-- COMPREHENSION CHECK: UNDERSTANDING THE CONVERSATION -->
+          <div class="pt-3 border-t border-[#22283a] space-y-3">
+            <div class="flex items-center justify-between">
+              <div class="text-xs sm:text-sm font-extrabold text-white flex items-center gap-1.5">
+                <span>🧠</span>
+                <span>Understand the Interaction (${step.questions.filter(q => q.answered).length}/${step.questions.length} Answered)</span>
+              </div>
+              <span class="text-[11px] text-slate-400">
+                ${step.allTurnsCompleted ? '🔓 Full Transcript Unlocked Above!' : 'Answer to unlock full English transcript'}
+              </span>
+            </div>
+
+            <div class="space-y-3">
+              ${questionsHtml}
+            </div>
+          </div>
+        </div>
+      `;
+
+      // Update Footer Button & Feedback
+      if (step.allTurnsCompleted) {
+        footerMsg.innerHTML = `<span class="text-emerald-400 font-semibold">✓ 2-Person Conversation Understood (${step.correctTurnsCount}/${step.questions.length} spot-on) • Full transcript unlocked!</span>`;
+        actionBtn.textContent = 'Finish Lesson →';
+        actionBtn.className = 'px-6 py-2.5 rounded-2xl bg-emerald-400 hover:bg-emerald-300 text-[#0e0f12] text-xs sm:text-sm font-bold transition-all cursor-pointer shrink-0 shadow-md';
+        actionBtn.disabled = false;
+      } else {
+        const remaining = step.questions.filter(q => !q.answered).length;
+        footerMsg.innerHTML = `<span class="text-slate-400 text-xs">🎧 Listen to the 2-person conversation above and answer ${remaining} comprehension question${remaining > 1 ? 's' : ''}</span>`;
+        actionBtn.textContent = 'Answer Above ↑';
+        actionBtn.className = 'px-5 py-2.5 rounded-2xl bg-[#22252e] text-slate-500 text-xs sm:text-sm font-semibold cursor-not-allowed shrink-0';
+        actionBtn.disabled = true;
       }
     }
 
@@ -7941,6 +9969,10 @@
         checkBuiltWord();
         return;
       }
+      if (step.type === 'live_conversation' && !step.allTurnsCompleted) {
+        advanceLiveConvoTurn();
+        return;
+      }
 
       activeSession.currentIndex += 1;
       renderCurrentLessonStep();
@@ -7959,8 +9991,11 @@
       saveState();
 
       const sessionDrills = (activeSession.steps || []).filter(s => s.type === 'street_listening_drill' || s.type === 'sound_to_letter' || s.type === 'word_decode');
-      const totalDrills = Math.max(1, sessionDrills.length);
-      const sessionAccuracy = Math.round((activeSession.correctCount / totalDrills) * 100);
+      const convoTurnsTotal = (activeSession.steps || [])
+        .filter(s => s.type === 'live_conversation')
+        .reduce((acc, s) => acc + (s.turns ? s.turns.length : 0), 0);
+      const totalDrills = Math.max(1, sessionDrills.length + convoTurnsTotal);
+      const sessionAccuracy = Math.min(100, Math.round((activeSession.correctCount / totalDrills) * 100));
       const overallMetrics = calculateLearningCurveMetrics();
 
       stage.innerHTML = `
@@ -8456,6 +10491,9 @@
       if ((remote.updatedAt || 0) > (local.updatedAt || 0)) {
         if (remote.currentTrack) local.currentTrack = remote.currentTrack;
         if (remote.pace) local.pace = remote.pace;
+        if (remote.courseLevel) local.courseLevel = remote.courseLevel;
+        if (remote.levelOverdrive !== undefined) local.levelOverdrive = !!remote.levelOverdrive;
+        if (remote.autoLevel !== undefined) local.autoLevel = !!remote.autoLevel;
       }
       return changed;
     }
