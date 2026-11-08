@@ -419,16 +419,16 @@
       </div>
       <div class="space-y-3 text-xs">
         <div>
-          <label class="block text-slate-400 mb-1">Thai Script *</label>
-          <input id="custom-thai" type="text" placeholder="e.g. เกาเหลา" class="w-full px-3.5 py-2.5 rounded-xl bg-[#0e0f12] border border-[#282c37] text-white font-thai text-base focus:outline-none focus:border-sky-400" />
+          <label class="block text-slate-400 mb-1">Hebrew Script *</label>
+          <input id="custom-thai" type="text" placeholder="e.g. שָׁלוֹם" class="w-full px-3.5 py-2.5 rounded-xl bg-[#0e0f12] border border-[#282c37] text-white font-hebrew text-base focus:outline-none focus:border-sky-400" />
         </div>
         <div>
-          <label class="block text-slate-400 mb-1">Pronunciation / Romanization *</label>
-          <input id="custom-roman" type="text" placeholder="e.g. kao-lǎo" class="w-full px-3.5 py-2.5 rounded-xl bg-[#0e0f12] border border-[#282c37] text-white focus:outline-none focus:border-sky-400" />
+          <label class="block text-slate-400 mb-1">Pronunciation / Transliteration *</label>
+          <input id="custom-roman" type="text" placeholder="e.g. shalom" class="w-full px-3.5 py-2.5 rounded-xl bg-[#0e0f12] border border-[#282c37] text-white focus:outline-none focus:border-sky-400" />
         </div>
         <div>
           <label class="block text-slate-400 mb-1">English Meaning *</label>
-          <input id="custom-meaning" type="text" placeholder="e.g. Noodle soup without noodles" class="w-full px-3.5 py-2.5 rounded-xl bg-[#0e0f12] border border-[#282c37] text-white focus:outline-none focus:border-sky-400" />
+          <input id="custom-meaning" type="text" placeholder="e.g. Peace / Hello / Goodbye" class="w-full px-3.5 py-2.5 rounded-xl bg-[#0e0f12] border border-[#282c37] text-white focus:outline-none focus:border-sky-400" />
         </div>
         <div class="grid grid-cols-2 gap-2.5">
           <div>
@@ -437,7 +437,7 @@
           </div>
           <div>
             <label class="block text-slate-400 mb-1">Reading Note</label>
-            <input id="custom-note" type="text" placeholder="e.g. เ-า vowel wraps ก" class="w-full px-3.5 py-2.5 rounded-xl bg-[#0e0f12] border border-[#282c37] text-white focus:outline-none focus:border-sky-400" />
+            <input id="custom-note" type="text" placeholder="e.g. Shin (sh) + Cholam (o)" class="w-full px-3.5 py-2.5 rounded-xl bg-[#0e0f12] border border-[#282c37] text-white focus:outline-none focus:border-sky-400" />
           </div>
         </div>
       </div>
@@ -7959,7 +7959,7 @@
       const note = document.getElementById('custom-note').value.trim();
 
       if (!thai || !meaning) {
-        showToast('Please enter Thai script and English meaning');
+        showToast('Please enter Hebrew script and English meaning');
         return;
       }
 
@@ -7969,6 +7969,7 @@
 
       const newWord = {
         id: `W_custom_${Date.now()}`,
+        hebrew: thai,
         thai,
         roman: roman || thai,
         meaning,
@@ -8397,7 +8398,10 @@ Examples:
     let geminiIsThinking = false;
 
     function getGeminiApiKey() {
-      return localStorage.getItem('gemini_user_api_key') || localStorage.getItem(GEMINI_KEY_STORAGE) || localStorage.getItem('thai_gemini_api_key') || '';
+      const explicit = localStorage.getItem(GEMINI_KEY_STORAGE);
+      if (explicit) return explicit;
+      if (localStorage.getItem('hebrew_gemini_disconnected') === 'true') return '';
+      return localStorage.getItem('gemini_user_api_key') || localStorage.getItem('thai_gemini_api_key') || '';
     }
 
     function getGeminiModel() {
@@ -8479,7 +8483,7 @@ Examples:
     function disconnectGeminiKey() {
       if (confirm('Disconnect your Gemini API key from this device?')) {
         localStorage.removeItem(GEMINI_KEY_STORAGE);
-        localStorage.removeItem('gemini_user_api_key');
+        localStorage.setItem('hebrew_gemini_disconnected', 'true');
         const input = document.getElementById('gemini-api-key-input');
         if (input) input.value = '';
         updateGeminiConnectionBadge();
@@ -8506,8 +8510,8 @@ Examples:
       }
 
       // Always save directly to browser storage so user doesn't lose it
+      localStorage.removeItem('hebrew_gemini_disconnected');
       localStorage.setItem(GEMINI_KEY_STORAGE, key);
-      localStorage.setItem('gemini_user_api_key', key);
       localStorage.setItem(GEMINI_MODEL_STORAGE, model);
 
       if (bypassVerify) {

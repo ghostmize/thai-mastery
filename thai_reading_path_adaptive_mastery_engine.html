@@ -6717,7 +6717,7 @@ Examples:
     let geminiIsThinking = false;
 
     function getGeminiApiKey() {
-      return localStorage.getItem('gemini_user_api_key') || localStorage.getItem(GEMINI_KEY_STORAGE) || '';
+      return localStorage.getItem(GEMINI_KEY_STORAGE) || localStorage.getItem('gemini_user_api_key') || '';
     }
 
     function getGeminiModel() {
@@ -6798,8 +6798,11 @@ Examples:
 
     function disconnectGeminiKey() {
       if (confirm('Disconnect your Gemini API key from this device?')) {
+        const curKey = localStorage.getItem(GEMINI_KEY_STORAGE);
         localStorage.removeItem(GEMINI_KEY_STORAGE);
-        localStorage.removeItem('gemini_user_api_key');
+        if (localStorage.getItem('gemini_user_api_key') === curKey) {
+          localStorage.removeItem('gemini_user_api_key');
+        }
         const input = document.getElementById('gemini-api-key-input');
         if (input) input.value = '';
         updateGeminiConnectionBadge();
@@ -6827,7 +6830,9 @@ Examples:
 
       // Always save directly to browser storage so user doesn't lose it
       localStorage.setItem(GEMINI_KEY_STORAGE, key);
-      localStorage.setItem('gemini_user_api_key', key);
+      if (!localStorage.getItem('gemini_user_api_key')) {
+        localStorage.setItem('gemini_user_api_key', key);
+      }
       localStorage.setItem(GEMINI_MODEL_STORAGE, model);
 
       if (bypassVerify) {
