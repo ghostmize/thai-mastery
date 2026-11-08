@@ -6398,6 +6398,29 @@
     window.addEventListener('keydown', (e) => {
       const overlay = document.getElementById('lesson-overlay');
       if (overlay && !overlay.classList.contains('hidden')) {
+        // 2-Person Convo: arrows/Enter walk line-by-line, 1-5 answer the Your-Turn pick
+        const convoStep = activeSession?.steps?.[activeSession.currentIndex];
+        const typingTarget = e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA');
+        if (convoStep && convoStep.type === 'live_conversation' && !typingTarget) {
+          ensureConvoState(convoStep);
+          const inPlay = convoStep.phase !== 'recap';
+          if (inPlay && /^[1-5]$/.test(e.key)) {
+            const q = getConvoLineTask(convoStep, convoStep.dialogueLines[convoStep.cursor]);
+            const opt = q && !q.answered ? q.options[Number(e.key) - 1] : null;
+            if (opt) { e.preventDefault(); handleConvoQuestionSelect(q.qIdx, opt.id); }
+            return;
+          }
+          if (e.key === 'ArrowRight' || e.key === 'Enter') {
+            e.preventDefault();
+            if (inPlay) advanceLiveConvoTurn(); else handleLessonFooterAction();
+            return;
+          }
+          if (e.key === 'ArrowLeft') {
+            e.preventDefault();
+            if (!convoStepBack()) handleLessonPrev();
+            return;
+          }
+        }
         if (e.key === 'ArrowLeft') {
           handleLessonPrev();
         } else if (e.key === 'ArrowRight') {
@@ -8997,97 +9020,69 @@
         });
       });
 
-      // 5. Build Comprehension Questions that test UNDERSTANDING the 2-person interaction!
+      // 5. Build "Your Turn" reply tasks: at every Speaker B turn the learner plays Speaker B and picks
+      //    the right HEBREW reply to what Speaker A just said. This tests the target words in context
+      //    (turn-taking), instead of English trivia about who said what.
       const allTurnKeys = Object.keys(HEBREW_CONVO_TURNS_MAP);
       const allStreetIds = (typeof STREET_DB !== 'undefined' ? STREET_DB.map(s => s.id) : []);
       const distractorIdPool = [...new Set([...shuffledKnown.map(k => k.id), ...newIds, ...allStreetIds, ...allTurnKeys])];
-      const optionCount = difficulty === 'easier' ? 3 : (difficulty === 'overdrive' ? 5 : 4);
+      const optionCount = (difficulty === 'harder' || difficulty === 'overdrive') ? 4 : 3;
+
+      // Attach the lesson word to each Speaker B line (underlined in the bubble + listed in the recap)
+      validExchanges.forEach((ex, exIdx) => {
+        const bLine = dialogueLines[exIdx * 2 + 1];
+        if (bLine && ex.targetPhrase) {
+          bLine.usedWords = [{ script: ex.targetPhrase, spoken: ex.targetSpoken || '', meaning: ex.targetMeaning || '', isSpiral: !!ex.isSpiral }];
+        }
+      });
 
       const questions = validExchanges.map((ex, qIdx) => {
-        const lineAIdx = qIdx * 2;
-        const lineBIdx = qIdx * 2 + 1;
-        const testSpeakerA = ((difficulty === 'harder' || difficulty === 'overdrive') && (qIdx === 1 || qIdx === 3));
-        const targetMeaning = testSpeakerA ? ex.partner.meaning : ex.user.meaning;
-        const targetScript = testSpeakerA ? ex.partner.script : ex.user.script;
-        const targetSpoken = testSpeakerA ? ex.partner.spoken : ex.user.spoken;
-        const targetTts = testSpeakerA ? ex.partner.tts : ex.user.tts;
-        const targetLineNum = testSpeakerA ? (lineAIdx + 1) : (lineBIdx + 1);
-
-        let qPrompt = '';
-        let qBadge = '';
-        if (qIdx === 0) {
-          qBadge = '🎯 Part 1 • Opening Exchange (New Words)';
-          qPrompt = `In the opening exchange (Lines 1–2), what did ${cast.speakerB.split('(')[0].trim()} say or ask for?`;
-        } else if (qIdx === validExchanges.length - 1 && validExchanges.length >= 3) {
-          qBadge = ex.isCompoundMix ? `🔗 Part ${qIdx + 1} • Final Twist (New + Old Combined)` : `🎧 Part ${qIdx + 1} • Closing Exchange`;
-          qPrompt = `At the end of the conversation (Line ${targetLineNum}), what did ${cast.speakerB.split('(')[0].trim()} decide or say?`;
-        } else {
-          qBadge = ex.isSpiral ? `🔄 Part ${qIdx + 1} • Known Word in Context` : `⚡ Part ${qIdx + 1} • Follow-Up Detail`;
-          qPrompt = testSpeakerA
-            ? `In Line ${targetLineNum}, what did ${cast.speakerA.split('(')[0].trim()} ask or tell ${cast.speakerB.split('(')[0].trim()}?`
-            : `In the follow-up (Line ${targetLineNum}), how did ${cast.speakerB.split('(')[0].trim()} respond?`;
-        }
-
+        const lineIdx = qIdx * 2 + 1;
         const correctOpt = {
           id: `q_${qIdx}_ok`,
-          text: targetMeaning,
-          script: targetScript,
-          spoken: targetSpoken,
+          text: ex.user.meaning,
+          script: ex.user.script,
+          spoken: ex.user.spoken,
+          tts: ex.user.tts || ex.user.script,
           isCorrect: true
         };
 
-        let distOpts = [];
-        if (testSpeakerA) {
-          distOpts = (ex.earDistractors || [
-            'Asked where the train exit is',
-            'Ordered a cold coffee with oat milk',
-            'Asked the waiter for the bill',
-            'Offered extra spicy dip and tehina'
-          ]).slice(0, optionCount - 1).map((dTxt, dIdx) => ({
-            id: `q_${qIdx}_dist_${dIdx}`,
-            text: dTxt,
-            isCorrect: false
-          }));
-        } else {
-          const chosenDistIds = distractorIdPool
-            .filter(cid => cid !== ex.itemId && cid !== ex.wovenOldId)
-            .sort(() => Math.random() - 0.5)
-            .slice(0, optionCount - 1);
+        const seenScripts = new Set([correctOpt.script]);
+        const distOpts = [];
+        const candidates = distractorIdPool
+          .filter(cid => cid !== ex.itemId && cid !== ex.wovenOldId)
+          .sort(() => Math.random() - 0.5);
 
-          distOpts = chosenDistIds.map((dId, dIdx) => {
-            const dTurn = getConvoTurnForItem(dId, false);
-            if (ex.isCompoundMix && shuffledNew.length > 0) {
-              const altTurn = getConvoTurnForItem(shuffledNew[(qIdx + dIdx) % shuffledNew.length], false);
-              if (altTurn.itemId !== dTurn.itemId) {
-                const compDist = createCompoundOldNewTurn(dTurn, altTurn);
-                return {
-                  id: `q_${qIdx}_dist_${dIdx}`,
-                  text: compDist.user.meaning,
-                  script: compDist.user.script,
-                  spoken: compDist.user.spoken,
-                  isCorrect: false
-                };
-              }
+        for (const dId of candidates) {
+          if (distOpts.length >= optionCount - 1) break;
+          const dTurn = getConvoTurnForItem(dId, false);
+          let dUser = dTurn?.user;
+          if (ex.isCompoundMix && shuffledNew.length > 0 && dTurn) {
+            const altTurn = getConvoTurnForItem(shuffledNew[(qIdx + distOpts.length) % shuffledNew.length], false);
+            if (altTurn && altTurn.itemId !== dTurn.itemId) {
+              dUser = createCompoundOldNewTurn(dTurn, altTurn)?.user || dUser;
             }
-            return {
-              id: `q_${qIdx}_dist_${dIdx}`,
-              text: dTurn.user.meaning,
-              script: dTurn.user.script,
-              spoken: dTurn.user.spoken,
-              isCorrect: false
-            };
+          }
+          if (!dUser || !dUser.script || seenScripts.has(dUser.script)) continue;
+          seenScripts.add(dUser.script);
+          distOpts.push({
+            id: `q_${qIdx}_dist_${distOpts.length}`,
+            text: dUser.meaning,
+            script: dUser.script,
+            spoken: dUser.spoken,
+            tts: dUser.tts || dUser.script,
+            isCorrect: false
           });
         }
 
         return {
           qIdx,
-          badge: qBadge,
-          prompt: qPrompt,
-          targetLineNum,
-          targetTts,
-          targetScript,
-          targetSpoken,
-          targetMeaning,
+          lineIdx,
+          targetLineNum: lineIdx + 1,
+          targetTts: correctOpt.tts,
+          targetScript: ex.user.script,
+          targetSpoken: ex.user.spoken,
+          targetMeaning: ex.user.meaning,
           itemId: ex.itemId,
           secondaryItemId: ex.wovenOldId || null,
           options: [correctOpt, ...distOpts].sort(() => Math.random() - 0.5),
@@ -9116,6 +9111,10 @@
         transcriptUnlocked: false,
         allTurnsCompleted: false,
         correctTurnsCount: 0,
+        cursor: 0,
+        maxReached: 0,
+        phase: 'play',
+        slow: false,
         _autoPlayedOnce: false
       };
     }
@@ -9127,8 +9126,23 @@
       return 1.0;
     }
 
+    // Space / Replay: replays the current line (or the line being replied to on a Your-Turn pick)
     function replayCurrentConvoPartnerAudio(slowOverride = false) {
-      playFullConversationThread(slowOverride);
+      const step = getActiveConvoStep();
+      if (!step) return;
+      ensureConvoState(step);
+      if (step.phase === 'recap') {
+        playFullConversationThread(slowOverride);
+        return;
+      }
+      const lines = step.dialogueLines || [];
+      const line = lines[step.cursor];
+      const q = getConvoLineTask(step, line);
+      const target = (q && !q.answered) ? lines[step.cursor - 1] : line;
+      if (!target) return;
+      stopFullConversationPlayback();
+      const bubble = document.getElementById(`convo-line-bubble-${target.lineIdx}`);
+      playHebrewAudio(target.tts, bubble, slowOverride ? 0.72 : getConvoRate(step));
     }
 
     function handleConvoDifficultyChange(newDiff) {
@@ -9170,11 +9184,19 @@
       renderCurrentLessonStep();
     }
 
-    function toggleConvoTranscriptReveal() {
-      if (!activeSession) return;
+    // ---------------------------------------------------------------------
+    // 2-PERSON CONVO: STEP-THROUGH PLAYER (one message at a time)
+    //   - cursor walks line by line; Speaker A lines auto-play, Speaker B lines are "Your Turn" picks
+    //   - each bubble reveals progressively: audio -> Hebrew -> sound (romanization) -> English
+    //   - after the last line a recap shows the words used + the full annotated conversation
+    // ---------------------------------------------------------------------
+    function getActiveConvoStep() {
+      if (!activeSession) return null;
       const step = activeSession.steps?.[activeSession.currentIndex];
-      if (!step || step.type !== 'live_conversation') return;
-      step.transcriptUnlocked = !step.transcriptUnlocked;
+      return step && step.type === 'live_conversation' ? step : null;
+    }
+
+    function rerenderLiveConvo(step) {
       renderLiveConversationStep(
         step,
         document.getElementById('lesson-stage'),
@@ -9184,20 +9206,190 @@
       );
     }
 
-    function toggleConvoLinePeek(lineIdx) {
-      if (!activeSession) return;
-      const step = activeSession.steps?.[activeSession.currentIndex];
-      if (!step || step.type !== 'live_conversation') return;
+    function getConvoRate(step) {
+      return step && step.slow ? 0.72 : getConvoAudioSpeed(step ? step.difficulty : 'standard');
+    }
+
+    function getConvoBaseReveal(diff) { return diff === 'easier' ? 2 : 0; }
+    function getConvoPastReveal(diff) { return (diff === 'harder' || diff === 'overdrive') ? 1 : 2; }
+    function convoShowRomanInOptions(step) {
+      const d = step.difficulty || 'standard';
+      return appState.pace !== 'intensive' && (d === 'easier' || d === 'standard');
+    }
+    function getConvoLineTask(step, line) {
+      return line && typeof line.taskIdx === 'number' ? ((step.questions || [])[line.taskIdx] || null) : null;
+    }
+
+    // Normalizes state for fresh, AI-generated and legacy convo steps
+    function ensureConvoState(step) {
+      const lines = step.dialogueLines || [];
+      if (typeof step.cursor !== 'number') step.cursor = 0;
+      step.cursor = Math.max(0, Math.min(step.cursor, Math.max(0, lines.length - 1)));
+      if (typeof step.maxReached !== 'number') step.maxReached = step.cursor;
+      if (!step.phase) step.phase = step.allTurnsCompleted ? 'recap' : 'play';
+      const base = getConvoBaseReveal(step.difficulty);
+      lines.forEach((l, i) => {
+        l.lineIdx = i;
+        if (typeof l.reveal !== 'number') l.reveal = base;
+        delete l.taskIdx;
+      });
+      (step.questions || []).forEach((q, qi) => {
+        if (typeof q.lineIdx !== 'number') q.lineIdx = qi * 2 + 1;
+        if (!q.qIdx && q.qIdx !== 0) q.qIdx = qi;
+        const ln = lines[q.lineIdx];
+        if (ln) ln.taskIdx = qi;
+      });
+    }
+
+    function getConvoSpeakerMeta(name) {
+      const raw = (name || '').trim();
+      const emojiMatch = raw.match(/^(\S+)\s/);
+      const emoji = emojiMatch && !/[A-Za-z\u0590-\u05FF\u0E00-\u0E7F]/.test(emojiMatch[1]) ? emojiMatch[1] : '💬';
+      const paren = raw.match(/\(([^)]+)\)/);
+      let label = paren ? paren[1].split(/\s+[—–-]\s+/)[0].trim() : raw.replace(emoji, '').trim();
+      if (!label) label = 'Speaker';
+      return { emoji, label };
+    }
+
+    // Called whenever the cursor lands on a line: plays it (unless it's an unanswered Your-Turn pick)
+    function onConvoLineEntered(step) {
+      const line = (step.dialogueLines || [])[step.cursor];
+      if (!line) return;
+      step.maxReached = Math.max(step.maxReached || 0, step.cursor);
+      const q = getConvoLineTask(step, line);
+      if (q && !q.answered) {
+        step._taskStart = Date.now();
+        return;
+      }
+      setTimeout(() => playHebrewAudio(line.tts, null, getConvoRate(step)), 120);
+    }
+
+    function advanceLiveConvoTurn() {
+      const step = getActiveConvoStep();
+      if (!step) return;
+      ensureConvoState(step);
+      stopFullConversationPlayback();
+
+      if (step.phase === 'recap') {
+        step.allTurnsCompleted = true;
+        activeSession.stepAnswered = true;
+        handleLessonFooterAction();
+        return;
+      }
+
+      const lines = step.dialogueLines || [];
+      const line = lines[step.cursor];
+      const q = getConvoLineTask(step, line);
+      if (q && !q.answered) {
+        showToast(`Your turn first: pick the reply (1–${q.options.length})`);
+        return;
+      }
+      if (line) line.reveal = Math.max(line.reveal || 0, getConvoPastReveal(step.difficulty));
+
+      if (step.cursor < lines.length - 1) {
+        step.cursor += 1;
+        rerenderLiveConvo(step);
+        onConvoLineEntered(step);
+        return;
+      }
+
+      // Finished the last line -> Recap
+      step.phase = 'recap';
+      step.allTurnsCompleted = true;
+      step.transcriptUnlocked = true;
+      activeSession.stepAnswered = true;
+      rerenderLiveConvo(step);
+    }
+
+    function convoStepBack() {
+      const step = getActiveConvoStep();
+      if (!step) return false;
+      ensureConvoState(step);
+      stopFullConversationPlayback();
+      if (step.phase === 'recap') {
+        step.phase = 'play';
+        step.allTurnsCompleted = false;
+        step.cursor = (step.dialogueLines || []).length - 1;
+      } else if (step.cursor > 0) {
+        step.cursor -= 1;
+      } else {
+        return false;
+      }
+      rerenderLiveConvo(step);
+      onConvoLineEntered(step);
+      return true;
+    }
+
+    function jumpToConvoLine(lineIdx) {
+      const step = getActiveConvoStep();
+      if (!step) return;
+      ensureConvoState(step);
+      if (step.phase !== 'recap' && lineIdx > (step.maxReached || 0)) return;
+      stopFullConversationPlayback();
+      step.phase = 'play';
+      step.allTurnsCompleted = false;
+      step.cursor = lineIdx;
+      step.maxReached = Math.max(step.maxReached || 0, lineIdx);
+      rerenderLiveConvo(step);
+      onConvoLineEntered(step);
+    }
+
+    function revealConvoLine(lineIdx) {
+      const step = getActiveConvoStep();
+      if (!step) return;
       const line = step.dialogueLines?.[lineIdx];
       if (!line) return;
-      line.peekScript = !line.peekScript;
-      renderLiveConversationStep(
-        step,
-        document.getElementById('lesson-stage'),
-        document.getElementById('lesson-action-btn'),
-        document.getElementById('lesson-feedback-msg'),
-        true
-      );
+      line.reveal = Math.min(3, (line.reveal || 0) + 1);
+      rerenderLiveConvo(step);
+    }
+
+    function playConvoLineAudio(lineIdx, el = null) {
+      const step = getActiveConvoStep();
+      if (!step) return;
+      const line = step.dialogueLines?.[lineIdx];
+      if (!line) return;
+      stopFullConversationPlayback();
+      playHebrewAudio(line.tts, el, getConvoRate(step));
+    }
+
+    function playConvoOptionAudio(qIdx, optIdx) {
+      const step = getActiveConvoStep();
+      if (!step) return;
+      const opt = step.questions?.[qIdx]?.options?.[optIdx];
+      if (!opt) return;
+      stopFullConversationPlayback();
+      playHebrewAudio(opt.tts || opt.script, null, getConvoRate(step));
+    }
+
+    function showConvoWordGloss(lineIdx, wordIdx) {
+      const step = getActiveConvoStep();
+      if (!step) return;
+      const w = step.dialogueLines?.[lineIdx]?.usedWords?.[wordIdx];
+      if (!w) return;
+      playHebrewAudio(w.script, null, getConvoRate(step));
+      showToast(`${w.script} · ${w.spoken} = ${w.meaning}`);
+    }
+
+    function toggleConvoSlow() {
+      const step = getActiveConvoStep();
+      if (!step) return;
+      step.slow = !step.slow;
+      rerenderLiveConvo(step);
+      replayCurrentConvoPartnerAudio();
+    }
+
+    // Legacy hooks (kept for compatibility with older saved steps / buttons)
+    function toggleConvoTranscriptReveal() {
+      const step = getActiveConvoStep();
+      if (!step) return;
+      ensureConvoState(step);
+      const allShown = step.dialogueLines.every(l => l.reveal >= 3);
+      step.dialogueLines.forEach(l => { l.reveal = allShown ? getConvoBaseReveal(step.difficulty) : 3; });
+      rerenderLiveConvo(step);
+    }
+
+    function toggleConvoLinePeek(lineIdx) {
+      revealConvoLine(lineIdx);
     }
 
     function remixLiveConversation() {
@@ -9206,24 +9398,25 @@
       if (!step || step.type !== 'live_conversation') return;
       stopFullConversationPlayback();
       const allCurricula = [...UNITS_CURRICULUM, ...STREET_CURRICULUM];
-      const node = allCurricula.flatMap(u => u.nodes).find(n => n.id === step.nodeId) || STREET_CURRICULUM[0].nodes[0];
-      const remixed = createLiveConversationStep(node, step.difficulty, (step.remixSeed || 0) + 1);
-      activeSession.steps[activeSession.currentIndex] = remixed;
-      showToast('🔄 Remixed 2-person conversation with a fresh blend of New + Known words!');
+      const node = allCurricula.flatMap(u => u.nodes).find(n => n.id === step.nodeId) || allCurricula[0].nodes[0];
+      const nextSeed = (step.remixSeed || 0) + 1;
+      const rebuilt = createLiveConversationStep(node, step.difficulty, nextSeed);
+      activeSession.steps[activeSession.currentIndex] = rebuilt;
       renderCurrentLessonStep();
+      showToast('🔄 Remixed the conversation with a fresh mix of new + known words');
     }
 
     function handleConvoQuestionSelect(qIdx, optId) {
-      if (!activeSession) return;
-      const step = activeSession.steps?.[activeSession.currentIndex];
-      if (!step || step.type !== 'live_conversation') return;
+      const step = getActiveConvoStep();
+      if (!step) return;
+      ensureConvoState(step);
       const q = step.questions?.[qIdx];
       if (!q || q.answered) return;
 
       const chosen = q.options.find(o => o.id === optId);
       if (!chosen) return;
 
-      const elapsed = Date.now() - (activeSession.stepStartTime || Date.now());
+      const elapsed = Date.now() - (step._taskStart || activeSession.stepStartTime || Date.now());
       const isRight = !!chosen.isCorrect;
 
       q.answered = true;
@@ -9235,36 +9428,18 @@
         activeSession.correctCount = (activeSession.correctCount || 0) + 1;
       }
 
+      // Record adaptive mastery for both primary and any woven old item
       recordItemAttempt(q.itemId, isRight, elapsed);
       if (q.secondaryItemId) {
         recordItemAttempt(q.secondaryItemId, isRight, elapsed);
       }
 
-      playHebrewAudio(q.targetTts, null, getConvoAudioSpeed(step.difficulty));
+      // Reveal the real line fully and play it, so ear + script + meaning link up right away
+      const line = step.dialogueLines?.[q.lineIdx];
+      if (line) line.reveal = 3;
+      playHebrewAudio(q.targetTts, null, getConvoRate(step));
 
-      if (step.questions.every(item => item.answered)) {
-        step.allTurnsCompleted = true;
-        step.transcriptUnlocked = true;
-        activeSession.stepAnswered = true;
-      }
-
-      renderLiveConversationStep(
-        step,
-        document.getElementById('lesson-stage'),
-        document.getElementById('lesson-action-btn'),
-        document.getElementById('lesson-feedback-msg'),
-        true
-      );
-    }
-
-    function advanceLiveConvoTurn() {
-      if (!activeSession) return;
-      const step = activeSession.steps?.[activeSession.currentIndex];
-      if (!step || step.type !== 'live_conversation') return;
-      stopFullConversationPlayback();
-      step.allTurnsCompleted = true;
-      activeSession.stepAnswered = true;
-      handleLessonNext();
+      rerenderLiveConvo(step);
     }
 
     let fullConvoPlaybackTimer = null;
@@ -9275,16 +9450,15 @@
       fullConvoPlaybackTimer = null;
       isFullConvoPlaying = false;
       document.querySelectorAll('.convo-playing-ring').forEach(el => {
-        el.classList.remove('ring-2', 'ring-amber-400', 'bg-[#1f263b]', 'convo-playing-ring');
+        el.classList.remove('ring-2', 'ring-amber-400', 'convo-playing-ring');
       });
       const playBtnLabel = document.getElementById('convo-master-play-label');
-      if (playBtnLabel) playBtnLabel.textContent = 'Play Full Conversation';
+      if (playBtnLabel) playBtnLabel.textContent = 'Play all';
     }
 
     function playFullConversationThread(slowOverride = false) {
-      if (!activeSession) return;
-      const step = activeSession.steps?.[activeSession.currentIndex];
-      if (!step || step.type !== 'live_conversation') return;
+      const step = getActiveConvoStep();
+      if (!step) return;
 
       if (isFullConvoPlaying && !slowOverride) {
         stopFullConversationPlayback();
@@ -9294,15 +9468,15 @@
       stopFullConversationPlayback();
       isFullConvoPlaying = true;
       const playBtnLabel = document.getElementById('convo-master-play-label');
-      if (playBtnLabel) playBtnLabel.textContent = 'Playing Dialogue... (Tap to Stop)';
+      if (playBtnLabel) playBtnLabel.textContent = 'Stop';
 
-      const rate = slowOverride ? 0.72 : getConvoAudioSpeed(step.difficulty);
+      const rate = slowOverride ? 0.72 : getConvoRate(step);
       const lines = step.dialogueLines || [];
       let lIdx = 0;
 
       const playNextLine = () => {
         document.querySelectorAll('.convo-playing-ring').forEach(el => {
-          el.classList.remove('ring-2', 'ring-amber-400', 'bg-[#1f263b]', 'convo-playing-ring');
+          el.classList.remove('ring-2', 'ring-amber-400', 'convo-playing-ring');
         });
         if (!isFullConvoPlaying || lIdx >= lines.length) {
           stopFullConversationPlayback();
@@ -9311,18 +9485,17 @@
         const line = lines[lIdx++];
         const bubbleEl = document.getElementById(`convo-line-bubble-${line.lineIdx}`);
         if (bubbleEl) {
-          bubbleEl.classList.add('ring-2', 'ring-amber-400', 'bg-[#1f263b]', 'convo-playing-ring');
+          bubbleEl.classList.add('ring-2', 'ring-amber-400', 'convo-playing-ring');
           bubbleEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         }
         playHebrewAudio(line.tts, null, rate);
-        const estDuration = Math.max(1850, Math.round((line.tts.length * 145) / rate));
+        const estDuration = Math.max(1750, Math.round((line.tts.length * 135) / rate));
         fullConvoPlaybackTimer = setTimeout(playNextLine, estDuration);
       };
 
       playNextLine();
     }
 
-    // Optional AI-Powered Dynamic 2-Person Conversation Remix using Gemini API (with instant procedural fallback)
     async function generateAiLiveConversation() {
       if (!activeSession) return;
       const step = activeSession.steps?.[activeSession.currentIndex];
@@ -9357,7 +9530,7 @@ Return ONLY valid JSON array of 3 exchange objects with keys:
 "partnerScript" (Hebrew with nikud), "partnerSpoken" (phonetics), "partnerMeaning" (English),
 "userScript" (Hebrew with nikud), "userSpoken" (phonetics), "userMeaning" (English),
 "isSpiral" (boolean),
-"distractorMeanings" (array of 3 plausible but wrong English meanings for what Speaker B said).`;
+"distractorReplies" (array of 2-3 plausible but wrong Hebrew reply objects: [{"script":"Hebrew","spoken":"phonetics","meaning":"English"}]).`;
 
         const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${ typeof getGeminiModel === 'function' ? getGeminiModel() : 'gemini-2.5-flash' }:generateContent?key=${encodeURIComponent(apiKey)}`, {
           method: 'POST',
@@ -9369,7 +9542,7 @@ Return ONLY valid JSON array of 3 exchange objects with keys:
         });
         const data = await res.json();
         const rawText = data?.candidates?.[0]?.content?.parts?.[0]?.text || '';
-        const parsed = JSON.parse(rawText);
+        const parsed = JSON.parse(rawText.replace(/^```json\s*|\s*```$/g, '').trim());
         if (Array.isArray(parsed) && parsed.length >= 2) {
           const rebuilt = createLiveConversationStep(node, step.difficulty, (step.remixSeed || 0) + 1);
           rebuilt.sceneTitle = `✨ AI 2-Person Quick Convo • ${node.title}`;
@@ -9402,16 +9575,21 @@ Return ONLY valid JSON array of 3 exchange objects with keys:
               isCompound: false,
               peekScript: false
             });
+            const optCount = (rebuilt.difficulty === 'harder' || rebuilt.difficulty === 'overdrive') ? 4 : 3;
+            const seen = new Set([item.userScript]);
+            const wrongPool = [
+              ...(Array.isArray(item.distractorReplies) ? item.distractorReplies : []),
+              ...parsed.filter((_, j) => j !== exIdx).map(o => ({ script: o.userScript, spoken: o.userSpoken, meaning: o.userMeaning }))
+            ].filter(d => d && d.script && !seen.has(d.script) && seen.add(d.script));
             const opts = [
-              { id: `ai_q_${exIdx}_ok`, text: item.userMeaning, script: item.userScript, spoken: item.userSpoken, isCorrect: true },
-              ...(item.distractorMeanings || ['Asked for the check', 'Told the driver to stop here', 'Ordered a cold coffee']).slice(0, rebuilt.difficulty === 'easier' ? 2 : 3).map((d, di) => ({
-                id: `ai_q_${exIdx}_d_${di}`, text: d, isCorrect: false
+              { id: `ai_q_${exIdx}_ok`, text: item.userMeaning, script: item.userScript, spoken: item.userSpoken, tts: item.userScript, isCorrect: true },
+              ...wrongPool.slice(0, optCount - 1).map((d, di) => ({
+                id: `ai_q_${exIdx}_d_${di}`, text: d.meaning || '', script: d.script, spoken: d.spoken || '', tts: d.script, isCorrect: false
               }))
             ].sort(() => Math.random() - 0.5);
             newQs.push({
               qIdx: exIdx,
-              badge: exIdx === 0 ? '🎯 Opening Exchange' : exIdx === 1 ? '⚡ Follow-Up Detail' : '🎧 Closing Exchange',
-              prompt: `In Line ${exIdx * 2 + 2}, what did ${rebuilt.cast.speakerB.split('(')[0].trim()} say or ask for?`,
+              lineIdx: exIdx * 2 + 1,
               targetLineNum: exIdx * 2 + 2,
               targetTts: item.userScript,
               targetScript: item.userScript,
@@ -9437,238 +9615,299 @@ Return ONLY valid JSON array of 3 exchange objects with keys:
       remixLiveConversation();
     }
 
-    function renderLiveConversationStep(step, stage, actionBtn, footerMsg, skipAutoAudio = false) {
-      const diff = step.difficulty || 'standard';
-      const speedRate = getConvoAudioSpeed(diff);
-      const showRomanGlobal = diff !== 'harder' && appState.pace !== 'intensive';
+    function escapeConvoAttr(s) {
+      return String(s || '').replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
+    }
 
-      // Auto-play the full 2-person conversation when the module first opens!
-      if (!skipAutoAudio && !step._autoPlayedOnce && !step.allTurnsCompleted) {
-        step._autoPlayedOnce = true;
-        setTimeout(() => {
-          playFullConversationThread(false);
-        }, 280);
+    // Underlines the lesson words inside a line; tapping one plays it + shows its meaning
+    function highlightConvoLineWords(line, idx) {
+      const full = line.script || '';
+      let html = full;
+      (line.usedWords || []).forEach((w, wIdx) => {
+        const s = (w.script || '').trim();
+        if (!s || s.length > full.length * 0.8) return;
+        const pos = html.indexOf(s);
+        if (pos === -1) return;
+        html = html.slice(0, pos)
+          + `<span onclick="event.stopPropagation(); showConvoWordGloss(${idx}, ${wIdx})" class="underline decoration-dotted decoration-sky-400/80 underline-offset-[6px] cursor-help" title="${escapeConvoAttr(w.meaning)}">${s}</span>`
+          + html.slice(pos + s.length);
+      });
+      return html;
+    }
+
+    // Length-proportional pseudo waveform for audio-only bubbles
+    function renderConvoWaveform(line) {
+      const t = line.tts || line.script || '';
+      const n = Math.max(6, Math.min(22, Math.round(t.length / 2)));
+      let bars = '';
+      for (let i = 0; i < n; i++) {
+        const c = t.charCodeAt(i % Math.max(1, t.length)) || 0;
+        const h = 30 + ((c * 37 + i * 53) % 70);
+        bars += `<span class="w-[3px] rounded-full bg-current" style="height:${h}%"></span>`;
+      }
+      return `
+        <div class="flex items-center gap-2.5 py-0.5">
+          <span class="text-sm">🔊</span>
+          <span class="flex items-center gap-[3px] h-5 opacity-80">${bars}</span>
+        </div>`;
+    }
+
+    // mode: 'current' (highlighted) | 'recent' (context, full opacity) | 'past' (dimmed) | 'recap'
+    function renderConvoBubble(step, line, idx, mode) {
+      const isA = line.speaker === 'A';
+      const meta = getConvoSpeakerMeta(line.speakerName);
+      const isCur = mode === 'current';
+      const reveal = mode === 'recap' ? 3 : (line.reveal || 0);
+      const q = getConvoLineTask(step, line);
+      const chosen = q && q.answered && !q.isCorrect ? q.options.find(o => o.id === q.chosenOptId) : null;
+      const nextLabels = { 1: 'Show Hebrew', 2: 'Show sound', 3: 'Show English' };
+
+      const body = reveal === 0 ? renderConvoWaveform(line) : `
+        <div dir="rtl" class="font-hebrew font-bold text-amber-200 ${isCur ? 'text-base sm:text-lg' : 'text-sm sm:text-base'} leading-snug">${highlightConvoLineWords(line, idx)}</div>
+        ${reveal >= 2 ? `<div class="font-mono text-[11px] sm:text-xs text-slate-300 mt-0.5">${line.spoken}</div>` : ''}
+        ${reveal >= 3 ? `<div class="text-[11px] sm:text-xs text-slate-400 italic mt-1">${line.meaning}</div>` : ''}`;
+
+      const tone = isA
+        ? 'bg-[#181c29] border-[#262d42] rounded-bl-md text-amber-300'
+        : 'bg-[#10201f] border-emerald-500/30 rounded-br-md text-emerald-300';
+      const ring = isCur ? (isA ? 'ring-2 ring-amber-400/60' : 'ring-2 ring-emerald-400/60') : '';
+      const fade = mode === 'past' ? 'opacity-50 hover:opacity-100' : '';
+
+      const extras = [];
+      if (q && q.answered) {
+        extras.push(q.isCorrect
+          ? `<span class="text-emerald-300 font-semibold">✓ your pick</span>`
+          : `<span class="text-rose-300">✗ you picked <span dir="rtl" class="font-hebrew">${chosen ? chosen.script : ''}</span></span>`);
+      }
+      if (mode !== 'recap' && reveal < 3) {
+        extras.push(`<button type="button" onclick="event.stopPropagation(); revealConvoLine(${idx})" class="text-sky-300/90 hover:text-sky-200 cursor-pointer">👁 ${nextLabels[reveal + 1]}</button>`);
       }
 
-      // Render the 2-person back-and-forth dialogue bubbles (Speaker A on Left, Speaker B on Right)
-      const linesHtml = (step.dialogueLines || []).map((line, idx) => {
-        const isSpeakerA = line.speaker === 'A';
-        const showScript = step.transcriptUnlocked || diff === 'easier' || (diff === 'standard' && line.peekScript);
-        const showMeaning = step.transcriptUnlocked || step.allTurnsCompleted;
-
-        return `
-          <div class="flex ${isSpeakerA ? 'justify-start' : 'justify-end'}">
-            <div id="convo-line-bubble-${idx}"
-                 class="w-[94%] sm:w-[88%] rounded-2xl ${
-                   isSpeakerA
-                     ? 'bg-[#151824] border border-[#242b3d] rounded-tl-sm'
-                     : 'bg-[#111f20] border border-emerald-500/30 rounded-tr-sm'
-                 } p-3 space-y-1.5 text-left transition-all">
-              <!-- Header: Speaker Name & Audio Controls -->
-              <div class="flex items-center justify-between gap-2">
-                <div class="flex items-center gap-1.5 min-w-0">
-                  <span class="text-xs font-bold ${isSpeakerA ? 'text-amber-300' : 'text-emerald-300'} truncate">
-                    ${line.speakerName}
-                  </span>
-                </div>
-                <div class="flex items-center gap-1 shrink-0">
-                  <button type="button"
-                          onclick="stopFullConversationPlayback(); playHebrewAudio('${line.tts.replace(/'/g, "\\'")}', this, ${speedRate})"
-                          class="w-7 h-7 rounded-lg bg-white/5 hover:bg-white/10 text-slate-200 text-xs flex items-center justify-center cursor-pointer transition-all"
-                          title="Listen to Line ${idx + 1}">
-                    🔊
-                  </button>
-                  <button type="button"
-                          onclick="stopFullConversationPlayback(); playHebrewAudio('${line.tts.replace(/'/g, "\\'")}', this, 0.72)"
-                          class="w-7 h-7 rounded-lg bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white text-[11px] flex items-center justify-center cursor-pointer transition-all"
-                          title="Slow Audio (0.72x)">
-                    🐢
-                  </button>
-                  ${!showScript && diff === 'standard' ? `
-                    <button type="button"
-                            onclick="toggleConvoLinePeek(${idx})"
-                            class="w-7 h-7 rounded-lg bg-white/5 hover:bg-white/10 text-sky-300 text-xs flex items-center justify-center cursor-pointer transition-all"
-                            title="Peek text">
-                      👁️
-                    </button>
-                  ` : ''}
-                </div>
-              </div>
-
-              <!-- Body: Script / Phonetics OR Minimal Ear-First Waveform -->
-              ${showScript ? `
-                <div class="space-y-0.5 pt-0.5 border-t border-white/5">
-                  <div class="text-base sm:text-lg font-bold text-amber-300 font-hebrew text-right" dir="rtl">${line.script}</div>
-                  ${showRomanGlobal ? `<div class="text-xs sm:text-sm font-bold text-white font-mono">${line.spoken}</div>` : ''}
-                  ${showMeaning ? `<div class="text-xs text-slate-400 italic pt-0.5">"${line.meaning}"</div>` : ''}
-                </div>
-              ` : `
-                <div onclick="stopFullConversationPlayback(); playHebrewAudio('${line.tts.replace(/'/g, "\\'")}', this, ${speedRate})"
-                     class="py-1.5 px-2.5 rounded-xl bg-black/25 hover:bg-black/40 border border-dashed border-[#28314a] flex items-center justify-between gap-2 cursor-pointer transition-all group">
-                  <div class="flex items-center gap-2">
-                    <span class="text-xs text-amber-300">🎧</span>
-                    <span class="text-xs text-slate-400 group-hover:text-slate-200 font-medium">
-                      ${diff === 'harder' ? 'Pure Spoken Hebrew — Tap to listen' : 'Ear-First Spoken — Tap to listen'}
-                    </span>
-                  </div>
-                  <span class="text-[10px] text-slate-500 font-mono">${speedRate}x</span>
-                </div>
-              `}
+      return `
+        <div class="flex items-end gap-2 ${isA ? '' : 'flex-row-reverse'} ${fade} transition-opacity">
+          <div class="w-8 h-8 shrink-0 rounded-full flex items-center justify-center text-base ${isA ? 'bg-amber-500/10 border border-amber-400/30' : 'bg-emerald-500/10 border border-emerald-400/30'}" title="${escapeConvoAttr(meta.label)}">${meta.emoji}</div>
+          <div class="min-w-0 max-w-[82%] flex flex-col ${isA ? 'items-start' : 'items-end'}">
+            ${isCur ? `<span class="text-[10px] font-semibold mb-1 px-1 ${isA ? 'text-amber-300/80' : 'text-emerald-300/80'}">${meta.label}</span>` : ''}
+            <div id="convo-line-bubble-${idx}" onclick="playConvoLineAudio(${idx}, this)" title="Tap to replay"
+                 class="cursor-pointer select-none rounded-2xl border px-3.5 py-2.5 text-left transition-all hover:brightness-110 ${tone} ${ring}">
+              ${body}
             </div>
+            ${extras.length ? `<div class="flex items-center gap-3 mt-1 px-1 text-[11px]">${extras.join('')}</div>` : ''}
           </div>
-        `;
-      }).join('');
+        </div>`;
+    }
 
-      // Render the Comprehension Check Questions below the 2-person conversation
-      const questionsHtml = (step.questions || []).map((q, qIdx) => {
-        return `
-          <div class="bg-[#151824] border ${
-            q.answered
-              ? (q.isCorrect ? 'border-emerald-500/40' : 'border-amber-500/40')
-              : 'border-[#242b3d]'
-          } rounded-2xl p-3.5 space-y-2.5 text-left">
+    // "Your Turn": the learner plays Speaker B and picks the Hebrew reply
+    function renderConvoTaskCard(step, q, line) {
+      const meta = getConvoSpeakerMeta(line.speakerName);
+      const showRoman = convoShowRomanInOptions(step);
+      const opts = q.options.map((opt, oi) => `
+        <div role="button" tabindex="0" onclick="handleConvoQuestionSelect(${q.qIdx}, '${opt.id}')"
+             class="flex items-center gap-2.5 p-2.5 rounded-xl border border-[#273047] bg-[#0f121b] hover:border-emerald-400/60 hover:bg-[#121a1f] cursor-pointer transition-all active:scale-[0.99]">
+          <span class="w-5 h-5 rounded-md bg-white/5 text-[10px] text-slate-400 font-mono flex items-center justify-center shrink-0">${oi + 1}</span>
+          <div class="min-w-0 flex-1 text-left">
+            <div dir="rtl" class="font-hebrew text-amber-200 font-bold text-sm sm:text-base leading-snug">${opt.script || opt.text}</div>
+            ${showRoman && opt.spoken ? `<div class="text-[11px] font-mono text-slate-400">${opt.spoken}</div>` : ''}
+          </div>
+          <button type="button" onclick="event.stopPropagation(); playConvoOptionAudio(${q.qIdx}, ${oi})"
+                  class="w-8 h-8 rounded-lg bg-white/5 hover:bg-white/10 text-xs flex items-center justify-center shrink-0 cursor-pointer" title="Hear this reply">🔊</button>
+        </div>`).join('');
+
+      return `
+        <div class="flex items-end gap-2 flex-row-reverse">
+          <div class="w-8 h-8 shrink-0 rounded-full flex items-center justify-center text-base bg-emerald-500/10 border border-emerald-400/50 animate-pulse">${meta.emoji}</div>
+          <div class="flex-1 min-w-0 rounded-2xl rounded-br-md border border-emerald-400/40 bg-emerald-500/[0.05] p-3 space-y-2">
             <div class="flex items-center justify-between gap-2">
-              <span class="px-2 py-0.5 rounded-full bg-sky-500/15 border border-sky-400/30 text-sky-300 text-[10px] font-bold uppercase tracking-wider">
-                ${q.badge}
-              </span>
-              <button type="button"
-                      onclick="stopFullConversationPlayback(); playHebrewAudio('${q.targetTts.replace(/'/g, "\\'")}', this, ${speedRate})"
-                      class="px-2 py-0.5 rounded-lg bg-white/5 hover:bg-white/10 text-amber-300 text-[11px] font-medium flex items-center gap-1 cursor-pointer transition-all">
-                <span>🔊</span><span>Replay Line ${q.targetLineNum}</span>
-              </button>
+              <span class="text-xs font-bold text-emerald-300">Your turn — reply as ${meta.label}</span>
+              <span class="text-[10px] text-slate-500 hidden sm:inline">keys 1–${q.options.length}</span>
             </div>
-
-            <div class="text-xs sm:text-sm font-bold text-white">
-              ${qIdx + 1}. ${q.prompt}
-            </div>
-
-            <div class="grid grid-cols-1 gap-1.5">
-              ${q.options.map(opt => {
-                const isChosen = q.chosenOptId === opt.id;
-                let btnStyle = 'bg-[#0f121b] hover:bg-[#1a1f2e] border-[#242b3d] text-slate-200';
-                if (q.answered) {
-                  if (opt.isCorrect) {
-                    btnStyle = 'bg-emerald-500/20 border-emerald-400 text-emerald-200 font-bold';
-                  } else if (isChosen && !opt.isCorrect) {
-                    btnStyle = 'bg-rose-500/20 border-rose-400 text-rose-200';
-                  } else {
-                    btnStyle = 'bg-[#0c0e15] border-[#1c2130] text-slate-500 opacity-60';
-                  }
-                }
-                return `
-                  <button type="button"
-                          ${q.answered ? 'disabled' : ''}
-                          onclick="handleConvoQuestionSelect(${qIdx}, '${opt.id}')"
-                          class="w-full p-2.5 rounded-xl border text-left text-xs sm:text-sm transition-all ${q.answered ? 'cursor-default' : 'cursor-pointer active:scale-[0.99]'} flex items-center justify-between gap-2 ${btnStyle}">
-                    <span>${opt.text}</span>
-                    ${q.answered && opt.isCorrect ? `<span class="text-emerald-300 font-bold shrink-0">✓</span>` : ''}
-                    ${q.answered && isChosen && !opt.isCorrect ? `<span class="text-rose-300 font-bold shrink-0">✗</span>` : ''}
-                  </button>
-                `;
-              }).join('')}
-            </div>
-
-            ${q.answered ? `
-              <div class="pt-1 border-t border-white/5 flex flex-wrap items-center gap-1.5 text-xs">
-                <span class="${q.isCorrect ? 'text-emerald-300' : 'text-amber-300'} font-bold">
-                  ${q.isCorrect ? '✓ Understood!' : '💡 In Line ' + q.targetLineNum + ':'}
-                </span>
-                <span class="text-white font-mono font-bold">${q.targetSpoken}</span>
-                <bdi dir="rtl"><span class="font-hebrew text-amber-300 font-bold" dir="rtl">(${q.targetScript})</span></bdi>
-              </div>
-            ` : ''}
+            <div class="space-y-1.5">${opts}</div>
           </div>
-        `;
+        </div>`;
+    }
+
+    // Segmented tracker: one segment per line; tap any reached segment to jump back to it
+    function renderConvoStepper(step) {
+      const lines = step.dialogueLines || [];
+      const inRecap = step.phase === 'recap';
+      const segs = lines.map((line, i) => {
+        const q = getConvoLineTask(step, line);
+        const reached = inRecap || i <= (step.maxReached || 0);
+        const isCur = !inRecap && i === step.cursor;
+        let color = 'bg-white/10';
+        if (reached) color = line.speaker === 'A' ? 'bg-amber-400/70' : 'bg-emerald-400/60';
+        if (q && q.answered) color = q.isCorrect ? 'bg-emerald-400' : 'bg-rose-400';
+        if (isCur && q && !q.answered) color = 'bg-emerald-400/50 animate-pulse';
+        return `<button type="button" ${reached ? `onclick="jumpToConvoLine(${i})"` : 'disabled'} title="Line ${i + 1}${reached ? '' : ' (locked)'}"
+                  class="flex-1 rounded-full transition-all ${isCur ? 'h-2.5 ring-2 ring-white/60' : 'h-1.5'} ${color} ${reached ? 'cursor-pointer hover:brightness-125' : 'cursor-default'}"></button>`;
       }).join('');
+      const label = inRecap ? 'Recap' : `${step.cursor + 1} / ${lines.length}`;
+      return `
+        <div class="flex items-center gap-3">
+          <div class="flex-1 flex items-center gap-1">${segs}</div>
+          <span class="text-[11px] font-mono text-slate-400 shrink-0">${label}</span>
+        </div>`;
+    }
+
+    function renderConvoRecap(step) {
+      const lines = step.dialogueLines || [];
+      const total = (step.questions || []).length;
+      const right = (step.questions || []).filter(q => q.isCorrect).length;
+      const perfect = total > 0 && right === total;
+
+      const seen = new Set();
+      const words = [];
+      lines.forEach((l, li) => (l.usedWords || []).forEach((w, wi) => {
+        if (w.script && !seen.has(w.script)) {
+          seen.add(w.script);
+          words.push({ ...w, li, wi });
+        }
+      }));
+
+      return `
+        <div class="rounded-2xl border ${perfect ? 'border-emerald-400/40 bg-emerald-500/[0.07]' : 'border-amber-400/40 bg-amber-500/[0.07]'} p-3 flex items-center justify-between gap-3">
+          <div class="min-w-0">
+            <div class="text-sm font-bold text-white">${perfect ? '🎉 Nailed the conversation' : '👍 Conversation done'}</div>
+            <div class="text-[11px] text-slate-400">You picked ${right} of ${total} replies correctly</div>
+          </div>
+          <div class="flex items-center gap-1.5 shrink-0">
+            <button type="button" onclick="playFullConversationThread(false)"
+                    class="h-8 px-3 rounded-xl bg-amber-400 hover:bg-amber-300 text-[#0e0f12] text-xs font-bold flex items-center gap-1.5 cursor-pointer active:scale-95 transition-all">
+              <span>▶</span><span id="convo-master-play-label">Play all</span>
+            </button>
+            <button type="button" onclick="playFullConversationThread(true)" title="Play all slowly (0.72x)"
+                    class="h-8 px-2.5 rounded-xl bg-[#171b26] hover:bg-[#222738] border border-[#262c3e] text-slate-300 text-xs cursor-pointer">🐢</button>
+          </div>
+        </div>
+
+        ${words.length ? `
+          <div class="space-y-1.5">
+            <div class="text-[10px] font-bold uppercase tracking-wider text-slate-500">Words in this conversation</div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
+              ${words.map(w => `
+                <button type="button" onclick="showConvoWordGloss(${w.li}, ${w.wi})"
+                        class="text-left p-2.5 rounded-xl bg-[#0f121b] border border-[#242b3d] hover:border-sky-400/50 transition-all cursor-pointer">
+                  <div class="flex items-center justify-between gap-2">
+                    <span dir="rtl" class="font-hebrew text-amber-300 font-bold text-sm sm:text-base">${w.script}</span>
+                    <span class="text-[9px] font-bold px-1.5 py-0.5 rounded-full ${w.isSpiral ? 'bg-sky-500/15 text-sky-300' : 'bg-amber-500/15 text-amber-300'}">${w.isSpiral ? 'REVIEW' : 'NEW'}</span>
+                  </div>
+                  <div class="text-[11px] font-mono text-slate-400">${w.spoken || ''}</div>
+                  <div class="text-xs text-slate-300">${w.meaning || ''}</div>
+                </button>`).join('')}
+            </div>
+          </div>` : ''}
+
+        <div class="space-y-2">
+          <div class="text-[10px] font-bold uppercase tracking-wider text-slate-500">Full conversation · tap a line to hear it</div>
+          <div class="space-y-2.5">${lines.map((l, i) => renderConvoBubble(step, l, i, 'recap')).join('')}</div>
+        </div>`;
+    }
+
+    function renderLiveConversationStep(step, stage, actionBtn, footerMsg, skipAutoAudio = false) {
+      ensureConvoState(step);
+      const lines = step.dialogueLines || [];
+      const inRecap = step.phase === 'recap';
+      const metaA = getConvoSpeakerMeta(step.cast?.speakerA || lines[0]?.speakerName);
+      const metaB = getConvoSpeakerMeta(step.cast?.speakerB || lines[1]?.speakerName);
+      const isAi = (step.sceneTitle || '').startsWith('✨');
+      const title = step.nodeTitle || (step.sceneTitle || '').replace(/^.*•\s*/, '');
+
+      // Play the first line when the module first opens
+      if (!skipAutoAudio && !step._autoPlayedOnce && !inRecap) {
+        step._autoPlayedOnce = true;
+        setTimeout(() => onConvoLineEntered(step), 300);
+      }
+
+      let bodyHtml = '';
+      if (inRecap) {
+        bodyHtml = renderConvoRecap(step);
+      } else {
+        const curLine = lines[step.cursor];
+        const curTask = getConvoLineTask(step, curLine);
+        const items = [];
+        for (let i = 0; i <= step.cursor && i < lines.length; i++) {
+          const line = lines[i];
+          const q = getConvoLineTask(step, line);
+          if (i === step.cursor) {
+            items.push(`<div id="convo-current-anchor" class="scroll-mt-24 scroll-mb-28">${
+              q && !q.answered ? renderConvoTaskCard(step, q, line) : renderConvoBubble(step, line, i, 'current')
+            }</div>`);
+          } else {
+            items.push(renderConvoBubble(step, line, i, i === step.cursor - 1 ? 'recent' : 'past'));
+          }
+        }
+        const remaining = lines.length - step.cursor - 1;
+
+        bodyHtml = `
+          <div class="space-y-3" id="live-convo-thread">${items.join('')}</div>
+          ${remaining > 0 ? `<div class="text-center text-[11px] text-slate-600">· · · ${remaining} more line${remaining > 1 ? 's' : ''}</div>` : ''}
+
+          <div class="flex items-center justify-between gap-2 pt-3 border-t border-white/5">
+            <div class="flex items-center gap-1.5">
+              <button type="button" onclick="convoStepBack()" ${step.cursor === 0 ? 'disabled' : ''} title="Previous line (←)"
+                      class="h-8 w-8 rounded-xl bg-[#171b26] hover:bg-[#222738] border border-[#262c3e] text-slate-300 text-xs cursor-pointer disabled:opacity-30 disabled:cursor-default">◀</button>
+              <button type="button" onclick="replayCurrentConvoPartnerAudio()" title="Replay (Space)"
+                      class="h-8 px-3 rounded-xl bg-[#171b26] hover:bg-[#222738] border border-[#262c3e] text-slate-200 text-xs font-medium cursor-pointer">⟲ Replay</button>
+              <button type="button" onclick="toggleConvoSlow()" title="Slow audio (0.72x)"
+                      class="h-8 px-2.5 rounded-xl border text-xs cursor-pointer ${step.slow ? 'bg-sky-500/15 border-sky-400/40 text-sky-200' : 'bg-[#171b26] hover:bg-[#222738] border-[#262c3e] text-slate-400'}">🐢${step.slow ? ' Slow' : ''}</button>
+            </div>
+            <span class="text-[10px] text-slate-600 hidden sm:inline">${curTask && !curTask.answered ? 'Press 1–' + curTask.options.length + ' to answer' : 'Space replay · ← → move'}</span>
+          </div>`;
+      }
 
       stage.innerHTML = `
-        <div class="max-w-xl mx-auto bg-[#12141c] border border-[#232838] rounded-3xl p-4 sm:p-5 space-y-3.5 shadow-2xl">
-          <!-- Card Header: Title & Action Icons -->
-          <div class="flex items-center justify-between gap-2 pb-2.5 border-b border-white/5">
+        <div class="max-w-xl mx-auto bg-[#12141c] border border-[#232838] rounded-3xl p-4 sm:p-5 space-y-4 shadow-2xl">
+          <div class="flex items-start justify-between gap-3">
             <div class="min-w-0">
-              <div class="flex items-center gap-2">
-                <span class="text-base sm:text-lg">🎧</span>
-                <h3 class="text-sm sm:text-base font-extrabold text-white truncate">${step.sceneTitle}</h3>
+              <h3 class="text-sm sm:text-base font-extrabold text-white truncate">${isAi ? '✨ ' : '🎧 '}${title}</h3>
+              <div class="text-[11px] text-slate-400 mt-0.5 flex items-center gap-1.5 flex-wrap">
+                <span class="text-amber-300/90">${metaA.emoji} ${metaA.label}</span>
+                <span class="text-slate-600">↔</span>
+                <span class="text-emerald-300/90">${metaB.emoji} ${metaB.label} <span class="text-emerald-400/60">(you)</span></span>
               </div>
-              <p class="text-[11px] text-slate-400 pl-6">
-                2-Person Street Dialogue • Overhear &amp; Comprehend
-              </p>
             </div>
-
-            <div class="flex items-center gap-1 shrink-0">
-              <button type="button" onclick="remixLiveConversation()"
-                      class="p-1.5 rounded-xl bg-[#171b26] hover:bg-[#222738] border border-[#262c3e] text-slate-300 hover:text-white text-xs transition-all cursor-pointer"
-                      title="Remix Dialogue with Different Known Words">
-                🔄
-              </button>
-              <button type="button" id="btn-ai-live-convo" onclick="generateAiLiveConversation()"
-                      class="p-1.5 rounded-xl bg-gradient-to-r from-sky-500/15 to-purple-500/15 hover:from-sky-500/25 to-purple-500/25 border border-sky-400/30 text-sky-300 text-xs transition-all cursor-pointer"
-                      title="Generate AI Dialogue">
-                ✨
-              </button>
+            <div class="flex items-center gap-1 shrink-0 opacity-70 hover:opacity-100 transition-opacity">
+              <button type="button" onclick="remixLiveConversation()" title="Remix with different words"
+                      class="w-8 h-8 rounded-xl hover:bg-white/5 text-slate-400 hover:text-white text-xs cursor-pointer">🔄</button>
+              <button type="button" id="btn-ai-live-convo" onclick="generateAiLiveConversation()" title="Generate a new AI conversation"
+                      class="w-8 h-8 rounded-xl hover:bg-white/5 text-sky-300 text-xs cursor-pointer">✨</button>
             </div>
           </div>
 
-          <!-- Minimal Master Audio Player Bar -->
-          <div class="flex items-center justify-between gap-2 bg-[#141722] p-2.5 rounded-2xl border border-[#222738]">
-            <div class="flex items-center gap-2">
-              <button type="button"
-                      onclick="playFullConversationThread(false)"
-                      class="px-3.5 py-1.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-[#0e0f12] text-xs font-bold flex items-center gap-1.5 cursor-pointer shadow-sm active:scale-95 transition-all">
-                <span>▶</span>
-                <span id="convo-master-play-label">Play Dialogue (${speedRate}x)</span>
-              </button>
-              <button type="button"
-                      onclick="playFullConversationThread(true)"
-                      class="px-2 py-1.5 rounded-xl bg-[#1b1f2c] hover:bg-[#252a3b] border border-[#283044] text-slate-300 hover:text-white text-xs font-medium cursor-pointer transition-all"
-                      title="Slow Audio (0.72x)">
-                🐢
-              </button>
-            </div>
-            <div class="flex items-center gap-2">
-              <span class="text-[11px] text-slate-500 hidden xs:inline">${step.dialogueLines.length} lines</span>
-              <button type="button" onclick="toggleConvoTranscriptReveal()"
-                      class="px-2.5 py-1 rounded-lg border border-[#272d3e] text-slate-300 hover:text-white hover:border-slate-400 text-[11px] font-medium transition-all cursor-pointer">
-                ${step.transcriptUnlocked ? '🙈 Hide Text' : '👁️ Show Text'}
-              </button>
-            </div>
-          </div>
+          ${renderConvoStepper(step)}
 
-          <!-- 2-Person Back-and-Forth Dialogue Stream -->
-          <div class="space-y-2 max-h-[36vh] overflow-y-auto pr-1 scroll-smooth" id="live-convo-thread">
-            ${linesHtml}
-          </div>
-
-          <!-- Comprehension Check -->
-          <div class="pt-2.5 border-t border-[#1e2332] space-y-2.5">
-            <div class="flex items-center justify-between text-xs">
-              <span class="font-bold text-slate-200 flex items-center gap-1.5">
-                <span>🧠</span><span>Comprehension (${step.questions.filter(q => q.answered).length}/${step.questions.length})</span>
-              </span>
-              <span class="text-[11px] text-slate-500">
-                ${step.allTurnsCompleted ? '✓ Completed' : 'Tap to answer'}
-              </span>
-            </div>
-
-            <div class="space-y-2.5">
-              ${questionsHtml}
-            </div>
-          </div>
+          ${bodyHtml}
         </div>
       `;
 
-      // Update Footer Button & Feedback
-      if (step.allTurnsCompleted) {
-        footerMsg.innerHTML = `<span class="text-emerald-400 font-semibold text-xs">✓ Dialogue Understood (${step.correctTurnsCount}/${step.questions.length})</span>`;
-        actionBtn.textContent = 'Finish Lesson →';
+      if (!inRecap) {
+        requestAnimationFrame(() => {
+          const anchor = document.getElementById('convo-current-anchor');
+          if (anchor) anchor.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+        });
+      }
+
+      // Footer: single primary action that walks through the conversation
+      const isLastStep = activeSession && activeSession.currentIndex >= activeSession.steps.length - 1;
+      if (inRecap) {
+        const right = (step.questions || []).filter(q => q.isCorrect).length;
+        footerMsg.innerHTML = `<span class="text-emerald-400 font-semibold text-xs">✓ ${right}/${step.questions.length} replies right</span>`;
+        actionBtn.textContent = isLastStep ? 'Finish Lesson →' : 'Continue →';
         actionBtn.className = 'px-6 py-2.5 rounded-2xl bg-emerald-400 hover:bg-emerald-300 text-[#0e0f12] text-xs sm:text-sm font-bold transition-all cursor-pointer shrink-0 shadow-md';
         actionBtn.disabled = false;
       } else {
-        const remaining = step.questions.filter(q => !q.answered).length;
-        footerMsg.innerHTML = `<span class="text-slate-400 text-xs">${remaining} question${remaining > 1 ? 's' : ''} remaining</span>`;
-        actionBtn.textContent = 'Answer Above ↑';
-        actionBtn.className = 'px-5 py-2.5 rounded-2xl bg-[#22252e] text-slate-500 text-xs sm:text-sm font-semibold cursor-not-allowed shrink-0';
-        actionBtn.disabled = true;
+        const curTask = getConvoLineTask(step, lines[step.cursor]);
+        if (curTask && !curTask.answered) {
+          footerMsg.innerHTML = `<span class="text-emerald-300 text-xs font-semibold">Your turn — pick the reply</span>`;
+          actionBtn.textContent = 'Next ▶';
+          actionBtn.className = 'px-5 py-2.5 rounded-2xl bg-[#22252e] text-slate-500 text-xs sm:text-sm font-semibold cursor-not-allowed shrink-0';
+          actionBtn.disabled = true;
+        } else {
+          footerMsg.innerHTML = '';
+          actionBtn.textContent = step.cursor >= lines.length - 1 ? 'See recap ▶' : 'Next line ▶';
+          actionBtn.className = 'px-6 py-2.5 rounded-2xl bg-amber-400 hover:bg-amber-300 text-[#0e0f12] text-xs sm:text-sm font-bold transition-all cursor-pointer shrink-0 shadow-md shadow-amber-500/10';
+          actionBtn.disabled = false;
+        }
       }
     }
 
