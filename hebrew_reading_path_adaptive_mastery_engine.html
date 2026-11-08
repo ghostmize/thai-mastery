@@ -277,20 +277,18 @@
           </span>
 
           <div class="inline-flex items-center bg-[#14161f] p-0.5 rounded-xl border border-[#25293a] gap-0.5">
-            <button type="button" onclick="stepCourseLevel(-1)" class="w-6 h-6 rounded-lg bg-[#1b1f2c] hover:bg-[#282e42] text-slate-300 hover:text-white text-xs font-extrabold flex items-center justify-center cursor-pointer active:scale-95 transition-all" title="Lower Course Level (Same Theme, Simpler Sentences)">−</button>
-            <button type="button" id="global-lvl-btn-1" onclick="setCourseLevel(1, true)" class="px-2 py-1 rounded-lg text-[11px] font-bold transition-all cursor-pointer flex items-center gap-1 text-slate-400 hover:text-white" title="Level 1: Core Survival Chunks • Slower Audio (0.80x) • Easier Questions">
+            <button type="button" id="global-lvl-btn-1" onclick="setCourseLevel(1, true)" class="px-2.5 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-1 text-slate-400 hover:text-white" title="Level 1: Core Survival Chunks • Slower Audio (0.80x) • Easier Questions">
               <span>🌱</span><span>Lv.1</span>
             </button>
-            <button type="button" id="global-lvl-btn-2" onclick="setCourseLevel(2, true)" class="px-2 py-1 rounded-lg text-[11px] font-bold transition-all cursor-pointer flex items-center gap-1 bg-amber-400 text-[#0e0f12] shadow-xs" title="Level 2: Everyday Polite Street Sentences • Native Speed (1.0x)">
+            <button type="button" id="global-lvl-btn-2" onclick="setCourseLevel(2, true)" class="px-2.5 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-1 bg-amber-400 text-[#0e0f12] shadow-xs" title="Level 2: Everyday Polite Street Sentences • Native Speed (1.0x)">
               <span>⚡</span><span>Lv.2</span>
             </button>
-            <button type="button" id="global-lvl-btn-3" onclick="setCourseLevel(3, true)" class="px-2 py-1 rounded-lg text-[11px] font-bold transition-all cursor-pointer flex items-center gap-1 text-slate-400 hover:text-white" title="Level 3: Longer Sentences + Israeli Street Slang + Bonus Theme Words + Harder Convo Questions">
+            <button type="button" id="global-lvl-btn-3" onclick="setCourseLevel(3, true)" class="px-2.5 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-1 text-slate-400 hover:text-white" title="Level 3: Longer Sentences + Israeli Street Slang + Bonus Theme Words + Harder Convo Questions">
               <span>🔥</span><span>Lv.3</span>
             </button>
-            <button type="button" id="global-lvl-btn-overdrive" onclick="toggleOverdriveLevel(true)" class="px-2 py-1 rounded-lg text-[11px] font-bold transition-all cursor-pointer flex items-center gap-1 text-slate-400 hover:text-white" title="Lv.3+ Overdrive: Rapid Native Flow (1.18x) + Multi-Clause Slang + 5-Exchange Convo">
+            <button type="button" id="global-lvl-btn-overdrive" onclick="toggleOverdriveLevel(true)" class="px-2.5 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-1 text-slate-400 hover:text-white" title="Lv.3+ Overdrive: Rapid Native Flow (1.18x) + Multi-Clause Slang + 5-Exchange Convo">
               <span>🚀</span><span class="hidden sm:inline">Overdrive</span><span class="sm:hidden">3+</span>
             </button>
-            <button type="button" onclick="stepCourseLevel(1)" class="w-6 h-6 rounded-lg bg-[#1b1f2c] hover:bg-[#282e42] text-slate-300 hover:text-white text-xs font-extrabold flex items-center justify-center cursor-pointer active:scale-95 transition-all" title="Raise Course Level (More Slang, Longer Sentences, Harder Questions)">+</button>
           </div>
 
           <button type="button" id="global-auto-lvl-btn" onclick="toggleAutoLevel()" class="px-2.5 py-1 rounded-xl border text-[11px] font-bold transition-all cursor-pointer flex items-center gap-1 bg-emerald-500/15 border-emerald-500/40 text-emerald-300" title="Auto-Adapt: Automatically raises level on fast streaks or lowers on misses while keeping the same lesson theme">
@@ -373,78 +371,49 @@
   <!-- ===================================================================== -->
   <div id="lesson-overlay" class="fixed inset-0 h-[100dvh] z-40 bg-[#0e0f12] hidden flex flex-col">
     
-    <!-- Lesson Top Progress Bar -->
-    <div class="max-w-2xl w-full mx-auto px-3 sm:px-4 pt-3 sm:pt-5 pb-2 sm:pb-3 flex items-center gap-2 sm:gap-3">
-      <button onclick="exitLesson()" aria-label="Exit Lesson" class="w-9 h-9 rounded-full bg-[#16181d] hover:bg-[#22252d] border border-[#262933] text-slate-400 hover:text-white flex items-center justify-center transition-colors cursor-pointer shrink-0" title="Exit (Esc)">
+    <!-- Lesson Top Navigation Bar (Sleek, Minimal, Single Row) -->
+    <div class="max-w-2xl w-full mx-auto px-3 sm:px-4 pt-3 pb-1 flex items-center justify-between gap-2.5">
+      <!-- Exit Button -->
+      <button onclick="exitLesson()" aria-label="Exit Lesson" class="w-8 h-8 rounded-xl bg-[#16181d] hover:bg-[#22252d] border border-[#262933] text-slate-400 hover:text-white flex items-center justify-center transition-colors cursor-pointer shrink-0" title="Exit Lesson (Esc)">
         ✕
       </button>
 
-      <!-- Back / Forth Navigation Arrows -->
-      <div class="flex items-center gap-1 shrink-0">
-        <button id="lesson-prev-arrow" onclick="handleLessonPrev()" class="w-8 h-8 rounded-full bg-[#16181d] hover:bg-[#22252d] border border-[#262933] text-slate-300 hover:text-white flex items-center justify-center text-sm font-bold transition-all cursor-pointer disabled:opacity-25 disabled:cursor-not-allowed" title="Previous Card (← Left Arrow)">
-          ←
-        </button>
-        <button id="lesson-next-arrow" onclick="handleLessonNext()" class="w-8 h-8 rounded-full bg-[#16181d] hover:bg-[#22252d] border border-[#262933] text-slate-300 hover:text-white flex items-center justify-center text-sm font-bold transition-all cursor-pointer disabled:opacity-25 disabled:cursor-not-allowed" title="Next Card (→ Right Arrow)">
-          →
-        </button>
-      </div>
-
-      <!-- Progress Bar -->
-      <div class="flex-1 h-3 bg-[#1a1d24] rounded-full overflow-hidden border border-[#252933]">
+      <!-- Center Progress Bar -->
+      <div class="flex-1 h-2 bg-[#1a1d24] rounded-full overflow-hidden border border-[#252933]">
         <div id="lesson-progress-bar" class="h-full bg-gradient-to-r from-amber-400 via-sky-400 to-emerald-400 rounded-full transition-all duration-300" style="width: 10%;"></div>
       </div>
 
-      <!-- Speed & Counter -->
-      <div class="flex items-center gap-1.5 sm:gap-2 shrink-0">
-        <button id="lesson-speed-btn" onclick="toggleAudioSpeed()" class="px-2 sm:px-2.5 py-1 rounded-full bg-[#16181d] border border-[#262933] text-xs font-medium text-slate-300 hover:text-white cursor-pointer" title="Toggle audio speed (1.0x / 0.75x)">
-          1.0x
-        </button>
-        <div class="text-xs font-semibold text-emerald-400 bg-emerald-500/10 border border-emerald-500/25 px-2 sm:px-2.5 py-1 rounded-full">
-          <span id="lesson-step-counter">1 / 8</span>
+      <!-- Right: Compact Level Segmented Control + Step Counter + Gemini -->
+      <div class="flex items-center gap-1.5 shrink-0">
+        <!-- Compact Level Segmented Pill -->
+        <div class="inline-flex items-center bg-[#14161f] p-0.5 rounded-xl border border-[#252a38] gap-0.5">
+          <button type="button" id="lesson-lvl-btn-1" onclick="setCourseLevel(1, true)" class="px-2 py-0.5 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-0.5 text-slate-400 hover:text-white" title="Lv.1 Survival Core">
+            <span>🌱</span><span class="text-[10px] hidden sm:inline">1</span>
+          </button>
+          <button type="button" id="lesson-lvl-btn-2" onclick="setCourseLevel(2, true)" class="px-2 py-0.5 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-0.5 bg-amber-400 text-[#0e0f12]" title="Lv.2 Natural Street">
+            <span>⚡</span><span class="text-[10px] hidden sm:inline">2</span>
+          </button>
+          <button type="button" id="lesson-lvl-btn-3" onclick="setCourseLevel(3, true)" class="px-2 py-0.5 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-0.5 text-slate-400 hover:text-white" title="Lv.3 Fluent + Slang">
+            <span>🔥</span><span class="text-[10px] hidden sm:inline">3</span>
+          </button>
+          <button type="button" id="lesson-lvl-btn-overdrive" onclick="toggleOverdriveLevel(true)" class="px-2 py-0.5 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-0.5 text-slate-400 hover:text-white" title="Lv.3+ Overdrive: Max Speed & Compound Slang">
+            <span>🚀</span>
+          </button>
         </div>
-        <button id="lesson-jump-convo-btn" onclick="jumpToLessonConversation()" class="px-2.5 py-1 rounded-full bg-amber-500/15 hover:bg-amber-500/30 border border-amber-400/40 text-xs font-semibold text-amber-300 hover:text-white transition-all flex items-center gap-1 cursor-pointer shadow-sm" title="Jump straight to this lesson's 2-Person Quick Conversation & Comprehension module">
-          <span>🎧</span>
-          <span class="hidden sm:inline">2-Person Convo</span>
-        </button>
-        <button id="lesson-gemini-btn" onclick="toggleGeminiChat()" class="px-2.5 py-1 rounded-full bg-gradient-to-r from-sky-500/20 to-purple-500/20 hover:from-sky-500/30 hover:to-purple-500/30 border border-sky-400/40 text-xs font-semibold text-sky-300 hover:text-white transition-all flex items-center gap-1.5 cursor-pointer shadow-sm" title="Ask Gemini about this card (Ctrl+Space)">
-          <span class="text-xs">✨</span>
-          <span class="hidden sm:inline">Ask Gemini</span>
+
+        <!-- Step Counter -->
+        <div class="text-xs font-bold text-slate-300 bg-[#16181d] border border-[#262933] px-2 py-0.5 rounded-lg shrink-0">
+          <span id="lesson-step-counter">1/8</span>
+        </div>
+
+        <!-- Gemini Tutor -->
+        <button id="lesson-gemini-btn" onclick="toggleGeminiChat()" class="w-7 h-7 rounded-lg bg-gradient-to-r from-sky-500/20 to-purple-500/20 hover:from-sky-500/30 border border-sky-400/40 text-sky-300 hover:text-white text-xs flex items-center justify-center transition-all cursor-pointer shrink-0" title="Ask Gemini (Ctrl+Space)">
+          ✨
         </button>
       </div>
     </div>
 
-    <!-- Live In-Lesson Dynamic Level Control Strip (Raise/Lower Anytime Without Leaving Theme!) -->
-    <div class="max-w-2xl w-full mx-auto px-3 sm:px-4 pb-1.5">
-      <div class="bg-[#13151e] border border-[#232736] rounded-2xl px-2.5 py-1.5 flex flex-wrap items-center justify-between gap-2 shadow-sm">
-        <div class="flex items-center gap-1.5 flex-wrap">
-          <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1">
-            <span>🎚️</span><span>Level:</span>
-          </span>
-          <div class="inline-flex items-center bg-[#0d0f15] p-0.5 rounded-xl border border-[#222636] gap-0.5">
-            <button type="button" onclick="stepCourseLevel(-1)" class="w-6 h-6 rounded-lg bg-[#181c28] hover:bg-[#252b3d] text-slate-300 hover:text-white text-xs font-extrabold flex items-center justify-center cursor-pointer active:scale-95" title="Lower Level (Simpler sentences & easier questions, same theme)">−</button>
-            <button type="button" id="lesson-lvl-btn-1" onclick="setCourseLevel(1, true)" class="px-2 py-0.5 rounded-lg text-[11px] font-bold transition-all cursor-pointer flex items-center gap-1 text-slate-400 hover:text-white">
-              <span>🌱</span><span>Lv.1</span>
-            </button>
-            <button type="button" id="lesson-lvl-btn-2" onclick="setCourseLevel(2, true)" class="px-2 py-0.5 rounded-lg text-[11px] font-bold transition-all cursor-pointer flex items-center gap-1 bg-amber-400 text-[#0e0f12]">
-              <span>⚡</span><span>Lv.2</span>
-            </button>
-            <button type="button" id="lesson-lvl-btn-3" onclick="setCourseLevel(3, true)" class="px-2 py-0.5 rounded-lg text-[11px] font-bold transition-all cursor-pointer flex items-center gap-1 text-slate-400 hover:text-white">
-              <span>🔥</span><span>Lv.3</span>
-            </button>
-            <button type="button" id="lesson-lvl-btn-overdrive" onclick="toggleOverdriveLevel(true)" class="px-2 py-0.5 rounded-lg text-[11px] font-bold transition-all cursor-pointer flex items-center gap-1 text-slate-400 hover:text-white" title="Lv.3+ Overdrive: Maximum Street Speed, Multi-Clause Slang & 5-Turn Convo">
-              <span>🚀</span><span>3+</span>
-            </button>
-            <button type="button" onclick="stepCourseLevel(1)" class="w-6 h-6 rounded-lg bg-[#181c28] hover:bg-[#252b3d] text-slate-300 hover:text-white text-xs font-extrabold flex items-center justify-center cursor-pointer active:scale-95" title="Raise Level (Longer sentences, more street slang, bonus words & harder questions)">+</button>
-          </div>
-          <button type="button" id="lesson-auto-lvl-btn" onclick="toggleAutoLevel()" class="px-2 py-0.5 rounded-lg border text-[10px] font-bold transition-all cursor-pointer flex items-center gap-1 bg-emerald-500/15 border-emerald-500/40 text-emerald-300" title="Toggle Auto-Adapt on streaks/misses">
-            <span>🔄</span><span>Auto: ON</span>
-          </button>
-        </div>
-        <span id="lesson-level-status-pill" class="text-[10px] sm:text-[11px] text-amber-300/90 font-semibold truncate">
-          ⚡ Lv.2 • Everyday Polite Street
-        </span>
-      </div>
-    </div>
+
 
     <!-- Lesson Dynamic Card Stage -->
     <div class="flex-1 overflow-y-auto px-3 sm:px-4 py-3 sm:py-4 flex items-center justify-center">
@@ -7066,16 +7035,16 @@
           : 'bg-rose-500 text-white shadow-xs';
         const inactiveClass = 'text-slate-400 hover:text-white';
 
-        if (gBtn) gBtn.className = `px-2 py-1 rounded-lg text-[11px] font-bold transition-all cursor-pointer flex items-center gap-1 ${active ? activeClass : inactiveClass}`;
-        if (lBtn) lBtn.className = `px-2 py-0.5 rounded-lg text-[11px] font-bold transition-all cursor-pointer flex items-center gap-1 ${active ? activeClass : inactiveClass}`;
+        if (gBtn) gBtn.className = `px-2.5 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-1 ${active ? activeClass : inactiveClass}`;
+        if (lBtn) lBtn.className = `px-2 py-0.5 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-0.5 ${active ? activeClass : inactiveClass}`;
       });
 
       const gOver = document.getElementById('global-lvl-btn-overdrive');
       const lOver = document.getElementById('lesson-lvl-btn-overdrive');
       const overActiveClass = 'bg-gradient-to-r from-fuchsia-500 to-amber-400 text-[#0e0f12] shadow-sm';
       const overInactiveClass = 'text-slate-400 hover:text-white';
-      if (gOver) gOver.className = `px-2 py-1 rounded-lg text-[11px] font-bold transition-all cursor-pointer flex items-center gap-1 ${isOverdrive ? overActiveClass : overInactiveClass}`;
-      if (lOver) lOver.className = `px-2 py-0.5 rounded-lg text-[11px] font-bold transition-all cursor-pointer flex items-center gap-1 ${isOverdrive ? overActiveClass : overInactiveClass}`;
+      if (gOver) gOver.className = `px-2.5 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-1 ${isOverdrive ? overActiveClass : overInactiveClass}`;
+      if (lOver) lOver.className = `px-2 py-0.5 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-0.5 ${isOverdrive ? overActiveClass : overInactiveClass}`;
 
       // Auto-Adapt button state
       const gAuto = document.getElementById('global-auto-lvl-btn');
@@ -9490,85 +9459,59 @@ Return ONLY valid JSON array of 3 exchange objects with keys:
         return `
           <div class="flex ${isSpeakerA ? 'justify-start' : 'justify-end'}">
             <div id="convo-line-bubble-${idx}"
-                 class="w-[90%] sm:w-[84%] rounded-2xl ${
+                 class="w-[94%] sm:w-[88%] rounded-2xl ${
                    isSpeakerA
-                     ? 'bg-[#171b28] border border-[#283149] rounded-tl-sm'
-                     : 'bg-gradient-to-br from-[#192428] to-[#141c24] border border-emerald-500/35 rounded-tr-sm'
-                 } p-3.5 space-y-2 text-left transition-all shadow-md">
-              <!-- Speaker Header + Line Number + Replay Button -->
+                     ? 'bg-[#151824] border border-[#242b3d] rounded-tl-sm'
+                     : 'bg-[#111f20] border border-emerald-500/30 rounded-tr-sm'
+                 } p-3 space-y-1.5 text-left transition-all">
+              <!-- Header: Speaker Name & Audio Controls -->
               <div class="flex items-center justify-between gap-2">
                 <div class="flex items-center gap-1.5 min-w-0">
-                  <span class="px-2 py-0.5 rounded-md text-[10px] font-extrabold ${
-                    isSpeakerA ? 'bg-amber-400/15 text-amber-300' : 'bg-emerald-400/15 text-emerald-300'
-                  }">
-                    Line ${idx + 1}
-                  </span>
-                  <span class="text-xs font-bold ${isSpeakerA ? 'text-slate-200' : 'text-emerald-200'} truncate">
+                  <span class="text-xs font-bold ${isSpeakerA ? 'text-amber-300' : 'text-emerald-300'} truncate">
                     ${line.speakerName}
                   </span>
-                  ${!isSpeakerA ? `
-                    <span class="px-1.5 py-0.5 rounded text-[9px] font-bold uppercase ${
-                      line.isCompound
-                        ? 'bg-purple-500/20 text-purple-300 border border-purple-400/30'
-                        : line.isSpiral
-                        ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-400/30'
-                        : 'bg-amber-400/20 text-amber-300 border border-amber-400/30'
-                    }">
-                      ${line.isCompound ? '🔗 Old+New' : line.isSpiral ? '🔄 Known' : '🆕 New'}
-                    </span>
-                  ` : ''}
                 </div>
-
                 <div class="flex items-center gap-1 shrink-0">
                   <button type="button"
                           onclick="stopFullConversationPlayback(); playHebrewAudio('${line.tts.replace(/'/g, "\\'")}', this, ${speedRate})"
-                          class="px-2.5 py-1 rounded-xl ${
-                            isSpeakerA
-                              ? 'bg-amber-400/20 hover:bg-amber-400/35 text-amber-300 border border-amber-400/40'
-                              : 'bg-emerald-400/20 hover:bg-emerald-400/35 text-emerald-200 border border-emerald-400/40'
-                          } text-[11px] font-bold flex items-center gap-1 cursor-pointer active:scale-95 transition-all"
+                          class="w-7 h-7 rounded-lg bg-white/5 hover:bg-white/10 text-slate-200 text-xs flex items-center justify-center cursor-pointer transition-all"
                           title="Listen to Line ${idx + 1}">
-                    <span>🔊</span><span>Listen</span>
+                    🔊
                   </button>
                   <button type="button"
                           onclick="stopFullConversationPlayback(); playHebrewAudio('${line.tts.replace(/'/g, "\\'")}', this, 0.72)"
-                          class="px-2 py-1 rounded-xl bg-[#111520] hover:bg-[#1d2336] border border-[#2a324b] text-slate-300 text-[10px] font-semibold cursor-pointer active:scale-95"
-                          title="Play Line ${idx + 1} slowly (0.72x)">
+                          class="w-7 h-7 rounded-lg bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white text-[11px] flex items-center justify-center cursor-pointer transition-all"
+                          title="Slow Audio (0.72x)">
                     🐢
                   </button>
                   ${!showScript && diff === 'standard' ? `
                     <button type="button"
                             onclick="toggleConvoLinePeek(${idx})"
-                            class="px-2 py-1 rounded-xl bg-[#111520] hover:bg-[#1d2336] border border-[#2a324b] text-sky-300 text-[10px] font-semibold cursor-pointer"
-                            title="Peek at the script for this line">
-                      👁️ Peek
+                            class="w-7 h-7 rounded-lg bg-white/5 hover:bg-white/10 text-sky-300 text-xs flex items-center justify-center cursor-pointer transition-all"
+                            title="Peek text">
+                      👁️
                     </button>
                   ` : ''}
                 </div>
               </div>
 
-              <!-- Bubble Body: Either Visible Script/Phonetics OR Ear-First Audio Waveform -->
+              <!-- Body: Script / Phonetics OR Minimal Ear-First Waveform -->
               ${showScript ? `
-                <div class="space-y-0.5 pt-1 border-t border-white/5">
+                <div class="space-y-0.5 pt-0.5 border-t border-white/5">
                   <div class="text-base sm:text-lg font-bold text-amber-300 font-hebrew text-right" dir="rtl">${line.script}</div>
-                  ${showRomanGlobal ? `<div class="text-xs sm:text-sm font-extrabold text-white font-mono tracking-wide">${line.spoken}</div>` : ''}
-                  ${showMeaning ? `<div class="text-xs text-slate-300 italic pt-0.5">"${line.meaning}"</div>` : ''}
+                  ${showRomanGlobal ? `<div class="text-xs sm:text-sm font-bold text-white font-mono">${line.spoken}</div>` : ''}
+                  ${showMeaning ? `<div class="text-xs text-slate-400 italic pt-0.5">"${line.meaning}"</div>` : ''}
                 </div>
               ` : `
                 <div onclick="stopFullConversationPlayback(); playHebrewAudio('${line.tts.replace(/'/g, "\\'")}', this, ${speedRate})"
-                     class="py-2 px-3 rounded-xl bg-[#0e111a] hover:bg-[#141926] border border-dashed border-[#28314a] flex items-center justify-between gap-2 cursor-pointer group">
+                     class="py-1.5 px-2.5 rounded-xl bg-black/25 hover:bg-black/40 border border-dashed border-[#28314a] flex items-center justify-between gap-2 cursor-pointer transition-all group">
                   <div class="flex items-center gap-2">
-                    <div class="flex items-end gap-1 h-3.5">
-                      <span class="w-1 h-2 bg-amber-400 rounded-full wave-bar"></span>
-                      <span class="w-1 h-3.5 bg-amber-300 rounded-full wave-bar" style="animation-delay:0.15s"></span>
-                      <span class="w-1 h-1.5 bg-sky-400 rounded-full wave-bar" style="animation-delay:0.3s"></span>
-                      <span class="w-1 h-3 bg-emerald-400 rounded-full wave-bar" style="animation-delay:0.45s"></span>
-                    </div>
+                    <span class="text-xs text-amber-300">🎧</span>
                     <span class="text-xs text-slate-400 group-hover:text-slate-200 font-medium">
-                      ${diff === 'harder' ? '🔒 Pure Ear Mode — Tap to hear this line' : '🎧 Ear-First Audio — Tap to replay line'}
+                      ${diff === 'harder' ? 'Pure Spoken Hebrew — Tap to listen' : 'Ear-First Spoken — Tap to listen'}
                     </span>
                   </div>
-                  <span class="text-[10px] text-amber-300/80 font-semibold">${speedRate}x</span>
+                  <span class="text-[10px] text-slate-500 font-mono">${speedRate}x</span>
                 </div>
               `}
             </div>
@@ -9579,20 +9522,19 @@ Return ONLY valid JSON array of 3 exchange objects with keys:
       // Render the Comprehension Check Questions below the 2-person conversation
       const questionsHtml = (step.questions || []).map((q, qIdx) => {
         return `
-          <div class="bg-[#161924] border ${
+          <div class="bg-[#151824] border ${
             q.answered
-              ? (q.isCorrect ? 'border-emerald-500/45' : 'border-amber-500/45')
-              : 'border-[#293147]'
-          } rounded-2xl p-4 space-y-2.5 text-left shadow-md">
-            <div class="flex flex-wrap items-center justify-between gap-2">
-              <span class="px-2.5 py-0.5 rounded-full bg-sky-500/15 border border-sky-400/35 text-sky-300 text-[10px] font-bold uppercase tracking-wider">
+              ? (q.isCorrect ? 'border-emerald-500/40' : 'border-amber-500/40')
+              : 'border-[#242b3d]'
+          } rounded-2xl p-3.5 space-y-2.5 text-left">
+            <div class="flex items-center justify-between gap-2">
+              <span class="px-2 py-0.5 rounded-full bg-sky-500/15 border border-sky-400/30 text-sky-300 text-[10px] font-bold uppercase tracking-wider">
                 ${q.badge}
               </span>
               <button type="button"
                       onclick="stopFullConversationPlayback(); playHebrewAudio('${q.targetTts.replace(/'/g, "\\'")}', this, ${speedRate})"
-                      class="px-2.5 py-1 rounded-xl bg-amber-400/15 hover:bg-amber-400/25 border border-amber-400/35 text-amber-300 text-[11px] font-bold flex items-center gap-1 cursor-pointer active:scale-95">
-                <span>🔊</span>
-                <span>Replay Line ${q.targetLineNum}</span>
+                      class="px-2 py-0.5 rounded-lg bg-white/5 hover:bg-white/10 text-amber-300 text-[11px] font-medium flex items-center gap-1 cursor-pointer transition-all">
+                <span>🔊</span><span>Replay Line ${q.targetLineNum}</span>
               </button>
             </div>
 
@@ -9600,24 +9542,24 @@ Return ONLY valid JSON array of 3 exchange objects with keys:
               ${qIdx + 1}. ${q.prompt}
             </div>
 
-            <div class="grid grid-cols-1 gap-2">
+            <div class="grid grid-cols-1 gap-1.5">
               ${q.options.map(opt => {
                 const isChosen = q.chosenOptId === opt.id;
-                let btnStyle = 'bg-[#0f121b] hover:bg-[#1a1f2e] border-[#262d42] text-slate-200';
+                let btnStyle = 'bg-[#0f121b] hover:bg-[#1a1f2e] border-[#242b3d] text-slate-200';
                 if (q.answered) {
                   if (opt.isCorrect) {
                     btnStyle = 'bg-emerald-500/20 border-emerald-400 text-emerald-200 font-bold';
                   } else if (isChosen && !opt.isCorrect) {
                     btnStyle = 'bg-rose-500/20 border-rose-400 text-rose-200';
                   } else {
-                    btnStyle = 'bg-[#0c0e15] border-[#1c2130] text-slate-500 opacity-65';
+                    btnStyle = 'bg-[#0c0e15] border-[#1c2130] text-slate-500 opacity-60';
                   }
                 }
                 return `
                   <button type="button"
                           ${q.answered ? 'disabled' : ''}
                           onclick="handleConvoQuestionSelect(${qIdx}, '${opt.id}')"
-                          class="w-full p-3 rounded-xl border text-left text-xs sm:text-sm transition-all ${q.answered ? 'cursor-default' : 'cursor-pointer active:scale-[0.99]'} flex items-center justify-between gap-2 ${btnStyle}">
+                          class="w-full p-2.5 rounded-xl border text-left text-xs sm:text-sm transition-all ${q.answered ? 'cursor-default' : 'cursor-pointer active:scale-[0.99]'} flex items-center justify-between gap-2 ${btnStyle}">
                     <span>${opt.text}</span>
                     ${q.answered && opt.isCorrect ? `<span class="text-emerald-300 font-bold shrink-0">✓</span>` : ''}
                     ${q.answered && isChosen && !opt.isCorrect ? `<span class="text-rose-300 font-bold shrink-0">✗</span>` : ''}
@@ -9627,14 +9569,12 @@ Return ONLY valid JSON array of 3 exchange objects with keys:
             </div>
 
             ${q.answered ? `
-              <div class="pt-1.5 border-t border-white/10 flex flex-wrap items-center justify-between gap-2 text-xs">
-                <div class="flex flex-wrap items-center gap-2">
-                  <span class="${q.isCorrect ? 'text-emerald-300' : 'text-amber-300'} font-bold">
-                    ${q.isCorrect ? '✓ Understood!' : '💡 In Line ' + q.targetLineNum + ' they said:'}
-                  </span>
-                  <span class="text-white font-mono font-bold">${q.targetSpoken}</span>
-                  <bdi dir="rtl"><span class="font-hebrew text-amber-300 font-bold" dir="rtl">(${q.targetScript})</span></bdi>
-                </div>
+              <div class="pt-1 border-t border-white/5 flex flex-wrap items-center gap-1.5 text-xs">
+                <span class="${q.isCorrect ? 'text-emerald-300' : 'text-amber-300'} font-bold">
+                  ${q.isCorrect ? '✓ Understood!' : '💡 In Line ' + q.targetLineNum + ':'}
+                </span>
+                <span class="text-white font-mono font-bold">${q.targetSpoken}</span>
+                <bdi dir="rtl"><span class="font-hebrew text-amber-300 font-bold" dir="rtl">(${q.targetScript})</span></bdi>
               </div>
             ` : ''}
           </div>
@@ -9642,128 +9582,75 @@ Return ONLY valid JSON array of 3 exchange objects with keys:
       }).join('');
 
       stage.innerHTML = `
-        <div class="max-w-xl mx-auto bg-[#12141c] border border-[#252a3a] rounded-3xl p-4 sm:p-6 space-y-4 shadow-2xl">
-          <!-- Top Header: Title + Cast + Remix/AI -->
-          <div class="space-y-2.5 pb-3 border-b border-[#1f2433]">
-            <div class="flex flex-wrap items-center justify-between gap-2">
+        <div class="max-w-xl mx-auto bg-[#12141c] border border-[#232838] rounded-3xl p-4 sm:p-5 space-y-3.5 shadow-2xl">
+          <!-- Card Header: Title & Action Icons -->
+          <div class="flex items-center justify-between gap-2 pb-2.5 border-b border-white/5">
+            <div class="min-w-0">
               <div class="flex items-center gap-2">
-                <span class="text-xl">🎧</span>
-                <div>
-                  <h3 class="text-sm sm:text-base font-extrabold text-white leading-tight">${step.sceneTitle}</h3>
-                  <p class="text-[11px] text-slate-400">
-                    Overhear 2 Locals &amp; Test Your Understanding • <span class="text-amber-300 font-semibold">${step.newCount} New</span> + <span class="text-cyan-300 font-semibold">${step.oldCount} Known</span>
-                  </p>
-                </div>
+                <span class="text-base sm:text-lg">🎧</span>
+                <h3 class="text-sm sm:text-base font-extrabold text-white truncate">${step.sceneTitle}</h3>
               </div>
-
-              <div class="flex items-center gap-1.5">
-                <button type="button" onclick="remixLiveConversation()"
-                        class="px-2.5 py-1.5 rounded-xl bg-[#191d2b] hover:bg-[#23293d] border border-[#2c344d] text-slate-200 hover:text-white text-[11px] font-semibold flex items-center gap-1 cursor-pointer active:scale-95 transition-all"
-                        title="Remix this 2-person conversation with different known words">
-                  <span>🔄</span><span>Remix</span>
-                </button>
-                <button type="button" id="btn-ai-live-convo" onclick="generateAiLiveConversation()"
-                        class="px-2.5 py-1.5 rounded-xl bg-gradient-to-r from-sky-500/20 to-purple-500/20 hover:from-sky-500/30 hover:to-purple-500/30 border border-sky-400/40 text-sky-300 hover:text-white text-[11px] font-semibold flex items-center gap-1 cursor-pointer active:scale-95 transition-all"
-                        title="Generate a brand-new 2-person conversation using your known + new words">
-                  <span>✨</span><span>AI Convo</span>
-                </button>
-              </div>
+              <p class="text-[11px] text-slate-400 pl-6">
+                2-Person Street Dialogue • Overhear &amp; Comprehend
+              </p>
             </div>
 
-            <!-- LIVE DIFFICULTY CONTROLLER (Make the Conversation Easier or Harder!) -->
-            <div class="flex flex-wrap items-center justify-between gap-2 bg-[#0c0e14] p-1.5 rounded-2xl border border-[#1f2434]">
-              <div class="flex items-center gap-1 flex-1 flex-wrap">
-                <button type="button" onclick="handleConvoDifficultyChange('easier')"
-                        class="flex-1 min-w-[70px] py-1.5 px-2 rounded-xl text-[11px] font-bold transition-all cursor-pointer flex items-center justify-center gap-1 ${
-                          diff === 'easier'
-                            ? 'bg-emerald-400 text-[#0e0f12] shadow-sm'
-                            : 'text-slate-400 hover:text-white'
-                        }"
-                        title="Easier: 4 lines at 0.80x slower audio, visible script & phonetics">
-                  <span>🌱</span><span>Lv.1 Easy (0.8x)</span>
-                </button>
-                <button type="button" onclick="handleConvoDifficultyChange('standard')"
-                        class="flex-1 min-w-[70px] py-1.5 px-2 rounded-xl text-[11px] font-bold transition-all cursor-pointer flex items-center justify-center gap-1 ${
-                          diff === 'standard'
-                            ? 'bg-amber-400 text-[#0e0f12] shadow-sm'
-                            : 'text-slate-400 hover:text-white'
-                        }"
-                        title="Standard: 6 lines at 1.0x native speed, Ear-First audio, weaves New + Known Old words">
-                  <span>⚡</span><span>Lv.2 Std (1.0x)</span>
-                </button>
-                <button type="button" onclick="handleConvoDifficultyChange('harder')"
-                        class="flex-1 min-w-[70px] py-1.5 px-2 rounded-xl text-[11px] font-bold transition-all cursor-pointer flex items-center justify-center gap-1 ${
-                          diff === 'harder'
-                            ? 'bg-rose-500 text-white shadow-sm'
-                            : 'text-slate-400 hover:text-white'
-                        }"
-                        title="Harder: Rapid street speed (1.12x), 8 lines, compound Old+New sentences, pure audio lock">
-                  <span>🔥</span><span>Lv.3 Hard (1.12x)</span>
-                </button>
-                <button type="button" onclick="handleConvoDifficultyChange('overdrive')"
-                        class="flex-1 min-w-[85px] py-1.5 px-2 rounded-xl text-[11px] font-bold transition-all cursor-pointer flex items-center justify-center gap-1 ${
-                          diff === 'overdrive'
-                            ? 'bg-gradient-to-r from-fuchsia-500 to-amber-400 text-[#0e0f12] shadow-sm font-extrabold'
-                            : 'text-slate-400 hover:text-white'
-                        }"
-                        title="Lv.3+ Overdrive: 10 rapid lines (1.18x), 3 compound turns, 5 choices per question">
-                  <span>🚀</span><span>Lv.3+ Overdrive</span>
-                </button>
-              </div>
-
-              ${diff === 'standard' && !step.allTurnsCompleted ? `
-                <button type="button" onclick="toggleConvoTranscriptReveal()"
-                        class="px-2.5 py-1.5 rounded-xl text-[10px] font-bold border transition-all cursor-pointer ${
-                          step.transcriptUnlocked
-                            ? 'bg-amber-400/20 border-amber-400/50 text-amber-300'
-                            : 'bg-[#151822] border-[#262c3e] text-slate-400 hover:text-white'
-                        }">
-                  ${step.transcriptUnlocked ? '🙈 Hide Script' : '👁️ Show Script'}
-                </button>
-              ` : ''}
-            </div>
-
-            <!-- MASTER 2-PERSON AUDIO PLAYER BAR -->
-            <div class="flex flex-wrap items-center justify-between gap-2 bg-gradient-to-r from-[#181d2c] to-[#141a26] p-3 rounded-2xl border border-[#2c3550]">
-              <div class="flex items-center gap-2">
-                <button type="button"
-                        onclick="playFullConversationThread(false)"
-                        class="px-4 py-2 rounded-xl bg-amber-400 hover:bg-amber-300 text-[#0e0f12] text-xs font-extrabold flex items-center gap-2 cursor-pointer shadow-md active:scale-95 transition-all">
-                  <span>▶</span>
-                  <span id="convo-master-play-label">Play Full Conversation (${speedRate}x)</span>
-                </button>
-                <button type="button"
-                        onclick="playFullConversationThread(true)"
-                        class="px-3 py-2 rounded-xl bg-[#1f2537] hover:bg-[#283048] border border-[#343e5c] text-sky-300 text-xs font-bold flex items-center gap-1 cursor-pointer active:scale-95 transition-all"
-                        title="Listen to the full 2-person conversation slowly at 0.72x">
-                  <span>🐢</span>
-                  <span>Slow Flow</span>
-                </button>
-              </div>
-              <span class="text-[11px] text-slate-400">
-                ${step.dialogueLines.length} lines • Spacebar to replay
-              </span>
+            <div class="flex items-center gap-1 shrink-0">
+              <button type="button" onclick="remixLiveConversation()"
+                      class="p-1.5 rounded-xl bg-[#171b26] hover:bg-[#222738] border border-[#262c3e] text-slate-300 hover:text-white text-xs transition-all cursor-pointer"
+                      title="Remix Dialogue with Different Known Words">
+                🔄
+              </button>
+              <button type="button" id="btn-ai-live-convo" onclick="generateAiLiveConversation()"
+                      class="p-1.5 rounded-xl bg-gradient-to-r from-sky-500/15 to-purple-500/15 hover:from-sky-500/25 to-purple-500/25 border border-sky-400/30 text-sky-300 text-xs transition-all cursor-pointer"
+                      title="Generate AI Dialogue">
+                ✨
+              </button>
             </div>
           </div>
 
-          <!-- 2-PERSON BACK-AND-FORTH DIALOGUE STREAM -->
-          <div class="space-y-2.5 max-h-[38vh] overflow-y-auto pr-1 scroll-smooth" id="live-convo-thread">
+          <!-- Minimal Master Audio Player Bar -->
+          <div class="flex items-center justify-between gap-2 bg-[#141722] p-2.5 rounded-2xl border border-[#222738]">
+            <div class="flex items-center gap-2">
+              <button type="button"
+                      onclick="playFullConversationThread(false)"
+                      class="px-3.5 py-1.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-[#0e0f12] text-xs font-bold flex items-center gap-1.5 cursor-pointer shadow-sm active:scale-95 transition-all">
+                <span>▶</span>
+                <span id="convo-master-play-label">Play Dialogue (${speedRate}x)</span>
+              </button>
+              <button type="button"
+                      onclick="playFullConversationThread(true)"
+                      class="px-2 py-1.5 rounded-xl bg-[#1b1f2c] hover:bg-[#252a3b] border border-[#283044] text-slate-300 hover:text-white text-xs font-medium cursor-pointer transition-all"
+                      title="Slow Audio (0.72x)">
+                🐢
+              </button>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="text-[11px] text-slate-500 hidden xs:inline">${step.dialogueLines.length} lines</span>
+              <button type="button" onclick="toggleConvoTranscriptReveal()"
+                      class="px-2.5 py-1 rounded-lg border border-[#272d3e] text-slate-300 hover:text-white hover:border-slate-400 text-[11px] font-medium transition-all cursor-pointer">
+                ${step.transcriptUnlocked ? '🙈 Hide Text' : '👁️ Show Text'}
+              </button>
+            </div>
+          </div>
+
+          <!-- 2-Person Back-and-Forth Dialogue Stream -->
+          <div class="space-y-2 max-h-[36vh] overflow-y-auto pr-1 scroll-smooth" id="live-convo-thread">
             ${linesHtml}
           </div>
 
-          <!-- COMPREHENSION CHECK: UNDERSTANDING THE CONVERSATION -->
-          <div class="pt-3 border-t border-[#22283a] space-y-3">
-            <div class="flex items-center justify-between">
-              <div class="text-xs sm:text-sm font-extrabold text-white flex items-center gap-1.5">
-                <span>🧠</span>
-                <span>Understand the Interaction (${step.questions.filter(q => q.answered).length}/${step.questions.length} Answered)</span>
-              </div>
-              <span class="text-[11px] text-slate-400">
-                ${step.allTurnsCompleted ? '🔓 Full Transcript Unlocked Above!' : 'Answer to unlock full English transcript'}
+          <!-- Comprehension Check -->
+          <div class="pt-2.5 border-t border-[#1e2332] space-y-2.5">
+            <div class="flex items-center justify-between text-xs">
+              <span class="font-bold text-slate-200 flex items-center gap-1.5">
+                <span>🧠</span><span>Comprehension (${step.questions.filter(q => q.answered).length}/${step.questions.length})</span>
+              </span>
+              <span class="text-[11px] text-slate-500">
+                ${step.allTurnsCompleted ? '✓ Completed' : 'Tap to answer'}
               </span>
             </div>
 
-            <div class="space-y-3">
+            <div class="space-y-2.5">
               ${questionsHtml}
             </div>
           </div>
@@ -9772,13 +9659,13 @@ Return ONLY valid JSON array of 3 exchange objects with keys:
 
       // Update Footer Button & Feedback
       if (step.allTurnsCompleted) {
-        footerMsg.innerHTML = `<span class="text-emerald-400 font-semibold">✓ 2-Person Conversation Understood (${step.correctTurnsCount}/${step.questions.length} spot-on) • Full transcript unlocked!</span>`;
+        footerMsg.innerHTML = `<span class="text-emerald-400 font-semibold text-xs">✓ Dialogue Understood (${step.correctTurnsCount}/${step.questions.length})</span>`;
         actionBtn.textContent = 'Finish Lesson →';
         actionBtn.className = 'px-6 py-2.5 rounded-2xl bg-emerald-400 hover:bg-emerald-300 text-[#0e0f12] text-xs sm:text-sm font-bold transition-all cursor-pointer shrink-0 shadow-md';
         actionBtn.disabled = false;
       } else {
         const remaining = step.questions.filter(q => !q.answered).length;
-        footerMsg.innerHTML = `<span class="text-slate-400 text-xs">🎧 Listen to the 2-person conversation above and answer ${remaining} comprehension question${remaining > 1 ? 's' : ''}</span>`;
+        footerMsg.innerHTML = `<span class="text-slate-400 text-xs">${remaining} question${remaining > 1 ? 's' : ''} remaining</span>`;
         actionBtn.textContent = 'Answer Above ↑';
         actionBtn.className = 'px-5 py-2.5 rounded-2xl bg-[#22252e] text-slate-500 text-xs sm:text-sm font-semibold cursor-not-allowed shrink-0';
         actionBtn.disabled = true;
