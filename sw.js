@@ -1,4 +1,4 @@
-﻿const CACHE_NAME = 'mastery-pwa-v2';
+const CACHE_NAME = 'mastery-pwa-v3';
 self.addEventListener('install', () => self.skipWaiting());
 self.addEventListener('activate', event => event.waitUntil(self.clients.claim()));
 self.addEventListener('fetch', event => {
