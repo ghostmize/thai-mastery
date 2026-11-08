@@ -8443,7 +8443,7 @@ Guidelines:
       }
     }
 
-    async function saveAndTestGeminiKey() {
+    async function saveAndTestGeminiKey(bypassVerify = false) {
       const input = document.getElementById('gemini-api-key-input');
       const select = document.getElementById('gemini-model-select');
       const feedback = document.getElementById('gemini-settings-feedback');
@@ -8459,6 +8459,23 @@ Guidelines:
         return;
       }
 
+      // Always save directly to browser storage so user doesn't lose it
+      localStorage.setItem(GEMINI_KEY_STORAGE, key);
+      localStorage.setItem('gemini_user_api_key', key);
+      localStorage.setItem(GEMINI_MODEL_STORAGE, model);
+
+      if (bypassVerify) {
+        feedback.className = 'text-[11px] text-emerald-400 block pt-1';
+        feedback.innerText = '✔ API key saved directly!';
+        updateGeminiConnectionBadge();
+        showToast('✨ Key saved');
+        setTimeout(() => {
+          toggleGeminiSettings(false);
+          renderGeminiChat();
+        }, 600);
+        return;
+      }
+
       feedback.className = 'text-[11px] text-sky-400 block pt-1';
       feedback.innerText = 'Verifying key with Google Gemini API...';
       if (testBtn) {
@@ -8466,25 +8483,22 @@ Guidelines:
         testBtn.innerText = 'Verifying...';
       }
 
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 6000);
+
       try {
-        const testRes = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${key}`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            contents: [{ role: 'user', parts: [{ text: 'Shalom Gemini, ping test!' }] }]
-          })
+        // Fast, zero-token key check
+        const testRes = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${key}`, {
+          method: 'GET',
+          signal: controller.signal
         });
+        clearTimeout(timeoutId);
 
         if (!testRes.ok) {
           const errData = await testRes.json().catch(() => ({}));
           const errMsg = errData.error?.message || `HTTP ${testRes.status}: Connection failed`;
           throw new Error(errMsg);
         }
-
-        // Save successfully to common and app keys
-        localStorage.setItem(GEMINI_KEY_STORAGE, key);
-        localStorage.setItem('gemini_user_api_key', key);
-        localStorage.setItem(GEMINI_MODEL_STORAGE, model);
 
         feedback.className = 'text-[11px] text-emerald-400 block pt-1';
         feedback.innerText = '✔ Connection verified! Saved securely to browser.';
@@ -8494,10 +8508,22 @@ Guidelines:
         setTimeout(() => {
           toggleGeminiSettings(false);
           renderGeminiChat();
-        }, 1000);
+        }, 800);
       } catch (err) {
-        feedback.className = 'text-[11px] text-rose-400 block pt-1';
-        feedback.innerText = '❌ Error: ' + err.message;
+        clearTimeout(timeoutId);
+        const isAbort = err.name === 'AbortError' || err.message?.includes('aborted');
+        const displayErr = isAbort ? 'Verification timed out (network slow or adblocker active)' : err.message;
+
+        feedback.className = 'text-[11px] text-rose-400 block pt-1 space-y-1';
+        feedback.innerHTML = `
+          <div>❌ ${escapeHtml(displayErr)}</div>
+          <div class="pt-0.5">
+            <button type="button" onclick="saveAndTestGeminiKey(true)" class="underline text-amber-300 hover:text-white font-semibold cursor-pointer">
+              Key is saved! Click here to use anyway →
+            </button>
+          </div>
+        `;
+        updateGeminiConnectionBadge();
       } finally {
         if (testBtn) {
           testBtn.disabled = false;
@@ -8967,6 +8993,9 @@ Guidelines:
           });
         });
 
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 28000);
+
         const body = {
           contents: apiContents,
           systemInstruction: {
@@ -8974,15 +9003,20 @@ Guidelines:
           },
           generationConfig: {
             temperature: 0.7,
-            maxOutputTokens: 1200
+            maxOutputTokens: 1200,
+            thinkingConfig: {
+              thinkingLevel: 'low'
+            }
           }
         };
 
         const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${key}`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(body)
+          body: JSON.stringify(body),
+          signal: controller.signal
         });
+        clearTimeout(timeoutId);
 
         if (!res.ok) {
           const errData = await res.json().catch(() => ({}));
