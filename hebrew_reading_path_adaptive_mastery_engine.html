@@ -8375,25 +8375,19 @@
     const GEMINI_ACTIVE_THREAD_STORAGE = 'hebrew_gemini_active_thread_id';
 
     const GEMINI_SYSTEM_PROMPT = `You are an expert bilingual Hebrew language tutor & cultural coach built into the "Hebrew Reading & Street Mastery" learning engine.
-Your mission is to help the learner master authentic Israeli spoken Hebrew, modern street slang, roots (shoresh / binyanim), reading nuances with/without Nikud (vowel marks), and everyday situational conversational Hebrew.
 
-AUDIO CLIPS ON-THE-FLY GENERATION (CRITICAL CAPABILITY):
-You have built-in audio functionality! Whenever your answer involves vocabulary, pronunciation, situational phrases, or dialogue (usually 1 to 4 key clips), format each audio clip on its own line using this exact syntax:
+CRITICAL FORMATTING & BREVITY RULES (STRICT):
+1. BE SHORT, PUNCHY & SUMMED UP. The learner is on a mobile phone during active drills. Do NOT write long essays, introductions, or conversational filler (NEVER say "Welcome to Card...", "Certainly!", "Here is a breakdown...").
+2. Max 2 to 4 concise bullet points total! Target length: strictly under 100 words.
+3. Front-load interactive audio clips! Format 1 to 4 key clips on their own line using:
 [audio: HebrewScript | Transliteration | English Translation]
 
 Examples:
 [audio: סבבה לגמרי | sababa legamrey | Totally fine / completely cool]
-[audio: יאללה ביי | yalla bye | Alright, see you later!]
 [audio: כמה זה עולה? | kama ze ole? | How much does this cost?]
 [audio: אפשר חשבון בבקשה? | efshar kheshbon bevakasha? | Can I get the check please?]
 
-The app automatically turns each [audio: ...] tag into an interactive, tap-to-play audio card so the learner can listen to native pronunciation instantly!
-
-Guidelines:
-1. Speak warmly, encouragingly, and concisely. Keep answers clean, direct, and well-structured.
-2. If situation context is attached (e.g. active card, drill, spoken phrase, Nikud), immediately explain that exact situation.
-3. Always provide 1 to 4 [audio: ...] clips generously so the user can listen and pronounce like a local!
-4. Explain WHY: Break down root letters (shoresh), vowel patterns, verb forms (binyanim), and everyday Israeli slang.`;
+4. Give a crisp 1-line root breakdown (shoresh) or Israeli street tip, then STOP.`;
 
     let geminiActiveTab = 'chat';
     let geminiSavedItems = [];
@@ -8921,10 +8915,45 @@ Guidelines:
       }
     }
 
-    function toggleSaveMessage(msgIdx) {
+    function isMsgSaved(idx) {
+      const msg = geminiChatHistory[idx];
+      if (!msg) return false;
+      return geminiSavedItems.some(item => {
+        if (msg.role === 'user') {
+          return item.question === msg.text;
+        } else {
+          return item.answer === msg.text || item.text === msg.text;
+        }
+      });
+    }
+
+    function toggleSaveQABlock(msgIdx) {
       const msg = geminiChatHistory[msgIdx];
       if (!msg) return;
-      const existingIdx = geminiSavedItems.findIndex(item => item.text === msg.text);
+
+      let questionText = '';
+      let answerText = '';
+
+      if (msg.role === 'user') {
+        questionText = msg.text;
+        if (msgIdx + 1 < geminiChatHistory.length && geminiChatHistory[msgIdx + 1].role === 'model') {
+          answerText = geminiChatHistory[msgIdx + 1].text;
+        }
+      } else {
+        answerText = msg.text;
+        if (msgIdx - 1 >= 0 && geminiChatHistory[msgIdx - 1].role === 'user') {
+          questionText = geminiChatHistory[msgIdx - 1].text;
+        }
+      }
+
+      // Check if already saved
+      const existingIdx = geminiSavedItems.findIndex(item => {
+        if (questionText && item.question === questionText) return true;
+        if (answerText && (item.answer === answerText || item.text === answerText)) return true;
+        if (!questionText && !answerText && item.text === msg.text) return true;
+        return false;
+      });
+
       if (existingIdx !== -1) {
         geminiSavedItems.splice(existingIdx, 1);
         showToast('Removed from Saved notes');
@@ -8932,14 +8961,26 @@ Guidelines:
         const ctx = getCurrentSituationContext();
         geminiSavedItems.unshift({
           id: 'saved_' + Date.now(),
-          text: msg.text,
+          question: questionText,
+          answer: answerText,
+          text: answerText || questionText || msg.text,
           situationTitle: ctx.displayTitle || 'Hebrew Lesson Note',
           savedAt: Date.now()
         });
-        showToast('⭐ Saved for later! View in Saved tab');
+        showToast('⭐ Q&A block saved! View in Saved tab');
       }
       saveGeminiState();
       renderGeminiChat();
+    }
+
+    function toggleSaveMessage(msgIdx) {
+      toggleSaveQABlock(msgIdx);
+    }
+
+    function copyGeminiMessage(idx) {
+      const msg = geminiChatHistory[idx];
+      if (!msg) return;
+      navigator.clipboard.writeText(msg.text).then(() => showToast('📋 Response copied!'));
     }
 
     function deleteGeminiMessage(msgIdx) {
@@ -8953,7 +8994,11 @@ Guidelines:
 
     function copyAllSavedItems() {
       if (geminiSavedItems.length === 0) return;
-      const allText = geminiSavedItems.map((item, i) => `=== Saved Item ${i + 1}: ${item.situationTitle} ===\n${item.text}\n`).join('\n\n');
+      const allText = geminiSavedItems.map((item, i) => {
+        return `=== Saved Item ${i + 1}: ${item.situationTitle || 'Q&A Note'} ===\n` +
+          (item.question ? `Q: ${item.question}\n\n` : '') +
+          `A:\n${item.answer || item.text}\n`;
+      }).join('\n\n');
       navigator.clipboard.writeText(allText).then(() => showToast('📋 All saved notes copied!'));
     }
 
@@ -8970,7 +9015,8 @@ Guidelines:
     function copySavedItem(id) {
       const item = geminiSavedItems.find(s => s.id === id);
       if (!item) return;
-      navigator.clipboard.writeText(item.text).then(() => showToast('📋 Note copied!'));
+      const textToCopy = (item.question ? `Q: ${item.question}\n\n` : '') + (item.answer || item.text);
+      navigator.clipboard.writeText(textToCopy).then(() => showToast('📋 Q&A note copied!'));
     }
 
     function removeSavedItem(id) {
@@ -8986,7 +9032,8 @@ Guidelines:
     function playSavedItemAudio(id, lang = 'he') {
       const item = geminiSavedItems.find(s => s.id === id);
       if (!item) return;
-      playMessageHebrewAudio(item.text);
+      const textToPlay = item.answer || item.text;
+      playMessageHebrewAudio(textToPlay);
     }
 
     function renderGeminiChat() {
@@ -9048,15 +9095,21 @@ Guidelines:
       let html = '';
       geminiChatHistory.forEach((msg, idx) => {
         const isUser = msg.role === 'user';
+        const isSaved = isMsgSaved(idx);
         if (isUser) {
           html += `
             <div class="flex justify-end group">
               <div class="max-w-[85%] bg-gradient-to-br from-sky-500/20 to-blue-600/20 border border-sky-400/40 rounded-2xl rounded-tr-xs px-3.5 py-2.5 text-xs text-slate-100 shadow-sm space-y-1 relative">
                 <div class="flex items-start justify-between gap-2">
                   <p class="leading-relaxed whitespace-pre-wrap">${escapeHtml(msg.text)}</p>
-                  <button onclick="deleteGeminiMessage(${idx})" class="text-slate-400 hover:text-rose-400 text-[10px] cursor-pointer opacity-40 group-hover:opacity-100 transition-opacity shrink-0" title="Delete message">
-                    🗑️
-                  </button>
+                  <div class="flex items-center gap-1 shrink-0">
+                    <button onclick="toggleSaveQABlock(${idx})" class="${isSaved ? 'text-amber-400 font-bold opacity-100' : 'text-slate-400 hover:text-amber-300 opacity-60 group-hover:opacity-100'} text-xs cursor-pointer transition-all p-0.5" title="${isSaved ? 'Remove Saved Q&A' : 'Save full Q&A block to Saved tab'}">
+                      ${isSaved ? '⭐' : '☆'}
+                    </button>
+                    <button onclick="deleteGeminiMessage(${idx})" class="text-slate-400 hover:text-rose-400 text-xs cursor-pointer opacity-50 group-hover:opacity-100 transition-opacity p-0.5" title="Delete message">
+                      🗑️
+                    </button>
+                  </div>
                 </div>
                 ${msg.hasContext ? '<span class="inline-flex items-center gap-1 text-[10px] text-sky-300/80 bg-sky-500/10 px-1.5 py-0.5 rounded">📍 Screen context attached</span>' : ''}
               </div>
@@ -9065,7 +9118,6 @@ Guidelines:
         } else {
           const renderedContent = safeRenderMarkdown(msg.text, 'he');
           const hasHebrew = extractHebrewWords(msg.text).length > 0;
-          const isSaved = geminiSavedItems.some(item => item.text === msg.text);
           html += `
             <div class="flex justify-start">
               <div class="max-w-[95%] bg-[#151926] border border-[#273047] rounded-2xl rounded-tl-xs px-3.5 py-3 text-xs text-slate-200 shadow-md space-y-2.5">
@@ -9080,9 +9132,9 @@ Guidelines:
                         <span>Listen All</span>
                       </button>
                     ` : ''}
-                    <button onclick="toggleSaveMessage(${idx})" class="${isSaved ? 'text-amber-400 font-semibold' : 'hover:text-amber-300'} flex items-center gap-1 cursor-pointer transition-colors" title="${isSaved ? 'Remove from Saved' : 'Save for later'}">
+                    <button onclick="toggleSaveQABlock(${idx})" class="${isSaved ? 'text-amber-400 font-semibold' : 'hover:text-amber-300'} flex items-center gap-1 cursor-pointer transition-colors" title="${isSaved ? 'Remove from Saved' : 'Save entire Q&A block'}">
                       <span>${isSaved ? '⭐' : '☆'}</span>
-                      <span>${isSaved ? 'Saved' : 'Save'}</span>
+                      <span>${isSaved ? 'Saved Q&A' : 'Save Q&A'}</span>
                     </button>
                   </div>
                   <div class="flex items-center gap-2">
@@ -9183,15 +9235,21 @@ Guidelines:
       } else {
         html += `<div class="space-y-3">`;
         filtered.forEach(item => {
-          const renderedContent = safeRenderMarkdown(item.text, 'he');
+          const renderedContent = safeRenderMarkdown(item.answer || item.text, 'he');
           html += `
-            <div class="p-3 rounded-2xl bg-[#141824] border border-[#252f44] hover:border-sky-400/40 transition-all shadow-sm space-y-2">
+            <div class="p-3 rounded-2xl bg-[#141824] border border-[#252f44] hover:border-sky-400/40 transition-all shadow-sm space-y-2.5">
               <div class="flex items-center justify-between gap-2">
                 <span class="text-[10px] text-sky-400 bg-sky-500/10 px-2 py-0.5 rounded-md font-semibold truncate">
                   🏷️ ${escapeHtml(item.situationTitle || 'Saved Note')}
                 </span>
                 <span class="text-[10px] text-slate-500 shrink-0">${formatGeminiTime(item.savedAt)}</span>
               </div>
+              ${item.question ? `
+                <div class="p-2.5 rounded-xl bg-sky-950/40 border border-sky-500/30 text-sky-200 text-xs flex items-start gap-2 shadow-xs">
+                  <span class="font-bold text-sky-400 shrink-0">❓ Q:</span>
+                  <span class="leading-relaxed whitespace-pre-wrap">${escapeHtml(item.question)}</span>
+                </div>
+              ` : ''}
               <div class="gemini-msg-bubble text-xs text-slate-200">
                 ${renderedContent}
               </div>
@@ -9200,7 +9258,7 @@ Guidelines:
                   <span>🔊</span> <span>Listen All</span>
                 </button>
                 <div class="flex items-center gap-2">
-                  <button onclick="copySavedItem('${item.id}')" class="hover:text-white flex items-center gap-1 cursor-pointer transition-colors" title="Copy note">
+                  <button onclick="copySavedItem('${item.id}')" class="hover:text-white flex items-center gap-1 cursor-pointer transition-colors" title="Copy Q&A">
                     <span>📋</span> <span>Copy</span>
                   </button>
                   <button onclick="removeSavedItem('${item.id}')" class="hover:text-rose-400 flex items-center gap-1 cursor-pointer transition-colors" title="Remove from saved">
@@ -9312,24 +9370,24 @@ Guidelines:
       let prompt = '';
       if (type === 'explain_situation') {
         prompt = ctx.targetHebrew 
-          ? `Please explain this card: "${ctx.targetHebrew}" (${ctx.targetTranslit || ctx.targetMeaning}). Give a clear breakdown of meaning, nuances, and 2-4 playable audio clips using [audio: Hebrew | Transliteration | English] showing the core phrase and how Israelis say it casually.`
-          : `Please explain this current learning section: ${ctx.displayTitle} - ${ctx.displayDetail}. Provide 3 to 4 spoken audio clips using [audio: Hebrew | Transliteration | English] so I can listen and practice.`;
+          ? `Please explain this card: "${ctx.targetHebrew}" (${ctx.targetTranslit || ctx.targetMeaning}). Give a short, crisp breakdown (under 100 words) with 2-4 playable audio clips using [audio: Hebrew | Transliteration | English] showing the core phrase and street usage.`
+          : `Please explain this current learning section: ${ctx.displayTitle} - ${ctx.displayDetail}. Short summary with 2 to 4 spoken audio clips using [audio: Hebrew | Transliteration | English].`;
       } else if (type === 'audio_clips') {
         prompt = ctx.targetHebrew
-          ? `Generate 3 to 4 practical spoken audio clips for "${ctx.targetHebrew}" (${ctx.targetMeaning}) in real everyday situations (casual with friends, polite, street market) formatted as [audio: Hebrew | Transliteration | English].`
-          : `Generate 3 to 4 practical spoken audio clips for this lesson (${ctx.displayTitle}) using [audio: Hebrew | Transliteration | English].`;
+          ? `Generate 3 to 4 practical spoken audio clips for "${ctx.targetHebrew}" (${ctx.targetMeaning}) in real everyday situations (casual with friends, polite, street market) formatted as [audio: Hebrew | Transliteration | English]. Keep text short!`
+          : `Generate 3 to 4 practical spoken audio clips for this lesson (${ctx.displayTitle}) using [audio: Hebrew | Transliteration | English]. Keep text short.`;
       } else if (type === 'street_slang') {
         prompt = ctx.targetHebrew
-          ? `For "${ctx.targetHebrew}" (${ctx.targetMeaning}), how would an Israeli say this casually on the street with friends versus politely? Any slang (Sababa, Walla, Yalla, etc.)? Include 2-4 audio clips formatted as [audio: Hebrew | Transliteration | English].`
-          : `What are the most common casual Israeli street phrases or slang related to this topic (${ctx.displayTitle})? Include [audio: Hebrew | Transliteration | English] clips.`;
+          ? `For "${ctx.targetHebrew}" (${ctx.targetMeaning}), give a punchy 2-bullet comparison: how Israelis say this casually on the street vs politely. Include 2-4 audio clips formatted as [audio: Hebrew | Transliteration | English].`
+          : `What are the most common casual Israeli street phrases or slang related to this topic (${ctx.displayTitle})? Keep it short with [audio: Hebrew | Transliteration | English] clips.`;
       } else if (type === 'roots') {
         prompt = ctx.targetHebrew
-          ? `Please break down the root letters (shoresh), vowel pattern (binyan/mishkal), and pronunciation with Nikud for "${ctx.targetHebrew}" (${ctx.targetTranslit}). Include [audio: Hebrew | Transliteration | English] clips.`
-          : `Can you explain the key root and pronunciation patterns for this topic (${ctx.displayTitle})? Include [audio: Hebrew | Transliteration | English] clips.`;
+          ? `Give a quick, concise root (shoresh) & binyan breakdown for "${ctx.targetHebrew}" (${ctx.targetTranslit}). Keep it brief with [audio: Hebrew | Transliteration | English] clips.`
+          : `Can you briefly explain key root and pronunciation patterns for this topic (${ctx.displayTitle})? Short bullets with [audio: Hebrew | Transliteration | English] clips.`;
       } else if (type === 'dialogue') {
         prompt = ctx.targetHebrew
-          ? `Give me a realistic 2-person mini dialogue using "${ctx.targetHebrew}" in an authentic Israeli situation (e.g. Shuk, cafe, bus, or hanging out). Format each spoken line with [audio: Hebrew | Transliteration | English] so I can tap to listen!`
-          : `Give me a realistic 2-person everyday dialogue using the concepts in this lesson (${ctx.displayTitle}) with [audio: Hebrew | Transliteration | English] clips.`;
+          ? `Give a realistic 2-person mini dialogue (3-4 lines max) using "${ctx.targetHebrew}" in an authentic Israeli street situation. Format each spoken line with [audio: Hebrew | Transliteration | English]!`
+          : `Give a brief 2-person everyday dialogue using the concepts in this lesson (${ctx.displayTitle}) with [audio: Hebrew | Transliteration | English] clips.`;
       }
       sendGeminiMessage(prompt);
     }
@@ -9423,7 +9481,7 @@ Guidelines:
           },
           generationConfig: {
             temperature: 0.7,
-            maxOutputTokens: 1200,
+            maxOutputTokens: 450,
             thinkingConfig: {
               thinkingLevel: 'low'
             }
@@ -9514,6 +9572,7 @@ Guidelines:
 
       updateGeminiConnectionBadge();
       updateGeminiContextUI();
+      renderGeminiChat();
 
       // Keyboard shortcuts: Ctrl+Space or Alt+G to toggle
       window.addEventListener('keydown', (e) => {

@@ -6695,25 +6695,19 @@
     const GEMINI_ACTIVE_THREAD_STORAGE = 'thai_gemini_active_thread_id';
 
     const GEMINI_SYSTEM_PROMPT = `You are an expert bilingual Thai language tutor & cultural coach built into the "Thai Reading & Street Mastery" learning engine.
-Your mission is to help the learner master authentic spoken Thai, tone rules, reading nuances, and real everyday situational street Thai.
 
-AUDIO CLIPS ON-THE-FLY GENERATION (CRITICAL CAPABILITY):
-You have built-in audio functionality! Whenever your answer involves vocabulary, pronunciation, situational phrases, or dialogue (usually 1 to 4 key clips), you MUST format each audio clip on its own line using this exact syntax:
+CRITICAL FORMATTING & BREVITY RULES (STRICT):
+1. BE SHORT, PUNCHY & SUMMED UP. The learner is on a mobile phone during active drills. Do NOT write long essays, introductions, or conversational filler (NEVER say "Welcome to Card...", "Certainly!", "Here is a breakdown...").
+2. Max 2 to 4 concise bullet points total! Target length: under 100 words.
+3. Front-load the interactive audio clips! Format 1 to 4 key clips on their own line using:
 [audio: ThaiScript | Romanization | English Translation]
 
 Examples:
 [audio: เอาเล็กครับ | ao lék kháp | Thin rice noodles please]
-[audio: แยกน้ำด้วยครับ | yâak nám dûai kháp | Broth packed separately please]
 [audio: เผ็ดน้อย | phèt nɔ́ɔi | A little spicy]
 [audio: ไม่ใส่ผักชี | mâi sài phàk-chii | No coriander / cilantro]
 
-The app turns every [audio: ...] into an interactive, tap-to-play audio card with native speech synthesis, so the learner can listen to each clip immediately!
-
-Guidelines:
-1. Speak warmly, encouragingly, and concisely. Keep answers clean, direct, and well-structured.
-2. If situation context is attached (e.g. active card, drill, spoken phrase, tone, situation prompt), immediately reference what is on the learner's screen so they get direct help for that exact moment.
-3. Always provide 1 to 4 [audio: ...] clips generously whenever teaching phrases, answering situational questions, comparing formal vs casual slang, or demonstrating dialogues!
-4. Explain WHY: Break down tricky tones, consonant classes (Low/Mid/High), dead vs live syllables, or colloquial contractions used by native Thais in Bangkok street life (slang, particles like ครับ/ค่ะ/นะ/ด้วย/จ้ะ, casual shortening, etc.).`;
+4. Give a crisp 1-line breakdown or Bangkok street tip, then STOP.`;
 
     let geminiActiveTab = 'chat';
     let geminiSavedItems = [];
@@ -7244,10 +7238,45 @@ Guidelines:
       }
     }
 
-    function toggleSaveMessage(msgIdx) {
+    function isMsgSaved(idx) {
+      const msg = geminiChatHistory[idx];
+      if (!msg) return false;
+      return geminiSavedItems.some(item => {
+        if (msg.role === 'user') {
+          return item.question === msg.text;
+        } else {
+          return item.answer === msg.text || item.text === msg.text;
+        }
+      });
+    }
+
+    function toggleSaveQABlock(msgIdx) {
       const msg = geminiChatHistory[msgIdx];
       if (!msg) return;
-      const existingIdx = geminiSavedItems.findIndex(item => item.text === msg.text);
+
+      let questionText = '';
+      let answerText = '';
+
+      if (msg.role === 'user') {
+        questionText = msg.text;
+        if (msgIdx + 1 < geminiChatHistory.length && geminiChatHistory[msgIdx + 1].role === 'model') {
+          answerText = geminiChatHistory[msgIdx + 1].text;
+        }
+      } else {
+        answerText = msg.text;
+        if (msgIdx - 1 >= 0 && geminiChatHistory[msgIdx - 1].role === 'user') {
+          questionText = geminiChatHistory[msgIdx - 1].text;
+        }
+      }
+
+      // Check if already saved
+      const existingIdx = geminiSavedItems.findIndex(item => {
+        if (questionText && item.question === questionText) return true;
+        if (answerText && (item.answer === answerText || item.text === answerText)) return true;
+        if (!questionText && !answerText && item.text === msg.text) return true;
+        return false;
+      });
+
       if (existingIdx !== -1) {
         geminiSavedItems.splice(existingIdx, 1);
         showToast('Removed from Saved notes');
@@ -7255,14 +7284,26 @@ Guidelines:
         const ctx = getCurrentSituationContext();
         geminiSavedItems.unshift({
           id: 'saved_' + Date.now(),
-          text: msg.text,
+          question: questionText,
+          answer: answerText,
+          text: answerText || questionText || msg.text,
           situationTitle: ctx.displayTitle || 'Thai Lesson Note',
           savedAt: Date.now()
         });
-        showToast('⭐ Saved for later! View in Saved tab');
+        showToast('⭐ Q&A block saved! View in Saved tab');
       }
       saveGeminiState();
       renderGeminiChat();
+    }
+
+    function toggleSaveMessage(msgIdx) {
+      toggleSaveQABlock(msgIdx);
+    }
+
+    function copyGeminiMessage(idx) {
+      const msg = geminiChatHistory[idx];
+      if (!msg) return;
+      navigator.clipboard.writeText(msg.text).then(() => showToast('📋 Response copied!'));
     }
 
     function deleteGeminiMessage(msgIdx) {
@@ -7276,7 +7317,11 @@ Guidelines:
 
     function copyAllSavedItems() {
       if (geminiSavedItems.length === 0) return;
-      const allText = geminiSavedItems.map((item, i) => `=== Saved Item ${i + 1}: ${item.situationTitle} ===\n${item.text}\n`).join('\n\n');
+      const allText = geminiSavedItems.map((item, i) => {
+        return `=== Saved Item ${i + 1}: ${item.situationTitle || 'Q&A Note'} ===\n` +
+          (item.question ? `Q: ${item.question}\n\n` : '') +
+          `A:\n${item.answer || item.text}\n`;
+      }).join('\n\n');
       navigator.clipboard.writeText(allText).then(() => showToast('📋 All saved notes copied!'));
     }
 
@@ -7293,7 +7338,8 @@ Guidelines:
     function copySavedItem(id) {
       const item = geminiSavedItems.find(s => s.id === id);
       if (!item) return;
-      navigator.clipboard.writeText(item.text).then(() => showToast('📋 Note copied!'));
+      const textToCopy = (item.question ? `Q: ${item.question}\n\n` : '') + (item.answer || item.text);
+      navigator.clipboard.writeText(textToCopy).then(() => showToast('📋 Q&A note copied!'));
     }
 
     function removeSavedItem(id) {
@@ -7309,10 +7355,11 @@ Guidelines:
     function playSavedItemAudio(id, lang = 'th') {
       const item = geminiSavedItems.find(s => s.id === id);
       if (!item) return;
+      const textToPlay = item.answer || item.text;
       if (lang === 'th') {
-        playMessageThaiAudio(item.text);
+        playMessageThaiAudio(textToPlay);
       } else {
-        playMessageHebrewAudio(item.text);
+        playMessageHebrewAudio(textToPlay);
       }
     }
 
@@ -7375,15 +7422,21 @@ Guidelines:
       let html = '';
       geminiChatHistory.forEach((msg, idx) => {
         const isUser = msg.role === 'user';
+        const isSaved = isMsgSaved(idx);
         if (isUser) {
           html += `
             <div class="flex justify-end group">
               <div class="max-w-[85%] bg-gradient-to-br from-sky-500/20 to-blue-600/20 border border-sky-400/40 rounded-2xl rounded-tr-xs px-3.5 py-2.5 text-xs text-slate-100 shadow-sm space-y-1 relative">
                 <div class="flex items-start justify-between gap-2">
                   <p class="leading-relaxed whitespace-pre-wrap">${escapeHtml(msg.text)}</p>
-                  <button onclick="deleteGeminiMessage(${idx})" class="text-slate-400 hover:text-rose-400 text-[10px] cursor-pointer opacity-40 group-hover:opacity-100 transition-opacity shrink-0" title="Delete message">
-                    🗑️
-                  </button>
+                  <div class="flex items-center gap-1 shrink-0">
+                    <button onclick="toggleSaveQABlock(${idx})" class="${isSaved ? 'text-amber-400 font-bold opacity-100' : 'text-slate-400 hover:text-amber-300 opacity-60 group-hover:opacity-100'} text-xs cursor-pointer transition-all p-0.5" title="${isSaved ? 'Remove Saved Q&A' : 'Save full Q&A block to Saved tab'}">
+                      ${isSaved ? '⭐' : '☆'}
+                    </button>
+                    <button onclick="deleteGeminiMessage(${idx})" class="text-slate-400 hover:text-rose-400 text-xs cursor-pointer opacity-50 group-hover:opacity-100 transition-opacity p-0.5" title="Delete message">
+                      🗑️
+                    </button>
+                  </div>
                 </div>
                 ${msg.hasContext ? '<span class="inline-flex items-center gap-1 text-[10px] text-sky-300/80 bg-sky-500/10 px-1.5 py-0.5 rounded">📍 Screen context attached</span>' : ''}
               </div>
@@ -7392,7 +7445,6 @@ Guidelines:
         } else {
           const renderedContent = safeRenderMarkdown(msg.text, 'th');
           const hasThai = extractThaiWords(msg.text).length > 0;
-          const isSaved = geminiSavedItems.some(item => item.text === msg.text);
           html += `
             <div class="flex justify-start">
               <div class="max-w-[95%] bg-[#151926] border border-[#273047] rounded-2xl rounded-tl-xs px-3.5 py-3 text-xs text-slate-200 shadow-md space-y-2.5">
@@ -7407,9 +7459,9 @@ Guidelines:
                         <span>Listen All</span>
                       </button>
                     ` : ''}
-                    <button onclick="toggleSaveMessage(${idx})" class="${isSaved ? 'text-amber-400 font-semibold' : 'hover:text-amber-300'} flex items-center gap-1 cursor-pointer transition-colors" title="${isSaved ? 'Remove from Saved' : 'Save for later'}">
+                    <button onclick="toggleSaveQABlock(${idx})" class="${isSaved ? 'text-amber-400 font-semibold' : 'hover:text-amber-300'} flex items-center gap-1 cursor-pointer transition-colors" title="${isSaved ? 'Remove from Saved' : 'Save entire Q&A block'}">
                       <span>${isSaved ? '⭐' : '☆'}</span>
-                      <span>${isSaved ? 'Saved' : 'Save'}</span>
+                      <span>${isSaved ? 'Saved Q&A' : 'Save Q&A'}</span>
                     </button>
                   </div>
                   <div class="flex items-center gap-2">
@@ -7510,15 +7562,21 @@ Guidelines:
       } else {
         html += `<div class="space-y-3">`;
         filtered.forEach(item => {
-          const renderedContent = safeRenderMarkdown(item.text, 'th');
+          const renderedContent = safeRenderMarkdown(item.answer || item.text, 'th');
           html += `
-            <div class="p-3 rounded-2xl bg-[#141824] border border-[#252f44] hover:border-sky-400/40 transition-all shadow-sm space-y-2">
+            <div class="p-3 rounded-2xl bg-[#141824] border border-[#252f44] hover:border-sky-400/40 transition-all shadow-sm space-y-2.5">
               <div class="flex items-center justify-between gap-2">
                 <span class="text-[10px] text-sky-400 bg-sky-500/10 px-2 py-0.5 rounded-md font-semibold truncate">
                   🏷️ ${escapeHtml(item.situationTitle || 'Saved Note')}
                 </span>
                 <span class="text-[10px] text-slate-500 shrink-0">${formatGeminiTime(item.savedAt)}</span>
               </div>
+              ${item.question ? `
+                <div class="p-2.5 rounded-xl bg-sky-950/40 border border-sky-500/30 text-sky-200 text-xs flex items-start gap-2 shadow-xs">
+                  <span class="font-bold text-sky-400 shrink-0">❓ Q:</span>
+                  <span class="leading-relaxed whitespace-pre-wrap">${escapeHtml(item.question)}</span>
+                </div>
+              ` : ''}
               <div class="gemini-msg-bubble text-xs text-slate-200">
                 ${renderedContent}
               </div>
@@ -7527,7 +7585,7 @@ Guidelines:
                   <span>🔊</span> <span>Listen All</span>
                 </button>
                 <div class="flex items-center gap-2">
-                  <button onclick="copySavedItem('${item.id}')" class="hover:text-white flex items-center gap-1 cursor-pointer transition-colors" title="Copy note">
+                  <button onclick="copySavedItem('${item.id}')" class="hover:text-white flex items-center gap-1 cursor-pointer transition-colors" title="Copy Q&A">
                     <span>📋</span> <span>Copy</span>
                   </button>
                   <button onclick="removeSavedItem('${item.id}')" class="hover:text-rose-400 flex items-center gap-1 cursor-pointer transition-colors" title="Remove from saved">
@@ -7614,24 +7672,24 @@ Guidelines:
       let prompt = '';
       if (type === 'explain_situation') {
         prompt = ctx.targetThai 
-          ? `Please explain this card: "${ctx.targetThai}" (${ctx.targetRoman || ctx.targetMeaning}). Give a clear, crisp breakdown of meaning, when to use it, and 2-4 playable audio clips using [audio: Thai | Roman | English] showing the core phrase and how locals say it on the street.`
-          : `Please explain this current topic: ${ctx.displayTitle}. Provide 3 to 4 spoken audio clips using [audio: Thai | Roman | English] so I can listen and practice.`;
+          ? `Please explain this card: "${ctx.targetThai}" (${ctx.targetRoman || ctx.targetMeaning}). Give a short, crisp breakdown (under 100 words) with 2-4 playable audio clips using [audio: Thai | Roman | English] showing the core phrase and street usage.`
+          : `Please explain this current topic: ${ctx.displayTitle}. Short summary with 2 to 4 spoken audio clips using [audio: Thai | Roman | English].`;
       } else if (type === 'audio_clips') {
         prompt = ctx.targetThai
-          ? `Generate 3 to 4 practical spoken audio clips for "${ctx.targetThai}" (${ctx.targetMeaning}) in real situations (e.g. casual with friends, polite to strangers, ordering) formatted as [audio: Thai | Roman | English].`
-          : `Generate 3 to 4 practical spoken audio clips for this lesson (${ctx.displayTitle}) using [audio: Thai | Roman | English].`;
+          ? `Generate 3 to 4 practical spoken audio clips for "${ctx.targetThai}" (${ctx.targetMeaning}) in real situations (e.g. casual with friends, polite to strangers, ordering) formatted as [audio: Thai | Roman | English]. Keep extra text very short!`
+          : `Generate 3 to 4 practical spoken audio clips for this lesson (${ctx.displayTitle}) using [audio: Thai | Roman | English]. Keep text short.`;
       } else if (type === 'street_slang') {
         prompt = ctx.targetThai
-          ? `For "${ctx.targetThai}" (${ctx.targetMeaning}), how would a native speaker say this casually on the street with friends versus politely to an elder or stranger? Any street slang or particle nuances? Include 2-4 audio clips formatted as [audio: Thai | Roman | English].`
-          : `What are the most common casual Bangkok street phrases or slang related to this topic (${ctx.displayTitle})? Include [audio: Thai | Roman | English] clips.`;
+          ? `For "${ctx.targetThai}" (${ctx.targetMeaning}), give a punchy 2-bullet comparison: how locals say this casually on the street vs politely. Include 2-4 audio clips formatted as [audio: Thai | Roman | English].`
+          : `What are the most common casual Bangkok street phrases or slang related to this topic (${ctx.displayTitle})? Keep it short with [audio: Thai | Roman | English] clips.`;
       } else if (type === 'tones') {
         prompt = ctx.targetThai
-          ? `Please break down the exact tone rules, vowel length, consonant classes, and pronunciation for "${ctx.targetThai}" (${ctx.targetRoman}). Include [audio: Thai | Roman | English] clips.`
-          : `Can you explain the key tone and pronunciation rules I need to watch out for in this topic (${ctx.displayTitle})? Include [audio: Thai | Roman | English] clips.`;
+          ? `Give a quick, concise tone rule & pronunciation breakdown for "${ctx.targetThai}" (${ctx.targetRoman}). Keep it brief with [audio: Thai | Roman | English] clips.`
+          : `Can you briefly explain key tone rules for this topic (${ctx.displayTitle})? Short bullets with [audio: Thai | Roman | English] clips.`;
       } else if (type === 'dialogue') {
         prompt = ctx.targetThai
-          ? `Give me a realistic 2-person mini dialogue using "${ctx.targetThai}" in an authentic everyday situation (e.g. food cart, taxi, 7-Eleven). Format each spoken line with [audio: Thai | Roman | English] so I can tap to listen!`
-          : `Give me a realistic 2-person everyday dialogue using the concepts in this lesson (${ctx.displayTitle}) with [audio: Thai | Roman | English] clips.`;
+          ? `Give a realistic 2-person mini dialogue (3-4 lines max) using "${ctx.targetThai}" in an authentic street situation. Format each spoken line with [audio: Thai | Roman | English]!`
+          : `Give a brief 2-person everyday dialogue using concepts in this lesson (${ctx.displayTitle}) with [audio: Thai | Roman | English] clips.`;
       }
       sendGeminiMessage(prompt);
     }
@@ -7727,7 +7785,7 @@ Guidelines:
           },
           generationConfig: {
             temperature: 0.7,
-            maxOutputTokens: 1200,
+            maxOutputTokens: 450,
             thinkingConfig: {
               thinkingLevel: 'low'
             }
@@ -7818,6 +7876,7 @@ Guidelines:
 
       updateGeminiConnectionBadge();
       updateGeminiContextUI();
+      renderGeminiChat();
 
       // Keyboard shortcuts: Ctrl+Space or Alt+G to toggle
       window.addEventListener('keydown', (e) => {
