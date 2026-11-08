@@ -477,7 +477,7 @@
         <div class="min-w-0 flex items-center gap-2">
           <h3 class="text-xs font-bold text-white tracking-tight truncate">Gemini Coach</h3>
           <span id="gemini-conn-dot" class="w-2 h-2 rounded-full bg-amber-400" title="API Status"></span>
-          <span id="gemini-model-badge" class="px-1.5 py-0.5 rounded text-[9px] font-semibold bg-sky-500/10 text-sky-300 border border-sky-500/25 hidden sm:inline">2.5-Flash</span>
+          <span id="gemini-model-badge" class="px-1.5 py-0.5 rounded text-[9px] font-semibold bg-sky-500/10 text-sky-300 border border-sky-500/25 hidden sm:inline">3.8-Flash</span>
         </div>
       </div>
 
@@ -518,10 +518,10 @@
       <div class="grid grid-cols-2 gap-2">
         <div>
           <select id="gemini-model-select" class="w-full px-2 py-1.5 rounded-xl bg-[#0e1017] border border-[#2b3245] text-slate-200 text-xs focus:outline-none focus:border-sky-400">
+            <option value="gemini-3.8-flash">Gemini 3.8 Flash</option>
+            <option value="gemini-3.5-flash-lite">Gemini 3.5 Flash-Lite</option>
+            <option value="gemini-3.5-pro">Gemini 3.5 Pro</option>
             <option value="gemini-2.5-flash">Gemini 2.5 Flash</option>
-            <option value="gemini-1.5-flash">Gemini 1.5 Flash</option>
-            <option value="gemini-2.0-flash">Gemini 2.0 Flash</option>
-            <option value="gemini-2.5-pro">Gemini 2.5 Pro</option>
           </select>
         </div>
         <button id="gemini-test-save-btn" onclick="saveAndTestGeminiKey()" class="w-full py-1.5 rounded-xl bg-gradient-to-r from-sky-500 to-emerald-400 hover:from-sky-400 hover:to-emerald-300 text-[#0e0f12] text-xs font-bold transition-all cursor-pointer shadow-xs">
@@ -8355,7 +8355,11 @@ Guidelines:
     }
 
     function getGeminiModel() {
-      return localStorage.getItem(GEMINI_MODEL_STORAGE) || 'gemini-2.5-flash';
+      const m = localStorage.getItem(GEMINI_MODEL_STORAGE);
+      if (!m || m === 'gemini-2.5-flash' || m === 'gemini-1.5-flash' || m === 'gemini-2.0-flash') {
+        return 'gemini-3.8-flash';
+      }
+      return m;
     }
 
     function isGeminiAutoContextEnabled() {
@@ -8447,7 +8451,7 @@ Guidelines:
       if (!input || !feedback) return;
 
       const key = input.value.trim();
-      const model = select ? select.value : 'gemini-2.5-flash';
+      const model = select ? select.value : getGeminiModel();
 
       if (!key) {
         feedback.className = 'text-[11px] text-rose-400 block pt-1';
@@ -8636,6 +8640,8 @@ Guidelines:
       }
       const settingsInput = document.getElementById('gemini-api-key-input');
       if (settingsInput) settingsInput.value = key;
+      const settingsSelect = document.getElementById('gemini-model-select');
+      if (settingsSelect) settingsSelect.value = getGeminiModel();
       await saveAndTestGeminiKey();
     }
 
