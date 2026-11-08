@@ -8961,7 +8961,8 @@ Examples:
     }
 
     function extractHebrewWords(str) {
-      const matches = str.match(/[\u0590-\u05FF]+/g);
+      if (!str) return [];
+      const matches = String(str).match(/[\u0590-\u05FF]+/g);
       return matches ? matches.filter(w => w.length >= 1) : [];
     }
 
@@ -9102,11 +9103,13 @@ Examples:
     function isMsgSaved(idx) {
       const msg = geminiChatHistory[idx];
       if (!msg) return false;
-      return geminiSavedItems.some(item => {
+      const msgText = msg.text || '';
+      return Array.isArray(geminiSavedItems) && geminiSavedItems.some(item => {
+        if (!item) return false;
         if (msg.role === 'user') {
-          return item.question === msg.text;
+          return item.question === msgText;
         } else {
-          return item.answer === msg.text || item.text === msg.text;
+          return item.answer === msgText || item.text === msgText;
         }
       });
     }
@@ -9224,137 +9227,142 @@ Examples:
       const container = document.getElementById('gemini-messages');
       if (!container) return;
 
-      const key = getGeminiApiKey();
+      try {
+        const key = getGeminiApiKey();
 
-      // If no key configured, show compact direct setup card
-      if (!key) {
-        container.innerHTML = `
-          <div class="p-3.5 rounded-2xl bg-[#141824] border border-[#252f44] space-y-2.5 shadow-lg">
-            <div class="flex items-center justify-between">
-              <div class="flex items-center gap-1.5">
-                <span class="text-sm">✨</span>
-                <h4 class="text-xs font-bold text-white">Connect Gemini Account</h4>
-              </div>
-              <span class="text-[10px] text-emerald-400 font-medium">🔒 100% Private</span>
-            </div>
-            <p class="text-[11px] text-slate-300 leading-relaxed">
-              Paste your free Gemini API key to ask situational questions and get on-the-fly audio clips:
-            </p>
-            <div class="flex items-center gap-2">
-              <input id="gemini-quick-key-input" type="password" placeholder="Paste AIzaSy... key" 
-                class="flex-1 px-3 py-1.5 rounded-xl bg-[#0c0e14] border border-[#263045] text-slate-100 font-mono text-xs focus:outline-none focus:border-sky-400" />
-              <button onclick="saveQuickGeminiKey()" 
-                class="px-3 py-1.5 rounded-xl bg-gradient-to-r from-sky-500 to-emerald-400 hover:from-sky-400 hover:to-emerald-300 text-[#0e0f12] text-xs font-bold transition-all cursor-pointer shadow-xs shrink-0">
-                Connect
-              </button>
-            </div>
-            <div class="flex items-center justify-between text-[11px] pt-0.5">
-              <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener noreferrer" class="text-sky-400 hover:underline">
-                Get free key at Google AI Studio ↗
-              </a>
-              <span class="text-slate-500 text-[10px]">Stored locally in browser</span>
-            </div>
-          </div>
-        `;
-        return;
-      }
-
-      // If no messages yet, show welcome tutor card
-      if (geminiChatHistory.length === 0) {
-        container.innerHTML = `
-          <div class="p-3.5 rounded-2xl bg-[#141824] border border-[#222a3d] space-y-2 shadow-sm">
-            <div class="flex items-center gap-2">
-              <span class="text-base">🇮🇱</span>
-              <h4 class="text-xs font-bold text-white">Shalom! I'm your Gemini Hebrew Coach.</h4>
-            </div>
-            <p class="text-xs text-slate-300 leading-relaxed">
-              I'm watching your active card in real time. Click <strong>💡 Explain this card</strong> above for a breakdown with 1-4 playable audio clips on the fly!
-            </p>
-          </div>
-        `;
-        return;
-      }
-
-      // Render conversation bubbles
-      let html = '';
-      geminiChatHistory.forEach((msg, idx) => {
-        const isUser = msg.role === 'user';
-        const isSaved = isMsgSaved(idx);
-        if (isUser) {
-          html += `
-            <div class="flex justify-end group">
-              <div class="max-w-[85%] bg-gradient-to-br from-sky-500/20 to-blue-600/20 border border-sky-400/40 rounded-2xl rounded-tr-xs px-3.5 py-2.5 text-xs text-slate-100 shadow-sm space-y-1 relative">
-                <div class="flex items-start justify-between gap-2">
-                  <p class="leading-relaxed whitespace-pre-wrap">${escapeHtml(msg.text)}</p>
-                  <div class="flex items-center gap-1 shrink-0">
-                    <button onclick="toggleSaveQABlock(${idx})" class="${isSaved ? 'text-amber-400 font-bold opacity-100' : 'text-slate-400 hover:text-amber-300 opacity-60 group-hover:opacity-100'} text-xs cursor-pointer transition-all p-0.5" title="${isSaved ? 'Remove Saved Q&A' : 'Save full Q&A block to Saved tab'}">
-                      ${isSaved ? '⭐' : '☆'}
-                    </button>
-                    <button onclick="deleteGeminiMessage(${idx})" class="text-slate-400 hover:text-rose-400 text-xs cursor-pointer opacity-50 group-hover:opacity-100 transition-opacity p-0.5" title="Delete message">
-                      🗑️
-                    </button>
-                  </div>
+        // If no key configured, show compact direct setup card
+        if (!key) {
+          container.innerHTML = `
+            <div class="p-3.5 rounded-2xl bg-[#141824] border border-[#252f44] space-y-2.5 shadow-lg">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-1.5">
+                  <span class="text-sm">✨</span>
+                  <h4 class="text-xs font-bold text-white">Connect Gemini Account</h4>
                 </div>
-                ${msg.hasContext ? '<span class="inline-flex items-center gap-1 text-[10px] text-sky-300/80 bg-sky-500/10 px-1.5 py-0.5 rounded">📍 Screen context attached</span>' : ''}
+                <span class="text-[10px] text-emerald-400 font-medium">🔒 100% Private</span>
+              </div>
+              <p class="text-[11px] text-slate-300 leading-relaxed">
+                Paste your free Gemini API key to ask situational questions and get on-the-fly audio clips:
+              </p>
+              <div class="flex items-center gap-2">
+                <input id="gemini-quick-key-input" type="password" placeholder="Paste AIzaSy... key" 
+                  class="flex-1 px-3 py-1.5 rounded-xl bg-[#0c0e14] border border-[#263045] text-slate-100 font-mono text-xs focus:outline-none focus:border-sky-400" />
+                <button onclick="saveQuickGeminiKey()" 
+                  class="px-3 py-1.5 rounded-xl bg-gradient-to-r from-sky-500 to-emerald-400 hover:from-sky-400 hover:to-emerald-300 text-[#0e0f12] text-xs font-bold transition-all cursor-pointer shadow-xs shrink-0">
+                  Connect
+                </button>
+              </div>
+              <div class="flex items-center justify-between text-[11px] pt-0.5">
+                <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener noreferrer" class="text-sky-400 hover:underline">
+                  Get free key at Google AI Studio ↗
+                </a>
+                <span class="text-slate-500 text-[10px]">Stored locally in browser</span>
               </div>
             </div>
           `;
-        } else {
-          const renderedContent = safeRenderMarkdown(msg.text, 'he');
-          const hasHebrew = extractHebrewWords(msg.text).length > 0;
+          return;
+        }
+
+        // If no messages yet, show welcome tutor card
+        if (!Array.isArray(geminiChatHistory) || geminiChatHistory.length === 0) {
+          container.innerHTML = `
+            <div class="p-3.5 rounded-2xl bg-[#141824] border border-[#222a3d] space-y-2 shadow-sm">
+              <div class="flex items-center gap-2">
+                <span class="text-base">🇮🇱</span>
+                <h4 class="text-xs font-bold text-white">Shalom! I'm your Gemini Hebrew Coach.</h4>
+              </div>
+              <p class="text-xs text-slate-300 leading-relaxed">
+                I'm watching your active card in real time. Click <strong>💡 Explain this card</strong> above for a breakdown with 1-4 playable audio clips on the fly!
+              </p>
+            </div>
+          `;
+          return;
+        }
+
+        // Render conversation bubbles
+        let html = '';
+        geminiChatHistory.forEach((msg, idx) => {
+          if (!msg) return;
+          const isUser = msg.role === 'user';
+          const isSaved = isMsgSaved(idx);
+          if (isUser) {
+            html += `
+              <div class="flex justify-end group">
+                <div class="max-w-[85%] bg-gradient-to-br from-sky-500/20 to-blue-600/20 border border-sky-400/40 rounded-2xl rounded-tr-xs px-3.5 py-2.5 text-xs text-slate-100 shadow-sm space-y-1 relative">
+                  <div class="flex items-start justify-between gap-2">
+                    <p class="leading-relaxed whitespace-pre-wrap">${escapeHtml(msg.text || '')}</p>
+                    <div class="flex items-center gap-1 shrink-0">
+                      <button onclick="toggleSaveQABlock(${idx})" class="${isSaved ? 'text-amber-400 font-bold opacity-100' : 'text-slate-400 hover:text-amber-300 opacity-60 group-hover:opacity-100'} text-xs cursor-pointer transition-all p-0.5" title="${isSaved ? 'Remove Saved Q&A' : 'Save full Q&A block to Saved tab'}">
+                        ${isSaved ? '⭐' : '☆'}
+                      </button>
+                      <button onclick="deleteGeminiMessage(${idx})" class="text-slate-400 hover:text-rose-400 text-xs cursor-pointer opacity-50 group-hover:opacity-100 transition-opacity p-0.5" title="Delete message">
+                        🗑️
+                      </button>
+                    </div>
+                  </div>
+                  ${msg.hasContext ? '<span class="inline-flex items-center gap-1 text-[10px] text-sky-300/80 bg-sky-500/10 px-1.5 py-0.5 rounded">📍 Screen context attached</span>' : ''}
+                </div>
+              </div>
+            `;
+          } else {
+            const renderedContent = safeRenderMarkdown(msg.text || '', 'he');
+            const hasHebrew = extractHebrewWords(msg.text || '').length > 0;
+            html += `
+              <div class="flex justify-start">
+                <div class="max-w-[95%] bg-[#151926] border border-[#273047] rounded-2xl rounded-tl-xs px-3.5 py-3 text-xs text-slate-200 shadow-md space-y-2.5">
+                  <div class="gemini-msg-bubble">
+                    ${renderedContent}
+                  </div>
+                  <div class="pt-1.5 border-t border-[#222a3d] flex items-center justify-between text-[11px] text-slate-400">
+                    <div class="flex items-center gap-2.5">
+                      ${hasHebrew ? `
+                        <button onclick="playMessageHebrewAudio(geminiChatHistory[${idx}].text)" class="hover:text-amber-300 flex items-center gap-1 cursor-pointer transition-colors" title="Pronounce Hebrew words in message">
+                          <span>🔊</span>
+                          <span>Listen All</span>
+                        </button>
+                      ` : ''}
+                      <button onclick="toggleSaveQABlock(${idx})" class="${isSaved ? 'text-amber-400 font-semibold' : 'hover:text-amber-300'} flex items-center gap-1 cursor-pointer transition-colors" title="${isSaved ? 'Remove from Saved' : 'Save entire Q&A block'}">
+                        <span>${isSaved ? '⭐' : '☆'}</span>
+                        <span>${isSaved ? 'Saved Q&A' : 'Save Q&A'}</span>
+                      </button>
+                    </div>
+                    <div class="flex items-center gap-2">
+                      <button onclick="copyGeminiMessage(${idx})" class="hover:text-white flex items-center gap-1 cursor-pointer transition-colors" title="Copy response">
+                        <span>📋</span>
+                        <span>Copy</span>
+                      </button>
+                      <button onclick="deleteGeminiMessage(${idx})" class="text-slate-500 hover:text-rose-400 flex items-center gap-1 cursor-pointer transition-colors opacity-70 hover:opacity-100" title="Delete message">
+                        <span>🗑️</span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            `;
+          }
+        });
+
+        // Typing loading bubble
+        if (geminiIsThinking) {
           html += `
             <div class="flex justify-start">
-              <div class="max-w-[95%] bg-[#151926] border border-[#273047] rounded-2xl rounded-tl-xs px-3.5 py-3 text-xs text-slate-200 shadow-md space-y-2.5">
-                <div class="gemini-msg-bubble">
-                  ${renderedContent}
-                </div>
-                <div class="pt-1.5 border-t border-[#222a3d] flex items-center justify-between text-[11px] text-slate-400">
-                  <div class="flex items-center gap-2.5">
-                    ${hasHebrew ? `
-                      <button onclick="playMessageHebrewAudio(geminiChatHistory[${idx}].text)" class="hover:text-amber-300 flex items-center gap-1 cursor-pointer transition-colors" title="Pronounce Hebrew words in message">
-                        <span>🔊</span>
-                        <span>Listen All</span>
-                      </button>
-                    ` : ''}
-                    <button onclick="toggleSaveQABlock(${idx})" class="${isSaved ? 'text-amber-400 font-semibold' : 'hover:text-amber-300'} flex items-center gap-1 cursor-pointer transition-colors" title="${isSaved ? 'Remove from Saved' : 'Save entire Q&A block'}">
-                      <span>${isSaved ? '⭐' : '☆'}</span>
-                      <span>${isSaved ? 'Saved Q&A' : 'Save Q&A'}</span>
-                    </button>
-                  </div>
-                  <div class="flex items-center gap-2">
-                    <button onclick="copyGeminiMessage(${idx})" class="hover:text-white flex items-center gap-1 cursor-pointer transition-colors" title="Copy response">
-                      <span>📋</span>
-                      <span>Copy</span>
-                    </button>
-                    <button onclick="deleteGeminiMessage(${idx})" class="text-slate-500 hover:text-rose-400 flex items-center gap-1 cursor-pointer transition-colors opacity-70 hover:opacity-100" title="Delete message">
-                      <span>🗑️</span>
-                    </button>
-                  </div>
+              <div class="bg-[#151926] border border-[#273047] rounded-2xl rounded-tl-xs px-3.5 py-3 text-xs text-slate-400 flex items-center gap-2">
+                <span>✨ Gemini is thinking</span>
+                <div class="flex items-center gap-1">
+                  <span class="w-1.5 h-1.5 rounded-full bg-sky-400 typing-dot"></span>
+                  <span class="w-1.5 h-1.5 rounded-full bg-indigo-400 typing-dot"></span>
+                  <span class="w-1.5 h-1.5 rounded-full bg-purple-400 typing-dot"></span>
                 </div>
               </div>
             </div>
           `;
         }
-      });
 
-      // Typing loading bubble
-      if (geminiIsThinking) {
-        html += `
-          <div class="flex justify-start">
-            <div class="bg-[#151926] border border-[#273047] rounded-2xl rounded-tl-xs px-3.5 py-3 text-xs text-slate-400 flex items-center gap-2">
-              <span>✨ Gemini is thinking</span>
-              <div class="flex items-center gap-1">
-                <span class="w-1.5 h-1.5 rounded-full bg-sky-400 typing-dot"></span>
-                <span class="w-1.5 h-1.5 rounded-full bg-indigo-400 typing-dot"></span>
-                <span class="w-1.5 h-1.5 rounded-full bg-purple-400 typing-dot"></span>
-              </div>
-            </div>
-          </div>
-        `;
+        container.innerHTML = html;
+        container.scrollTop = container.scrollHeight;
+      } catch (err) {
+        console.error('Error rendering Gemini chat:', err);
       }
-
-      container.innerHTML = html;
-      container.scrollTop = container.scrollHeight;
     }
 
     function renderGeminiSaved(filterText = '') {
@@ -9513,9 +9521,13 @@ Examples:
     }
 
     function escapeHtml(text) {
-      const div = document.createElement('div');
-      div.innerText = text;
-      return div.innerHTML;
+      if (text === null || text === undefined) return '';
+      return String(text)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
     }
 
     function copyGeminiMessage(idx) {
