@@ -9365,7 +9365,58 @@ Examples:
       }
     }
 
-    function renderGeminiSaved(filterText = '') {
+    let geminiSavedCategoryFilter = 'all';
+    let geminiSavedSortMode = 'newest';
+    let geminiSavedViewMode = 'detailed';
+    let geminiSavedSearchText = '';
+
+    function setGeminiSavedCategory(cat) {
+      geminiSavedCategoryFilter = cat;
+      renderGeminiSaved();
+    }
+
+    function handleGeminiSavedSearch(val) {
+      geminiSavedSearchText = val;
+      renderGeminiSaved();
+    }
+
+    function handleGeminiSavedSort(mode) {
+      geminiSavedSortMode = mode;
+      renderGeminiSaved();
+    }
+
+    function toggleGeminiSavedViewMode() {
+      geminiSavedViewMode = (geminiSavedViewMode === 'detailed') ? 'compact' : 'detailed';
+      renderGeminiSaved();
+    }
+
+    function exportGeminiSavedItems(lang = 'he') {
+      if (geminiSavedItems.length === 0) {
+        showToast('No saved items to export');
+        return;
+      }
+      const appName = lang === 'he' ? 'Hebrew Reading & Street Mastery' : 'Thai Reading & Street Mastery';
+      let md = `# ${appName} - Saved Q&A Gems\n*Exported on ${new Date().toLocaleString()}*\n\n`;
+      geminiSavedItems.forEach((item, idx) => {
+        md += `## ${idx + 1}. ${item.situationTitle || 'Saved Note'}\n`;
+        if (item.question) md += `**Question:** ${item.question}\n\n`;
+        md += `**Response & Audio Clips:**\n${item.answer || item.text}\n\n`;
+        md += `---\n\n`;
+      });
+
+      const blob = new Blob([md], { type: 'text/markdown;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${lang}_saved_gems_${new Date().toISOString().slice(0, 10)}.md`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      showToast('📥 Saved gems exported to Markdown!');
+    }
+
+    function renderGeminiSaved() {
       const container = document.getElementById('gemini-view-saved');
       if (!container) return;
 
@@ -9380,7 +9431,7 @@ Examples:
             <div class="space-y-1">
               <h4 class="text-xs font-bold text-slate-200">No Saved Notes Yet</h4>
               <p class="text-[11px] text-slate-400 max-w-[240px] leading-relaxed">
-                Tap the <span class="text-amber-300 font-semibold">⭐ Save</span> button on any Gemini response or crucial explanation to bookmark it here for quick review!
+                Tap the <span class="text-amber-300 font-semibold">⭐ Save Q&A</span> button on any Hebrew question or Gemini response to bookmark it here for quick review!
               </p>
             </div>
           </div>
@@ -9388,44 +9439,160 @@ Examples:
         return;
       }
 
-      const query = (filterText || '').toLowerCase().trim();
-      const filtered = query
-        ? geminiSavedItems.filter(item => (item.text || '').toLowerCase().includes(query) || (item.situationTitle || '').toLowerCase().includes(query))
-        : geminiSavedItems;
+      // Collect categories & counts for filter pills
+      const categoryCounts = {};
+      geminiSavedItems.forEach(item => {
+        const cat = item.situationTitle || 'General Note';
+        categoryCounts[cat] = (categoryCounts[cat] || 0) + 1;
+      });
+      const categories = Object.keys(categoryCounts).sort();
+
+      // Filter and sort items
+      let filtered = geminiSavedItems.slice();
+
+      if (geminiSavedCategoryFilter !== 'all') {
+        filtered = filtered.filter(item => (item.situationTitle || 'General Note') === geminiSavedCategoryFilter);
+      }
+
+      if (geminiSavedSearchText) {
+        const q = geminiSavedSearchText.toLowerCase().trim();
+        filtered = filtered.filter(item => {
+          const haystack = ((item.question || '') + ' ' + (item.answer || item.text || '') + ' ' + (item.situationTitle || '')).toLowerCase();
+          return haystack.includes(q);
+        });
+      }
+
+      if (geminiSavedSortMode === 'oldest') {
+        filtered.sort((a, b) => (a.savedAt || 0) - (b.savedAt || 0));
+      } else if (geminiSavedSortMode === 'topic') {
+        filtered.sort((a, b) => (a.situationTitle || '').localeCompare(b.situationTitle || ''));
+      } else {
+        filtered.sort((a, b) => (b.savedAt || 0) - (a.savedAt || 0));
+      }
 
       let html = `
-        <div class="space-y-2 sticky top-0 bg-[#0f1117] pt-1 pb-2 z-10">
+        <div class="space-y-2.5 sticky top-0 bg-[#0f1117] pt-1 pb-2 z-10 border-b border-[#1c2233]">
           <div class="flex items-center justify-between text-xs">
             <span class="font-bold text-slate-200 flex items-center gap-1.5">
-              <span>⭐</span> Saved Gems (${geminiSavedItems.length})
+              <span>⭐</span> Saved Gems (${filtered.length}${filtered.length !== geminiSavedItems.length ? ' / ' + geminiSavedItems.length : ''})
             </span>
-            <div class="flex items-center gap-2">
-              <button onclick="copyAllSavedItems()" class="text-[11px] text-sky-400 hover:underline cursor-pointer">
-                📋 Copy All
+            <div class="flex items-center gap-1.5 flex-wrap">
+              <button onclick="toggleGeminiSavedViewMode()" class="text-[10px] text-slate-300 hover:text-white flex items-center gap-1 cursor-pointer bg-[#171b28] hover:bg-[#20273a] px-2 py-1 rounded-lg border border-[#273046] transition-colors" title="Toggle detailed or compact view">
+                <span>${geminiSavedViewMode === 'compact' ? '📄 Expanded' : '☰ Compact'}</span>
               </button>
-              <button onclick="clearAllSavedItems()" class="text-[11px] text-rose-400 hover:underline cursor-pointer">
-                🗑️ Clear
+              <button onclick="exportGeminiSavedItems('he')" class="text-[10px] text-emerald-400 hover:text-emerald-300 flex items-center gap-1 cursor-pointer bg-emerald-500/10 hover:bg-emerald-500/20 px-2 py-1 rounded-lg border border-emerald-500/20 transition-colors" title="Download Markdown review sheet">
+                <span>📥</span> <span>Export</span>
+              </button>
+              <button onclick="copyAllSavedItems()" class="text-[10px] text-sky-400 hover:text-sky-300 flex items-center gap-1 cursor-pointer bg-sky-500/10 hover:bg-sky-500/20 px-2 py-1 rounded-lg border border-sky-500/20 transition-colors">
+                <span>📋</span> <span>Copy All</span>
+              </button>
+              <button onclick="clearAllSavedItems()" class="text-[10px] text-rose-400 hover:text-rose-300 flex items-center gap-1 cursor-pointer bg-rose-500/10 hover:bg-rose-500/20 px-2 py-1 rounded-lg border border-rose-500/20 transition-colors">
+                <span>🗑️</span>
               </button>
             </div>
           </div>
-          <div class="relative">
-            <input type="text" id="gemini-saved-search" placeholder="Search saved phrases & notes..."
-              value="${escapeHtml(filterText)}"
-              oninput="renderGeminiSaved(this.value)"
-              class="w-full px-3 py-1.5 rounded-xl bg-[#0e1017] border border-[#252b3d] text-slate-200 placeholder-slate-500 text-xs focus:outline-none focus:border-sky-400" />
-            ${filterText ? `<button onclick="renderGeminiSaved('')" class="absolute right-2.5 top-1.5 text-slate-400 hover:text-white text-xs cursor-pointer">✕</button>` : ''}
+
+          <!-- Search & Sort Row -->
+          <div class="flex items-center gap-2">
+            <div class="relative flex-1">
+              <input type="text" id="gemini-saved-search" placeholder="Search Hebrew questions, words, or slang..."
+                value="${escapeHtml(geminiSavedSearchText)}"
+                oninput="handleGeminiSavedSearch(this.value)"
+                class="w-full pl-7 pr-7 py-1.5 rounded-xl bg-[#0e1017] border border-[#252b3d] text-slate-200 placeholder-slate-500 text-xs focus:outline-none focus:border-sky-400" />
+              <span class="absolute left-2.5 top-2 text-slate-500 text-xs pointer-events-none">🔍</span>
+              ${geminiSavedSearchText ? `<button onclick="handleGeminiSavedSearch('')" class="absolute right-2.5 top-1.5 text-slate-400 hover:text-white text-xs cursor-pointer">✕</button>` : ''}
+            </div>
+            <select onchange="handleGeminiSavedSort(this.value)" class="bg-[#121622] border border-[#252f44] text-slate-300 text-[11px] rounded-xl px-2 py-1.5 focus:outline-none cursor-pointer">
+              <option value="newest" ${geminiSavedSortMode === 'newest' ? 'selected' : ''}>Newest</option>
+              <option value="oldest" ${geminiSavedSortMode === 'oldest' ? 'selected' : ''}>Oldest</option>
+              <option value="topic" ${geminiSavedSortMode === 'topic' ? 'selected' : ''}>Topic A-Z</option>
+            </select>
           </div>
+
+          <!-- Category Filter Pills -->
+          ${categories.length > 0 ? `
+            <div class="flex items-center gap-1.5 overflow-x-auto pb-0.5 text-[11px] scrollbar-none">
+              <button onclick="setGeminiSavedCategory('all')" 
+                class="px-2.5 py-0.5 rounded-full font-medium whitespace-nowrap transition-colors cursor-pointer shrink-0 ${geminiSavedCategoryFilter === 'all' ? 'bg-sky-500/20 text-sky-300 border border-sky-400/50' : 'bg-[#141824] text-slate-400 hover:text-white border border-[#232b3d]'}">
+                All (${geminiSavedItems.length})
+              </button>
+              ${categories.map(cat => {
+                const isSelected = (geminiSavedCategoryFilter === cat);
+                const count = categoryCounts[cat];
+                const catEsc = escapeHtml(cat).replace(/'/g, "\\'");
+                return `
+                  <button onclick="setGeminiSavedCategory('${catEsc}')" 
+                    class="px-2.5 py-0.5 rounded-full font-medium whitespace-nowrap transition-colors cursor-pointer shrink-0 ${isSelected ? 'bg-sky-500/20 text-sky-300 border border-sky-400/50' : 'bg-[#141824] text-slate-400 hover:text-white border border-[#232b3d]'}">
+                    🏷️ ${escapeHtml(cat)} (${count})
+                  </button>
+                `;
+              }).join('')}
+            </div>
+          ` : ''}
         </div>
       `;
 
       if (filtered.length === 0) {
         html += `
-          <div class="text-center py-8 text-xs text-slate-400">
-            No saved notes match "${escapeHtml(filterText)}".
+          <div class="text-center py-10 space-y-2 text-xs text-slate-400">
+            <div>No saved gems match "${escapeHtml(geminiSavedSearchText || geminiSavedCategoryFilter)}".</div>
+            <button onclick="handleGeminiSavedSearch(''); setGeminiSavedCategory('all');" class="text-sky-400 hover:underline cursor-pointer font-semibold">
+              Reset search & filters →
+            </button>
           </div>
         `;
+      } else if (geminiSavedViewMode === 'compact') {
+        // High-density compact accordion list
+        html += `<div class="space-y-2 pt-1">`;
+        filtered.forEach(item => {
+          const renderedContent = safeRenderMarkdown(item.answer || item.text, 'he');
+          html += `
+            <details class="group bg-[#141824] border border-[#232b3d] hover:border-sky-400/40 rounded-2xl p-2.5 transition-all shadow-xs">
+              <summary class="flex items-center justify-between gap-2 cursor-pointer list-none select-none">
+                <div class="flex items-center gap-2 min-w-0 flex-1">
+                  <span class="text-[10px] text-sky-400 bg-sky-500/10 px-2 py-0.5 rounded-md font-semibold truncate shrink-0">
+                    🏷️ ${escapeHtml(item.situationTitle || 'Note')}
+                  </span>
+                  <span class="text-xs text-white font-medium truncate">
+                    ${item.question ? '❓ ' + escapeHtml(item.question) : escapeHtml((item.answer || item.text || '').replace(/[#*`\[\]]/g, '').slice(0, 48))}
+                  </span>
+                </div>
+                <div class="flex items-center gap-2 shrink-0 text-slate-500 group-hover:text-slate-300 text-[10px]">
+                  <span>${formatGeminiTime(item.savedAt)}</span>
+                  <span class="text-xs group-open:rotate-180 transition-transform">▼</span>
+                </div>
+              </summary>
+              <div class="mt-2.5 pt-2 border-t border-[#1e2536] space-y-2">
+                ${item.question ? `
+                  <div class="p-2.5 rounded-xl bg-sky-950/40 border border-sky-500/30 text-sky-200 text-xs flex items-start gap-2 shadow-xs">
+                    <span class="font-bold text-sky-400 shrink-0">❓ Q:</span>
+                    <span class="leading-relaxed whitespace-pre-wrap">${escapeHtml(item.question)}</span>
+                  </div>
+                ` : ''}
+                <div class="gemini-msg-bubble text-xs text-slate-200">
+                  ${renderedContent}
+                </div>
+                <div class="pt-1.5 border-t border-[#202738] flex items-center justify-between text-[11px] text-slate-400">
+                  <button onclick="playSavedItemAudio('${item.id}', 'he')" class="hover:text-amber-300 flex items-center gap-1 cursor-pointer transition-colors" title="Pronounce Hebrew words">
+                    <span>🔊</span> <span>Listen All</span>
+                  </button>
+                  <div class="flex items-center gap-2">
+                    <button onclick="copySavedItem('${item.id}')" class="hover:text-white flex items-center gap-1 cursor-pointer transition-colors" title="Copy Q&A">
+                      <span>📋</span> <span>Copy</span>
+                    </button>
+                    <button onclick="removeSavedItem('${item.id}')" class="hover:text-rose-400 flex items-center gap-1 cursor-pointer transition-colors" title="Remove from saved">
+                      <span>🗑️</span> <span>Remove</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </details>
+          `;
+        });
+        html += `</div>`;
       } else {
-        html += `<div class="space-y-3">`;
+        // Full expanded cards view
+        html += `<div class="space-y-3 pt-1">`;
         filtered.forEach(item => {
           const renderedContent = safeRenderMarkdown(item.answer || item.text, 'he');
           html += `
