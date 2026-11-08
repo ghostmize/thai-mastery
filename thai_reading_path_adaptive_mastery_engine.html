@@ -4071,9 +4071,11 @@
         } catch(e) {}
       }
 
-      // 2. High-fidelity audio stream (works everywhere on desktop & web with no-referrer)
+      // 2. High-fidelity audio stream
       const url = `https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&tl=th&q=${encodeURIComponent(clean)}`;
-      const audio = new Audio(url);
+      const audio = new Audio();
+      audio.referrerPolicy = 'no-referrer';
+      audio.src = url;
       audio.playbackRate = appState.audioSpeed || 1.0;
       currentAudio = audio;
 
