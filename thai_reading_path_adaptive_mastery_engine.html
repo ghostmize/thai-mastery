@@ -544,75 +544,114 @@
       </div>
     </div>
 
-    <!-- Slim Modern Situation Bar (Clean & Focused) -->
-    <div id="gemini-context-card" class="bg-[#121520] border-b border-[#1e2332] px-3 py-1.5 flex items-center justify-between gap-2 shrink-0">
-      <!-- Active Situation Chip -->
-      <div id="gemini-current-situation-pill" class="flex items-center gap-1.5 text-xs text-slate-300 min-w-0 flex-1 truncate" title="Current situation context">
-        <span class="text-xs shrink-0">🎯</span>
-        <span id="gemini-situation-title" class="font-bold text-slate-200 text-xs truncate">Ready on Path</span>
+    <!-- Tabs Navigation Bar (Chat, Saved Notes, History Threads) -->
+    <div class="px-3 py-1.5 bg-[#121520] border-b border-[#1c2130] flex items-center justify-between gap-1 shrink-0 text-xs">
+      <div class="flex items-center gap-1">
+        <button id="tab-btn-chat" onclick="switchGeminiTab('chat')" 
+          class="px-2.5 py-1 rounded-lg font-semibold flex items-center gap-1.5 transition-all cursor-pointer bg-sky-500/20 text-sky-300 border border-sky-400/30">
+          <span>💬</span>
+          <span>Chat</span>
+        </button>
+        <button id="tab-btn-saved" onclick="switchGeminiTab('saved')" 
+          class="px-2.5 py-1 rounded-lg font-semibold flex items-center gap-1.5 transition-all cursor-pointer text-slate-400 hover:text-white border border-transparent hover:bg-[#1a1f2e]">
+          <span>⭐</span>
+          <span>Saved</span>
+          <span id="gemini-saved-badge" class="px-1.5 py-0.2 rounded-full text-[10px] bg-amber-500/20 text-amber-300 border border-amber-500/30 font-mono hidden">0</span>
+        </button>
+        <button id="tab-btn-history" onclick="switchGeminiTab('history')" 
+          class="px-2.5 py-1 rounded-lg font-semibold flex items-center gap-1.5 transition-all cursor-pointer text-slate-400 hover:text-white border border-transparent hover:bg-[#1a1f2e]">
+          <span>📜</span>
+          <span>Threads</span>
+        </button>
       </div>
 
-      <!-- Clean Action Chips -->
-      <div class="flex items-center gap-1.5 shrink-0">
-        <button id="btn-explain-card" onclick="askGeminiQuickPrompt('explain_situation')" 
-          class="px-2.5 py-1 rounded-xl bg-gradient-to-r from-sky-500/20 to-purple-500/20 hover:from-sky-500/30 hover:to-purple-500/30 border border-sky-400/40 hover:border-sky-300 text-sky-300 hover:text-white text-[11px] font-semibold flex items-center gap-1 cursor-pointer transition-all shadow-xs active:scale-95 whitespace-nowrap"
-          title="Break down this exact card with on-the-fly audio clips">
-          <span>💡</span>
-          <span>Explain this card</span>
-        </button>
+      <button onclick="startNewGeminiThread()" class="px-2 py-1 rounded-lg bg-[#181d2a] hover:bg-[#232a3d] border border-[#2b334a] text-slate-300 hover:text-white text-[11px] font-semibold flex items-center gap-1 transition-colors cursor-pointer" title="Start a fresh conversation thread">
+        <span>+</span> <span>New Chat</span>
+      </button>
+    </div>
 
-        <!-- Dropdown for extra situational prompts -->
-        <div class="relative group">
-          <button type="button" class="w-6 h-6 rounded-lg bg-[#181d2a] hover:bg-[#232a3d] border border-[#2b334a] text-slate-400 hover:text-white text-xs flex items-center justify-center cursor-pointer transition-colors" title="More prompts (Audio, Slang, Dialogue)">
-            ⋯
+    <!-- Tab View 1: Live Chat -->
+    <div id="gemini-view-chat" class="flex-1 flex flex-col min-h-0">
+      <!-- Slim Modern Situation Bar (Clean & Focused) -->
+      <div id="gemini-context-card" class="bg-[#121520] border-b border-[#1e2332] px-3 py-1.5 flex items-center justify-between gap-2 shrink-0">
+        <!-- Active Situation Chip -->
+        <div id="gemini-current-situation-pill" class="flex items-center gap-1.5 text-xs text-slate-300 min-w-0 flex-1 truncate" title="Current situation context">
+          <span class="text-xs shrink-0">🎯</span>
+          <span id="gemini-situation-title" class="font-bold text-slate-200 text-xs truncate">Ready on Path</span>
+        </div>
+
+        <!-- Clean Action Chips -->
+        <div class="flex items-center gap-1.5 shrink-0">
+          <button id="btn-explain-card" onclick="askGeminiQuickPrompt('explain_situation')" 
+            class="px-2.5 py-1 rounded-xl bg-gradient-to-r from-sky-500/20 to-purple-500/20 hover:from-sky-500/30 hover:to-purple-500/30 border border-sky-400/40 hover:border-sky-300 text-sky-300 hover:text-white text-[11px] font-semibold flex items-center gap-1 cursor-pointer transition-all shadow-xs active:scale-95 whitespace-nowrap"
+            title="Break down this exact card with on-the-fly audio clips">
+            <span>💡</span>
+            <span>Explain this card</span>
           </button>
-          <div class="absolute right-0 top-full mt-1 w-48 bg-[#141824] border border-[#262f44] rounded-xl shadow-2xl py-1 hidden group-hover:block hover:block z-50 text-xs">
-            <button onclick="askGeminiQuickPrompt('audio_clips')" class="w-full text-left px-3 py-1.5 hover:bg-[#1f2538] text-slate-300 hover:text-white flex items-center gap-2 cursor-pointer">
-              <span>🔊</span> <span>Generate 3-4 Audio Clips</span>
+
+          <!-- Dropdown for extra situational prompts -->
+          <div class="relative group">
+            <button type="button" class="w-6 h-6 rounded-lg bg-[#181d2a] hover:bg-[#232a3d] border border-[#2b334a] text-slate-400 hover:text-white text-xs flex items-center justify-center cursor-pointer transition-colors" title="More prompts (Audio, Slang, Dialogue)">
+              ⋯
             </button>
-            <button onclick="askGeminiQuickPrompt('street_slang')" class="w-full text-left px-3 py-1.5 hover:bg-[#1f2538] text-slate-300 hover:text-white flex items-center gap-2 cursor-pointer">
-              <span>🗣️</span> <span>Street vs Polite Slang</span>
-            </button>
-            <button onclick="askGeminiQuickPrompt('tones')" class="w-full text-left px-3 py-1.5 hover:bg-[#1f2538] text-slate-300 hover:text-white flex items-center gap-2 cursor-pointer">
-              <span>🇹🇭</span> <span>Tones & Grammar</span>
-            </button>
-            <button onclick="askGeminiQuickPrompt('dialogue')" class="w-full text-left px-3 py-1.5 hover:bg-[#1f2538] text-slate-300 hover:text-white flex items-center gap-2 cursor-pointer">
-              <span>💬</span> <span>Mini Dialogue</span>
-            </button>
-            <div class="border-t border-[#23293a] my-1"></div>
-            <label class="px-3 py-1.5 text-slate-400 flex items-center gap-2 cursor-pointer hover:bg-[#1f2538]">
-              <input id="gemini-context-toggle" type="checkbox" checked onchange="handleContextToggleChange()" class="rounded border-slate-600 text-sky-500 focus:ring-0 cursor-pointer" />
-              <span>Auto-attach context</span>
-            </label>
+            <div class="absolute right-0 top-full mt-1 w-48 bg-[#141824] border border-[#262f44] rounded-xl shadow-2xl py-1 hidden group-hover:block hover:block z-50 text-xs">
+              <button onclick="askGeminiQuickPrompt('audio_clips')" class="w-full text-left px-3 py-1.5 hover:bg-[#1f2538] text-slate-300 hover:text-white flex items-center gap-2 cursor-pointer">
+                <span>🔊</span> <span>Generate 3-4 Audio Clips</span>
+              </button>
+              <button onclick="askGeminiQuickPrompt('street_slang')" class="w-full text-left px-3 py-1.5 hover:bg-[#1f2538] text-slate-300 hover:text-white flex items-center gap-2 cursor-pointer">
+                <span>🗣️</span> <span>Street vs Polite Slang</span>
+              </button>
+              <button onclick="askGeminiQuickPrompt('tones')" class="w-full text-left px-3 py-1.5 hover:bg-[#1f2538] text-slate-300 hover:text-white flex items-center gap-2 cursor-pointer">
+                <span>🇹🇭</span> <span>Tones & Grammar</span>
+              </button>
+              <button onclick="askGeminiQuickPrompt('dialogue')" class="w-full text-left px-3 py-1.5 hover:bg-[#1f2538] text-slate-300 hover:text-white flex items-center gap-2 cursor-pointer">
+                <span>💬</span> <span>Mini Dialogue</span>
+              </button>
+              <div class="border-t border-[#23293a] my-1"></div>
+              <label class="px-3 py-1.5 text-slate-400 flex items-center gap-2 cursor-pointer hover:bg-[#1f2538]">
+                <input id="gemini-context-toggle" type="checkbox" checked onchange="handleContextToggleChange()" class="rounded border-slate-600 text-sky-500 focus:ring-0 cursor-pointer" />
+                <span>Auto-attach context</span>
+              </label>
+            </div>
           </div>
+        </div>
+      </div>
+
+      <!-- Chat Message List -->
+      <div id="gemini-messages" class="flex-1 overflow-y-auto p-4 space-y-3.5 scroll-smooth">
+        <!-- Injected dynamically -->
+      </div>
+
+      <!-- Bottom Input Container -->
+      <div class="border-t border-[#1f2433] bg-[#141722] p-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] space-y-2 shrink-0 z-20 relative">
+        <form id="gemini-chat-form" onsubmit="handleGeminiSubmit(event)" class="relative flex items-end gap-2">
+          <textarea id="gemini-user-input" rows="1" placeholder="Ask about this situation or anything in Thai..."
+            onkeydown="handleGeminiInputKeydown(event)"
+            oninput="autoResizeGeminiInput(this)"
+            class="flex-1 max-h-32 min-h-[42px] px-3.5 py-2.5 rounded-2xl bg-[#0c0e14] border border-[#252b3d] text-slate-100 placeholder-slate-500 text-xs sm:text-sm focus:outline-none focus:border-sky-400 resize-none leading-relaxed transition-all"></textarea>
+
+          <button id="gemini-send-btn" type="submit"
+            class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-sky-500 to-emerald-400 hover:from-sky-400 hover:to-emerald-300 text-[#0e0f12] flex items-center justify-center font-bold shadow-md transition-all cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed shrink-0 z-10 relative">
+            <svg class="w-4 h-4 translate-x-[1px] -translate-y-[1px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+            </svg>
+          </button>
+        </form>
+        <div class="flex items-center justify-between text-[10px] text-slate-500 px-1">
+          <span>Enter to send · Shift+Enter for newline · Ctrl+Space to toggle</span>
+          <span id="gemini-token-indicator" class="text-sky-400/70">Google Gemini Live</span>
         </div>
       </div>
     </div>
 
-    <!-- Chat Message List -->
-    <div id="gemini-messages" class="flex-1 overflow-y-auto p-4 space-y-3.5 scroll-smooth">
+    <!-- Tab View 2: Saved Notes & Phrases -->
+    <div id="gemini-view-saved" class="hidden flex-1 overflow-y-auto p-3.5 space-y-3 min-h-0">
       <!-- Injected dynamically -->
     </div>
 
-    <!-- Bottom Input Container -->
-    <div class="border-t border-[#1f2433] bg-[#141722] p-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] space-y-2 shrink-0 z-20 relative">
-      <form id="gemini-chat-form" onsubmit="handleGeminiSubmit(event)" class="relative flex items-end gap-2">
-        <textarea id="gemini-user-input" rows="1" placeholder="Ask about this situation or anything in Thai..."
-          onkeydown="handleGeminiInputKeydown(event)"
-          oninput="autoResizeGeminiInput(this)"
-          class="flex-1 max-h-32 min-h-[42px] px-3.5 py-2.5 rounded-2xl bg-[#0c0e14] border border-[#252b3d] text-slate-100 placeholder-slate-500 text-xs sm:text-sm focus:outline-none focus:border-sky-400 resize-none leading-relaxed transition-all"></textarea>
-
-        <button id="gemini-send-btn" type="submit"
-          class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-sky-500 to-emerald-400 hover:from-sky-400 hover:to-emerald-300 text-[#0e0f12] flex items-center justify-center font-bold shadow-md transition-all cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed shrink-0 z-10 relative">
-          <svg class="w-4 h-4 translate-x-[1px] -translate-y-[1px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
-          </svg>
-        </button>
-      </form>
-      <div class="flex items-center justify-between text-[10px] text-slate-500 px-1">
-        <span>Enter to send · Shift+Enter for newline · Ctrl+Space to toggle</span>
-        <span id="gemini-token-indicator" class="text-sky-400/70">Google Gemini Live</span>
-      </div>
+    <!-- Tab View 3: Conversation Threads / History -->
+    <div id="gemini-view-history" class="hidden flex-1 overflow-y-auto p-3.5 space-y-3 min-h-0">
+      <!-- Injected dynamically -->
     </div>
 
   </aside>
@@ -6651,6 +6690,9 @@
     const GEMINI_MODEL_STORAGE = 'thai_gemini_model';
     const GEMINI_HISTORY_STORAGE = 'thai_gemini_chat_history';
     const GEMINI_AUTO_CONTEXT_STORAGE = 'thai_gemini_auto_context';
+    const GEMINI_SAVED_STORAGE = 'thai_gemini_saved_notes_v1';
+    const GEMINI_THREADS_STORAGE = 'thai_gemini_threads_v1';
+    const GEMINI_ACTIVE_THREAD_STORAGE = 'thai_gemini_active_thread_id';
 
     const GEMINI_SYSTEM_PROMPT = `You are an expert bilingual Thai language tutor & cultural coach built into the "Thai Reading & Street Mastery" learning engine.
 Your mission is to help the learner master authentic spoken Thai, tone rules, reading nuances, and real everyday situational street Thai.
@@ -6673,6 +6715,10 @@ Guidelines:
 3. Always provide 1 to 4 [audio: ...] clips generously whenever teaching phrases, answering situational questions, comparing formal vs casual slang, or demonstrating dialogues!
 4. Explain WHY: Break down tricky tones, consonant classes (Low/Mid/High), dead vs live syllables, or colloquial contractions used by native Thais in Bangkok street life (slang, particles like ครับ/ค่ะ/นะ/ด้วย/จ้ะ, casual shortening, etc.).`;
 
+    let geminiActiveTab = 'chat';
+    let geminiSavedItems = [];
+    let geminiThreads = [];
+    let geminiActiveThreadId = null;
     let geminiChatHistory = [];
     let geminiIsThinking = false;
 
@@ -6708,7 +6754,7 @@ Guidelines:
         if (backdrop) backdrop.classList.remove('hidden');
         if (floatingBtn) floatingBtn.classList.add('hidden');
         updateGeminiContextUI();
-        renderGeminiChat();
+        switchGeminiTab(geminiActiveTab || 'chat');
         setTimeout(() => {
           const input = document.getElementById('gemini-user-input');
           if (input && window.innerWidth >= 768) input.focus();
@@ -7076,6 +7122,200 @@ Guidelines:
       }
     }
 
+    function formatGeminiTime(ts) {
+      if (!ts) return '';
+      const diffSec = Math.floor((Date.now() - ts) / 1000);
+      if (diffSec < 60) return 'Just now';
+      if (diffSec < 3600) return Math.floor(diffSec / 60) + 'm ago';
+      if (diffSec < 86400) return Math.floor(diffSec / 3600) + 'h ago';
+      const d = new Date(ts);
+      return d.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
+    }
+
+    function saveGeminiState() {
+      try {
+        const activeThread = geminiThreads.find(t => t.id === geminiActiveThreadId);
+        if (activeThread) {
+          activeThread.messages = geminiChatHistory;
+          activeThread.updatedAt = Date.now();
+        }
+        localStorage.setItem(GEMINI_THREADS_STORAGE, JSON.stringify(geminiThreads));
+        localStorage.setItem(GEMINI_ACTIVE_THREAD_STORAGE, geminiActiveThreadId || '');
+        localStorage.setItem(GEMINI_SAVED_STORAGE, JSON.stringify(geminiSavedItems));
+        localStorage.setItem(GEMINI_HISTORY_STORAGE, JSON.stringify(geminiChatHistory.slice(-20)));
+      } catch (e) {}
+      updateSavedBadge();
+    }
+
+    function updateSavedBadge() {
+      const badge = document.getElementById('gemini-saved-badge');
+      if (badge) {
+        badge.innerText = geminiSavedItems.length;
+        badge.classList.toggle('hidden', geminiSavedItems.length === 0);
+      }
+    }
+
+    function switchGeminiTab(tabName) {
+      geminiActiveTab = tabName;
+      const tabs = ['chat', 'saved', 'history'];
+      tabs.forEach(t => {
+        const btn = document.getElementById(`tab-btn-${t}`);
+        const view = document.getElementById(`gemini-view-${t}`);
+        const isActive = (t === tabName);
+        if (btn) {
+          if (isActive) {
+            btn.className = 'px-2.5 py-1 rounded-lg font-semibold flex items-center gap-1.5 transition-all cursor-pointer bg-sky-500/20 text-sky-300 border border-sky-400/30';
+          } else {
+            btn.className = 'px-2.5 py-1 rounded-lg font-semibold flex items-center gap-1.5 transition-all cursor-pointer text-slate-400 hover:text-white border border-transparent hover:bg-[#1a1f2e]';
+          }
+        }
+        if (view) {
+          view.classList.toggle('hidden', !isActive);
+        }
+      });
+
+      if (tabName === 'chat') {
+        renderGeminiChat();
+      } else if (tabName === 'saved') {
+        renderGeminiSaved();
+      } else if (tabName === 'history') {
+        renderGeminiHistory();
+      }
+    }
+
+    function startNewGeminiThread() {
+      saveGeminiState();
+      if (geminiChatHistory.length === 0 && geminiActiveTab === 'chat') {
+        showToast('Already on a fresh chat thread');
+        return;
+      }
+      const newThread = {
+        id: 'thread_' + Date.now(),
+        title: 'New Conversation',
+        createdAt: Date.now(),
+        updatedAt: Date.now(),
+        messages: []
+      };
+      geminiThreads.unshift(newThread);
+      geminiActiveThreadId = newThread.id;
+      geminiChatHistory = [];
+      saveGeminiState();
+      switchGeminiTab('chat');
+      showToast('✨ Started new chat session');
+    }
+
+    function selectGeminiThread(threadId) {
+      saveGeminiState();
+      const thread = geminiThreads.find(t => t.id === threadId);
+      if (!thread) return;
+      geminiActiveThreadId = thread.id;
+      geminiChatHistory = thread.messages || [];
+      saveGeminiState();
+      switchGeminiTab('chat');
+    }
+
+    function deleteGeminiThread(threadId) {
+      if (geminiThreads.length <= 1) {
+        geminiThreads = [{
+          id: 'thread_' + Date.now(),
+          title: 'Main Chat',
+          createdAt: Date.now(),
+          updatedAt: Date.now(),
+          messages: []
+        }];
+        geminiActiveThreadId = geminiThreads[0].id;
+        geminiChatHistory = [];
+        saveGeminiState();
+        renderGeminiHistory();
+        showToast('Chat thread reset');
+        return;
+      }
+
+      const idx = geminiThreads.findIndex(t => t.id === threadId);
+      if (idx !== -1) {
+        geminiThreads.splice(idx, 1);
+        if (geminiActiveThreadId === threadId) {
+          geminiActiveThreadId = geminiThreads[0].id;
+          geminiChatHistory = geminiThreads[0].messages || [];
+        }
+        saveGeminiState();
+        renderGeminiHistory();
+        showToast('Thread deleted');
+      }
+    }
+
+    function toggleSaveMessage(msgIdx) {
+      const msg = geminiChatHistory[msgIdx];
+      if (!msg) return;
+      const existingIdx = geminiSavedItems.findIndex(item => item.text === msg.text);
+      if (existingIdx !== -1) {
+        geminiSavedItems.splice(existingIdx, 1);
+        showToast('Removed from Saved notes');
+      } else {
+        const ctx = getCurrentSituationContext();
+        geminiSavedItems.unshift({
+          id: 'saved_' + Date.now(),
+          text: msg.text,
+          situationTitle: ctx.displayTitle || 'Thai Lesson Note',
+          savedAt: Date.now()
+        });
+        showToast('⭐ Saved for later! View in Saved tab');
+      }
+      saveGeminiState();
+      renderGeminiChat();
+    }
+
+    function deleteGeminiMessage(msgIdx) {
+      if (msgIdx >= 0 && msgIdx < geminiChatHistory.length) {
+        geminiChatHistory.splice(msgIdx, 1);
+        saveGeminiState();
+        renderGeminiChat();
+        showToast('Message deleted');
+      }
+    }
+
+    function copyAllSavedItems() {
+      if (geminiSavedItems.length === 0) return;
+      const allText = geminiSavedItems.map((item, i) => `=== Saved Item ${i + 1}: ${item.situationTitle} ===\n${item.text}\n`).join('\n\n');
+      navigator.clipboard.writeText(allText).then(() => showToast('📋 All saved notes copied!'));
+    }
+
+    function clearAllSavedItems() {
+      if (geminiSavedItems.length === 0) return;
+      if (confirm('Clear all saved notes and crucial phrases?')) {
+        geminiSavedItems = [];
+        saveGeminiState();
+        renderGeminiSaved();
+        showToast('Saved notes cleared');
+      }
+    }
+
+    function copySavedItem(id) {
+      const item = geminiSavedItems.find(s => s.id === id);
+      if (!item) return;
+      navigator.clipboard.writeText(item.text).then(() => showToast('📋 Note copied!'));
+    }
+
+    function removeSavedItem(id) {
+      const idx = geminiSavedItems.findIndex(s => s.id === id);
+      if (idx !== -1) {
+        geminiSavedItems.splice(idx, 1);
+        saveGeminiState();
+        renderGeminiSaved();
+        showToast('Note removed from saved');
+      }
+    }
+
+    function playSavedItemAudio(id, lang = 'th') {
+      const item = geminiSavedItems.find(s => s.id === id);
+      if (!item) return;
+      if (lang === 'th') {
+        playMessageThaiAudio(item.text);
+      } else {
+        playMessageHebrewAudio(item.text);
+      }
+    }
+
     function renderGeminiChat() {
       const container = document.getElementById('gemini-messages');
       if (!container) return;
@@ -7137,9 +7377,14 @@ Guidelines:
         const isUser = msg.role === 'user';
         if (isUser) {
           html += `
-            <div class="flex justify-end">
-              <div class="max-w-[85%] bg-gradient-to-br from-sky-500/20 to-blue-600/20 border border-sky-400/40 rounded-2xl rounded-tr-xs px-3.5 py-2.5 text-xs text-slate-100 shadow-sm space-y-1">
-                <p class="leading-relaxed whitespace-pre-wrap">${escapeHtml(msg.text)}</p>
+            <div class="flex justify-end group">
+              <div class="max-w-[85%] bg-gradient-to-br from-sky-500/20 to-blue-600/20 border border-sky-400/40 rounded-2xl rounded-tr-xs px-3.5 py-2.5 text-xs text-slate-100 shadow-sm space-y-1 relative">
+                <div class="flex items-start justify-between gap-2">
+                  <p class="leading-relaxed whitespace-pre-wrap">${escapeHtml(msg.text)}</p>
+                  <button onclick="deleteGeminiMessage(${idx})" class="text-slate-400 hover:text-rose-400 text-[10px] cursor-pointer opacity-40 group-hover:opacity-100 transition-opacity shrink-0" title="Delete message">
+                    🗑️
+                  </button>
+                </div>
                 ${msg.hasContext ? '<span class="inline-flex items-center gap-1 text-[10px] text-sky-300/80 bg-sky-500/10 px-1.5 py-0.5 rounded">📍 Screen context attached</span>' : ''}
               </div>
             </div>
@@ -7147,6 +7392,7 @@ Guidelines:
         } else {
           const renderedContent = safeRenderMarkdown(msg.text, 'th');
           const hasThai = extractThaiWords(msg.text).length > 0;
+          const isSaved = geminiSavedItems.some(item => item.text === msg.text);
           html += `
             <div class="flex justify-start">
               <div class="max-w-[95%] bg-[#151926] border border-[#273047] rounded-2xl rounded-tl-xs px-3.5 py-3 text-xs text-slate-200 shadow-md space-y-2.5">
@@ -7154,18 +7400,27 @@ Guidelines:
                   ${renderedContent}
                 </div>
                 <div class="pt-1.5 border-t border-[#222a3d] flex items-center justify-between text-[11px] text-slate-400">
-                  <div class="flex items-center gap-2">
+                  <div class="flex items-center gap-2.5">
                     ${hasThai ? `
                       <button onclick="playMessageThaiAudio(geminiChatHistory[${idx}].text)" class="hover:text-amber-300 flex items-center gap-1 cursor-pointer transition-colors" title="Pronounce all Thai text">
                         <span>🔊</span>
                         <span>Listen All</span>
                       </button>
                     ` : ''}
+                    <button onclick="toggleSaveMessage(${idx})" class="${isSaved ? 'text-amber-400 font-semibold' : 'hover:text-amber-300'} flex items-center gap-1 cursor-pointer transition-colors" title="${isSaved ? 'Remove from Saved' : 'Save for later'}">
+                      <span>${isSaved ? '⭐' : '☆'}</span>
+                      <span>${isSaved ? 'Saved' : 'Save'}</span>
+                    </button>
                   </div>
-                  <button onclick="copyGeminiMessage(${idx})" class="hover:text-white flex items-center gap-1 cursor-pointer transition-colors" title="Copy response">
-                    <span>📋</span>
-                    <span>Copy</span>
-                  </button>
+                  <div class="flex items-center gap-2">
+                    <button onclick="copyGeminiMessage(${idx})" class="hover:text-white flex items-center gap-1 cursor-pointer transition-colors" title="Copy response">
+                      <span>📋</span>
+                      <span>Copy</span>
+                    </button>
+                    <button onclick="deleteGeminiMessage(${idx})" class="text-slate-500 hover:text-rose-400 flex items-center gap-1 cursor-pointer transition-colors opacity-70 hover:opacity-100" title="Delete message">
+                      <span>🗑️</span>
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
@@ -7193,26 +7448,153 @@ Guidelines:
       container.scrollTop = container.scrollHeight;
     }
 
-    function escapeHtml(text) {
-      const div = document.createElement('div');
-      div.innerText = text;
-      return div.innerHTML;
-    }
+    function renderGeminiSaved(filterText = '') {
+      const container = document.getElementById('gemini-view-saved');
+      if (!container) return;
 
-    function copyGeminiMessage(idx) {
-      const msg = geminiChatHistory[idx];
-      if (!msg) return;
-      navigator.clipboard.writeText(msg.text).then(() => showToast('📋 Response copied to clipboard!'));
-    }
+      updateSavedBadge();
 
-    function clearGeminiChatHistory() {
-      if (geminiChatHistory.length === 0) return;
-      if (confirm('Clear chat history?')) {
-        geminiChatHistory = [];
-        localStorage.removeItem(GEMINI_HISTORY_STORAGE);
-        renderGeminiChat();
-        showToast('Chat history cleared');
+      if (geminiSavedItems.length === 0) {
+        container.innerHTML = `
+          <div class="h-full flex flex-col items-center justify-center text-center p-6 space-y-3">
+            <div class="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-2xl">
+              ⭐
+            </div>
+            <div class="space-y-1">
+              <h4 class="text-xs font-bold text-slate-200">No Saved Notes Yet</h4>
+              <p class="text-[11px] text-slate-400 max-w-[240px] leading-relaxed">
+                Tap the <span class="text-amber-300 font-semibold">⭐ Save</span> button on any Gemini response or crucial explanation to bookmark it here for quick review!
+              </p>
+            </div>
+          </div>
+        `;
+        return;
       }
+
+      const query = (filterText || '').toLowerCase().trim();
+      const filtered = query
+        ? geminiSavedItems.filter(item => (item.text || '').toLowerCase().includes(query) || (item.situationTitle || '').toLowerCase().includes(query))
+        : geminiSavedItems;
+
+      let html = `
+        <div class="space-y-2 sticky top-0 bg-[#0f1117] pt-1 pb-2 z-10">
+          <div class="flex items-center justify-between text-xs">
+            <span class="font-bold text-slate-200 flex items-center gap-1.5">
+              <span>⭐</span> Saved Gems (${geminiSavedItems.length})
+            </span>
+            <div class="flex items-center gap-2">
+              <button onclick="copyAllSavedItems()" class="text-[11px] text-sky-400 hover:underline cursor-pointer">
+                📋 Copy All
+              </button>
+              <button onclick="clearAllSavedItems()" class="text-[11px] text-rose-400 hover:underline cursor-pointer">
+                🗑️ Clear
+              </button>
+            </div>
+          </div>
+          <div class="relative">
+            <input type="text" id="gemini-saved-search" placeholder="Search saved phrases & notes..."
+              value="${escapeHtml(filterText)}"
+              oninput="renderGeminiSaved(this.value)"
+              class="w-full px-3 py-1.5 rounded-xl bg-[#0e1017] border border-[#252b3d] text-slate-200 placeholder-slate-500 text-xs focus:outline-none focus:border-sky-400" />
+            ${filterText ? `<button onclick="renderGeminiSaved('')" class="absolute right-2.5 top-1.5 text-slate-400 hover:text-white text-xs cursor-pointer">✕</button>` : ''}
+          </div>
+        </div>
+      `;
+
+      if (filtered.length === 0) {
+        html += `
+          <div class="text-center py-8 text-xs text-slate-400">
+            No saved notes match "${escapeHtml(filterText)}".
+          </div>
+        `;
+      } else {
+        html += `<div class="space-y-3">`;
+        filtered.forEach(item => {
+          const renderedContent = safeRenderMarkdown(item.text, 'th');
+          html += `
+            <div class="p-3 rounded-2xl bg-[#141824] border border-[#252f44] hover:border-sky-400/40 transition-all shadow-sm space-y-2">
+              <div class="flex items-center justify-between gap-2">
+                <span class="text-[10px] text-sky-400 bg-sky-500/10 px-2 py-0.5 rounded-md font-semibold truncate">
+                  🏷️ ${escapeHtml(item.situationTitle || 'Saved Note')}
+                </span>
+                <span class="text-[10px] text-slate-500 shrink-0">${formatGeminiTime(item.savedAt)}</span>
+              </div>
+              <div class="gemini-msg-bubble text-xs text-slate-200">
+                ${renderedContent}
+              </div>
+              <div class="pt-1.5 border-t border-[#202738] flex items-center justify-between text-[11px] text-slate-400">
+                <button onclick="playSavedItemAudio('${item.id}', 'th')" class="hover:text-amber-300 flex items-center gap-1 cursor-pointer transition-colors" title="Pronounce Thai words">
+                  <span>🔊</span> <span>Listen All</span>
+                </button>
+                <div class="flex items-center gap-2">
+                  <button onclick="copySavedItem('${item.id}')" class="hover:text-white flex items-center gap-1 cursor-pointer transition-colors" title="Copy note">
+                    <span>📋</span> <span>Copy</span>
+                  </button>
+                  <button onclick="removeSavedItem('${item.id}')" class="hover:text-rose-400 flex items-center gap-1 cursor-pointer transition-colors" title="Remove from saved">
+                    <span>🗑️</span> <span>Remove</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          `;
+        });
+        html += `</div>`;
+      }
+
+      container.innerHTML = html;
+    }
+
+    function renderGeminiHistory() {
+      const container = document.getElementById('gemini-view-history');
+      if (!container) return;
+
+      let html = `
+        <div class="flex items-center justify-between pb-1">
+          <span class="font-bold text-slate-200 text-xs flex items-center gap-1.5">
+            <span>📜</span> Conversation Threads (${geminiThreads.length})
+          </span>
+          <button onclick="startNewGeminiThread()" class="px-2.5 py-1 rounded-xl bg-gradient-to-r from-sky-500 to-emerald-400 hover:from-sky-400 hover:to-emerald-300 text-[#0e0f12] text-xs font-bold transition-all cursor-pointer shadow-xs flex items-center gap-1">
+            <span>+</span> <span>New Chat</span>
+          </button>
+        </div>
+        <div class="space-y-2.5 pt-1">
+      `;
+
+      geminiThreads.forEach(thread => {
+        const isActive = (thread.id === geminiActiveThreadId);
+        const msgCount = thread.messages ? thread.messages.length : 0;
+        const lastMsg = msgCount > 0 ? thread.messages[msgCount - 1].text : 'Empty conversation';
+        const preview = lastMsg.replace(/[#*`\[\]]/g, '').trim().slice(0, 95) + (lastMsg.length > 95 ? '...' : '');
+
+        html += `
+          <div onclick="selectGeminiThread('${thread.id}')" 
+            class="p-3 rounded-2xl ${isActive ? 'bg-[#182133] border border-sky-400/50 ring-1 ring-sky-400/20' : 'bg-[#141824] border border-[#232b3d] hover:border-slate-600'} transition-all cursor-pointer shadow-sm space-y-1.5 group">
+            <div class="flex items-center justify-between gap-2">
+              <div class="flex items-center gap-1.5 min-w-0">
+                ${isActive ? '<span class="w-2 h-2 rounded-full bg-emerald-400 shrink-0"></span>' : '<span class="w-2 h-2 rounded-full bg-slate-600 shrink-0"></span>'}
+                <h4 class="font-bold text-xs text-white truncate">${escapeHtml(thread.title || 'Conversation')}</h4>
+              </div>
+              <div class="flex items-center gap-2 shrink-0">
+                <span class="text-[10px] text-slate-500">${formatGeminiTime(thread.updatedAt || thread.createdAt)}</span>
+                <button onclick="event.stopPropagation(); deleteGeminiThread('${thread.id}')" 
+                  class="text-slate-500 hover:text-rose-400 text-xs cursor-pointer p-0.5 transition-colors opacity-60 group-hover:opacity-100" title="Delete thread">
+                  🗑️
+                </button>
+              </div>
+            </div>
+            <p class="text-[11px] text-slate-400 line-clamp-2 leading-relaxed">
+              ${escapeHtml(preview)}
+            </p>
+            <div class="flex items-center justify-between text-[10px] text-slate-500 pt-0.5">
+              <span>${msgCount} ${msgCount === 1 ? 'message' : 'messages'}</span>
+              ${isActive ? '<span class="text-emerald-400 font-semibold">Active Session</span>' : '<span class="text-sky-400 group-hover:underline">Open chat →</span>'}
+            </div>
+          </div>
+        `;
+      });
+
+      html += `</div>`;
+      container.innerHTML = html;
     }
 
     function autoResizeGeminiInput(textarea) {
@@ -7302,6 +7684,19 @@ Guidelines:
         hasContext: hasAttachedContext
       });
 
+      // Update thread title if new
+      const activeThread = geminiThreads.find(t => t.id === geminiActiveThreadId);
+      if (activeThread && (activeThread.title === 'New Conversation' || activeThread.title === 'New Chat' || activeThread.title === 'Main Chat' || !activeThread.title)) {
+        if (ctx && ctx.targetThai) {
+          activeThread.title = `${ctx.targetThai} (${ctx.targetMeaning || ctx.displayTitle})`;
+        } else if (ctx && ctx.displayTitle && ctx.displayTitle !== 'Ready on Path') {
+          activeThread.title = ctx.displayTitle;
+        } else {
+          activeThread.title = userText.slice(0, 32) + (userText.length > 32 ? '...' : '');
+        }
+      }
+      saveGeminiState();
+
       geminiIsThinking = true;
       renderGeminiChat();
 
@@ -7361,10 +7756,7 @@ Guidelines:
           text: responseText
         });
 
-        // Save history in session
-        try {
-          localStorage.setItem(GEMINI_HISTORY_STORAGE, JSON.stringify(geminiChatHistory.slice(-20)));
-        } catch (e) {}
+        saveGeminiState();
 
       } catch (err) {
         console.error('Gemini error:', err);
@@ -7372,6 +7764,7 @@ Guidelines:
           role: 'model',
           text: `⚠️ **Gemini Connection Error**: ${err.message}\n\nPlease check your Gemini API key in ⚙️ Settings or verify your network connection.`
         });
+        saveGeminiState();
       } finally {
         geminiIsThinking = false;
         renderGeminiChat();
@@ -7380,13 +7773,42 @@ Guidelines:
     }
 
     function initGeminiTutor() {
-      // Load saved history if available
+      // Load saved notes and threads
       try {
-        const savedHist = localStorage.getItem(GEMINI_HISTORY_STORAGE);
-        if (savedHist) {
-          geminiChatHistory = JSON.parse(savedHist);
-        }
-      } catch (e) {}
+        geminiSavedItems = JSON.parse(localStorage.getItem(GEMINI_SAVED_STORAGE) || '[]');
+      } catch (e) { geminiSavedItems = []; }
+
+      try {
+        geminiThreads = JSON.parse(localStorage.getItem(GEMINI_THREADS_STORAGE) || '[]');
+      } catch (e) { geminiThreads = []; }
+
+      // Migration from legacy GEMINI_HISTORY_STORAGE
+      if (geminiThreads.length === 0) {
+        let legacyMessages = [];
+        try {
+          const savedHist = localStorage.getItem(GEMINI_HISTORY_STORAGE);
+          if (savedHist) legacyMessages = JSON.parse(savedHist);
+        } catch (e) {}
+
+        const defaultThread = {
+          id: 'thread_' + Date.now(),
+          title: legacyMessages.length > 0 ? 'Saved Chat' : 'Main Chat',
+          createdAt: Date.now(),
+          updatedAt: Date.now(),
+          messages: legacyMessages
+        };
+        geminiThreads.push(defaultThread);
+      }
+
+      geminiActiveThreadId = localStorage.getItem(GEMINI_ACTIVE_THREAD_STORAGE);
+      let activeThread = geminiThreads.find(t => t.id === geminiActiveThreadId);
+      if (!activeThread) {
+        activeThread = geminiThreads[0];
+        geminiActiveThreadId = activeThread.id;
+      }
+      geminiChatHistory = activeThread.messages || [];
+
+      updateSavedBadge();
 
       // Init toggle states
       const chk = document.getElementById('gemini-context-toggle');
