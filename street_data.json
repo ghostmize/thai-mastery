@@ -1,0 +1,2034 @@
+{
+  "items": [
+    {
+      "id": "ST_lek",
+      "thai": "เล็ก",
+      "spoken": "lék",
+      "roman": "lék",
+      "meaning": "Thin rice noodles (most popular choice)",
+      "streetShift": "The vendor's first question is always noodle choice. 'เล็ก' (short for เส้นเล็ก) is Thailand's #1 favorite chewy rice noodle.",
+      "unit": 1,
+      "theme": "Street Food",
+      "category": "Noodle Foundation",
+      "tts": "เล็ก",
+      "words": [
+        {
+          "th": "เล็ก",
+          "ro": "lék",
+          "en": "thin rice noodles"
+        }
+      ],
+      "situationPrompt": "The noodle cart vendor looks at you with tongs in hand and asks 'เอาเส้นอะไร?'. You want the standard thin chewy rice noodles. What 1-word code do you say?",
+      "situationCorrect": "เล็ก (lék) — Thin rice noodles",
+      "situationDistractors": [
+        "แยกน้ำ (yâak nám) — Separate broth",
+        "เผ็ดน้อย (phèt nɔ́ɔi) — Less spicy",
+        "เก็บตังค์ (gèp dtang) — Bill please"
+      ]
+    },
+    {
+      "id": "ST_yaak_nam",
+      "thai": "แยกน้ำ",
+      "spoken": "yâak nám",
+      "roman": "yâak nám",
+      "meaning": "Broth on the side / separate soup (takeaway essential)",
+      "streetShift": "Essential 2-word street phrase when taking food to go. Tells the vendor to bag the broth separately so your noodles stay bouncy and don't soak up all the soup.",
+      "unit": 1,
+      "theme": "Street Food",
+      "category": "Customization",
+      "tts": "แยกน้ำ",
+      "words": [
+        {
+          "th": "แยก",
+          "ro": "yâak",
+          "en": "separate / on the side"
+        },
+        {
+          "th": "น้ำ",
+          "ro": "nám",
+          "en": "soup / broth"
+        }
+      ],
+      "situationPrompt": "The noodle cart vendor is packing your order to go and asks how you want the soup. You want it packed separately. What do you say?",
+      "situationCorrect": "แยกน้ำ (yâak nám) — Separate broth",
+      "situationDistractors": [
+        "เก็บตังค์ (gèp dtang) — Check please",
+        "หวานน้อย (wǎan nɔ́ɔi) — Less sweet",
+        "ตรงไป (drong bpai) — Go straight"
+      ]
+    },
+    {
+      "id": "ST_mhii_haeng",
+      "thai": "หมี่แห้งพิเศษ",
+      "spoken": "mìi hâeng phí-sèet",
+      "roman": "mìi hâeng phí-sèet",
+      "meaning": "Dry egg noodles, extra large portion",
+      "streetShift": "บะหมี่ drops to just 'หมี่', 'แห้ง' means dry (no soup), and 'พิเศษ' tells the vendor to add extra noodles, meat, and toppings.",
+      "unit": 1,
+      "theme": "Street Food",
+      "category": "Vendor Shorthand",
+      "tts": "หมี่แห้งพิเศษ",
+      "words": [
+        {
+          "th": "หมี่",
+          "ro": "mìi",
+          "en": "egg noodles"
+        },
+        {
+          "th": "แห้ง",
+          "ro": "hâeng",
+          "en": "dry / no soup"
+        },
+        {
+          "th": "พิเศษ",
+          "ro": "phí-sèet",
+          "en": "extra portion"
+        }
+      ],
+      "situationPrompt": "You want yellow egg noodles with NO soup, and an extra-large portion with extra toppings. What shorthand do you call out?",
+      "situationCorrect": "หมี่แห้งพิเศษ (mìi hâeng phí-sèet)",
+      "situationDistractors": [
+        "เล็กน้ำไม่ชิ้น (lék nám mâi chín)",
+        "น้ำแข็งเปล่า (nám-khɛ̌ng bplào)",
+        "ไม่เอาถุง (mâi ao thǔng)"
+      ]
+    },
+    {
+      "id": "ST_mai_chin_mai_ngok",
+      "thai": "ไม่ชิ้น ไม่งอก",
+      "spoken": "mâi chín mâi ngôok",
+      "roman": "mâi chín mâi ngôok",
+      "meaning": "No meatballs, no bean sprouts",
+      "streetShift": "Rapid exclusion shorthand: Thais drop full words like ใส่ (put), ลูก (ball), and ถั่ว (bean) to order rapid-fire in 1 second.",
+      "unit": 1,
+      "theme": "Street Food",
+      "category": "Vendor Shorthand",
+      "tts": "ไม่ชิ้น ไม่งอก",
+      "words": [
+        {
+          "th": "ไม่ชิ้น",
+          "ro": "mâi chín",
+          "en": "no meatballs"
+        },
+        {
+          "th": "ไม่งอก",
+          "ro": "mâi ngôok",
+          "en": "no bean sprouts"
+        }
+      ],
+      "situationPrompt": "You hate meatballs and dislike raw bean sprouts in your noodles. What rapid exclusion shorthand do you say?",
+      "situationCorrect": "ไม่ชิ้น ไม่งอก (mâi chín mâi ngôok)",
+      "situationDistractors": [
+        "ใส่ห่อ (sài hɔ̀ɔ)",
+        "เผ็ดน้อย (phèt nɔ́ɔi)",
+        "กินนี่ (kin nîi)"
+      ]
+    },
+    {
+      "id": "ST_noodle_shorthand",
+      "thai": "เล็กน้ำไม่ชิ้นไม่งอก",
+      "spoken": "lék nám mâi chín mâi ngɔ̂ɔk",
+      "roman": "lék nám mâi chín mâi ngôok",
+      "meaning": "Thin noodles in soup, no meatballs, no bean sprouts",
+      "streetShift": "The legendary vendor shorthand! Notice how every piece you just learned combines: noodle (เล็ก) + broth (น้ำ) + custom toppings (ไม่ชิ้นไม่งอก).",
+      "unit": 1,
+      "theme": "Street Food",
+      "category": "Vendor Shorthand",
+      "tts": "เล็กน้ำไม่ชิ้นไม่งอก",
+      "words": [
+        {
+          "th": "เล็ก",
+          "ro": "lék",
+          "en": "thin noodles"
+        },
+        {
+          "th": "น้ำ",
+          "ro": "nám",
+          "en": "in soup"
+        },
+        {
+          "th": "ไม่ชิ้น",
+          "ro": "mâi chín",
+          "en": "no meatballs"
+        },
+        {
+          "th": "ไม่งอก",
+          "ro": "mâi ngôok",
+          "en": "no bean sprouts"
+        }
+      ],
+      "situationPrompt": "You hear a local customer shout 'เล็กน้ำไม่ชิ้นไม่งอก!'. What are they ordering?",
+      "situationCorrect": "Thin noodle soup with NO meatballs and NO sprouts",
+      "situationDistractors": [
+        "Wide dry noodles with extra meatballs",
+        "Clear broth soup with chicken and veggies",
+        "Egg noodles dry to take home"
+      ]
+    },
+    {
+      "id": "ST_phet_noi",
+      "thai": "เผ็ดน้อย",
+      "spoken": "phèt nɔ́ɔi",
+      "roman": "phèt nɔ́ɔi",
+      "meaning": "Less spicy / mild (1 chili instead of 5)",
+      "streetShift": "Street survival phrase! Thai street food defaults to scorching heat; 'เผ็ดน้อย' keeps the dish flavorful without burning your tongue.",
+      "unit": 1,
+      "theme": "Street Food",
+      "category": "Spice Level",
+      "tts": "เผ็ดน้อย",
+      "words": [
+        {
+          "th": "เผ็ด",
+          "ro": "phèt",
+          "en": "spicy"
+        },
+        {
+          "th": "น้อย",
+          "ro": "nɔ́ɔi",
+          "en": "little / less"
+        }
+      ],
+      "situationPrompt": "You are ordering Pad Krapao or Som Tum and want only a hint of chili heat. What do you tell the cook?",
+      "situationCorrect": "เผ็ดน้อย (phèt nɔ́ɔi) — Less spicy",
+      "situationDistractors": [
+        "เผ็ดมาก (phèt mâak) — Super spicy",
+        "หวานน้อย (wǎan nɔ́ɔi) — Less sweet",
+        "ไม่เอาถุง (mâi ao thǔng) — No bag"
+      ]
+    },
+    {
+      "id": "ST_mai_sai_phrik",
+      "thai": "ไม่ใส่พริก",
+      "spoken": "mâi sài phrík",
+      "roman": "mâi sài phrík",
+      "meaning": "Zero chilies / completely non-spicy",
+      "streetShift": "Essential when you have zero chili tolerance. Saying 'ไม่เผ็ด' (not spicy) can still get you 1 chili; 'ไม่ใส่พริก' explicitly ensures zero chilies.",
+      "unit": 1,
+      "theme": "Street Food",
+      "category": "Spice Level",
+      "tts": "ไม่ใส่พริก",
+      "words": [
+        {
+          "th": "ไม่ใส่",
+          "ro": "mâi sài",
+          "en": "do not put"
+        },
+        {
+          "th": "พริก",
+          "ro": "phrík",
+          "en": "chili"
+        }
+      ],
+      "situationPrompt": "You cannot tolerate any spicy chili at all. What is the safest, most explicit instruction to give the street vendor?",
+      "situationCorrect": "ไม่ใส่พริก (mâi sài phrík) — Put NO chilies",
+      "situationDistractors": [
+        "เผ็ดน้อย (phèt nɔ́ɔi) — Less spicy",
+        "พิเศษ (phí-sèet) — Extra portion",
+        "เอาอีก (ao ìik) — Give more"
+      ]
+    },
+    {
+      "id": "ST_mai_sai_phakchii",
+      "thai": "ไม่ใส่ผักชี",
+      "spoken": "mâi sài phàk-chii",
+      "roman": "mâi sài phàk-chii",
+      "meaning": "No coriander / no cilantro",
+      "streetShift": "Street vendors love garnishing soups and stir-fries with raw cilantro leaves; say this upfront as you order if you dislike cilantro.",
+      "unit": 1,
+      "theme": "Street Food",
+      "category": "Herb Customization",
+      "tts": "ไม่ใส่ผักชี",
+      "words": [
+        {
+          "th": "ไม่ใส่",
+          "ro": "mâi sài",
+          "en": "do not put"
+        },
+        {
+          "th": "ผักชี",
+          "ro": "phàk-chii",
+          "en": "coriander / cilantro"
+        }
+      ],
+      "situationPrompt": "You have the genetic aversion where cilantro/coriander tastes like soap. What do you say?",
+      "situationCorrect": "ไม่ใส่ผักชี (mâi sài phàk-chii) — No coriander",
+      "situationDistractors": [
+        "ไม่ใส่พริก (mâi sài phrík) — No chili",
+        "ไม่ชิ้น (mâi chín) — No meatballs",
+        "หวานน้อย (wǎan nɔ́ɔi) — Less sweet"
+      ]
+    },
+    {
+      "id": "ST_mai_sai_phongchurot",
+      "thai": "ไม่ใส่ผงชูรส",
+      "spoken": "mâi sài phǒng-chuu-rót",
+      "roman": "mâi sài phǒng-chuu-rót",
+      "meaning": "No MSG (monosodium glutamate)",
+      "streetShift": "Street carts use big scoops of MSG for umami; saying this prompts them to rely purely on fish sauce, stock, and natural seasoning.",
+      "unit": 1,
+      "theme": "Street Food",
+      "category": "Ingredient Customization",
+      "tts": "ไม่ใส่ผงชูรส",
+      "words": [
+        {
+          "th": "ไม่ใส่",
+          "ro": "mâi sài",
+          "en": "do not put"
+        },
+        {
+          "th": "ผงชูรส",
+          "ro": "phǒng-chuu-rót",
+          "en": "MSG"
+        }
+      ],
+      "situationPrompt": "You are sensitive to MSG and want your dish cooked without it. What do you tell the cook?",
+      "situationCorrect": "ไม่ใส่ผงชูรส (mâi sài phǒng-chuu-rót)",
+      "situationDistractors": [
+        "ไม่ใส่น้ำตาล (mâi sài nám-dtaan)",
+        "ไม่ใส่พริก (mâi sài phrík)",
+        "ไม่เอาน้ำแข็ง (mâi ao nám-khɛ̌ng)"
+      ]
+    },
+    {
+      "id": "ST_kin_nii_hor",
+      "thai": "กินนี่หรือใส่ห่อ",
+      "spoken": "kin nîi rěu sài hɔ̀ɔ",
+      "roman": "kin nîi rǒe sài hɔ̀ɔ",
+      "meaning": "'Eat here or wrap to-go?' (Vendor question)",
+      "streetShift": "The universal question asked at every food court and street stall across Thailand before they prepare your bowl or container.",
+      "unit": 1,
+      "theme": "Street Food",
+      "category": "Vendor Question",
+      "tts": "กินนี่หรือใส่ห่อ",
+      "words": [
+        {
+          "th": "กินนี่",
+          "ro": "kin nîi",
+          "en": "eat here"
+        },
+        {
+          "th": "หรือ",
+          "ro": "rǒe",
+          "en": "or"
+        },
+        {
+          "th": "ใส่ห่อ",
+          "ro": "sài hɔ̀ɔ",
+          "en": "wrap to-go"
+        }
+      ],
+      "situationPrompt": "The food stall cook asks 'กินนี่หรือใส่ห่อ?'. What are they asking you?",
+      "situationCorrect": "Are you eating here or taking it to go?",
+      "situationDistractors": [
+        "Do you want spicy soup or clear soup?",
+        "Are you paying cash or scanning QR?",
+        "Do you want a small bowl or large bowl?"
+      ]
+    },
+    {
+      "id": "ST_sai_hor",
+      "thai": "ใส่ห่อ",
+      "spoken": "sài hɔ̀ɔ / glàp bâan",
+      "roman": "sài hɔ̀ɔ",
+      "meaning": "Wrap it to-go / Takeaway",
+      "streetShift": "Your answer to 'กินนี่หรือใส่ห่อ?'. You can say 'ใส่ห่อ' (wrap it) or 'กลับบ้าน' (glàp bâan - take home).",
+      "unit": 1,
+      "theme": "Street Food",
+      "category": "Customer Answer",
+      "tts": "ใส่ห่อ",
+      "words": [
+        {
+          "th": "ใส่",
+          "ro": "sài",
+          "en": "put / pack"
+        },
+        {
+          "th": "ห่อ",
+          "ro": "hɔ̀ɔ",
+          "en": "wrapper / parcel"
+        }
+      ],
+      "situationPrompt": "You want to take your street meal back to your hotel or condo. What is the short, casual answer?",
+      "situationCorrect": "ใส่ห่อ (sài hɔ̀ɔ) — Wrap to-go",
+      "situationDistractors": [
+        "กินนี่ (kin nîi) — Eat here",
+        "ไม่เอา (mâi ao) — Don't want",
+        "เท่าไหร่ (thâo-lài) — How much"
+      ]
+    },
+    {
+      "id": "ST_phiseet",
+      "thai": "พิเศษ",
+      "spoken": "phí-sèet",
+      "roman": "phí-sèet",
+      "meaning": "Special size / extra large portion (+10 Baht)",
+      "streetShift": "Standard street portions in Thailand can be petite; calling out 'พิเศษ' gives you 30-40% more protein, noodles, and greens for just ~10 baht.",
+      "unit": 1,
+      "theme": "Street Food",
+      "category": "Portion Size",
+      "tts": "พิเศษ",
+      "words": [
+        {
+          "th": "พิเศษ",
+          "ro": "phí-sèet",
+          "en": "special / large portion"
+        }
+      ],
+      "situationPrompt": "You are hungry and the standard dish is too small. What single word upgrades your meal to extra-large?",
+      "situationCorrect": "พิเศษ (phí-sèet) — Extra portion",
+      "situationDistractors": [
+        "ธรรมดา (tham-má-daa) — Regular size",
+        "แยกน้ำ (yâak nám) — Broth separate",
+        "เผ็ดน้อย (phèt nɔ́ɔi) — Mild heat"
+      ]
+    },
+    {
+      "id": "ST_waan_noi",
+      "thai": "หวานน้อย",
+      "spoken": "wǎan nɔ́ɔi",
+      "roman": "wǎan nɔ́ɔi",
+      "meaning": "Less sweet / ~50% sweetness (Cafe & Cart)",
+      "streetShift": "Thailand's national drink order! Default Thai iced tea and coffee are heavily sweetened with condensed milk; 'หวานน้อย' brings it to a balanced sweetness.",
+      "unit": 2,
+      "theme": "Drinks & Cafes",
+      "category": "Sweetness Level",
+      "tts": "หวานน้อย",
+      "words": [
+        {
+          "th": "หวาน",
+          "ro": "wǎan",
+          "en": "sweet"
+        },
+        {
+          "th": "น้อย",
+          "ro": "nɔ́ɔi",
+          "en": "little / less"
+        }
+      ],
+      "situationPrompt": "You are ordering Cha Yen (Thai Iced Tea) at an Amazon cafe or street cart and want only half the usual sugar. What do you say?",
+      "situationCorrect": "หวานน้อย (wǎan nɔ́ɔi) — Less sweet",
+      "situationDistractors": [
+        "หวานมาก (wǎan mâak) — Very sweet",
+        "เผ็ดน้อย (phèt nɔ́ɔi) — Less spicy",
+        "แยกน้ำ (yâak nám) — Broth separate"
+      ]
+    },
+    {
+      "id": "ST_mai_waan",
+      "thai": "ไม่หวาน",
+      "spoken": "mâi wǎan",
+      "roman": "mâi wǎan",
+      "meaning": "Unsweetened / 0% sugar",
+      "streetShift": "Zero syrup/sugar added. Crucial for black coffee (Americano) or green tea lovers who want completely unsweetened beverages.",
+      "unit": 2,
+      "theme": "Drinks & Cafes",
+      "category": "Sweetness Level",
+      "tts": "ไม่หวาน",
+      "words": [
+        {
+          "th": "ไม่",
+          "ro": "mâi",
+          "en": "no / not"
+        },
+        {
+          "th": "หวาน",
+          "ro": "wǎan",
+          "en": "sweet"
+        }
+      ],
+      "situationPrompt": "You want an iced Americano with absolutely NO syrup or sweetener. What do you specify?",
+      "situationCorrect": "ไม่หวาน (mâi wǎan) — No sugar / Unsweetened",
+      "situationDistractors": [
+        "หวานน้อย (wǎan nɔ́ɔi) — Less sweet",
+        "หวานปกติ (wǎan bpòk-gà-dtì) — Normal sweetness",
+        "ไม่เอาน้ำแข็ง (mâi ao nám-khɛ̌ng) — No ice"
+      ]
+    },
+    {
+      "id": "ST_nam_kheng_plao",
+      "thai": "น้ำแข็งเปล่า",
+      "spoken": "nám-khɛ̌ng bplào",
+      "roman": "nám-khɛ̌ng bplào",
+      "meaning": "Plain cup of crushed ice (1-2 Baht)",
+      "streetShift": "When you buy canned soda, beer, or bring your own water bottle to a street restaurant, order this to get a cold glass of crushed ice.",
+      "unit": 2,
+      "theme": "Drinks & Cafes",
+      "category": "Drink Basics",
+      "tts": "น้ำแข็งเปล่า",
+      "words": [
+        {
+          "th": "น้ำแข็ง",
+          "ro": "nám-khɛ̌ng",
+          "en": "ice (water-hard)"
+        },
+        {
+          "th": "เปล่า",
+          "ro": "bplào",
+          "en": "plain / empty"
+        }
+      ],
+      "situationPrompt": "You bought a cold can of Coke at 7-Eleven and sit down at a food stall. You want an empty cup with crushed ice. What do you ask for?",
+      "situationCorrect": "น้ำแข็งเปล่า (nám-khɛ̌ng bplào) — Cup of plain ice",
+      "situationDistractors": [
+        "น้ำเปล่า (nám bplào) — Plain water",
+        "ไม่เอาน้ำแข็ง (mâi ao nám-khɛ̌ng) — No ice",
+        "ใส่ห่อ (sài hɔ̀ɔ) — To-go"
+      ]
+    },
+    {
+      "id": "ST_waan_pokati",
+      "thai": "หวานปกติ",
+      "spoken": "wǎan bpòk-gà-dtì",
+      "roman": "wǎan bpòk-gà-dtì",
+      "meaning": "Normal / Standard 100% sweetness",
+      "streetShift": "When the barista asks your sweetness preference and you want the recipe standard as designed.",
+      "unit": 2,
+      "theme": "Drinks & Cafes",
+      "category": "Sweetness Level",
+      "tts": "หวานปกติ",
+      "words": [
+        {
+          "th": "หวาน",
+          "ro": "wǎan",
+          "en": "sweet"
+        },
+        {
+          "th": "ปกติ",
+          "ro": "bpòk-gà-dtì",
+          "en": "normal / regular"
+        }
+      ],
+      "situationPrompt": "The barista asks for your sweetness level and you want the drink made standard according to the house recipe. What do you answer?",
+      "situationCorrect": "หวานปกติ (wǎan bpòk-gà-dtì) — Standard sweetness",
+      "situationDistractors": [
+        "ไม่หวาน (mâi wǎan) — No sweetness",
+        "หวานน้อย (wǎan nɔ́ɔi) — Less sweet",
+        "เผ็ดน้อย (phèt nɔ́ɔi) — Less spicy"
+      ]
+    },
+    {
+      "id": "ST_gep_dtang",
+      "thai": "เก็บตังค์",
+      "spoken": "gèp dtang",
+      "roman": "gèp dtang",
+      "meaning": "Check please! / Bill please! (Casual Bangkok)",
+      "streetShift": "Much more common and natural than the textbook 'เช็คบิล' (check bill) at casual street eateries, night markets, and local cafes.",
+      "unit": 2,
+      "theme": "Paying & 7-Eleven",
+      "category": "Paying the Bill",
+      "tts": "เก็บตังค์",
+      "words": [
+        {
+          "th": "เก็บ",
+          "ro": "gèp",
+          "en": "collect"
+        },
+        {
+          "th": "ตังค์",
+          "ro": "dtang",
+          "en": "money / cash"
+        }
+      ],
+      "situationPrompt": "You finish your noodles at a night market stall and raise your hand to ask for the bill. What is the most natural everyday phrase to shout?",
+      "situationCorrect": "เก็บตังค์! (gèp dtang) — Check please!",
+      "situationDistractors": [
+        "ตรงไป (drong bpai) — Go straight",
+        "เอาอีก (ao ìik) — Give more",
+        "จอดที่นี่ (jɔ̀ɔt thîi nîi) — Park here"
+      ]
+    },
+    {
+      "id": "ST_thao_rai",
+      "thai": "เท่าไหร่",
+      "spoken": "thâo-lài",
+      "roman": "thâo-lài",
+      "meaning": "How much is it? (Universal spoken shift)",
+      "streetShift": "The textbook spelling is เท่าไหร่ (thâo-rài), but 99% of Thais pronounce the ร as an ล, sounding like 'thâo-lài'.",
+      "unit": 2,
+      "theme": "Paying & 7-Eleven",
+      "category": "Asking Price",
+      "tts": "เท่าไหร่",
+      "words": [
+        {
+          "th": "เท่า",
+          "ro": "thâo",
+          "en": "equal"
+        },
+        {
+          "th": "ไหร่",
+          "ro": "lài",
+          "en": "much / what"
+        }
+      ],
+      "situationPrompt": "You pick up a fresh coconut at a market and want to ask the price in everyday casual Thai. What do you ask?",
+      "situationCorrect": "เท่าไหร่? (thâo-lài) — How much?",
+      "situationDistractors": [
+        "ที่ไหน (thîi nǎi) — Where?",
+        "ทำไม (tham-mai) — Why?",
+        "อะไร (à-lai) — What?"
+      ]
+    },
+    {
+      "id": "ST_scan_dai_mai",
+      "thai": "สแกนได้ไหม",
+      "spoken": "sà-gaen dâi mǎi",
+      "roman": "sà-gaen dâi mǎi",
+      "meaning": "Can I scan to pay? (QR code PromptPay)",
+      "streetShift": "Thailand is nearly cashless! Street carts, taxi bikes, and fruit sellers all accept QR PromptPay. Just show your banking app and ask this.",
+      "unit": 2,
+      "theme": "Paying & 7-Eleven",
+      "category": "Payment Method",
+      "tts": "สแกนได้ไหม",
+      "words": [
+        {
+          "th": "สแกน",
+          "ro": "sà-gaen",
+          "en": "scan (QR)"
+        },
+        {
+          "th": "ได้ไหม",
+          "ro": "dâi mǎi",
+          "en": "can I?"
+        }
+      ],
+      "situationPrompt": "You have no cash and want to pay the street vendor using your banking app QR code. What do you ask?",
+      "situationCorrect": "สแกนได้ไหม? (sà-gaen dâi mǎi) — Can I scan?",
+      "situationDistractors": [
+        "เก็บตังค์ (gèp dtang) — Collect money",
+        "ไม่เอาถุง (mâi ao thǔng) — No bag",
+        "มีทอนไหม (mii thɔɔn mǎi) — Do you have change?"
+      ]
+    },
+    {
+      "id": "ST_mai_ao_thung",
+      "thai": "ไม่เอาถุง",
+      "spoken": "mâi ao thǔng",
+      "roman": "mâi ao thǔng",
+      "meaning": "No plastic bag needed (7-Eleven & Markets)",
+      "streetShift": "Say this immediately at 7-Eleven or Tops daily checkout counters before the clerk charges you for an extra bag.",
+      "unit": 2,
+      "theme": "Paying & 7-Eleven",
+      "category": "Checkout Customization",
+      "tts": "ไม่เอาถุง",
+      "words": [
+        {
+          "th": "ไม่เอา",
+          "ro": "mâi ao",
+          "en": "do not want"
+        },
+        {
+          "th": "ถุง",
+          "ro": "thǔng",
+          "en": "bag"
+        }
+      ],
+      "situationPrompt": "You're at 7-Eleven buying a single bottle of water and already have a backpack. What do you tell the cashier?",
+      "situationCorrect": "ไม่เอาถุง (mâi ao thǔng) — No bag needed",
+      "situationDistractors": [
+        "มีหลอดไหม (mii lɔ̀ɔt mǎi) — Have straw?",
+        "เวฟได้ไหม (wéep dâi mǎi) — Microwave this?",
+        "เก็บตังค์ (gèp dtang) — Bill please"
+      ]
+    },
+    {
+      "id": "ST_mii_hlort",
+      "thai": "มีหลอดไหม",
+      "spoken": "mii lɔ̀ɔt mǎi",
+      "roman": "mii lɔ̀ɔt mǎi",
+      "meaning": "Do you have a straw?",
+      "streetShift": "Convenience stores and street stands often keep straws behind the counter; use this to ask for one.",
+      "unit": 2,
+      "theme": "Paying & 7-Eleven",
+      "category": "Supplies",
+      "tts": "มีหลอดไหม",
+      "words": [
+        {
+          "th": "มี",
+          "ro": "mii",
+          "en": "have"
+        },
+        {
+          "th": "หลอด",
+          "ro": "lɔ̀ɔt",
+          "en": "straw"
+        },
+        {
+          "th": "ไหม",
+          "ro": "mǎi",
+          "en": "question word"
+        }
+      ],
+      "situationPrompt": "You bought an iced drink at a small shop but the cashier forgot to give you a straw. What do you ask?",
+      "situationCorrect": "มีหลอดไหม? (mii lɔ̀ɔt mǎi) — Do you have a straw?",
+      "situationDistractors": [
+        "ไม่เอาถุง (mâi ao thǔng) — No bag",
+        "เวฟได้ไหม (wéep dâi mǎi) — Heat this up?",
+        "เท่าไหร่ (thâo-lài) — How much?"
+      ]
+    },
+    {
+      "id": "ST_wen_dai_mai",
+      "thai": "เวฟได้ไหม",
+      "spoken": "wéep dâi mǎi",
+      "roman": "wéep dâi mǎi",
+      "meaning": "Can you microwave / heat this up? (7-Eleven food)",
+      "streetShift": "เวฟ (wéep) is the loanword for 'microwave'. When buying toasted sandwiches, dumplings, or ready-meals at 7-Eleven, cashiers ask 'เวฟไหม?' (Heat it up?).",
+      "unit": 2,
+      "theme": "Paying & 7-Eleven",
+      "category": "7-Eleven Food",
+      "tts": "เวฟได้ไหม",
+      "words": [
+        {
+          "th": "เวฟ",
+          "ro": "wéep",
+          "en": "microwave / heat up"
+        },
+        {
+          "th": "ได้ไหม",
+          "ro": "dâi mǎi",
+          "en": "can you?"
+        }
+      ],
+      "situationPrompt": "You bought a ham & cheese toastie at 7-Eleven and want them to warm it up in the toaster/microwave. What do you ask?",
+      "situationCorrect": "เวฟได้ไหม? (wéep dâi mǎi) — Can you heat it up?",
+      "situationDistractors": [
+        "ไม่เอาถุง (mâi ao thǔng) — No bag",
+        "มีหลอดไหม (mii lɔ̀ɔt mǎi) — Have straw?",
+        "สแกนได้ไหม (sà-gaen dâi mǎi) — Can I scan?"
+      ]
+    },
+    {
+      "id": "ST_phii_driver",
+      "thai": "พี่ครับ / พี่คะ",
+      "spoken": "phîi kháp / khá",
+      "roman": "phîi kháp",
+      "meaning": "Polite address for drivers, vendors & peers",
+      "streetShift": "Calling your taxi or motorcycle driver 'คุณ' (khun) sounds overly stiff and corporate. 'พี่' (older brother/sister) establishes immediate friendly warmth.",
+      "unit": 3,
+      "theme": "Taxis & Directions",
+      "category": "Polite Address",
+      "tts": "พี่ครับ",
+      "words": [
+        {
+          "th": "พี่",
+          "ro": "phîi",
+          "en": "older brother/sister"
+        },
+        {
+          "th": "ครับ",
+          "ro": "kháp",
+          "en": "polite particle"
+        }
+      ],
+      "situationPrompt": "You get into a taxi or approach a motorcycle taxi rank. What is the warmest, most natural title to address the driver?",
+      "situationCorrect": "พี่ครับ / พี่คะ (phîi kháp/khá) — P'Driver",
+      "situationDistractors": [
+        "คุณ (khun) — Formal Mr/Ms",
+        "น้อง (nɔ́ɔng) — Younger one",
+        "ลุง (lung) — Old uncle"
+      ]
+    },
+    {
+      "id": "ST_nong_staff",
+      "thai": "น้องครับ / น้องคะ",
+      "spoken": "nɔ́ɔng kháp / khá",
+      "roman": "nɔ́ɔng kháp",
+      "meaning": "Friendly address for younger servers, baristas & staff",
+      "streetShift": "The standard natural way to call over restaurant servers, cafe baristas, or 7-Eleven staff who appear younger than you.",
+      "unit": 3,
+      "theme": "Taxis & Directions",
+      "category": "Polite Address",
+      "tts": "น้องครับ",
+      "words": [
+        {
+          "th": "น้อง",
+          "ro": "nɔ́ɔng",
+          "en": "younger brother/sister"
+        },
+        {
+          "th": "ครับ",
+          "ro": "kháp",
+          "en": "polite particle"
+        }
+      ],
+      "situationPrompt": "You want to wave over the young cafe waiter or waitress to order another drink. What do you call out?",
+      "situationCorrect": "น้องครับ / น้องคะ (nɔ́ɔng kháp/khá)",
+      "situationDistractors": [
+        "พี่ครับ (phîi kháp) — Older brother",
+        "บริกร (bɔɔ-rí-gɔɔn) — Waiter (textbook)",
+        "คุณ (khun) — Formal Mr."
+      ]
+    },
+    {
+      "id": "ST_trong_bpai",
+      "thai": "ตรงไป",
+      "spoken": "drong bpai",
+      "roman": "drong bpai",
+      "meaning": "Go straight ahead",
+      "streetShift": "Essential command when giving directions inside a taxi, tuk-tuk, or motorcycle ride.",
+      "unit": 3,
+      "theme": "Taxis & Directions",
+      "category": "Directions",
+      "tts": "ตรงไป",
+      "words": [
+        {
+          "th": "ตรง",
+          "ro": "drong",
+          "en": "straight"
+        },
+        {
+          "th": "ไป",
+          "ro": "bpai",
+          "en": "go"
+        }
+      ],
+      "situationPrompt": "Your taxi driver comes to an intersection and looks back to see which way to navigate. You want him to proceed straight ahead. What do you say?",
+      "situationCorrect": "ตรงไป (drong bpai) — Go straight",
+      "situationDistractors": [
+        "เลี้ยวซ้าย (líaw sáai) — Turn left",
+        "เลี้ยวขวา (líaw kwǎa) — Turn right",
+        "จอดตรงนี้ (jɔ̀ɔt drong níi) — Stop here"
+      ]
+    },
+    {
+      "id": "ST_liao_sai",
+      "thai": "เลี้ยวซ้าย",
+      "spoken": "líaw sáai",
+      "roman": "líaw sáai",
+      "meaning": "Turn left",
+      "streetShift": "High-frequency direction command for any vehicle ride in Thailand.",
+      "unit": 3,
+      "theme": "Taxis & Directions",
+      "category": "Directions",
+      "tts": "เลี้ยวซ้าย",
+      "words": [
+        {
+          "th": "เลี้ยว",
+          "ro": "líaw",
+          "en": "turn"
+        },
+        {
+          "th": "ซ้าย",
+          "ro": "sáai",
+          "en": "left"
+        }
+      ],
+      "situationPrompt": "Your taxi is approaching the intersection where your condo road is on the left. What command do you give?",
+      "situationCorrect": "เลี้ยวซ้าย (líaw sáai) — Turn left",
+      "situationDistractors": [
+        "เลี้ยวขวา (líaw kwǎa) — Turn right",
+        "ตรงไป (drong bpai) — Go straight",
+        "จอดตรงนี้ (jɔ̀ɔt drong níi) — Stop here"
+      ]
+    },
+    {
+      "id": "ST_liao_kwaa",
+      "thai": "เลี้ยวขวา",
+      "spoken": "líaw kwǎa",
+      "roman": "líaw kwǎa",
+      "meaning": "Turn right",
+      "streetShift": "The counter-direction to turn left; essential taxi navigation.",
+      "unit": 3,
+      "theme": "Taxis & Directions",
+      "category": "Directions",
+      "tts": "เลี้ยวขวา",
+      "words": [
+        {
+          "th": "เลี้ยว",
+          "ro": "líaw",
+          "en": "turn"
+        },
+        {
+          "th": "ขวา",
+          "ro": "kwǎa",
+          "en": "right"
+        }
+      ],
+      "situationPrompt": "You need the driver to take the upcoming right turn onto Sukhumvit. What do you say?",
+      "situationCorrect": "เลี้ยวขวา (líaw kwǎa) — Turn right",
+      "situationDistractors": [
+        "เลี้ยวซ้าย (líaw sáai) — Turn left",
+        "ตรงไป (drong bpai) — Go straight",
+        "ข้างหน้า (khâang nâa) — Up ahead"
+      ]
+    },
+    {
+      "id": "ST_yut_trong_nii",
+      "thai": "จอดตรงนี้",
+      "spoken": "jɔ̀ɔt drong níi",
+      "roman": "jɔ̀ɔt drong níi",
+      "meaning": "Pull over / stop right here",
+      "streetShift": "จอด (jɔ̀ɔt) specifically means to park or pull the car over to the curb. Perfect when reaching your destination.",
+      "unit": 3,
+      "theme": "Taxis & Directions",
+      "category": "Stopping & Arrival",
+      "tts": "จอดตรงนี้",
+      "words": [
+        {
+          "th": "จอด",
+          "ro": "jɔ̀ɔt",
+          "en": "park / pull over"
+        },
+        {
+          "th": "ตรงนี้",
+          "ro": "drong níi",
+          "en": "right here"
+        }
+      ],
+      "situationPrompt": "You see your destination 10 meters away on the side of the street. What do you tell the taxi or Grab driver to pull over?",
+      "situationCorrect": "จอดตรงนี้ (jɔ̀ɔt drong níi) — Pull over right here",
+      "situationDistractors": [
+        "ตรงไป (drong bpai) — Go straight",
+        "เลี้ยวซ้าย (líaw sáai) — Turn left",
+        "เท่าไหร่ (thâo-lài) — How much"
+      ]
+    },
+    {
+      "id": "ST_khaang_naa",
+      "thai": "ข้างหน้า",
+      "spoken": "khâang nâa",
+      "roman": "khâang nâa",
+      "meaning": "Right up ahead / in front",
+      "streetShift": "Often combined with จอด: 'จอดข้างหน้าครับ' (Pull over right up ahead).",
+      "unit": 3,
+      "theme": "Taxis & Directions",
+      "category": "Location Reference",
+      "tts": "ข้างหน้า",
+      "words": [
+        {
+          "th": "ข้าง",
+          "ro": "khâang",
+          "en": "side / place"
+        },
+        {
+          "th": "หน้า",
+          "ro": "nâa",
+          "en": "front / ahead"
+        }
+      ],
+      "situationPrompt": "You want the taxi to stop near the 7-Eleven just a little further ahead. What location word do you use?",
+      "situationCorrect": "ข้างหน้า (khâang nâa) — Up ahead",
+      "situationDistractors": [
+        "ข้างหลัง (khâang lǎng) — Behind",
+        "เลี้ยวซ้าย (líaw sáai) — Turn left",
+        "ซอยนี้ (sɔɔi níi) — This soi"
+      ]
+    },
+    {
+      "id": "ST_soi_nii",
+      "thai": "ซอยนี้",
+      "spoken": "sɔɔi níi",
+      "roman": "sɔɔi níi",
+      "meaning": "Into this alley / side-street (soi)",
+      "streetShift": "Bangkok geography runs on sois! Point to the alley entrance and tell your driver 'เข้าซอยนี้' (turn into this soi).",
+      "unit": 3,
+      "theme": "Taxis & Directions",
+      "category": "Location Reference",
+      "tts": "ซอยนี้",
+      "words": [
+        {
+          "th": "ซอย",
+          "ro": "sɔɔi",
+          "en": "alley / side-street"
+        },
+        {
+          "th": "นี้",
+          "ro": "níi",
+          "en": "this"
+        }
+      ],
+      "situationPrompt": "Your hotel is located down a small side street you are passing right now. What do you point to and say?",
+      "situationCorrect": "ซอยนี้ (sɔɔi níi) — This soi / alley",
+      "situationDistractors": [
+        "ตรงไป (drong bpai) — Go straight",
+        "เก็บตังค์ (gèp dtang) — Collect money",
+        "ข้างหลัง (khâang lǎng) — Behind"
+      ]
+    },
+    {
+      "id": "ST_song_thii_nii",
+      "thai": "ส่งที่นี่",
+      "spoken": "sòng thîi nîi",
+      "roman": "sòng thîi nîi",
+      "meaning": "Drop me off here",
+      "streetShift": "ส่ง (sòng) means deliver/drop off. A friendly, natural way to tell a driver you've reached your destination.",
+      "unit": 3,
+      "theme": "Taxis & Directions",
+      "category": "Stopping & Arrival",
+      "tts": "ส่งที่นี่",
+      "words": [
+        {
+          "th": "ส่ง",
+          "ro": "sòng",
+          "en": "drop off / deliver"
+        },
+        {
+          "th": "ที่นี่",
+          "ro": "thîi nîi",
+          "en": "here"
+        }
+      ],
+      "situationPrompt": "You are at your stop and want to say 'Drop me off right here, please'. What phrase expresses this?",
+      "situationCorrect": "ส่งที่นี่ (sòng thîi nîi) — Drop me here",
+      "situationDistractors": [
+        "ตรงไป (drong bpai) — Go straight",
+        "สแกนได้ไหม (sà-gaen dâi mǎi) — Can I scan?",
+        "รอแป๊บ (rɔɔ bpáep) — Wait a sec"
+      ]
+    },
+    {
+      "id": "ST_arai",
+      "thai": "อะไร",
+      "spoken": "à-lai",
+      "roman": "à-lai",
+      "meaning": "What? (Spoken ร → ล sound shift)",
+      "streetShift": "The universal Thai spoken shift: the rolling 'r' (ร) is relaxed to 'l' (ล) in everyday conversation. Thais almost never say 'à-rai' casually—it sounds like 'à-lai'.",
+      "unit": 4,
+      "theme": "Sound Shifts",
+      "category": "ร → ล Sound Shift",
+      "tts": "อะไร",
+      "words": [
+        {
+          "th": "อะไร",
+          "ro": "à-lai",
+          "en": "what?"
+        }
+      ],
+      "situationPrompt": "You hear a friend say 'à-lai ná?'. Why does it sound like an 'L' sound instead of the textbook 'R' sound?",
+      "situationCorrect": "Everyday Thai speech routinely shifts 'r' (ร) to 'l' (ล)",
+      "situationDistractors": [
+        "It is an ancient royal pronunciation",
+        "It is a regional Southern dialect",
+        "It is a mispronunciation by the speaker"
+      ]
+    },
+    {
+      "id": "ST_khrap",
+      "thai": "ครับ",
+      "spoken": "kháp (คับ)",
+      "roman": "kháp",
+      "meaning": "Polite male particle / Yes (Dropped cluster)",
+      "streetShift": "Textbook says 'khráp' with an 'r' cluster, but 99% of Thai men speak it as 'kháp' (คับ), completely dropping the 'r'.",
+      "unit": 4,
+      "theme": "Sound Shifts",
+      "category": "Dropped Cluster",
+      "tts": "ครับ",
+      "words": [
+        {
+          "th": "ครับ",
+          "ro": "kháp",
+          "en": "polite particle / yes"
+        }
+      ],
+      "situationPrompt": "When Thai men say 'ครับ', how does it actually sound in 99% of normal casual conversations?",
+      "situationCorrect": "kháp (คับ) — the 'r' consonant cluster is dropped",
+      "situationDistractors": [
+        "khrráp — with a heavy rolling Spanish R",
+        "khrap-pó — elongated two syllables",
+        "khâ — with falling female tone"
+      ]
+    },
+    {
+      "id": "ST_aroi_aloi",
+      "thai": "อร่อย",
+      "spoken": "à-lòi (อะหล่อย)",
+      "roman": "à-lòi",
+      "meaning": "Delicious! (Spoken ร → ล shift)",
+      "streetShift": "Another prime example of ร shifting to ล in casual speech. You will hear Thais compliment dishes as 'à-lòi mâak!'",
+      "unit": 4,
+      "theme": "Sound Shifts",
+      "category": "ร → ล Sound Shift",
+      "tts": "อร่อย",
+      "words": [
+        {
+          "th": "อร่อย",
+          "ro": "à-lòi",
+          "en": "delicious!"
+        }
+      ],
+      "situationPrompt": "A Thai vendor serves you mango sticky rice and asks if you like it. You want to say 'Very delicious!' using natural spoken phonetics. How is it pronounced?",
+      "situationCorrect": "à-lòi mâak! (อร่อย with an L sound)",
+      "situationDistractors": [
+        "ar-roy mak with heavy rolling R",
+        "kin dai (edible)",
+        "phet mak (too spicy)"
+      ]
+    },
+    {
+      "id": "ST_reu_plao",
+      "thai": "หรือเปล่า",
+      "spoken": "bpào / rǒe-bpào",
+      "roman": "bpào",
+      "meaning": "...or not? / right? (Rapid question contraction)",
+      "streetShift": "Textbook 'rěu bplào' contracts in fast street speech down to just 'bpào?' or 'rǒe-bpào?'.",
+      "unit": 4,
+      "theme": "Sound Shifts",
+      "category": "Fast Contraction",
+      "tts": "หรือเปล่า",
+      "words": [
+        {
+          "th": "หรือ",
+          "ro": "rǒe",
+          "en": "or"
+        },
+        {
+          "th": "เปล่า",
+          "ro": "bpào",
+          "en": "not / right?"
+        }
+      ],
+      "situationPrompt": "A friend asks 'Chob bpao?' (ชอบเปล่า). What does the ending 'bpao' mean here?",
+      "situationCorrect": "Contraction of หรือเปล่า ('...or not? / do you?')",
+      "situationDistractors": [
+        "It means 'water' (nám bplào)",
+        "It means 'empty space'",
+        "It means 'yesterday'"
+      ]
+    },
+    {
+      "id": "ST_yang_nii",
+      "thai": "อย่างนี้",
+      "spoken": "งี้ (ngíi)",
+      "roman": "ngíi",
+      "meaning": "Like this / this way (Fast reduction)",
+      "streetShift": "The 2-syllable textbook phrase 'yàang-níi' collapses in everyday spoken Thai into a single high-toned syllable: 'ngíi' (งี้)!",
+      "unit": 4,
+      "theme": "Sound Shifts",
+      "category": "Fast Contraction",
+      "tts": "อย่างนี้",
+      "words": [
+        {
+          "th": "อย่างนี้",
+          "ro": "ngíi",
+          "en": "like this / this way"
+        }
+      ],
+      "situationPrompt": "A Thai colleague demonstrates how to do something and says 'Thum ngii si!'. What is 'ngii' short for?",
+      "situationCorrect": "อย่างนี้ (yàang níi) — 'Like this / in this manner'",
+      "situationDistractors": [
+        "งู (nguu) — Snake",
+        "งง (ngong) — Confused",
+        "ง่าย (ngâai) — Easy"
+      ]
+    },
+    {
+      "id": "ST_yang_nan",
+      "thai": "อย่างนั้น",
+      "spoken": "งั้น (ngán)",
+      "roman": "ngán",
+      "meaning": "In that case / like that (Fast reduction)",
+      "streetShift": "Just like อย่างนี้ -> งี้, อย่างนั้น reduces to 'ngán' (งั้น). Frequently used as 'งั้นไปกัน' (In that case, let's go!).",
+      "unit": 4,
+      "theme": "Sound Shifts",
+      "category": "Fast Contraction",
+      "tts": "อย่างนั้น",
+      "words": [
+        {
+          "th": "อย่างนั้น",
+          "ro": "ngán",
+          "en": "in that case / like that"
+        }
+      ],
+      "situationPrompt": "Someone says 'Khao mai ma... ngan rao pai kan loei' (He's not coming... ngán let's go). What does 'ngan' signify?",
+      "situationCorrect": "อย่างนั้น (yàang nán) -> 'In that case / then'",
+      "situationDistractors": [
+        "เงิน (ngoen) — Money",
+        "ง่วง (ngûang) — Sleepy",
+        "งาน (ngaan) — Work"
+      ]
+    },
+    {
+      "id": "ST_baep_nueng",
+      "thai": "แป๊บหนึ่ง",
+      "spoken": "แป๊บนึง (bpáep-nɯng)",
+      "roman": "bpáep-nɯng",
+      "meaning": "One sec! / Hold on a moment! (Casual shift)",
+      "streetShift": "Casual Thai switches the formal 'หนึ่ง' (nùeng) to 'นึง' (nueng). 'แป๊บนึงนะ' is said hundreds of times a day.",
+      "unit": 4,
+      "theme": "Sound Shifts",
+      "category": "Casual Shift",
+      "tts": "แป๊บหนึ่ง",
+      "words": [
+        {
+          "th": "แป๊บ",
+          "ro": "bpáep",
+          "en": "a split second / moment"
+        },
+        {
+          "th": "นึง",
+          "ro": "nɯng",
+          "en": "one"
+        }
+      ],
+      "situationPrompt": "You are putting on your shoes when a friend asks if you're ready to leave. You want to say 'One second!'. What do you say?",
+      "situationCorrect": "แป๊บนึง! (bpáep-nɯng ná) — One moment!",
+      "situationDistractors": [
+        "ตรงไป (drong bpai) — Go straight",
+        "เก็บตังค์ (gèp dtang) — Collect money",
+        "ไม่เอา (mâi ao) — Don't want"
+      ]
+    },
+    {
+      "id": "ST_tham_mai",
+      "thai": "ทำไม",
+      "spoken": "tham-mai",
+      "roman": "tham-mai",
+      "meaning": "Why? (Street conversational inflection)",
+      "streetShift": "Spoken with rising curiosity or elongation 'ทำไมอ่ะ' (tham-mai à?) when asking 'Why is that?' to friends.",
+      "unit": 4,
+      "theme": "Sound Shifts",
+      "category": "Conversational Question",
+      "tts": "ทำไม",
+      "words": [
+        {
+          "th": "ทำไม",
+          "ro": "tham-mai",
+          "en": "why?"
+        }
+      ],
+      "situationPrompt": "A Thai friend says they can't attend the party. You want to ask 'Why?' in casual spoken tone. What do you say?",
+      "situationCorrect": "ทำไมอ่ะ? (tham-mai à?) — Why?",
+      "situationDistractors": [
+        "อะไรนะ (à-lai ná) — What?",
+        "ที่ไหน (thîi nǎi) — Where?",
+        "เมื่อไหร่ (mûea-rài) — When?"
+      ]
+    },
+    {
+      "id": "ST_chai_pa",
+      "thai": "ใช่ป่ะ",
+      "spoken": "châi bpà",
+      "roman": "châi bpà",
+      "meaning": "Right? / Isn't that so? (Casual contraction)",
+      "streetShift": "Everyday casual form of 'ใช่ไหม' (châi mǎi). Used constantly among peers to seek agreement.",
+      "unit": 4,
+      "theme": "Sound Shifts",
+      "category": "Casual Contraction",
+      "tts": "ใช่ป่ะ",
+      "words": [
+        {
+          "th": "ใช่",
+          "ro": "châi",
+          "en": "yes / correct"
+        },
+        {
+          "th": "ป่ะ",
+          "ro": "bpà",
+          "en": "right? / eh?"
+        }
+      ],
+      "situationPrompt": "You are telling a friend that Thai mangoes are the best in the world, and seek their agreement with 'Right?!'. What particle do you use?",
+      "situationCorrect": "ใช่ป่ะ? (châi bpà?) — Right?",
+      "situationDistractors": [
+        "ใช่ครับ (châi kháp) — Formal yes",
+        "ไม่เอา (mâi ao) — Don't want",
+        "แป๊บนึง (bpáep nɯng) — One sec"
+      ]
+    },
+    {
+      "id": "ST_nia",
+      "thai": "เนี่ย",
+      "spoken": "nîa",
+      "roman": "nîa",
+      "meaning": "'This right here!' / Exasperation & focus marker",
+      "streetShift": "Brings intense focus to the subject: 'ร้อนมากเนี่ย' (It is SO hot right now!), 'คนนี้เนี่ย' (THIS person right here).",
+      "unit": 5,
+      "theme": "Vibe Particles",
+      "category": "Focus & Emotion",
+      "tts": "เนี่ย",
+      "words": [
+        {
+          "th": "เนี่ย",
+          "ro": "nîa",
+          "en": "this right here! / emphasis"
+        }
+      ],
+      "situationPrompt": "Someone is complaining about Bangkok traffic and says 'Rot dtit maak nîa!'. What feeling does 'เนี่ย' add?",
+      "situationCorrect": "Emphasis & personal exasperation about the immediate situation",
+      "situationDistractors": [
+        "It turns the sentence into a polite apology",
+        "It makes the sentence formal for news broadcast",
+        "It indicates future tense"
+      ]
+    },
+    {
+      "id": "ST_nor",
+      "thai": "เนาะ",
+      "spoken": "nór",
+      "roman": "nór",
+      "meaning": "'Right? / Would you not say?' (Seeking consensus)",
+      "streetShift": "The warmest, most bonding conversational ending. 'Aroi nor!' (So delicious, right?!). Prompts the listener to nod in mutual agreement.",
+      "unit": 5,
+      "theme": "Vibe Particles",
+      "category": "Social Consensus",
+      "tts": "เนาะ",
+      "words": [
+        {
+          "th": "เนาะ",
+          "ro": "nór",
+          "en": "right? / wouldn't you say?"
+        }
+      ],
+      "situationPrompt": "You take a bite of fresh mango sticky rice and turn to your partner to share the mutual joy: 'Aroi nór!'. What does 'เนาะ' express?",
+      "situationCorrect": "'Right?! Don't you agree?' — bonding consensus",
+      "situationDistractors": [
+        "A stern warning not to eat it",
+        "A polite refusal",
+        "A question asking what time it is"
+      ]
+    },
+    {
+      "id": "ST_a",
+      "thai": "อะ",
+      "spoken": "à",
+      "roman": "à",
+      "meaning": "Conversational softener / casual topic filler",
+      "streetShift": "Heard in almost every casual Thai sentence: 'อะไรอ่ะ' (What's that?), 'เค้าอ่ะ' (As for him...). Relaxes any sentence from sounding stiff.",
+      "unit": 5,
+      "theme": "Vibe Particles",
+      "category": "Casual Softener",
+      "tts": "อะ",
+      "words": [
+        {
+          "th": "อะ",
+          "ro": "à",
+          "en": "conversational softener / eh?"
+        }
+      ],
+      "situationPrompt": "Why do Thai native speakers attach 'อะ' (à) to the ends of questions like 'ทำไมอ่ะ' or statements like 'ก็ดีอ่ะ'?",
+      "situationCorrect": "It softens the sentence and makes it naturally casual among friends",
+      "situationDistractors": [
+        "It is a strict grammar requirement for negative verbs",
+        "It marks past tense actions",
+        "It is only used when angry"
+      ]
+    },
+    {
+      "id": "ST_loei",
+      "thai": "เลย",
+      "spoken": "loei",
+      "roman": "loei",
+      "meaning": "'Right away!' / 'Totally!' / 'Not at all' (Intensifier)",
+      "streetShift": "Super-versatile particle! 'ไปเลย' (go right now!), 'ไม่ชอบเลย' (don't like it at all!), 'ดีเลย' (that's awesome!).",
+      "unit": 5,
+      "theme": "Vibe Particles",
+      "category": "Intensifier",
+      "tts": "เลย",
+      "words": [
+        {
+          "th": "เลย",
+          "ro": "loei",
+          "en": "right away! / totally!"
+        }
+      ],
+      "situationPrompt": "Your friend suggests going to the night market and you enthusiastically agree: 'Pai loei!'. What does 'เลย' mean here?",
+      "situationCorrect": "'Right now! / Let's go immediately!'",
+      "situationDistractors": [
+        "Maybe tomorrow",
+        "I don't have money",
+        "Turn left"
+      ]
+    },
+    {
+      "id": "ST_roe",
+      "thai": "เหรอ",
+      "spoken": "rǒe / rɔ̌ɔ (หรอ/เหรอออ)",
+      "roman": "rǒe",
+      "meaning": "'Really?! / Is that so?!' (Curiosity or disbelief)",
+      "streetShift": "Spoken with rising tone. When elongated to 'rǒeeeee?' it expresses humorous skepticism or playful shock.",
+      "unit": 5,
+      "theme": "Vibe Particles",
+      "category": "Reaction & Wonder",
+      "tts": "เหรอ",
+      "words": [
+        {
+          "th": "เหรอ",
+          "ro": "rǒe",
+          "en": "really?! / is that so?!"
+        }
+      ],
+      "situationPrompt": "A friend tells you an incredible piece of gossip. You react with surprise: 'Jing rǒe?!' (จริงเหรอ). What are you asking?",
+      "situationCorrect": "'Really?! Is that true?!'",
+      "situationDistractors": [
+        "Where did you hear that?",
+        "Who told you?",
+        "I already knew that"
+      ]
+    },
+    {
+      "id": "ST_si",
+      "thai": "สิ",
+      "spoken": "sì / sí (ซิ)",
+      "roman": "sì",
+      "meaning": "'Do it!' / 'Of course!' (Urging imperative)",
+      "streetShift": "'กินสิ' (Eat up!), 'มาสิ' (Come on in!). Softens commands while encouraging action.",
+      "unit": 5,
+      "theme": "Vibe Particles",
+      "category": "Encouragement",
+      "tts": "สิ",
+      "words": [
+        {
+          "th": "สิ",
+          "ro": "sì",
+          "en": "go ahead / do it!"
+        }
+      ],
+      "situationPrompt": "You are hesitating to try a spicy street snack. A friend smiles and says 'Kin sì!'. What are they saying?",
+      "situationCorrect": "'Go ahead, eat it! Try it!'",
+      "situationDistractors": [
+        "Don't touch that food",
+        "Pay for that first",
+        "It is not cooked yet"
+      ]
+    },
+    {
+      "id": "ST_na",
+      "thai": "นะ",
+      "spoken": "ná",
+      "roman": "ná",
+      "meaning": "Gentle reminder / Softener ('okay?')",
+      "streetShift": "Turns commands into polite, sweet requests: 'รอแป๊บนะ' (Wait a sec, okay?), 'ไปก่อนนะ' (I'm heading out, ok?).",
+      "unit": 5,
+      "theme": "Vibe Particles",
+      "category": "Sweet Softener",
+      "tts": "นะ",
+      "words": [
+        {
+          "th": "นะ",
+          "ro": "ná",
+          "en": "gentle softener / okay?"
+        }
+      ],
+      "situationPrompt": "Why is 'นะ' (ná) considered the friendliest particle in the Thai language?",
+      "situationCorrect": "It adds warmth, sweetness, and gentle agreement to statements",
+      "situationDistractors": [
+        "It is strictly used by monks",
+        "It marks government orders",
+        "It indicates an angry tone"
+      ]
+    },
+    {
+      "id": "ST_la",
+      "thai": "ล่ะ",
+      "spoken": "lâ",
+      "roman": "lâ",
+      "meaning": "'What about...?' (Passing the question)",
+      "streetShift": "'แล้วเธอล่ะ' (And what about you?), 'แล้วไงล่ะ' (So what about it?). Bounces the topic back to the listener.",
+      "unit": 5,
+      "theme": "Vibe Particles",
+      "category": "Topic Hand-off",
+      "tts": "ล่ะ",
+      "words": [
+        {
+          "th": "ล่ะ",
+          "ro": "lâ",
+          "en": "what about...?"
+        }
+      ],
+      "situationPrompt": "You tell someone your food order, then turn to them and ask: 'Láew thoe lâ?'. What does 'ล่ะ' mean here?",
+      "situationCorrect": "'And what about you?'",
+      "situationDistractors": [
+        "Where are you going?",
+        "How much is your meal?",
+        "Why aren't you eating?"
+      ]
+    },
+    {
+      "id": "ST_rao",
+      "thai": "เรา",
+      "spoken": "rao",
+      "roman": "rao",
+      "meaning": "'I / me' (or friendly 'we')",
+      "streetShift": "Textbooks teach ผม (phǒm) and ดิฉัน (dì-chǎn). But in casual speech with peers, Thais constantly refer to themselves as 'เรา' (rao).",
+      "unit": 6,
+      "theme": "Pronouns & Slang",
+      "category": "Casual Pronoun",
+      "tts": "เรา",
+      "words": [
+        {
+          "th": "เรา",
+          "ro": "rao",
+          "en": "I / me (or friendly we)"
+        }
+      ],
+      "situationPrompt": "A Thai peer says 'เราอยากกินส้มตำ' (Rao yàak kin sôm-dtam). Who is 'เรา' referring to here?",
+      "situationCorrect": "'I / me' — casual friendly first-person pronoun",
+      "situationDistractors": [
+        "The king or royalty",
+        "A stranger across the street",
+        "An old teacher"
+      ]
+    },
+    {
+      "id": "ST_khao",
+      "thai": "เค้า",
+      "spoken": "kháo",
+      "roman": "kháo",
+      "meaning": "He / she / they (or cute 'I' among partners)",
+      "streetShift": "The spoken version of เขา. Used for third persons ('เค้าบอกว่า...' - they said that...), and also used cutely as 'me' among couples.",
+      "unit": 6,
+      "theme": "Pronouns & Slang",
+      "category": "Casual Pronoun",
+      "tts": "เค้า",
+      "words": [
+        {
+          "th": "เค้า",
+          "ro": "kháo",
+          "en": "he / she / they"
+        }
+      ],
+      "situationPrompt": "You hear someone say 'เค้าไม่ไป' (Kháo mâi bpai). What does 'เค้า' mean?",
+      "situationCorrect": "He / She / They are not going",
+      "situationDistractors": [
+        "We are going together",
+        "The car isn't moving",
+        "It's not delicious"
+      ]
+    },
+    {
+      "id": "ST_dtua_eeng",
+      "thai": "ตัวเอง",
+      "spoken": "dtua-eeng",
+      "roman": "dtua-eeng",
+      "meaning": "'You / babe / oneself' (Affectionate)",
+      "streetShift": "Heard constantly among close friends and couples as an endearing term for 'you' ('ตัวเองกินอะไรดี' - babe/you, what do you wanna eat?).",
+      "unit": 6,
+      "theme": "Pronouns & Slang",
+      "category": "Affectionate Pronoun",
+      "tts": "ตัวเอง",
+      "words": [
+        {
+          "th": "ตัว",
+          "ro": "dtua",
+          "en": "body / person"
+        },
+        {
+          "th": "เอง",
+          "ro": "eeng",
+          "en": "oneself / dear"
+        }
+      ],
+      "situationPrompt": "A Thai couple is deciding on dinner and one asks 'ตัวเองอยากกินอะไร?'. What does 'ตัวเอง' mean in this context?",
+      "situationCorrect": "'You / Babe / Honey'",
+      "situationDistractors": [
+        "The waiter",
+        "The chef",
+        "Yesterday's dinner"
+      ]
+    },
+    {
+      "id": "ST_jing_roe",
+      "thai": "จริงเหรอ",
+      "spoken": "jing rǒe / jing dì (จริงดิ)",
+      "roman": "jing rǒe",
+      "meaning": "'For real?! Seriously?! No way!'",
+      "streetShift": "The quintessential Thai conversation reactor. Alternates with 'จริงดิ?!' (jing dì) for peak youth slang.",
+      "unit": 6,
+      "theme": "Pronouns & Slang",
+      "category": "Native Reaction",
+      "tts": "จริงเหรอ",
+      "words": [
+        {
+          "th": "จริง",
+          "ro": "jing",
+          "en": "true / real"
+        },
+        {
+          "th": "เหรอ",
+          "ro": "rǒe",
+          "en": "really?!"
+        }
+      ],
+      "situationPrompt": "Someone tells you they saw a famous actor at 7-Eleven. What is the most natural reflex exclamation in Thai?",
+      "situationCorrect": "จริงเหรอ?! / จริงดิ?! (jing rǒe / jing dì) — For real?!",
+      "situationDistractors": [
+        "ขอบคุณครับ (khɔ̀ɔp-khun kháp) — Thank you",
+        "ไม่เป็นไร (mâi bpen rai) — Never mind",
+        "ตรงไป (drong bpai) — Go straight"
+      ]
+    },
+    {
+      "id": "ST_mai_pen_rai",
+      "thai": "ไม่เป็นไร",
+      "spoken": "mâi bpen rai",
+      "roman": "mâi bpen rai",
+      "meaning": "'No worries! / It is all good! / You are welcome!'",
+      "streetShift": "Thailand's cultural mantra: cushions minor inconveniences, accepts apologies, and gracefully says 'You're welcome'.",
+      "unit": 6,
+      "theme": "Pronouns & Slang",
+      "category": "Everyday Philosophy",
+      "tts": "ไม่เป็นไร",
+      "words": [
+        {
+          "th": "ไม่เป็นไร",
+          "ro": "mâi bpen rai",
+          "en": "no worries / all good"
+        }
+      ],
+      "situationPrompt": "Someone accidentally bumps into you at a crowded BTS station and immediately apologizes. What is the classic Thai response?",
+      "situationCorrect": "ไม่เป็นไรครับ/ค่ะ (mâi bpen rai) — No worries at all!",
+      "situationDistractors": [
+        "เก็บตังค์ (gèp dtang) — Bill please",
+        "เท่าไหร่ (thâo-lài) — How much",
+        "จริงเหรอ (jing rǒe) — Really"
+      ]
+    },
+    {
+      "id": "ST_ao_di",
+      "thai": "เอาดิ",
+      "spoken": "ao dì",
+      "roman": "ao dì",
+      "meaning": "'Sure, let's do it! / I'm down!'",
+      "streetShift": "Casual enthusiastic acceptance of an invitation. 'ไปกินหมูกระทะกัน' (Let's go get Thai BBQ) -> 'เอาดิ!' (I'm so down!).",
+      "unit": 6,
+      "theme": "Pronouns & Slang",
+      "category": "Enthusiastic Agreement",
+      "tts": "เอาดิ",
+      "words": [
+        {
+          "th": "เอา",
+          "ro": "ao",
+          "en": "take / do"
+        },
+        {
+          "th": "ดิ",
+          "ro": "dì",
+          "en": "go ahead / totally"
+        }
+      ],
+      "situationPrompt": "Your friends propose going to an outdoor night market right now. You are 100% on board. What quick casual slang do you say?",
+      "situationCorrect": "เอาดิ! (ao dì) — I'm down! Let's do it!",
+      "situationDistractors": [
+        "ไม่เอา (mâi ao) — I don't want it",
+        "งงมาก (ngong mâak) — Confused",
+        "ไม่เป็นไร (mâi bpen rai) — No worries"
+      ]
+    },
+    {
+      "id": "ST_ngong_maak",
+      "thai": "งงมาก",
+      "spoken": "ngong mâak",
+      "roman": "ngong mâak",
+      "meaning": "'So confused! / Totally baffled!'",
+      "streetShift": "Everyday exclamation when directions are messy or a situation makes zero sense.",
+      "unit": 6,
+      "theme": "Pronouns & Slang",
+      "category": "Expressing Confusion",
+      "tts": "งงมาก",
+      "words": [
+        {
+          "th": "งง",
+          "ro": "ngong",
+          "en": "confused / puzzled"
+        },
+        {
+          "th": "มาก",
+          "ro": "mâak",
+          "en": "very / much"
+        }
+      ],
+      "situationPrompt": "A vendor explains a complicated system of queue tickets and you have no idea what's happening. What phrase expresses 'I am totally confused!'?",
+      "situationCorrect": "งงมาก (ngong mâak) — So confused!",
+      "situationDistractors": [
+        "โคตรดี (khôot dii) — Insanely good",
+        "เอาดิ (ao dì) — I'm down",
+        "สุดยอด (sùt yɔ̂ɔt) — Awesome"
+      ]
+    },
+    {
+      "id": "ST_khoot_dii",
+      "thai": "โคตรดี",
+      "spoken": "khôot dii",
+      "roman": "khôot dii",
+      "meaning": "'Insanely good! / Crazy good!' (Street Slang)",
+      "streetShift": "โคตร (khôot) is ubiquitous slang replacing 'มาก' (very) for dramatic emphasis. Highly casual with friends.",
+      "unit": 6,
+      "theme": "Pronouns & Slang",
+      "category": "Youth Slang",
+      "tts": "โคตรดี",
+      "words": [
+        {
+          "th": "โคตร",
+          "ro": "khôot",
+          "en": "insanely / crazy"
+        },
+        {
+          "th": "ดี",
+          "ro": "dii",
+          "en": "good"
+        }
+      ],
+      "situationPrompt": "You try a legendary mango sticky rice and want to tell your buddy it's 'insanely good' using real street slang. What do you say?",
+      "situationCorrect": "โคตรดี! (khôot dii) — Insanely good!",
+      "situationDistractors": [
+        "งงมาก (ngong mâak) — Confused",
+        "ไม่หวาน (mâi wǎan) — Unsweetened",
+        "ตรงไป (drong bpai) — Go straight"
+      ]
+    },
+    {
+      "id": "ST_sut_yoot",
+      "thai": "สุดยอด",
+      "spoken": "sùt yɔ̂ɔt",
+      "roman": "sùt yɔ̂ɔt",
+      "meaning": "'Awesome! / Incredible! / Top tier!'",
+      "streetShift": "The #1 praise word in Thailand for great performances, delicious food, or amazing view points.",
+      "unit": 6,
+      "theme": "Pronouns & Slang",
+      "category": "Praise & Exclamation",
+      "tts": "สุดยอด",
+      "words": [
+        {
+          "th": "สุด",
+          "ro": "sùt",
+          "en": "extreme / peak"
+        },
+        {
+          "th": "ยอด",
+          "ro": "yɔ̂ɔt",
+          "en": "top / summit"
+        }
+      ],
+      "situationPrompt": "A street cook performs a spectacular flaming wok show and serves you a masterpiece. What exclamation of praise do you give?",
+      "situationCorrect": "สุดยอด! (sùt yɔ̂ɔt) — Awesome! Top tier!",
+      "situationDistractors": [
+        "ไม่เอาถุง (mâi ao thǔng) — No bag",
+        "งงมาก (ngong mâak) — So confused",
+        "เก็บตังค์ (gèp dtang) — Check please"
+      ]
+    },
+    {
+      "id": "ST_chill_chill",
+      "thai": "ชิลๆ",
+      "spoken": "chil-chil",
+      "roman": "chil-chil",
+      "meaning": "'Chill / Relaxed / Easy-peasy'",
+      "streetShift": "Loanword from English 'chill' with Thai reduplication (ๆ). Means relaxing, taking it easy, or that a task is no stress.",
+      "unit": 6,
+      "theme": "Pronouns & Slang",
+      "category": "Modern Slang",
+      "tts": "ชิลชิล",
+      "words": [
+        {
+          "th": "ชิลๆ",
+          "ro": "chil-chil",
+          "en": "chill / relaxed"
+        }
+      ],
+      "situationPrompt": "A friend asks if your schedule today is stressful. You reply 'Chil-chil!'. What does that communicate?",
+      "situationCorrect": "Super relaxed, easy-going, no stress",
+      "situationDistractors": [
+        "Extremely hectic and busy",
+        "Freezing cold weather",
+        "Need to visit the hospital"
+      ]
+    },
+    {
+      "id": "ST_ao_ngai_dii",
+      "thai": "เอาไงดี",
+      "spoken": "ao ngai dii",
+      "roman": "ao ngai dii",
+      "meaning": "'What should we do? / What is the move?'",
+      "streetShift": "The go-to question when deciding where to eat, where to go out, or when plans suddenly change.",
+      "unit": 6,
+      "theme": "Pronouns & Slang",
+      "category": "Decision Making",
+      "tts": "เอาไงดี",
+      "words": [
+        {
+          "th": "เอา",
+          "ro": "ao",
+          "en": "take / choose"
+        },
+        {
+          "th": "ไง",
+          "ro": "ngai",
+          "en": "how / what way"
+        },
+        {
+          "th": "ดี",
+          "ro": "dii",
+          "en": "good"
+        }
+      ],
+      "situationPrompt": "Sudden tropical rain hits while you and your Thai friend are walking outdoors. Your friend looks at you and asks 'เอาไงดี?'. What are they asking?",
+      "situationCorrect": "'What should we do now? / What's the plan?'",
+      "situationDistractors": [
+        "Can you lend me cash?",
+        "Where did you buy your umbrella?",
+        "Do you want to eat noodles?"
+      ]
+    }
+  ],
+  "curriculum": [
+    {
+      "unit": 1,
+      "title": "Street Food & Noodle Stalls",
+      "subtitle": "Order noodles, broth, custom toppings & takeout like a local",
+      "color": "amber",
+      "nodes": [
+        {
+          "id": "s1_n1",
+          "title": "Noodle Kitchen Shorthand",
+          "type": "street",
+          "icon": "🍜",
+          "description": "Gradual buildup: lék (thin noodles) → yâak nám (broth separate) → mìi hâeng (dry egg noodles) → mâi chín mâi ngôok (no meatballs/sprouts) → full compound order",
+          "itemIds": [
+            "ST_lek",
+            "ST_yaak_nam",
+            "ST_mhii_haeng",
+            "ST_mai_chin_mai_ngok",
+            "ST_noodle_shorthand"
+          ]
+        },
+        {
+          "id": "s1_n2",
+          "title": "Spice & Topping Customization",
+          "type": "street",
+          "icon": "🌶️",
+          "description": "Customizing ingredients: phèt nɔ́ɔi (mild heat) → mâi sài phrík (zero chilies) → mâi sài phàk-chii (no cilantro) → mâi sài phǒng-chuu-rót (no MSG)",
+          "itemIds": [
+            "ST_phet_noi",
+            "ST_mai_sai_phrik",
+            "ST_mai_sai_phakchii",
+            "ST_mai_sai_phongchurot"
+          ]
+        },
+        {
+          "id": "s1_n3",
+          "title": "Vendor Exchanges & Takeaway",
+          "type": "street",
+          "icon": "🥡",
+          "description": "Vendor questions & takeout: kin nîi rǒe sài hɔ̀ɔ (eat here or wrap to-go?) → sài hɔ̀ɔ (takeaway) → phí-sèet (extra portion)",
+          "itemIds": [
+            "ST_kin_nii_hor",
+            "ST_sai_hor",
+            "ST_phiseet"
+          ]
+        }
+      ]
+    },
+    {
+      "unit": 2,
+      "title": "Cafes, 7-Eleven & Cashless Paying",
+      "subtitle": "Control sweetness, order ice, grab straws & scan PromptPay QR",
+      "color": "emerald",
+      "nodes": [
+        {
+          "id": "s2_n1",
+          "title": "Sweetness & Ice Customization",
+          "type": "street",
+          "icon": "🧋",
+          "description": "Cafe sweetness & ice: wǎan nɔ́ɔi (50% sweet) → mâi wǎan (0% sugar) → nám-khɛ̌ng bplào (cup of crushed ice) → wǎan bpòk-gà-dtì (normal)",
+          "itemIds": [
+            "ST_waan_noi",
+            "ST_mai_waan",
+            "ST_nam_kheng_plao",
+            "ST_waan_pokati"
+          ]
+        },
+        {
+          "id": "s2_n2",
+          "title": "Paying the Bill & Shorthand",
+          "type": "street",
+          "icon": "💸",
+          "description": "Paying the bill: gèp dtang (check please) → thâo-lài (how much) → sà-gaen dâi mǎi (can I scan PromptPay QR?)",
+          "itemIds": [
+            "ST_gep_dtang",
+            "ST_thao_rai",
+            "ST_scan_dai_mai"
+          ]
+        },
+        {
+          "id": "s2_n3",
+          "title": "7-Eleven Checkout Essentials",
+          "type": "street",
+          "icon": "🏪",
+          "description": "7-Eleven checkout: mâi ao thǔng (no plastic bag) → mii lɔ̀ɔt mǎi (have a straw?) → wéep dâi mǎi (heat/microwave this up?)",
+          "itemIds": [
+            "ST_mai_ao_thung",
+            "ST_mii_hlort",
+            "ST_wen_dai_mai"
+          ]
+        }
+      ]
+    },
+    {
+      "unit": 3,
+      "title": "Taxis, Grab, Bolt & Navigation",
+      "subtitle": "Direct drivers smoothly, call polite titles & give rapid turns",
+      "color": "sky",
+      "nodes": [
+        {
+          "id": "s3_n1",
+          "title": "Polite Addressing for Drivers & Peers",
+          "type": "street",
+          "icon": "🚕",
+          "description": "Polite titles: phîi kháp/khá (brother / driver / peer) → nɔ́ɔng kháp/khá (younger server / barista)",
+          "itemIds": [
+            "ST_phii_driver",
+            "ST_nong_staff"
+          ]
+        },
+        {
+          "id": "s3_n2",
+          "title": "Turn-by-Turn Navigation",
+          "type": "street",
+          "icon": "🧭",
+          "description": "Turn-by-turn navigation: drong bpai (straight) → líaw sáai (turn left) → líaw kwǎa (turn right)",
+          "itemIds": [
+            "ST_trong_bpai",
+            "ST_liao_sai",
+            "ST_liao_kwaa"
+          ]
+        },
+        {
+          "id": "s3_n3",
+          "title": "Pulling Over & Exact Stops",
+          "type": "street",
+          "icon": "🛑",
+          "description": "Pulling over & stops: jɔ̀ɔt drong níi (pull over right here) → khâang nâa (up ahead) → sɔɔi níi (this alley) → sòng thîi nîi (drop me here)",
+          "itemIds": [
+            "ST_yut_trong_nii",
+            "ST_khaang_naa",
+            "ST_soi_nii",
+            "ST_song_thii_nii"
+          ]
+        }
+      ]
+    },
+    {
+      "unit": 4,
+      "title": "Spoken Sound Shifts & Contractions",
+      "subtitle": "How Thais actually pronounce words vs formal written rules",
+      "color": "rose",
+      "nodes": [
+        {
+          "id": "s4_n1",
+          "title": "Everyday ร → ล Sound Shifts",
+          "type": "street",
+          "icon": "🗣️",
+          "description": "Everyday spoken shifts: à-lai (what? ร→ล shift) → kháp (dropped r-cluster) → à-lòi (delicious! ร→ล shift)",
+          "itemIds": [
+            "ST_arai",
+            "ST_khrap",
+            "ST_aroi_aloi"
+          ]
+        },
+        {
+          "id": "s4_n2",
+          "title": "Rapid Street Contractions",
+          "type": "street",
+          "icon": "⚡",
+          "description": "Fast street contractions: bpào? (or not?) → ngíi (like this) → ngán (in that case)",
+          "itemIds": [
+            "ST_reu_plao",
+            "ST_yang_nii",
+            "ST_yang_nan"
+          ]
+        },
+        {
+          "id": "s4_n3",
+          "title": "Casual Conversational Question Words",
+          "type": "street",
+          "icon": "⏱️",
+          "description": "Daily rhythm: bpáep-nɯng (one second!) → tham-mai (why?) → châi bpà (right? / isn't it?)",
+          "itemIds": [
+            "ST_baep_nueng",
+            "ST_tham_mai",
+            "ST_chai_pa"
+          ]
+        }
+      ]
+    },
+    {
+      "unit": 5,
+      "title": "Everyday Particles & Vibe Markers",
+      "subtitle": "The untranslatable feelings, social markers & tone shifters",
+      "color": "indigo",
+      "nodes": [
+        {
+          "id": "s5_n1",
+          "title": "Focus & Social Agreement Particles",
+          "type": "street",
+          "icon": "🎭",
+          "description": "Focus & consensus particles: nîa (right here! / emphasis) → nór (bonding agreement: right?!) → à (conversational softener)",
+          "itemIds": [
+            "ST_nia",
+            "ST_nor",
+            "ST_a"
+          ]
+        },
+        {
+          "id": "s5_n2",
+          "title": "Urgency, Imperatives & Reaction Tone",
+          "type": "street",
+          "icon": "💥",
+          "description": "Imperatives & reactions: loei (right now! / totally!) → rǒe (really?!) → sì (go ahead! / do it!)",
+          "itemIds": [
+            "ST_loei",
+            "ST_roe",
+            "ST_si"
+          ]
+        },
+        {
+          "id": "s5_n3",
+          "title": "Sweet Softeners & Counter-Questions",
+          "type": "street",
+          "icon": "🌸",
+          "description": "Everyday warmth: ná (gentle reminder / softener) → lâ (what about...?)",
+          "itemIds": [
+            "ST_na",
+            "ST_la"
+          ]
+        }
+      ]
+    },
+    {
+      "unit": 6,
+      "title": "Casual Pronouns, Slang & Reactions",
+      "subtitle": "Natural friend talk, playful reactions & street lingo",
+      "color": "violet",
+      "nodes": [
+        {
+          "id": "s6_n1",
+          "title": "Real-Life Casual Pronouns",
+          "type": "street",
+          "icon": "👥",
+          "description": "Casual pronouns: rao (friendly I/me) → kháo (he/she/cute me) → dtua-eeng (you/babe)",
+          "itemIds": [
+            "ST_rao",
+            "ST_khao",
+            "ST_dtua_eeng"
+          ]
+        },
+        {
+          "id": "s6_n2",
+          "title": "Everyday Thai Reactions",
+          "type": "street",
+          "icon": "🤝",
+          "description": "Essential Thai reactions: jing rǒe (for real?!) → mâi bpen rai (no worries!) → ao dì (I'm down!)",
+          "itemIds": [
+            "ST_jing_roe",
+            "ST_mai_pen_rai",
+            "ST_ao_di"
+          ]
+        },
+        {
+          "id": "s6_n3",
+          "title": "Modern Bangkok Slang & Group Moves",
+          "type": "street",
+          "icon": "🔥",
+          "description": "Youth slang & moves: ngong mâak (baffled) → khôot dii (crazy good) → sùt yɔ̂ɔt (awesome) → chil-chil (relaxed) → ao ngai dii (what's the plan?)",
+          "itemIds": [
+            "ST_ngong_maak",
+            "ST_khoot_dii",
+            "ST_sut_yoot",
+            "ST_chill_chill",
+            "ST_ao_ngai_dii"
+          ]
+        }
+      ]
+    }
+  ]
+}

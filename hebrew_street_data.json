@@ -1,0 +1,5300 @@
+{
+  "street_items": [
+    {
+      "id": "ST_lafa",
+      "hebrew": "לַאפָה",
+      "thai": "לַאפָה",
+      "spoken": "lá-fa",
+      "roman": "lafa",
+      "meaning": "Lafa (chewy Iraqi flatbread wrap)",
+      "unit": 1,
+      "theme": "Street Food",
+      "category": "Bread Base",
+      "tts": "לַאפַה",
+      "words": [
+        {
+          "he": "לַאפָה",
+          "th": "לַאפָה",
+          "ro": "lá-fa",
+          "en": "flatbread wrap",
+          "tts": "לַאפַה"
+        }
+      ],
+      "streetShift": "At every shawarma or falafel counter, the vendor's first question is '?פִּיתָה אוֹ לַאפָה' (Pita or Lafa?). Lafa is larger, soft, rolled fresh on the spot, and holds generous portions of meat and salads without tearing.",
+      "scene": "🥙 Shawarma & Falafel Stand, Tel Aviv",
+      "dialogue": {
+        "speakerA": "👨‍🍳 מוֹכֵר (Vendor)",
+        "lineHebrewA": "?פִּיתָה אוֹ לַאפָה",
+        "lineSpokenA": "Pí-ta o lá-fa?",
+        "lineEnglishA": "Pita or lafa wrap?",
+        "ttsA": "פִּיתָה אוֹ לַאפַה?",
+        "speakerB": "🙋 אַתָּה (You)",
+        "lineHebrewB": "!בְּלַאפָה, בְּבַקָּשָׁה",
+        "lineSpokenB": "B'lá-fa, be-va-ka-shá!",
+        "lineEnglishB": "In a lafa, please!",
+        "ttsB": "!בְּלַאפַה, בְּבַקָּשָׁה"
+      },
+      "exampleSentence": {
+        "hebrew": "!שִׂים לִי בְּלַאפָה, עִם הַכֹּל וְהַרְבֵּה חָרִיף",
+        "spoken": "Sim li b'lá-fa, im ha-kól ve-har-bé cha-ríf!",
+        "english": "Put it in a lafa for me, with everything and plenty of spicy!",
+        "tts": "!שִׂים לִי בְּלַאפַה, עִם הַכֹּל וְהַרְבֵּה חָרִיף"
+      },
+      "situationPrompt": "You stand before the sizzling rotating shawarma spit. The carver raises his knife and asks: '?פִּיתָה אוֹ לַאפָה'. You want the large, rolled flatbread wrap. What do you say?",
+      "situationAudio": "פִּיתָה אוֹ לַאפַה?",
+      "situationCorrect": "בְּלַאפָה, בְּבַקָּשָׁה (b'lafa, bevakasha) — In a lafa wrap, please",
+      "situationDistractors": [
+        "בְּלִי סֻכָּר (bli sukar) — Without sugar",
+        "אֶפְשָׁר חֶשְׁבּוֹן? (efshar cheshbon?) — Can I have the check?",
+        "יְמִינָה בָּרַמְזוֹר (yemina baramzor) — Right at the traffic light"
+      ]
+    },
+    {
+      "id": "ST_pita",
+      "hebrew": "פִּיתָה",
+      "thai": "פִּיתָה",
+      "spoken": "pí-ta",
+      "roman": "pita",
+      "meaning": "Pita (fluffy Israeli pocket bread)",
+      "unit": 1,
+      "theme": "Street Food",
+      "category": "Bread Base",
+      "tts": "פִּיתָה",
+      "words": [
+        {
+          "he": "פִּיתָה",
+          "th": "פִּיתָה",
+          "ro": "pita",
+          "en": "pita pocket"
+        }
+      ],
+      "streetShift": "Israeli pita is famously thick, pillowy, and steamy—designed to absorb tahini and hummus juices without leaking. It's the classic, lighter alternative to a giant lafa.",
+      "scene": "🥙 Falafel Stall, Jerusalem Market",
+      "dialogue": {
+        "speakerA": "👨‍🍳 מוֹכֵר (Vendor)",
+        "lineHebrewA": "?בְּמָה לָשִׂים לְךָ, פִּיתָה אוֹ לַאפָה",
+        "lineSpokenA": "Bema lasim lecha, pita o lafa?",
+        "lineEnglishA": "What should I put it in, pita or lafa?",
+        "ttsA": "בְּמָה לָשִׂים לְךָ, פִּיתָה אוֹ לַאפַה?",
+        "speakerB": "🙋 אַתָּה (You)",
+        "lineHebrewB": "!בְּפִיתָה, תּוֹדָה",
+        "lineSpokenB": "B'pí-ta, to-dá!",
+        "lineEnglishB": "In a pita pocket, thanks!",
+        "ttsB": "בְּפִיתָה, תּוֹדָה"
+      },
+      "exampleSentence": {
+        "hebrew": "!מָנָה פָלָאפֶל בְּפִיתָה, עִם הַרְבֵּה טְחִינָה",
+        "spoken": "Maná faláfel b'pí-ta, im har-bé tchi-ná!",
+        "english": "A portion of falafel in a pita, with plenty of tahini!",
+        "tts": "מָנָה פָלָאפֶל בְּפִיתָה, עִם הַרְבֵּה טְחִינָה"
+      },
+      "situationPrompt": "The falafel master points with his tongs: '?בְּמָה לָשִׂים לְךָ'. You want the classic fluffy pocket bread. What do you reply?",
+      "situationAudio": "בְּמָה לָשִׂים לְךָ?",
+      "situationCorrect": "בְּפִיתָה, תּוֹדָה (b'pita, toda) — In a pita, thanks",
+      "situationDistractors": [
+        "תַּפְעִיל מוֹנֶה (taf'il mone) — Turn on the meter",
+        "עַל הַפָּנִים (al hapanim) — Terrible / Horrible",
+        "רַב-קַו (rav-kav) — Transit smartcard"
+      ]
+    },
+    {
+      "id": "ST_im_hakol",
+      "hebrew": "עִם הַכֹּל",
+      "thai": "עִם הַכֹּל",
+      "spoken": "im ha-kól",
+      "roman": "im hakol",
+      "meaning": "With everything / the works (all salads & sauces)",
+      "unit": 1,
+      "theme": "Street Food",
+      "category": "Ordering Code",
+      "tts": "עִם הַכֹּל",
+      "words": [
+        {
+          "he": "עִם",
+          "th": "עִם",
+          "ro": "im",
+          "en": "with"
+        },
+        {
+          "he": "הַכֹּל",
+          "th": "הַכֹּל",
+          "ro": "hakol",
+          "en": "everything"
+        }
+      ],
+      "streetShift": "Never list individual salads one by one! In authentic street Hebrew, say '!עִם הַכֹּל' (im hakol) to tell the vendor to load all the fresh salads, cabbage, pickles, hummus, and tahini.",
+      "scene": "🥙 Shuk Carmel Food Stand",
+      "dialogue": {
+        "speakerA": "👨‍🍳 מוֹכֵר (Vendor)",
+        "lineHebrewA": "?מָה לָשִׂים לְךָ בַּמָּנָה",
+        "lineSpokenA": "Ma lasim lecha ba-mana?",
+        "lineEnglishA": "What salads should I put in for you?",
+        "ttsA": "מָה לָשִׂים לְךָ בַּמָּנָה?",
+        "speakerB": "🙋 אַתָּה (You)",
+        "lineHebrewB": "!עִם הַכֹּל, וְשִׂים לִי הַרְבֵּה חָרִיף",
+        "lineSpokenB": "Im ha-kól, ve-sim li har-bé cha-ríf!",
+        "lineEnglishB": "With everything, and put lots of spicy for me!",
+        "ttsB": "עִם הַכֹּל, וְשִׂים לִי הַרְבֵּה חָרִיף"
+      },
+      "exampleSentence": {
+        "hebrew": "!שִׂים לִי שַׁוַארְמָה עִם הַכֹּל, כָּל הַסָּלָטִים",
+        "spoken": "Sim li shavarma im hakol, kol hasalatim!",
+        "english": "Make me shawarma with everything, all the salads!",
+        "tts": "שִׂים לִי שַׁוַארְמָה עִם הַכֹּל, כָּל הַסָּלָטִים"
+      },
+      "situationPrompt": "You are at a crowded shawarma counter. The vendor holds the tongs ready over 8 salad trays and asks: '?מָה לָשִׂים לְךָ'. You want the works—all salads, pickles, and tahini. What do you shout?",
+      "situationAudio": "מָה לָשִׂים לְךָ בַּמָּנָה?",
+      "situationCorrect": "עִם הַכֹּל, בְּבַקָּשָׁה! (im hakol, bevakasha!) — With everything / the works!",
+      "situationDistractors": [
+        "כְּמוֹ שֶׁהוּא (kmo shehu) — As it is (unnatural textbook)",
+        "בְּלִי סֻכָּר (bli sukar) — Without sugar",
+        "אֶפְשָׁר חֶשְׁבּוֹן? (efshar cheshbon?) — Can I have the check?"
+      ]
+    },
+    {
+      "id": "ST_harbe_charif",
+      "hebrew": "הַרְבֵּה חָרִיף",
+      "thai": "הַרְבֵּה חָרִיף",
+      "spoken": "har-bé cha-ríf",
+      "roman": "harbe charif",
+      "meaning": "Plenty of spicy (schug / harissa hot sauce)",
+      "unit": 1,
+      "theme": "Street Food",
+      "category": "Spice Level",
+      "tts": "הַרְבֵּה חָרִיף",
+      "words": [
+        {
+          "he": "הַרְבֵּה",
+          "th": "הַרְבֵּה",
+          "ro": "harbe",
+          "en": "plenty / lots"
+        },
+        {
+          "he": "חָרִיף",
+          "th": "חָרִיף",
+          "ro": "charif",
+          "en": "spicy hot sauce"
+        }
+      ],
+      "streetShift": "Israeli street hot sauce (schug or harissa) packs serious heat. Asking for 'הרבה חריף' signals to the stall owner that you can handle real Yemenite/North African chili paste.",
+      "scene": "🥙 Falafel Stall, HaTikva Market",
+      "dialogue": {
+        "speakerA": "👨‍🍳 מוֹכֵר (Vendor)",
+        "lineHebrewA": "?לָשִׂים לְךָ חָרִיף בַּפִּיתָה",
+        "lineSpokenA": "Lasim lecha charif ba-pita?",
+        "lineEnglishA": "Put spicy sauce in your pita?",
+        "ttsA": "לָשִׂים לְךָ חָרִיף בַּפִּיתָה?",
+        "speakerB": "🙋 אַתָּה (You)",
+        "lineHebrewB": "!כֵּן אָחִי, שִׂים הַרְבֵּה חָרִיף",
+        "lineSpokenB": "Ken achi, sim har-bé cha-ríf!",
+        "lineEnglishB": "Yes bro, put plenty of spicy!",
+        "ttsB": "כֵּן אָחִי, שִׂים הַרְבֵּה חָרִיף"
+      },
+      "exampleSentence": {
+        "hebrew": "!אֲנִי אוֹהֵב הַרְבֵּה חָרִיף עִם הַטְּחִינָה",
+        "spoken": "Ani ohev harbe charif im hat'china!",
+        "english": "I love plenty of spicy with the tahini!",
+        "tts": "אֲנִי אוֹהֵב הַרְבֵּה חָרִיף עִם הַטְּחִינָה"
+      },
+      "situationPrompt": "The vendor lifts a spoonful of fiery red and green schug: '?רוֹצֶה חָרִיף'. You love strong chili heat. How do you instruct him?",
+      "situationAudio": "לָשִׂים לְךָ חָרִיף?",
+      "situationCorrect": "שִׂים הַרְבֵּה חָרִיף! (sim harbe charif!) — Put plenty of spicy!",
+      "situationDistractors": [
+        "בְּלִי חָלָב (bli chalav) — Without milk",
+        "קַבָּלָה בְּסִמְס (kabala besms) — Receipt by text",
+        "תַּחֲנָה הַבָּאָה (tachana haba'a) — Next stop"
+      ]
+    },
+    {
+      "id": "ST_bli_amba",
+      "hebrew": "בְּלִי עַמְבָּה",
+      "thai": "בְּלִי עַמְבָּה",
+      "spoken": "bli ám-ba",
+      "roman": "bli amba",
+      "meaning": "Without amba (tangy Iraqi pickled mango sauce)",
+      "unit": 1,
+      "theme": "Street Food",
+      "category": "Exclusion",
+      "tts": "בְּלִי עַם-בָּה",
+      "words": [
+        {
+          "he": "בְּלִי",
+          "th": "בְּלִי",
+          "ro": "bli",
+          "en": "without"
+        },
+        {
+          "he": "עַמְבָּה",
+          "th": "עַמְבָּה",
+          "ro": "ám-ba",
+          "en": "pickled mango sauce",
+          "tts": "עַם-בָּה"
+        }
+      ],
+      "streetShift": "Amba is a fragrant, bright yellow Iraqi fermented mango-fenugreek condiment. It has a potent smell and distinct flavor. If you don't want it, state 'בְּלִי עַמְבָּה' early before the vendor drizzles it.",
+      "scene": "🥙 Sabich & Shawarma Stand, Frishman St.",
+      "dialogue": {
+        "speakerA": "👨‍🍳 מוֹכֵר (Vendor)",
+        "lineHebrewA": "?לָשִׂים עַמְבָּה מֵעַל",
+        "lineSpokenA": "Lasim amba me'al?",
+        "lineEnglishA": "Should I put amba sauce on top?",
+        "ttsA": "לָשִׂים עַם-בָּה מֵעַל?",
+        "speakerB": "🙋 אַתָּה (You)",
+        "lineHebrewB": "!לֹא, בְּלִי עַמְבָּה, רַק טְחִינָה",
+        "lineSpokenB": "Lo, bli ám-ba, rak tchi-ná!",
+        "lineEnglishB": "No, without amba, only tahini!",
+        "ttsB": "!לֹא, בְּלִי עַם-בָּה, רַק טְחִינָה"
+      },
+      "exampleSentence": {
+        "hebrew": "!בְּבַקָּשָׁה שִׂים לִי סַבִּיחַ, אֲבָל בְּלִי עַמְבָּה",
+        "spoken": "Bevakasha sim li sabich, aval bli amba!",
+        "english": "Please make me a sabich, but without amba!",
+        "tts": "!בְּבַקָּשָׁה שִׂים לִי סַבִּיחַ, אֲבָל בְּלִי עַם-בָּה"
+      },
+      "situationPrompt": "The sabich maker hovers a ladle of bright yellow pickled mango sauce over your pita and asks: '?לָשִׂים עַמְבָּה'. You dislike fenugreek. How do you halt him?",
+      "situationAudio": "לָשִׂים עַם-בָּה מֵעַל?",
+      "situationCorrect": "בְּלִי עַמְבָּה, תּוֹדָה (bli amba, toda) — Without amba, thanks",
+      "situationDistractors": [
+        "עִם חֲלַב שִׁבּוֹלֶת (im chalav shibolet) — With oat milk",
+        "תִּסְגֹּר לִי (tisgor li) — Close my tab",
+        "יָשָׁר יָשָׁר (yashar yashar) — Straight ahead"
+      ]
+    },
+    {
+      "id": "ST_rak_tchinah",
+      "hebrew": "רַק טְחִינָה",
+      "thai": "רַק טְחִינָה",
+      "spoken": "rak tchi-ná",
+      "roman": "rak tchinah",
+      "meaning": "Only tahini (no extras / sauces)",
+      "unit": 1,
+      "theme": "Street Food",
+      "category": "Sauce Choice",
+      "tts": "רַק טְחִינָה",
+      "words": [
+        {
+          "he": "רַק",
+          "th": "רַק",
+          "ro": "rak",
+          "en": "only / just"
+        },
+        {
+          "he": "טְחִינָה",
+          "th": "טְחִינָה",
+          "ro": "tchina",
+          "en": "sesame tahini"
+        }
+      ],
+      "streetShift": "Tahini is the sacred baseline of Israeli street food. If you want a mild, creamy sandwich without hot peppers or pickled mango, say 'רַק טְחִינָה'.",
+      "scene": "🥙 Falafel Stall, King George St.",
+      "dialogue": {
+        "speakerA": "👨‍🍳 מוֹכֵר (Vendor)",
+        "lineHebrewA": "?אֵיזֶה רְטָבִים לָשִׂים לְךָ",
+        "lineSpokenA": "Eize retavim lasim lecha?",
+        "lineEnglishA": "Which sauces should I put for you?",
+        "ttsA": "אֵיזֶה רְטָבִים לָשִׂים לְךָ?",
+        "speakerB": "🙋 אַתָּה (You)",
+        "lineHebrewB": "!רַק טְחִינָה, תִּשְׁפֹּךְ הַרְבֵּה מֵעַל",
+        "lineSpokenB": "Rak tchi-ná, tishpoch harbe me'al!",
+        "lineEnglishB": "Only tahini, pour plenty on top!",
+        "ttsB": "רַק טְחִינָה, תִּשְׁפֹּךְ הַרְבֵּה מֵעַל"
+      },
+      "exampleSentence": {
+        "hebrew": "!בְּלִי חָרִיף וּבְלִי עַמְבָּה, רַק טְחִינָה",
+        "spoken": "Bli charif uvli amba, rak tchina!",
+        "english": "No spicy and no amba, just tahini!",
+        "tts": "!בְּלִי חָרִיף וּבְלִי עַם-בָּה, רַק טְחִינָה"
+      },
+      "situationPrompt": "The vendor asks: '?אֵיזֶה רְטָבִים' (Which sauces?). You want pure sesame puree and zero hot peppers. What do you order?",
+      "situationAudio": "אֵיזֶה רְטָבִים לָשִׂים לְךָ?",
+      "situationCorrect": "רַק טְחִינָה, בְּבַקָּשָׁה (rak tchina, bevakasha) — Only tahini, please",
+      "situationDistractors": [
+        "הָפוּך חַלָּשׁ (hafuch chalash) — Mild cappuccino",
+        "אַשְׁרַאי אוֹ מְזֻמָּן (ashrai o mezuman) — Credit or cash",
+        "צָרִיךְ שַׂקִּית? (tsarich sakit?) — Need a bag?"
+      ]
+    },
+    {
+      "id": "ST_lashevet",
+      "hebrew": "לָשֶׁבֶת",
+      "thai": "לָשֶׁבֶת",
+      "spoken": "la-shé-vet",
+      "roman": "lashevet",
+      "meaning": "For here / Dine in (literally: to sit)",
+      "unit": 1,
+      "theme": "Street Food",
+      "category": "Dining Option",
+      "tts": "לָשֶׁבֶת",
+      "words": [
+        {
+          "he": "לָשֶׁבֶת",
+          "th": "לָשֶׁבֶת",
+          "ro": "lashevet",
+          "en": "to sit / dine in"
+        }
+      ],
+      "streetShift": "At every Israeli counter, café, or hummus joint, the first register question is '?לָשֶׁבֶת אוֹ לָקַחַת' (To sit or to take?). If dining at the tables, reply '!לָשֶׁבֶת'.",
+      "scene": "🍽️ Hummus Parlor, Jaffa",
+      "dialogue": {
+        "speakerA": "👨‍🍳 קֻפַּאי (Cashier)",
+        "lineHebrewA": "?שָׁלוֹם, לָשֶׁבֶת אוֹ לָקַחַת",
+        "lineSpokenA": "Shalom, la-shé-vet o la-ká-chat?",
+        "lineEnglishA": "Hello, for here or to go?",
+        "ttsA": "שָׁלוֹם, לָשֶׁבֶת אוֹ לָקַחַת?",
+        "speakerB": "🙋 אַתָּה (You)",
+        "lineHebrewB": "!לָשֶׁבֶת, תּוֹדָה, תֵּן לִי צַלַּחַת מַסַבָּחָה",
+        "lineSpokenB": "La-shé-vet, to-dá, ten li tzalachat masabacha!",
+        "lineEnglishB": "For here, thanks, give me a plate of warm masabacha!",
+        "ttsB": "לָשֶׁבֶת, תּוֹדָה"
+      },
+      "exampleSentence": {
+        "hebrew": "!אֲנַחְנוּ רוֹצִים לָשֶׁבֶת בַּחוּץ בַּשֶּׁמֶשׁ",
+        "spoken": "Anachnu rotzim lashevet bachutz bashemesh!",
+        "english": "We want to sit outside in the sun!",
+        "tts": "אֲנַחְנוּ רוֹצִים לָשֶׁבֶת בַּחוּץ בַּשֶּׁמֶשׁ"
+      },
+      "situationPrompt": "You arrive at Abu Hassan in Jaffa. The host asks at the door: '?לָשֶׁבֶת אוֹ לָקַחַת'. You want a table inside. What is your response?",
+      "situationAudio": "לָשֶׁבֶת אוֹ לָקַחַת?",
+      "situationCorrect": "לָשֶׁבֶת, תּוֹדָה (lashevet, toda) — For here / Dine in, thanks",
+      "situationDistractors": [
+        "לָקַחַת (lakachat) — To go / Takeaway",
+        "בְּלִי סֻכָּר (bli sukar) — Without sugar",
+        "תַּפְעִיל מוֹנֶה (taf'il mone) — Turn on the meter"
+      ]
+    },
+    {
+      "id": "ST_lakachat",
+      "hebrew": "לָקַחַת",
+      "thai": "לָקַחַת",
+      "spoken": "la-ká-chat",
+      "roman": "lakachat",
+      "meaning": "To take away / To go",
+      "unit": 1,
+      "theme": "Street Food",
+      "category": "Dining Option",
+      "tts": "לָקַחַת",
+      "words": [
+        {
+          "he": "לָקַחַת",
+          "th": "לָקַחַת",
+          "ro": "lakachat",
+          "en": "to take / to go"
+        }
+      ],
+      "streetShift": "When you say 'לָקַחַת', the vendor wraps the sandwich tightly in foil and paper, bags it, and adds napkins and pickles on the side for your journey.",
+      "scene": "🥙 Shuk Falafel Stand",
+      "dialogue": {
+        "speakerA": "👨‍🍳 קֻפַּאי (Cashier)",
+        "lineHebrewA": "?זֶה לָשֶׁבֶת פֹּה אוֹ לָקַחַת",
+        "lineSpokenA": "Ze lashevet po o lakachat?",
+        "lineEnglishA": "Is this to sit here or to go?",
+        "ttsA": "זֶה לָשֶׁבֶת פֹּה אוֹ לָקַחַת?",
+        "speakerB": "🙋 אַתָּה (You)",
+        "lineHebrewB": "!לָקַחַת, תַּעֲטֹף לִי טוֹב לַדֶּרֶךְ",
+        "lineSpokenB": "La-ká-chat, ta'atof li tov laderech!",
+        "lineEnglishB": "To go, wrap it tight for the road!",
+        "ttsB": "לָקַחַת, תַּעֲטֹף לִי טוֹב"
+      },
+      "exampleSentence": {
+        "hebrew": "!שְׁתֵּי מָנוֹת פָלָאפֶל לָקַחַת, בְּבַקָּשָׁה",
+        "spoken": "Shtei manot falafel lakachat, bevakasha!",
+        "english": "Two falafel servings to go, please!",
+        "tts": "שְׁתֵּי מָנוֹת פָלָאפֶל לָקַחַת, בְּבַקָּשָׁה"
+      },
+      "situationPrompt": "You are on your lunch break heading back to the office. The bakery cashier asks: '?לָשֶׁבֶת אוֹ לָקַחַת'. What is your answer?",
+      "situationAudio": "זֶה לָשֶׁבֶת פֹּה אוֹ לָקַחַת?",
+      "situationCorrect": "לָקַחַת, בְּבַקָּשָׁה (lakachat, bevakasha) — To go / Takeaway, please",
+      "situationDistractors": [
+        "לָשֶׁבֶת (lashevet) — Dine in",
+        "שְׂמֹאלָה בַּכִּכָּר (smola bakikar) — Left at roundabout",
+        "חַי בְּסֶרֶט (chai beseret) — Living in a movie"
+      ]
+    },
+    {
+      "id": "ST_titchadesh",
+      "hebrew": "תִּתְחַדֵּשׁ",
+      "thai": "תִּתְחַדֵּשׁ",
+      "spoken": "tit-cha-désh",
+      "roman": "titchadesh",
+      "meaning": "'Enjoy your new thing!' (Traditional blessing on any new purchase)",
+      "unit": 1,
+      "theme": "Everyday Hebrew",
+      "category": "Blessing & Politeness",
+      "tts": "תִּתְחַדֵּשׁ",
+      "words": [
+        {
+          "he": "תִּתְחַדֵּשׁ",
+          "th": "תִּתְחַדֵּשׁ",
+          "ro": "titchadesh",
+          "en": "may you be renewed"
+        }
+      ],
+      "streetShift": "When an Israeli buys clothing, shoes, a phone, or gets a haircut, friends and shop owners always say '!תִּתְחַדֵּשׁ' (male) or '!תִּתְחַדְּשִׁי' (female). The standard reply is '!תּוֹדָה רַבָּה'!",
+      "scene": "🛍️ Clothing Boutique, Dizengoff St.",
+      "dialogue": {
+        "speakerA": "👨‍💼 מוֹכֵר (Seller)",
+        "lineHebrewA": "!הִנֵּה הַחֻלְצָה שֶׁלְּךָ, תִּתְחַדֵּשׁ",
+        "lineSpokenA": "Hine hachultza shelcha, tit-cha-désh!",
+        "lineEnglishA": "Here is your shirt, enjoy your new item!",
+        "ttsA": "הִנֵּה הַחֻלְצָה שֶׁלְּךָ, תִּתְחַדֵּשׁ!",
+        "speakerB": "🙋 אַתָּה (You)",
+        "lineHebrewB": "!תּוֹדָה רַבָּה אָחִי, אֵיזֶה כֵּיף",
+        "lineSpokenB": "Toda raba achi, eize kef!",
+        "lineEnglishB": "Thanks so much bro, awesome!",
+        "ttsB": "תּוֹדָה רַבָּה אָחִי"
+      },
+      "exampleSentence": {
+        "hebrew": "!אֵיזֶה נַעֲלַיִם יָפוֹת, תִּתְחַדֵּשׁ",
+        "spoken": "Eize na'alayim yafot, titchadesh!",
+        "english": "What nice shoes, enjoy them!",
+        "tts": "אֵיזֶה נַעֲלַיִם יָפוֹת, תִּתְחַדֵּשׁ"
+      },
+      "situationPrompt": "You just bought a jacket at the market. The shopkeeper hands you the bag with a warm smile and says: '!תִּתְחַדֵּשׁ'. What does he mean?",
+      "situationAudio": "תִּתְחַדֵּשׁ אָחִי!",
+      "situationCorrect": "Enjoy your new purchase! (Traditional congratulatory blessing)",
+      "situationDistractors": [
+        "You owe me more money!",
+        "Hurry up and leave the shop!",
+        "Do you want to exchange this tomorrow?"
+      ]
+    },
+    {
+      "id": "ST_od_mashehu",
+      "hebrew": "עוֹד מַשֶּׁהוּ?",
+      "thai": "עוֹד מַשֶּׁהוּ?",
+      "spoken": "od má-she-hu?",
+      "roman": "od mashehu",
+      "meaning": "Anything else?",
+      "unit": 1,
+      "theme": "Everyday Commerce",
+      "category": "Cashier Question",
+      "tts": "עוֹד מַשֶּׁהוּ?",
+      "words": [
+        {
+          "he": "עוֹד",
+          "th": "עוֹד",
+          "ro": "od",
+          "en": "more / else"
+        },
+        {
+          "he": "מַשֶּׁהוּ",
+          "th": "מַשֶּׁהוּ",
+          "ro": "mashehu",
+          "en": "something"
+        }
+      ],
+      "streetShift": "At every Israeli register before giving the total, the cashier asks '?עוֹד מַשֶּׁהוּ' (anything else? a drink, gum, etc.).",
+      "scene": "🏪 Bakery Register, Allenby St.",
+      "dialogue": {
+        "speakerA": "👨‍💼 קֻפַּאי (Cashier)",
+        "lineHebrewA": "?עוֹד מַשֶּׁהוּ, שְׁתִיָּה אוֹ מַשֶּׁהוּ מָתוֹק",
+        "lineSpokenA": "Od mashehu, shtiya o mashehu matok?",
+        "lineEnglishA": "Anything else, a drink or something sweet?",
+        "ttsA": "עוֹד מַשֶּׁהוּ, שְׁתִיָּה אוֹ מַשֶּׁהוּ מָתוֹק?",
+        "speakerB": "🙋 אַתָּה (You)",
+        "lineHebrewB": "!לֹא תּוֹדָה, זֶה הַכֹּל, אֶפְשָׁר חֶשְׁבּוֹן",
+        "lineSpokenB": "Lo toda, ze hakol, efshar cheshbon!",
+        "lineEnglishB": "No thanks, that's everything, can I pay!",
+        "ttsB": "לֹא תּוֹדָה, זֶה הַכֹּל"
+      },
+      "exampleSentence": {
+        "hebrew": "?עוֹד מַשֶּׁהוּ אָחִי, אוֹ שֶׁנִּסְגֹּר חֶשְׁבּוֹן",
+        "spoken": "Od mashehu achi, o shenisgor cheshbon?",
+        "english": "Anything else bro, or shall we close the check?",
+        "tts": "עוֹד מַשֶּׁהוּ אָחִי, אוֹ שֶׁנִּסְגֹּר חֶשְׁבּוֹן?"
+      },
+      "situationPrompt": "The cashier has rung up your borekas and asks: '?עוֹד מַשֶּׁהוּ'. What is she inquiring about?",
+      "situationAudio": "עוֹד מַשֶּׁהוּ?",
+      "situationCorrect": "Whether you'd like to add anything else to your order",
+      "situationDistractors": [
+        "Whether you are paying by cash or credit card",
+        "What time the store closes",
+        "Whether you liked your food"
+      ]
+    },
+    {
+      "id": "ST_ze_hakol",
+      "hebrew": "זֶה הַכֹּל",
+      "thai": "זֶה הַכֹּל",
+      "spoken": "ze ha-kól",
+      "roman": "ze hakol",
+      "meaning": "That is all / that's everything",
+      "unit": 1,
+      "theme": "Everyday Commerce",
+      "category": "Customer Confirmation",
+      "tts": "זֶה הַכֹּל",
+      "words": [
+        {
+          "he": "זֶה",
+          "th": "זֶה",
+          "ro": "ze",
+          "en": "this is"
+        },
+        {
+          "he": "הַכֹּל",
+          "th": "הַכֹּל",
+          "ro": "hakol",
+          "en": "everything"
+        }
+      ],
+      "streetShift": "When the cashier or vendor asks '?עוֹד מַשֶּׁהוּ', the clean natural response is '!זֶה הַכֹּל' (ze hakol). It signals you are ready for the final bill.",
+      "scene": "🏪 Grocery Checkout, Tel Aviv",
+      "dialogue": {
+        "speakerA": "👨‍💼 קֻפַּאי (Cashier)",
+        "lineHebrewA": "?עוֹד מַשֶּׁהוּ בִּשְׁבִילְךָ",
+        "lineSpokenA": "Od mashehu bishvilcha?",
+        "lineEnglishA": "Anything else for you?",
+        "ttsA": "עוֹד מַשֶּׁהוּ בִּשְׁבִילְךָ?",
+        "speakerB": "🙋 אַתָּה (You)",
+        "lineHebrewB": "!זֶה הַכֹּל, תַּעֲשֶׂה לִי חֶשְׁבּוֹן",
+        "lineSpokenB": "Ze ha-kól, ta'ase li cheshbon!",
+        "lineEnglishB": "That's all, give me the total!",
+        "ttsB": "זֶה הַכֹּל, תַּעֲשֶׂה לִי חֶשְׁבּוֹן"
+      },
+      "exampleSentence": {
+        "hebrew": "!רַק קָפֶה וּמַיִם, זֶה הַכֹּל",
+        "spoken": "Rak kafe umayim, ze hakol!",
+        "english": "Just coffee and water, that's everything!",
+        "tts": "רַק קָפֶה וּמַיִם, זֶה הַכֹּל"
+      },
+      "situationPrompt": "The bakery clerk holds the tongs waiting to see if you want cookies too: '?עוֹד מַשֶּׁהוּ'. You are finished ordering. How do you signal wrap-up?",
+      "situationAudio": "עוֹד מַשֶּׁהוּ בִּשְׁבִילְךָ?",
+      "situationCorrect": "זֶה הַכֹּל, תּוֹדָה (ze hakol, toda) — That's all / that's everything, thanks",
+      "situationDistractors": [
+        "הָפוּך גָּדוֹל (hafuch gadol) — Large cappuccino",
+        "עַל הַפָּנִים (al hapanim) — Terrible",
+        "תַּפְעִיל מוֹנֶה (taf'il mone) — Put on the meter"
+      ]
+    },
+    {
+      "id": "ST_hafuch_gadol",
+      "hebrew": "הָפוּך גָּדוֹל",
+      "thai": "הָפוּך גָּדוֹל",
+      "spoken": "ha-fúch ga-dól",
+      "roman": "hafuch gadol",
+      "meaning": "Large cafe hafuch (Israeli latte / cappuccino)",
+      "unit": 2,
+      "theme": "Coffee Culture",
+      "category": "Drink Order",
+      "tts": "הָפוּך גָּדוֹל",
+      "words": [
+        {
+          "he": "הָפוּך",
+          "th": "הָפוּך",
+          "ro": "hafuch",
+          "en": "upside-down (coffee)"
+        },
+        {
+          "he": "גָּדוֹל",
+          "th": "גָּדוֹל",
+          "ro": "gadol",
+          "en": "large"
+        }
+      ],
+      "streetShift": "'קפה הפוך' (literally 'upside-down coffee') is Israel's national espresso drink: steamed milk first, espresso poured over, topped with velvety foam. Saying 'הפוך גדול' is the most common morning sentence in Tel Aviv.",
+      "scene": "☕ Neighborhood Café, Rothschild Blvd.",
+      "dialogue": {
+        "speakerA": "👩‍💼 בָּרִיסְטָה (Barista)",
+        "lineHebrewA": "?בֹּקֶר טוֹב, מָה בִּשְׁבִילְךָ",
+        "lineSpokenA": "Boker tov, ma bishvilcha?",
+        "lineEnglishA": "Good morning, what can I get you?",
+        "ttsA": "בֹּקֶר טוֹב, מָה בִּשְׁבִילְךָ?",
+        "speakerB": "🙋 אַתָּה (You)",
+        "lineHebrewB": "!הָפוּך גָּדוֹל בְּבַקָּשָׁה, עִם חֲלַב שִׁבּוֹלֶת",
+        "lineSpokenB": "Ha-fúch ga-dól bevakasha, im chalav shibolet!",
+        "lineEnglishB": "A large hafuch please, with oat milk!",
+        "ttsB": "הָפוּך גָּדוֹל בְּבַקָּשָׁה"
+      },
+      "exampleSentence": {
+        "hebrew": "!אֲנִי חַיָּב הָפוּך גָּדוֹל כְּדֵי לְהִתְעוֹרֵר הַבֹּקֶר",
+        "spoken": "Ani chayav hafuch gadol kedei lehit'orer haboker!",
+        "english": "I must have a large hafuch to wake up this morning!",
+        "tts": "אֲנִי חַיָּב הָפוּך גָּדוֹל כְּדֵי לְהִתְעוֹרֵר הַבֹּקֶר"
+      },
+      "situationPrompt": "You walk into Aroma or a hip Tel Aviv cafe at 8:30 AM. The barista looks up: '?מָה תִּרְצֶה'. You want Israel's signature large layered latte. What do you order?",
+      "situationAudio": "בֹּקֶר טוֹב, מָה בִּשְׁבִילְךָ?",
+      "situationCorrect": "הָפוּך גָּדוֹל, בְּבַקָּשָׁה (hafuch gadol, bevakasha) — Large cafe hafuch, please",
+      "situationDistractors": [
+        "בְּלִי עַמְבָּה (bli amba) — Without amba",
+        "אֵין מַצָּב (ein matzav) — No way",
+        "קַבָּלָה בְּסִמְס (kabala besms) — Receipt by text"
+      ]
+    },
+    {
+      "id": "ST_chalav_shibolet",
+      "hebrew": "חֲלַב שִׁבּוֹלֶת",
+      "thai": "חֲלַב שִׁבּוֹלֶת",
+      "spoken": "cha-láv shi-bó-let",
+      "roman": "chalav shibolet",
+      "meaning": "Oat milk (short for חלב שיבולת שועל)",
+      "unit": 2,
+      "theme": "Coffee Culture",
+      "category": "Milk Choice",
+      "tts": "חֲלַב שִׁבּוֹלֶת",
+      "words": [
+        {
+          "he": "חֲלַב",
+          "th": "חֲלַב",
+          "ro": "chalav",
+          "en": "milk of"
+        },
+        {
+          "he": "שִׁבּוֹלֶת",
+          "th": "שִׁבּוֹלֶת",
+          "ro": "shibolet",
+          "en": "oat"
+        }
+      ],
+      "streetShift": "Israel has the highest per-capita vegan population in the world, and oat milk is offered at 100% of coffee shops without question. Locals abbreviate 'חלב שיבולת שועל' to just 'חלב שיבולת'.",
+      "scene": "☕ Cafe Counter, Basel St.",
+      "dialogue": {
+        "speakerA": "👩‍💼 בָּרִיסְטָה (Barista)",
+        "lineHebrewA": "?עִם אֵיזֶה חָלָב לַעֲשׂוֹת לְךָ אֶת הַקָּפֶה",
+        "lineSpokenA": "Im eize chalav la'asot lecha et hakafe?",
+        "lineEnglishA": "With what milk should I make your coffee?",
+        "ttsA": "עִם אֵיזֶה חָלָב לַעֲשׂוֹת לְךָ?",
+        "speakerB": "🙋 אַתָּה (You)",
+        "lineHebrewB": "!עִם חֲלַב שִׁבּוֹלֶת, בְּבַקָּשָׁה",
+        "lineSpokenB": "Im cha-láv shi-bó-let, be-va-ka-shá!",
+        "lineEnglishB": "With oat milk, please!",
+        "ttsB": "עִם חֲלַב שִׁבּוֹלֶת, בְּבַקָּשָׁה"
+      },
+      "exampleSentence": {
+        "hebrew": "!קָפֶה קַר עִם חֲלַב שִׁבּוֹלֶת זֶה הֲכִי טָעִים בַּקַּיִץ",
+        "spoken": "Kafe kar im chalav shibolet ze hachi taim bakayitz!",
+        "english": "Iced coffee with oat milk is the tastiest in summer!",
+        "tts": "קָפֶה קַר עִם חֲלַב שִׁבּוֹלֶת זֶה הֲכִי טָעִים"
+      },
+      "situationPrompt": "You ordered a cappuccino and the barista asks: '?עִם אֵיזֶה חָלָב' (Which milk?). You want oat milk. How do you specify?",
+      "situationAudio": "עִם אֵיזֶה חָלָב לַעֲשׂוֹת לְךָ?",
+      "situationCorrect": "חֲלַב שִׁבּוֹלֶת, בְּבַקָּשָׁה (chalav shibolet, bevakasha) — Oat milk, please",
+      "situationDistractors": [
+        "הַרְבֵּה חָרִיף (harbe charif) — Plenty of spicy",
+        "תַּפְעִיל מוֹנֶה (taf'il mone) — Turn on the meter",
+        "יָשָׁר יָשָׁר (yashar yashar) — Straight ahead"
+      ]
+    },
+    {
+      "id": "ST_bli_sukar",
+      "hebrew": "בְּלִי סֻכָּר",
+      "thai": "בְּלִי סֻכָּר",
+      "spoken": "bli su-kár",
+      "roman": "bli sukar",
+      "meaning": "Without sugar / Unsweetened",
+      "unit": 2,
+      "theme": "Coffee Culture",
+      "category": "Customization",
+      "tts": "בְּלִי סֻכָּר",
+      "words": [
+        {
+          "he": "בְּלִי",
+          "th": "בְּלִי",
+          "ro": "bli",
+          "en": "without"
+        },
+        {
+          "he": "סֻכָּר",
+          "th": "סֻכָּר",
+          "ro": "sukar",
+          "en": "sugar"
+        }
+      ],
+      "streetShift": "If you don't mention sugar, Israeli baristas leave it unsweetened and point you to the sugar caddy on the counter. Saying 'בלי סוכר' confirms you want it pure.",
+      "scene": "☕ Cafe Counter, Shenkin St.",
+      "dialogue": {
+        "speakerA": "👩‍💼 בָּרִיסְטָה (Barista)",
+        "lineHebrewA": "?לָשִׂים לְךָ סֻכָּר בַּקָּפֶה",
+        "lineSpokenA": "Lasim lecha sukar bakafe?",
+        "lineEnglishA": "Put sugar in your coffee?",
+        "ttsA": "לָשִׂים לְךָ סֻכָּר בַּקָּפֶה?",
+        "speakerB": "🙋 אַתָּה (You)",
+        "lineHebrewB": "!לֹא, בְּלִי סֻכָּר בִּכְלָל, תּוֹדָה",
+        "lineSpokenB": "Lo, bli su-kár bich-lál, to-dá!",
+        "lineEnglishB": "No, no sugar at all, thanks!",
+        "ttsB": "לֹא, בְּלִי סֻכָּר בִּכְלָל"
+      },
+      "exampleSentence": {
+        "hebrew": "!אֲנִי תָּמִיד שׁוֹתֶה תֵּה וְקָפֶה בְּלִי סֻכָּר",
+        "spoken": "Ani tamid shote te vekafe bli sukar!",
+        "english": "I always drink tea and coffee without sugar!",
+        "tts": "אֲנִי תָּמִיד שׁוֹתֶה קָפֶה בְּלִי סֻכָּר"
+      },
+      "situationPrompt": "The barista pauses with a spoon over the sugar container: '?כַּמָּה סֻכָּר' (How much sugar?). You prefer unsweetened. What do you say?",
+      "situationAudio": "לָשִׂים לְךָ סֻכָּר בַּקָּפֶה?",
+      "situationCorrect": "בְּלִי סֻכָּר, תּוֹדָה (bli sukar, toda) — Without sugar, thanks",
+      "situationDistractors": [
+        "עִם הַכֹּל (im hakol) — With everything",
+        "בְּאַשְׁרַאי (be'ashrai) — By credit card",
+        "עַל הַפָּנִים (al hapanim) — Awful / In shambles"
+      ]
+    },
+    {
+      "id": "ST_hafuch_chalash",
+      "hebrew": "הָפוּך חַלָּשׁ",
+      "thai": "הָפוּך חַלָּשׁ",
+      "spoken": "ha-fúch cha-lásh",
+      "roman": "hafuch chalash",
+      "meaning": "Mild / weak cappuccino (single light espresso shot)",
+      "unit": 2,
+      "theme": "Coffee Culture",
+      "category": "Strength Choice",
+      "tts": "הָפוּך חַלָּשׁ",
+      "words": [
+        {
+          "he": "הָפוּך",
+          "th": "הָפוּך",
+          "ro": "hafuch",
+          "en": "cappuccino"
+        },
+        {
+          "he": "חַלָּשׁ",
+          "th": "חַלָּשׁ",
+          "ro": "chalash",
+          "en": "weak / mild"
+        }
+      ],
+      "streetShift": "Standard Israeli espresso roasts are bold and dark. If you are sensitive to caffeine or drinking coffee late in the afternoon, order 'הפוך חלש' (mild hafuch) or 'הפוך חזק' (strong hafuch with an extra shot).",
+      "scene": "☕ Evening Café, Dizengoff Square",
+      "dialogue": {
+        "speakerA": "👩‍💼 בָּרִיסְטָה (Barista)",
+        "lineHebrewA": "?רוֹצֶה אֶת הַקָּפֶה חָזָק אוֹ חַלָּשׁ",
+        "lineSpokenA": "Rotze et hakafe chazak o chalash?",
+        "lineEnglishA": "Do you want the coffee strong or mild?",
+        "ttsA": "רוֹצֶה אֶת הַקָּפֶה חָזָק אוֹ חַלָּשׁ?",
+        "speakerB": "🙋 אַתָּה (You)",
+        "lineHebrewB": "!הָפוּך חַלָּשׁ, עֶרֶב עַכְשָׁו",
+        "lineSpokenB": "Ha-fúch cha-lásh, érev ach-sháv!",
+        "lineEnglishB": "Mild hafuch, it's evening now!",
+        "ttsB": "הָפוּך חַלָּשׁ, בְּבַקָּשָׁה"
+      },
+      "exampleSentence": {
+        "hebrew": "!בַּלַּיְלָה אֲנִי מַזְמִין רַק הָפוּך חַלָּשׁ",
+        "spoken": "Balayla ani mazmin rak hafuch chalash!",
+        "english": "At night I only order a mild hafuch!",
+        "tts": "בַּלַּיְלָה אֲנִי מַזְמִין רַק הָפוּך חַלָּשׁ"
+      },
+      "situationPrompt": "It's 6:00 PM and you want a warm milky coffee without staying awake all night. What specific drink type do you ask the barista for?",
+      "situationAudio": "רוֹצֶה אֶת הַקָּפֶה חָזָק אוֹ חַלָּשׁ?",
+      "situationCorrect": "הָפוּך חַלָּשׁ (hafuch chalash) — Mild / single-shot cappuccino",
+      "situationDistractors": [
+        "הַרְבֵּה חָרִיף (harbe charif) — Plenty of spicy",
+        "בְּלִי עַמְבָּה (bli amba) — Without amba",
+        "תִּסְגֹּר לִי (tisgor li) — Close my tab"
+      ]
+    },
+    {
+      "id": "ST_kar",
+      "hebrew": "קַר",
+      "thai": "קַר",
+      "spoken": "kar",
+      "roman": "kar",
+      "meaning": "Cold / Iced (e.g. קָפֶה קַר — unsweetened iced coffee)",
+      "unit": 2,
+      "theme": "Coffee Culture",
+      "category": "Temperature Choice",
+      "tts": "קָפֶה קַר",
+      "words": [
+        {
+          "he": "קַר",
+          "th": "קַר",
+          "ro": "kar",
+          "en": "cold"
+        }
+      ],
+      "streetShift": "Note the big cultural difference: 'קָפֶה קַר' (kafe kar) is real iced espresso over cold milk with ice cubes. In contrast, 'אַיְיס קָפֶה' (ice cafe) refers to the sweet slushy machine drink from Aroma!",
+      "scene": "☕ Beach Kiosk, Tel Aviv Boardwalk",
+      "dialogue": {
+        "speakerA": "👩‍💼 בָּרִיסְטָה (Barista)",
+        "lineHebrewA": "?חַם אוֹ קַר",
+        "lineSpokenA": "Cham o kar?",
+        "lineEnglishA": "Hot or iced?",
+        "ttsA": "חַם אוֹ קַר?",
+        "speakerB": "🙋 אַתָּה (You)",
+        "lineHebrewB": "!קַר, מַמָּשׁ חַם בַּחוּץ הַיּוֹם",
+        "lineSpokenB": "Kar, mamash cham bachutz hayom!",
+        "lineEnglishB": "Iced, it's really hot outside today!",
+        "ttsB": "קַפֶה קַר, בְּבַקָּשָׁה"
+      },
+      "exampleSentence": {
+        "hebrew": "!בַּקַּיִץ כֻּלָּם שׁוֹתִים קָפֶה קַר בַּיָּם",
+        "spoken": "Bakayitz kulam shotim kafe kar bayam!",
+        "english": "In summer everyone drinks iced coffee at the beach!",
+        "tts": "בַּקַּיִץ כֻּלָּם שׁוֹתִים קָפֶה קַר"
+      },
+      "situationPrompt": "It's 34°C (93°F) in July on Bograshov St. The barista asks: '?חַם אוֹ קַר' (Hot or iced?). What 1-word answer do you give?",
+      "situationAudio": "חַם אוֹ קַר?",
+      "situationCorrect": "קַר, בְּבַקָּשָׁה (kar, bevakasha) — Iced / Cold, please",
+      "situationDistractors": [
+        "חַם (cham) — Hot",
+        "לָקַחַת (lakachat) — Takeaway",
+        "מוֹנֶה (mone) — Meter"
+      ]
+    },
+    {
+      "id": "ST_efshar_cheshbon",
+      "hebrew": "אֶפְשָׁר חֶשְׁבּוֹן?",
+      "thai": "אֶפְשָׁר חֶשְׁבּוֹן?",
+      "spoken": "ef-shár chesh-bón?",
+      "roman": "efshar cheshbon",
+      "meaning": "Can I have the check / bill please?",
+      "unit": 2,
+      "theme": "Everyday Commerce",
+      "category": "Paying & Leaving",
+      "tts": "אֶפְשָׁר חֶשְׁבּוֹן?",
+      "words": [
+        {
+          "he": "אֶפְשָׁר",
+          "th": "אֶפְשָׁר",
+          "ro": "efshar",
+          "en": "is it possible / can I"
+        },
+        {
+          "he": "חֶשְׁבּוֹן",
+          "th": "חֶשְׁבּוֹן",
+          "ro": "cheshbon",
+          "en": "bill / calculation"
+        }
+      ],
+      "streetShift": "In Israel, servers almost never bring the check unprompted—it's considered rude to rush diners. You must catch the server's eye and say: '?אֶפְשָׁר חֶשְׁבּוֹן' (or make the universal check-scribble hand gesture).",
+      "scene": "🍽️ Restaurant Patio, Neve Tzedek",
+      "dialogue": {
+        "speakerA": "🙋 אַתָּה (You)",
+        "lineHebrewA": "?סְלִיחָה, אֶפְשָׁר חֶשְׁבּוֹן",
+        "lineSpokenA": "Slicha, ef-shár chesh-bón?",
+        "lineEnglishA": "Excuse me, can we have the bill?",
+        "ttsA": "סְלִיחָה, אֶפְשָׁר חֶשְׁבּוֹן?",
+        "speakerB": "👨‍💼 מֶלְצָר (Waiter)",
+        "lineHebrewB": "!בֶּטַח, כְּבָר מֵבִיא לָכֶם",
+        "lineSpokenB": "Bétach, kvar mevi lachem!",
+        "lineEnglishB": "Sure, bringing it right over to you!",
+        "ttsB": "בֶּטַח, כְּבָר מֵבִיא לָכֶם"
+      },
+      "exampleSentence": {
+        "hebrew": "?סִיַּמְנוּ לֶאֱכֹל, אֶפְשָׁר חֶשְׁבּוֹן בְּבַקָּשָׁה",
+        "spoken": "Siyamnu le'echol, efshar cheshbon bevakasha?",
+        "english": "We finished eating, can we have the check please?",
+        "tts": "סִיַּמְנוּ לֶאֱכֹל, אֶפְשָׁר חֶשְׁבּוֹן בְּבַקָּשָׁה?"
+      },
+      "situationPrompt": "You and your friends finished dinner. Plates have been cleared for 20 minutes and you want to leave. What phrase do you call to the server?",
+      "situationAudio": "סְלִיחָה, אֶפְשָׁר חֶשְׁבּוֹן?",
+      "situationCorrect": "אֶפְשָׁר חֶשְׁבּוֹן? (efshar cheshbon?) — Can I have the check please?",
+      "situationDistractors": [
+        "מָה פִּתְאוֹם?! (ma pit'om?!) — Are you kidding?!",
+        "עִם הַכֹּל (im hakol) — With everything",
+        "יְמִינָה בָּרַמְזוֹר (yemina baramzor) — Right at the light"
+      ]
+    },
+    {
+      "id": "ST_tisgor_li",
+      "hebrew": "תִּסְגֹּר לִי",
+      "thai": "תִּסְגֹּר לִי",
+      "spoken": "tis-gór li",
+      "roman": "tisgor li",
+      "meaning": "Close my tab / finalize my bill (literally: close for me)",
+      "unit": 2,
+      "theme": "Nightlife & Bars",
+      "category": "Bar Checkout",
+      "tts": "תִּסְגֹּר לִי",
+      "words": [
+        {
+          "he": "תִּסְגֹּר",
+          "th": "תִּסְגֹּר",
+          "ro": "tisgor",
+          "en": "close (command/future)"
+        },
+        {
+          "he": "לִי",
+          "th": "לִי",
+          "ro": "li",
+          "en": "for me"
+        }
+      ],
+      "streetShift": "At lively Tel Aviv bars and pubs where you gave a card to open an open tab, say to the bartender: '!תִּסְגֹּר לִי' (close my tab) instead of the formal 'אפשר חשבון'.",
+      "scene": "🍸 Crowded Bar, Florentin",
+      "dialogue": {
+        "speakerA": "🙋 אַתָּה (You)",
+        "lineHebrewA": "!אָחִי, תִּסְגֹּר לִי שָׁם בַּבָּר",
+        "lineSpokenA": "Achi, tis-gór li sham ba-bar!",
+        "lineEnglishA": "Bro, close my tab over at the bar!",
+        "ttsA": "אָחִי, תִּסְגֹּר לִי שָׁם בַּבָּר",
+        "speakerB": "👨‍💼 בַּרְמֶן (Bartender)",
+        "lineHebrewB": "!סָגוּר גֶּבֶר, שְׁמוֹנִים שֶׁקֶל",
+        "lineSpokenB": "Sagur gever, shmonim shekel!",
+        "lineEnglishB": "Done man, eighty shekels!",
+        "ttsB": "סָגוּר גֶּבֶר, שְׁמוֹנִים שֶׁקֶל"
+      },
+      "exampleSentence": {
+        "hebrew": "!אֲנִי הוֹלֵךְ, תִּסְגֹּר לִי אֶת הַחֶשְׁבּוֹן",
+        "spoken": "Ani holech, tisgor li et hacheshbon!",
+        "english": "I'm leaving, close my tab for me!",
+        "tts": "אֲנִי הוֹלֵךְ, תִּסְגֹּר לִי אֶת הַחֶשְׁבּוֹן"
+      },
+      "situationPrompt": "You're at a crowded neighborhood pub in Florentin and ready to leave. You opened a tab with your name on it. What casual 2-word phrase do you say to the bartender?",
+      "situationAudio": "אָחִי, תִּסְגֹּר לִי שָׁם בַּבָּר!",
+      "situationCorrect": "תִּסְגֹּר לִי (tisgor li) — Close my tab",
+      "situationDistractors": [
+        "בְּלִי עַמְבָּה (bli amba) — Without amba",
+        "תַּחֲנָה הַבָּאָה (tachana haba'a) — Next stop",
+        "חַי בְּסֶרֶט (chai beseret) — Living in a movie"
+      ]
+    },
+    {
+      "id": "ST_ashrai_o_mizuman",
+      "hebrew": "אַשְׁרַאי אוֹ מְזֻמָּן?",
+      "thai": "אַשְׁרַאי אוֹ מְזֻמָּן?",
+      "spoken": "ash-rái o me-zu-mán?",
+      "roman": "ashrai o mezuman",
+      "meaning": "Credit card or cash?",
+      "unit": 2,
+      "theme": "Everyday Commerce",
+      "category": "Payment Method",
+      "tts": "אַשְׁרַאי אוֹ מְזֻמָּן?",
+      "words": [
+        {
+          "he": "אַשְׁרַאי",
+          "th": "אַשְׁרַאי",
+          "ro": "ashrai",
+          "en": "credit"
+        },
+        {
+          "he": "אוֹ",
+          "th": "אוֹ",
+          "ro": "o",
+          "en": "or"
+        },
+        {
+          "he": "מְזֻמָּן",
+          "th": "מְזֻמָּן",
+          "ro": "mezuman",
+          "en": "cash"
+        }
+      ],
+      "streetShift": "Israel is virtually 95% cashless today (Apple Pay, contactless chip, and Bit app dominate). Still, servers and cashiers always ask '?אַשְׁרַאי אוֹ מְזֻמָּן' to set up the terminal.",
+      "scene": "🧾 Checkout Register, Dizengoff Center",
+      "dialogue": {
+        "speakerA": "👨‍💼 קֻפַּאי (Cashier)",
+        "lineHebrewA": "?אַשְׁרַאי אוֹ מְזֻמָּן",
+        "lineSpokenA": "Ash-rái o me-zu-mán?",
+        "lineEnglishA": "Credit card or cash?",
+        "ttsA": "אַשְׁרַאי אוֹ מְזֻמָּן?",
+        "speakerB": "🙋 אַתָּה (You)",
+        "lineHebrewB": "!בְּאַשְׁרַאי בְּבַקָּשָׁה, בַּטֶּלֶפוֹן",
+        "lineSpokenB": "Be'ashrai bevakasha, batelefon!",
+        "lineEnglishB": "Credit please, on my phone!",
+        "ttsB": "בְּאַשְׁרַאי בְּבַקָּשָׁה"
+      },
+      "exampleSentence": {
+        "hebrew": "?אֶפְשָׁר לְשַׁלֵּם בְּאַשְׁרַאי, אוֹ רַק מְזֻמָּן",
+        "spoken": "Efshar leshalem be'ashrai, o rak mezuman?",
+        "english": "Can I pay by credit card, or only cash?",
+        "tts": "אֶפְשָׁר לְשַׁלֵּם בְּאַשְׁרַאי?"
+      },
+      "situationPrompt": "You step up to pay at a boutique. The cashier holds the portable credit terminal and asks: '?אַשְׁרַאי אוֹ מְזֻמָּן'. What is she asking?",
+      "situationAudio": "אַשְׁרַאי אוֹ מְזֻמָּן?",
+      "situationCorrect": "Whether you want to pay by credit card or cash",
+      "situationDistractors": [
+        "Whether you want to sit inside or outside",
+        "Whether you want a paper receipt or SMS",
+        "Whether you want hot or cold coffee"
+      ]
+    },
+    {
+      "id": "ST_tip_bifnim",
+      "hebrew": "טִיפּ בִּפְנִים",
+      "thai": "טִיפּ בִּפְנִים",
+      "spoken": "tip bif-ním",
+      "roman": "tip bifnim",
+      "meaning": "Tip included inside (added to card charge)",
+      "unit": 2,
+      "theme": "Everyday Commerce",
+      "category": "Tipping Etiquette",
+      "tts": "טִיפּ בִּפְנִים",
+      "words": [
+        {
+          "he": "טִיפּ",
+          "th": "טִיפּ",
+          "ro": "tip",
+          "en": "gratuity tip"
+        },
+        {
+          "he": "בִּפְנִים",
+          "th": "בִּפְנִים",
+          "ro": "bifnim",
+          "en": "inside"
+        }
+      ],
+      "streetShift": "Standard tipping in Israeli dining is 12% to 15%. When handing your card to the server, you say '!טִיפּ בִּפְנִים' or tell them the total amount including tip (e.g., 'תעשה שמונים עם הטיפ').",
+      "scene": "🍽️ Cafe Patio, Nahalat Binyamin",
+      "dialogue": {
+        "speakerA": "👨‍💼 מֶלְצָר (Waiter)",
+        "lineHebrewA": "?לְהוֹסִיף שֵׁרוּת בַּכַּרְטִיס",
+        "lineSpokenA": "Lehosif sherut bakartis?",
+        "lineEnglishA": "Should I add service onto the card?",
+        "ttsA": "לְהוֹסִיף שֵׁרוּת בַּכַּרְטִיס?",
+        "speakerB": "🙋 אַתָּה (You)",
+        "lineHebrewB": "!כֵּן, תּוֹסִיף חֲמִשָּׁה-עָשָׂר אָחוּז, טִיפּ בִּפְנִים",
+        "lineSpokenB": "Ken, tosif chamisha-asar achuz, tip bif-ním!",
+        "lineEnglishB": "Yes, add 15%, tip included inside!",
+        "ttsB": "טִיפּ בִּפְנִים, תּוֹדָה"
+      },
+      "exampleSentence": {
+        "hebrew": "!שִׁלַּמְתִּי מֵאָה שֶׁקֶל כּוֹלֵל טִיפּ בִּפְנִים",
+        "spoken": "Shilamti me'a shekel kolel tip bifnim!",
+        "english": "I paid 100 shekels including the tip inside!",
+        "tts": "שִׁלַּמְתִּי כּוֹלֵל טִיפּ בִּפְנִים"
+      },
+      "situationPrompt": "The server presents the card terminal with your 90 NIS bill. You want to round it to 105 NIS so the 15 NIS tip is charged directly to your card. What phrase do you tell him?",
+      "situationAudio": "לְהוֹסִיף שֵׁרוּת בַּכַּרְטִיס?",
+      "situationCorrect": "טִיפּ בִּפְנִים (tip bifnim) — Tip included inside",
+      "situationDistractors": [
+        "בְּלִי סֻכָּר (bli sukar) — Without sugar",
+        "שְׂמֹאלָה בַּכִּכָּר (smola bakikar) — Left at roundabout",
+        "עַל הַפָּנִים (al hapanim) — Terrible"
+      ]
+    },
+    {
+      "id": "ST_bit",
+      "hebrew": "בִּיט",
+      "thai": "בִּיט",
+      "spoken": "bit",
+      "roman": "bit",
+      "meaning": "Bit (Israel's universal peer-to-peer phone payment app)",
+      "unit": 2,
+      "theme": "Daily Life Tech",
+      "category": "Payment Tech",
+      "tts": "בִּיט",
+      "words": [
+        {
+          "he": "בִּיט",
+          "th": "בִּיט",
+          "ro": "bit",
+          "en": "Bit app"
+        }
+      ],
+      "streetShift": "Bit (by Bank Hapoalim) is so ubiquitous in Israel that it became an everyday verb: 'תַּבְיֵיט לִי' (Bit me the money!). Small corner shops, markets, barbers, and friends split bills via Bit 24/7.",
+      "scene": "🏪 AM:PM Kiosk, Ben Yehuda St.",
+      "dialogue": {
+        "speakerA": "🙋 חָבֵר (Friend)",
+        "lineHebrewA": "?אֵין לִי מְזֻמָּן, אֵיךְ לְהַחְזִיר לְךָ",
+        "lineSpokenA": "Ein li mezuman, eich lehachzir lecha?",
+        "lineEnglishA": "I don't have cash, how should I pay you back?",
+        "ttsA": "אֵיךְ לְהַחְזִיר לְךָ?",
+        "speakerB": "🙋 אַתָּה (You)",
+        "lineHebrewB": "!פָּשׁוּט תַּעֲבִיר לִי בְּבִּיט",
+        "lineSpokenB": "Pashut ta'avir li be-Bit!",
+        "lineEnglishB": "Just transfer it to me on Bit!",
+        "ttsB": "תַּעֲבִיר לִי בְּבִּיט"
+      },
+      "exampleSentence": {
+        "hebrew": "!שָׁלַחְתִּי לְךָ חֲמִשִּׁים שֶׁקֶל בְּבִּיט עַל הַפִּיצָה",
+        "spoken": "Shalachti lecha chamishim shekel be-Bit al hapitza!",
+        "english": "I sent you 50 shekels on Bit for the pizza!",
+        "tts": "שָׁלַחְתִּי לְךָ בְּבִּיט עַל הַפִּיצָה"
+      },
+      "situationPrompt": "You covered your coworker's lunch bill. He opens his wallet and realizes he has no cash. What universal Israeli app do you tell him to use?",
+      "situationAudio": "אֵיךְ לְהַחְזִיר לְךָ?",
+      "situationCorrect": "תַּעֲבִיר לִי בְּבִּיט (ta'avir li be-bit) — Transfer it to me on Bit",
+      "situationDistractors": [
+        "שִׂים מוֹנֶה (sim mone) — Turn on the meter",
+        "רַב-קַו (rav-kav) — Transit card",
+        "בְּלִי עַמְבָּה (bli amba) — Without amba"
+      ]
+    },
+    {
+      "id": "ST_kabala_besms",
+      "hebrew": "קַבָּלָה בְּסִמְס?",
+      "thai": "קַבָּלָה בְּסִמְס?",
+      "spoken": "ka-ba-lá be-e-se-m-es?",
+      "roman": "kabala besms",
+      "meaning": "Receipt via SMS text message?",
+      "unit": 2,
+      "theme": "Supermarket & Retail",
+      "category": "Checkout Question",
+      "tts": "קַבָּלָה בְּסִמְס?",
+      "words": [
+        {
+          "he": "קַבָּלָה",
+          "th": "קַבָּלָה",
+          "ro": "kabala",
+          "en": "receipt"
+        },
+        {
+          "he": "בְּסִמְס",
+          "th": "בְּסִמְס",
+          "ro": "be-SMS",
+          "en": "by text message"
+        }
+      ],
+      "streetShift": "Israeli retail laws allow stores to avoid printing paper receipts. At Super-Pharm, Shufersal, and AM:PM, the cashier will prompt '?קַבָּלָה בְּסִמְס אוֹ מֻדְפֶּסֶת' (SMS or printed receipt?).",
+      "scene": "🏪 Super-Pharm Register, Tel Aviv",
+      "dialogue": {
+        "speakerA": "👨‍💼 קֻפַּאי (Cashier)",
+        "lineHebrewA": "?רוֹצֶה קַבָּלָה בְּסִמְס לַטֶּלֶפוֹן",
+        "lineSpokenA": "Rotze kabala be-SMS latelefon?",
+        "lineEnglishA": "Want receipt via SMS text to your phone?",
+        "ttsA": "רוֹצֶה קַבָּלָה בְּסִמְס?",
+        "speakerB": "🙋 אַתָּה (You)",
+        "lineHebrewB": "!לֹא תּוֹדָה, אֵין צֹרֶךְ",
+        "lineSpokenB": "Lo toda, ein tzorech!",
+        "lineEnglishB": "No thanks, no need!",
+        "ttsB": "לֹא תּוֹדָה, אֵין צֹרֶךְ"
+      },
+      "exampleSentence": {
+        "hebrew": "!אֲנִי תָּמִיד לוֹקֵחַ קַבָּלָה בְּסִמְס כְּדֵי לִשְׁמֹר עַל הַסְּבִיבָה",
+        "spoken": "Ani tamid lokeach kabala be-SMS kedei lishmor al hasviva!",
+        "english": "I always take an SMS receipt to save the environment!",
+        "tts": "אֲנִי לוֹקֵחַ קַבָּלָה בְּסִמְס"
+      },
+      "situationPrompt": "You pay for sunscreen at Super-Pharm. The cashier types your number and asks: '?קַבָּלָה בְּסִמְס'. What is he asking?",
+      "situationAudio": "רוֹצֶה קַבָּלָה בְּסִמְס?",
+      "situationCorrect": "Whether you want your sales receipt texted to your phone",
+      "situationDistractors": [
+        "Whether you want to pay with credit or cash",
+        "Whether you need a shopping cart",
+        "Whether you have a club membership discount"
+      ]
+    },
+    {
+      "id": "ST_tsarich_sakit",
+      "hebrew": "צָרִיךְ שַׂקִּית?",
+      "thai": "צָרִיךְ שַׂקִּית?",
+      "spoken": "tsa-rích sa-kít?",
+      "roman": "tsarich sakit",
+      "meaning": "Do you need a shopping bag? (Costs 10 agorot by law)",
+      "unit": 2,
+      "theme": "Supermarket & Retail",
+      "category": "Checkout Question",
+      "tts": "צָרִיךְ שַׂקִּית?",
+      "words": [
+        {
+          "he": "צָרִיךְ",
+          "th": "צָרִיךְ",
+          "ro": "tsarich",
+          "en": "need (m)"
+        },
+        {
+          "he": "שַׂקִּית",
+          "th": "שַׂקִּית",
+          "ro": "sakit",
+          "en": "plastic bag"
+        }
+      ],
+      "streetShift": "Israeli law mandates a small fee for plastic shopping bags at grocery stores. The cashier will always ask '?צָרִיךְ שַׂקִּית' (need a bag?) so they know whether to add the fee to your total.",
+      "scene": "🏪 AM:PM Market, Gordon St.",
+      "dialogue": {
+        "speakerA": "👨‍💼 קֻפַּאי (Cashier)",
+        "lineHebrewA": "?צָרִיךְ שַׂקִּית לַמִּצְרָכִים",
+        "lineSpokenA": "Tsarich sakit lamitrozim?",
+        "lineEnglishA": "Do you need a bag for the groceries?",
+        "ttsA": "צָרִיךְ שַׂקִּית?",
+        "speakerB": "🙋 אַתָּה (You)",
+        "lineHebrewB": "!לֹא תּוֹדָה, הֵבֵאתִי תִּיק מֵהַבַּיִת",
+        "lineSpokenB": "Lo toda, heveti tik mehabayit!",
+        "lineEnglishB": "No thanks, I brought a backpack from home!",
+        "ttsB": "לֹא תּוֹדָה, יֵשׁ לִי תִּיק"
+      },
+      "exampleSentence": {
+        "hebrew": "!שַׂקִּית אַחַת בְּבַקָּשָׁה, יֵשׁ לִי הַרְבֵּה דְּבָרִים",
+        "spoken": "Sakit achat bevakasha, yesh li harbe dvarim!",
+        "english": "One bag please, I have many items!",
+        "tts": "שַׂקִּית אַחַת בְּבַקָּשָׁה"
+      },
+      "situationPrompt": "At the checkout register, the clerk has bagged nothing and asks: '?צָרִיךְ שַׂקִּית'. What is she asking you?",
+      "situationAudio": "צָרִיךְ שַׂקִּית?",
+      "situationCorrect": "Do you need a shopping bag? (fee applies)",
+      "situationDistractors": [
+        "Do you want a receipt?",
+        "Are you paying with cash?",
+        "Do you need directions to the bus stop?"
+      ]
+    },
+    {
+      "id": "ST_gett",
+      "hebrew": "גֶּט",
+      "thai": "גֶּט",
+      "spoken": "get",
+      "roman": "gett",
+      "meaning": "Gett (Israel's universal taxi-hailing app)",
+      "unit": 3,
+      "theme": "Taxis & Navigation",
+      "category": "Transit App",
+      "tts": "גֶּט",
+      "words": [
+        {
+          "he": "גֶּט",
+          "th": "גֶּט",
+          "ro": "get",
+          "en": "Gett taxi app"
+        }
+      ],
+      "streetShift": "Uber in Israel works almost entirely with licensed taxis through Gett. Saying 'בוא נזמין גט' (let's order a Gett) is the universal way to summon a cab from your phone.",
+      "scene": "🚕 Street Corner, Ibn Gabirol St.",
+      "dialogue": {
+        "speakerA": "🙋 חָבֵר (Friend)",
+        "lineHebrewA": "?אֵיךְ נַגִּיעַ לַחוֹף עַכְשָׁו",
+        "lineSpokenA": "Eich nagia lachof achshav?",
+        "lineEnglishA": "How will we get to the beach now?",
+        "ttsA": "אֵיךְ נַגִּיעַ לַחוֹף עַכְשָׁו?",
+        "speakerB": "🙋 אַתָּה (You)",
+        "lineHebrewB": "!נַזְמִין גֶּט, מַגִּיעַ עוֹד שְׁתֵּי דַּקּוֹת",
+        "lineSpokenB": "Nazmin Gett, magia od shtei dakot!",
+        "lineEnglishB": "Let's order a Gett, arriving in 2 minutes!",
+        "ttsB": "נַזְמִין גֶּט, מַגִּיעַ מַהֵר"
+      },
+      "exampleSentence": {
+        "hebrew": "!הִזְמַנְתִּי גֶּט, הַנַּהָג כְּבָר לְמַטָּה",
+        "spoken": "Hizmanti Gett, hanahag kvar lemata!",
+        "english": "I ordered a Gett, the driver is already downstairs!",
+        "tts": "הִזְמַנְתִּי גֶּט, הַנַּהָג לְמַטָּה"
+      },
+      "situationPrompt": "You and your friends are leaving a party late at night with no buses running. How do you propose hailing a ride via smartphone?",
+      "situationAudio": "אֵיךְ נַגִּיעַ לַחוֹף?",
+      "situationCorrect": "נַזְמִין גֶּט (nazmin gett) — Let's order a Gett taxi",
+      "situationDistractors": [
+        "הָפוּך גָּדוֹל (hafuch gadol) — Large cappuccino",
+        "בְּלִי סֻכָּר (bli sukar) — Without sugar",
+        "עַל הַפָּנִים (al hapanim) — Terrible"
+      ]
+    },
+    {
+      "id": "ST_mone",
+      "hebrew": "מוֹנֶה",
+      "thai": "מוֹנֶה",
+      "spoken": "mo-né",
+      "roman": "mone",
+      "meaning": "Taximeter (insisting on the legal meter fare)",
+      "unit": 3,
+      "theme": "Taxis & Navigation",
+      "category": "Taxi Fare",
+      "tts": "מוֹנֶה",
+      "words": [
+        {
+          "he": "מוֹנֶה",
+          "th": "מוֹנֶה",
+          "ro": "mone",
+          "en": "taximeter"
+        }
+      ],
+      "streetShift": "Israeli taxi drivers legally must run the meter, but often try to quote fixed inflated flat rates ('שישים שקל ונסע'). Always insist firmly: '!שִׂים מוֹנֶה, בְּבַקָּשָׁה' (Put on the meter, please).",
+      "scene": "🚕 Taxi Window, Tel Aviv Central Station",
+      "dialogue": {
+        "speakerA": "👨‍💼 נַהָג (Driver)",
+        "lineHebrewA": "?חֲמִשִּׁים שֶׁקֶל וְנִסַּע יָשָׁר",
+        "lineSpokenA": "Chamishim shekel venisa yashar?",
+        "lineEnglishA": "Fifty shekels and we go straight away?",
+        "ttsA": "חֲמִשִּׁים שֶׁקֶל וְנִסַּע?",
+        "speakerB": "🙋 אַתָּה (You)",
+        "lineHebrewB": "!לֹא תּוֹדָה, שִׂים מוֹנֶה בְּבַקָּשָׁה",
+        "lineSpokenB": "Lo toda, sim mo-né be-va-ka-shá!",
+        "lineEnglishB": "No thanks, put on the meter please!",
+        "ttsB": "שִׂים מוֹנֶה בְּבַקָּשָׁה"
+      },
+      "exampleSentence": {
+        "hebrew": "!תָּמִיד כְּדַאי לִנְסֹעַ עִם מוֹנֶה בְּתֵל אָבִיב",
+        "spoken": "Tamid kedai linsoa im mone betel aviv!",
+        "english": "It's always better to ride with a meter in Tel Aviv!",
+        "tts": "תָּמִיד כְּדַאי לִנְסֹעַ עִם מוֹנֶה"
+      },
+      "situationPrompt": "You get into a taxi outside the train station. The driver offers a fixed 70 NIS flat price. What assertive phrase ensures you pay the fair legal fare?",
+      "situationAudio": "חֲמִשִּׁים שֶׁקֶל וְנִסַּע?",
+      "situationCorrect": "שִׂים מוֹנֶה, בְּבַקָּשָׁה (sim mone, bevakasha) — Put on the meter, please",
+      "situationDistractors": [
+        "טִיפּ בִּפְנִים (tip bifnim) — Tip inside",
+        "עִם הַכֹּל (im hakol) — With everything",
+        "יָשָׁר יָשָׁר (yashar yashar) — Straight ahead"
+      ]
+    },
+    {
+      "id": "ST_ata_panoi",
+      "hebrew": "אַתָּה פָּנוּי?",
+      "thai": "אַתָּה פָּנוּי?",
+      "spoken": "a-tá pa-núi?",
+      "roman": "ata panui",
+      "meaning": "Are you free / available? (Asked to taxi driver)",
+      "unit": 3,
+      "theme": "Taxis & Navigation",
+      "category": "Taxi Greeting",
+      "tts": "אַתָּה פָּנוּי?",
+      "words": [
+        {
+          "he": "אַתָּה",
+          "th": "אַתָּה",
+          "ro": "ata",
+          "en": "you (m)"
+        },
+        {
+          "he": "פָּנוּי",
+          "th": "פָּנוּי",
+          "ro": "panui",
+          "en": "available / vacant"
+        }
+      ],
+      "streetShift": "When flagging a taxi curbside, lean down to the front passenger window and ask '?אַתָּה פָּנוּי' before opening the rear door and getting inside.",
+      "scene": "🚕 Curbside, Allenby St.",
+      "dialogue": {
+        "speakerA": "🙋 אַתָּה (You)",
+        "lineHebrewA": "?שָׁלוֹם, אַתָּה פָּנוּי לִנְסִיעָה לְיָפוֹ",
+        "lineSpokenA": "Shalom, a-tá pa-núi linsia leyafo?",
+        "lineEnglishA": "Hello, are you free for a trip to Jaffa?",
+        "ttsA": "שָׁלוֹם, אַתָּה פָּנוּי?",
+        "speakerB": "👨‍💼 נַהָג (Driver)",
+        "lineHebrewB": "!כֵּן גֶּבֶר, תִּכָּנֵס",
+        "lineSpokenB": "Ken gever, tikanes!",
+        "lineEnglishB": "Yes man, get in!",
+        "ttsB": "כֵּן גֶּבֶר, תִּכָּנֵס"
+      },
+      "exampleSentence": {
+        "hebrew": "?סְלִיחָה נַהָג, אַתָּה פָּנוּי עַכְשָׁו",
+        "spoken": "Slicha nahag, ata panui achshav?",
+        "english": "Excuse me driver, are you available now?",
+        "tts": "סְלִיחָה נַהָג, אַתָּה פָּנוּי?"
+      },
+      "situationPrompt": "A white taxi rolls up slowly to the curb with its rooftop light on. You peek in the front window. What polite question do you ask the driver?",
+      "situationAudio": "שָׁלוֹם, אַתָּה פָּנוּי?",
+      "situationCorrect": "אַתָּה פָּנוּי? (ata panui?) — Are you free / available?",
+      "situationDistractors": [
+        "אֶפְשָׁר חֶשְׁבּוֹן? (efshar cheshbon?) — Check please",
+        "בְּלִי עַמְבָּה (bli amba) — Without amba",
+        "צָרִיךְ שַׂקִּית? (tsarich sakit?) — Need a bag?"
+      ]
+    },
+    {
+      "id": "ST_kama_ze_ad",
+      "hebrew": "כַּמָּה זֶה עַד...?",
+      "thai": "כַּמָּה זֶה עַד...?",
+      "spoken": "ká-ma ze ad...?",
+      "roman": "kama ze ad",
+      "meaning": "How much is it to...?",
+      "unit": 3,
+      "theme": "Taxis & Navigation",
+      "category": "Price Check",
+      "tts": "כַּמָּה זֶה עַד",
+      "words": [
+        {
+          "he": "כַּמָּה",
+          "th": "כַּמָּה",
+          "ro": "kama",
+          "en": "how much"
+        },
+        {
+          "he": "זֶה",
+          "th": "זֶה",
+          "ro": "ze",
+          "en": "is it"
+        },
+        {
+          "he": "עַד",
+          "th": "עַד",
+          "ro": "ad",
+          "en": "up to / until"
+        }
+      ],
+      "streetShift": "Before committing to a long intercity or airport trip, ask '?כַּמָּה זֶה עַד' plus your destination (e.g. 'כמה זה עד ירושלים?').",
+      "scene": "🚕 Taxi Stand, Tel Aviv Airport",
+      "dialogue": {
+        "speakerA": "🙋 אַתָּה (You)",
+        "lineHebrewA": "?כַּמָּה זֶה עַד נְמַל הַתְּעוּפָה",
+        "lineSpokenA": "Ká-ma ze ad nemal hate'ufa?",
+        "lineEnglishA": "How much is it to the airport?",
+        "ttsA": "כַּמָּה זֶה עַד נְמַל הַתְּעוּפָה?",
+        "speakerB": "👨‍💼 נַהָג (Driver)",
+        "lineHebrewB": "!מֵאָה וַחֲמִשִּׁים שֶׁקֶל בְּמוֹנֶה",
+        "lineSpokenB": "Me'a vachamishim shekel bemone!",
+        "lineEnglishB": "150 shekels on the meter!",
+        "ttsB": "מֵאָה וַחֲמִשִּׁים שֶׁקֶל"
+      },
+      "exampleSentence": {
+        "hebrew": "?כַּמָּה זֶה עַד הַתַּחֲנָה הַמֶּרְכָּזִית",
+        "spoken": "Kama ze ad hatachana hamerkazit?",
+        "english": "How much is it to the central bus station?",
+        "tts": "כַּמָּה זֶה עַד הַתַּחֲנָה הַמֶּרְכָּזִית?"
+      },
+      "situationPrompt": "You need to know the approximate cab fare before hopping in for a ride to Jerusalem. What formula do you use?",
+      "situationAudio": "כַּמָּה זֶה עַד יְרוּשָׁלַיִם?",
+      "situationCorrect": "כַּמָּה זֶה עַד...? (kama ze ad...?) — How much is it to...?",
+      "situationDistractors": [
+        "תַּכְלֶ'ס (tachles) — Bottom line",
+        "בְּלִי סֻכָּר (bli sukar) — Without sugar",
+        "עַל הַפָּנִים (al hapanim) — Terrible"
+      ]
+    },
+    {
+      "id": "ST_yashar_yashar",
+      "hebrew": "יָשָׁר יָשָׁר",
+      "thai": "יָשָׁר יָשָׁר",
+      "spoken": "ya-shár ya-shár",
+      "roman": "yashar yashar",
+      "meaning": "Straight ahead / Keep going straight",
+      "unit": 3,
+      "theme": "Navigation",
+      "category": "Direction",
+      "tts": "יָשָׁר יָשָׁר",
+      "words": [
+        {
+          "he": "יָשָׁר",
+          "th": "יָשָׁר",
+          "ro": "yashar",
+          "en": "straight"
+        },
+        {
+          "he": "יָשָׁר",
+          "th": "יָשָׁר",
+          "ro": "yashar",
+          "en": "straight"
+        }
+      ],
+      "streetShift": "Doubling words for emphasis is very typical of Israeli speech rhythm. 'ישר ישר' means 'don't turn anywhere yet, just keep driving straight down this avenue'.",
+      "scene": "🚕 Inside Taxi, Dizengoff St.",
+      "dialogue": {
+        "speakerA": "👨‍💼 נַהָג (Driver)",
+        "lineHebrewA": "?לְאָן עַכְשָׁו, לִפְנוֹת פֹּה",
+        "lineSpokenA": "Le'an achshav, lifnot po?",
+        "lineEnglishA": "Where now, turn here?",
+        "ttsA": "לְאָן עַכְשָׁו?",
+        "speakerB": "🙋 אַתָּה (You)",
+        "lineHebrewB": "!תַּמְשִׁיךְ יָשָׁר יָשָׁר עַד הַיָּם",
+        "lineSpokenB": "Tamshich ya-shár ya-shár ad hayam!",
+        "lineEnglishB": "Keep going straight straight all the way to the sea!",
+        "ttsB": "תַּמְשִׁיךְ יָשָׁר יָשָׁר"
+      },
+      "exampleSentence": {
+        "hebrew": "!תֵּלֵךְ יָשָׁר יָשָׁר וְתִרְאֶה אֶת הַבַּנְק מִצַּד יָמִין",
+        "spoken": "Telech yashar yashar vetir'e et habank mitzad yamin!",
+        "english": "Walk straight ahead and you'll see the bank on the right!",
+        "tts": "תֵּלֵךְ יָשָׁר יָשָׁר עַד הַבַּנְק"
+      },
+      "situationPrompt": "The driver slows down approaching an intersection and asks which way to turn. You want him to continue straight without turning. What do you instruct?",
+      "situationAudio": "לְאָן עַכְשָׁו, לִפְנוֹת פֹּה?",
+      "situationCorrect": "יָשָׁר יָשָׁר (yashar yashar) — Straight ahead / keep going straight",
+      "situationDistractors": [
+        "שְׂמֹאלָה (smola) — Left",
+        "רַק טְחִינָה (rak tchina) — Only tahini",
+        "בִּיט (bit) — Bit payment app"
+      ]
+    },
+    {
+      "id": "ST_yemina_barmzor",
+      "hebrew": "יְמִינָה בָּרַמְזוֹר",
+      "thai": "יְמִינָה בָּרַמְזוֹר",
+      "spoken": "ye-mí-na ba-ram-zór",
+      "roman": "yemina baramzor",
+      "meaning": "Right at the traffic light",
+      "unit": 3,
+      "theme": "Navigation",
+      "category": "Direction",
+      "tts": "יְמִינָה בָּרַמְזוֹר",
+      "words": [
+        {
+          "he": "יְמִינָה",
+          "th": "יְמִינָה",
+          "ro": "yemina",
+          "en": "to the right"
+        },
+        {
+          "he": "בָּרַמְזוֹר",
+          "th": "בָּרַמְזוֹר",
+          "ro": "baramzor",
+          "en": "at the traffic light"
+        }
+      ],
+      "streetShift": "Giving advance notice to Israeli cab drivers is key before they enter the wrong lane. Say 'יְמִינָה בָּרַמְזוֹר' well before the intersection so they can merge right.",
+      "scene": "🚕 Inside Taxi, King George St.",
+      "dialogue": {
+        "speakerA": "👨‍💼 נַהָג (Driver)",
+        "lineHebrewA": "?אֵיפֹה לִפְנוֹת אָחִי",
+        "lineSpokenA": "Eifo lifnot achi?",
+        "lineEnglishA": "Where should I turn bro?",
+        "ttsA": "אֵיפֹה לִפְנוֹת אָחִי?",
+        "speakerB": "🙋 אַתָּה (You)",
+        "lineHebrewB": "!קַח יְמִינָה בָּרַמְזוֹר הַבָּא",
+        "lineSpokenB": "Kach ye-mí-na ba-ram-zór haba!",
+        "lineEnglishB": "Take a right at the next traffic light!",
+        "ttsB": "קַח יְמִינָה בָּרַמְזוֹר"
+      },
+      "exampleSentence": {
+        "hebrew": "!בָּרַמְזוֹר תִּפְנֶה יְמִינָה לִרְחוֹב אַלֶנְבִּי",
+        "spoken": "Baramzor tifne yemina lirchov allenby!",
+        "english": "At the traffic light turn right onto Allenby street!",
+        "tts": "תִּפְנֶה יְמִינָה בָּרַמְזוֹר"
+      },
+      "situationPrompt": "The cab driver is in the center lane and asks where your turn is. You need him to turn right at the upcoming signals. What do you call out?",
+      "situationAudio": "אֵיפֹה לִפְנוֹת אָחִי?",
+      "situationCorrect": "יְמִינָה בָּרַמְזוֹר (yemina baramzor) — Right at the traffic light",
+      "situationDistractors": [
+        "שְׂמֹאלָה בַּכִּכָּר (smola bakikar) — Left at roundabout",
+        "בְּלִי סֻכָּר (bli sukar) — Without sugar",
+        "אֵין מַצָּב (ein matzav) — No way"
+      ]
+    },
+    {
+      "id": "ST_smola",
+      "hebrew": "שְׂמֹאלָה",
+      "thai": "שְׂמֹאלָה",
+      "spoken": "smó-la",
+      "roman": "smola",
+      "meaning": "To the left / Turn left",
+      "unit": 3,
+      "theme": "Navigation",
+      "category": "Direction",
+      "tts": "שְׂמֹאלָה",
+      "words": [
+        {
+          "he": "שְׂמֹאלָה",
+          "th": "שְׂמֹאלָה",
+          "ro": "smola",
+          "en": "to the left"
+        }
+      ],
+      "streetShift": "'שְׂמֹאלָה' (smóla) means toward the left. Note the direction suffix '-ah' which converts nouns of direction into movements (יָמִין -> יְמִינָה, שְׂמֹאל -> שְׂמֹאלָה).",
+      "scene": "🚕 Inside Taxi, Habima Square",
+      "dialogue": {
+        "speakerA": "👨‍💼 נַהָג (Driver)",
+        "lineHebrewA": "?לִפְנוֹת יְמִינָה בַּכִּכָּר",
+        "lineSpokenA": "Lifnot yemina bakikar?",
+        "lineEnglishA": "Turn right at the roundabout?",
+        "ttsA": "לִפְנוֹת יְמִינָה?",
+        "speakerB": "🙋 אַתָּה (You)",
+        "lineHebrewB": "!לֹא, שְׂמֹאלָה בַּכִּכָּר בְּבַקָּשָׁה",
+        "lineSpokenB": "Lo, smó-la ba-ki-kár be-va-ka-shá!",
+        "lineEnglishB": "No, left at the roundabout please!",
+        "ttsB": "שְׂמֹאלָה בַּכִּכָּר"
+      },
+      "exampleSentence": {
+        "hebrew": "!בַּסּוֹף שֶׁל הָרְחוֹב תִּקַּח שְׂמֹאלָה",
+        "spoken": "Basof shel harechov tikach smola!",
+        "english": "At the end of the street take a left!",
+        "tts": "תִּקַּח שְׂמֹאלָה בַּסּוֹף"
+      },
+      "situationPrompt": "The driver asks if he should turn right at the square. You need him to turn left. What 1-word direction command do you say?",
+      "situationAudio": "לִפְנוֹת יְמִינָה?",
+      "situationCorrect": "שְׂמֹאלָה (smola) — To the left / turn left",
+      "situationDistractors": [
+        "יְמִינָה (yemina) — To the right",
+        "עַל הַפָּנִים (al hapanim) — Terrible",
+        "רַב-קַו (rav-kav) — Transit card"
+      ]
+    },
+    {
+      "id": "ST_po_bapina",
+      "hebrew": "פֹּה בַּפִּנָּה",
+      "thai": "פֹּה בַּפִּנָּה",
+      "spoken": "po ba-pi-ná",
+      "roman": "po bapina",
+      "meaning": "Right here at the corner (drop me off)",
+      "unit": 3,
+      "theme": "Navigation",
+      "category": "Drop-Off",
+      "tts": "פֹּה בַּפִּנָּה",
+      "words": [
+        {
+          "he": "פֹּה",
+          "th": "פֹּה",
+          "ro": "po",
+          "en": "here"
+        },
+        {
+          "he": "בַּפִּנָּה",
+          "th": "בַּפִּנָּה",
+          "ro": "bapina",
+          "en": "at the corner"
+        }
+      ],
+      "streetShift": "Instead of having a taxi crawl down a one-way congested side street, Israelis usually say '!תּוֹרִיד אוֹתִי פֹּה בַּפִּנָּה' (drop me right here at the corner) to save time and money.",
+      "scene": "🚕 Inside Taxi, Bugrashov St.",
+      "dialogue": {
+        "speakerA": "👨‍💼 נַהָג (Driver)",
+        "lineHebrewA": "?אֵיפֹה בְּדִיּוּק הַכְּתֹבֶת שֶׁלְּךָ",
+        "lineSpokenA": "Eifo bediyuk haktovet shelcha?",
+        "lineEnglishA": "Where exactly is your address?",
+        "ttsA": "אֵיפֹה בְּדִיּוּק הַכְּתֹבֶת?",
+        "speakerB": "🙋 אַתָּה (You)",
+        "lineHebrewB": "!תּוֹרִיד אוֹתִי פֹּה בַּפִּנָּה, זֶה מְצֻיָּן",
+        "lineSpokenB": "Torid oti po ba-pi-ná, ze metzuyan!",
+        "lineEnglishB": "Drop me right here at the corner, that's perfect!",
+        "ttsB": "תּוֹרִיד אוֹתִי פֹּה בַּפִּנָּה"
+      },
+      "exampleSentence": {
+        "hebrew": "!אַתָּה יָכוֹל לַעֲצֹר לִי פֹּה בַּפִּנָּה",
+        "spoken": "Ata yachol la'atzor li po bapina!",
+        "english": "You can stop for me right here at the corner!",
+        "tts": "תַּעֲצֹר לִי פֹּה בַּפִּנָּה"
+      },
+      "situationPrompt": "You see your destination 20 meters ahead, but traffic is backing up before the alley. How do you tell the driver to let you out right at the intersection?",
+      "situationAudio": "אֵיפֹה לַעֲצֹר לְךָ?",
+      "situationCorrect": "פֹּה בַּפִּנָּה, תּוֹדָה (po bapina, toda) — Right here at the corner, thanks",
+      "situationDistractors": [
+        "הַרְבֵּה חָרִיף (harbe charif) — Plenty of spicy",
+        "אֶפְשָׁר חֶשְׁבּוֹן? (efshar cheshbon?) — Can I have the check?",
+        "חַי בְּסֶרֶט (chai beseret) — Living in a movie"
+      ]
+    },
+    {
+      "id": "ST_rav_kav",
+      "hebrew": "רַב-קַו",
+      "thai": "רַב-קַו",
+      "spoken": "rav-káv",
+      "roman": "rav-kav",
+      "meaning": "Rav-Kav (Israel's national transit smartcard)",
+      "unit": 3,
+      "theme": "Public Transit",
+      "category": "Transit Ticket",
+      "tts": "רַב-קַו",
+      "words": [
+        {
+          "he": "רַב",
+          "th": "רַב",
+          "ro": "rav",
+          "en": "multi-"
+        },
+        {
+          "he": "קַו",
+          "th": "קַו",
+          "ro": "kav",
+          "en": "line"
+        }
+      ],
+      "streetShift": "Israeli buses and trains no longer accept cash onboard. You must tap a 'רַב-קַו' (Rav-Kav) smartcard or scan a transit app (Moovit / HopOn) upon boarding.",
+      "scene": "🚌 Boarding Dan Bus Line 5, Tel Aviv",
+      "dialogue": {
+        "speakerA": "👨‍💼 נַהָג אוֹטוֹבּוּס (Bus Driver)",
+        "lineHebrewA": "?תִּקַּפְתָּ בְּרַב-קַו אוֹ בָּאַפְּלִיקַצְיָה",
+        "lineSpokenA": "Tikafta beravkav o ba'aplikatsya?",
+        "lineEnglishA": "Did you validate with Rav-Kav or app?",
+        "ttsA": "תִּקַּפְתָּ בְּרַב-קַו?",
+        "speakerB": "🙋 אַתָּה (You)",
+        "lineHebrewB": "!כֵּן, הִנֵּה הָרַב-קַו שֶׁלִּי, תִּקַּפְתִּי כְּבָר",
+        "lineSpokenB": "Ken, hine harav-kav sheli, tikafti kvar!",
+        "lineEnglishB": "Yes, here's my Rav-Kav, I already validated!",
+        "ttsB": "הִנֵּה הָרַב-קַו שֶׁלִּי"
+      },
+      "exampleSentence": {
+        "hebrew": "!צָרִיךְ לְהַטְעִין אֶת הָרַב-קַו לִפְנֵי שֶׁעוֹלִים לָאוֹטוֹבּוּס",
+        "spoken": "Tsarich lehat'in et harav-kav lifnei she'olim la'otobus!",
+        "english": "You need to reload your Rav-Kav before boarding the bus!",
+        "tts": "צָרִיךְ לְהַטְעִין אֶת הָרַב-קַו"
+      },
+      "situationPrompt": "A transit ticket inspector boards the bus and asks all passengers to present their payment card. What item do you show him?",
+      "situationAudio": "תִּקַּפְתָּ בְּרַב-קַו?",
+      "situationCorrect": "רַב-קַו (rav-kav) — National transit smartcard",
+      "situationDistractors": [
+        "בִּיט (bit) — Bit payment app",
+        "קַבָּלָה בְּסִמְס (kabala besms) — Receipt by text",
+        "שַׂקִּית (sakit) — Shopping bag"
+      ]
+    },
+    {
+      "id": "ST_tachana_habaa",
+      "hebrew": "תַּחֲנָה הַבָּאָה",
+      "thai": "תַּחֲנָה הַבָּאָה",
+      "spoken": "ta-cha-ná ha-ba-á",
+      "roman": "tachana habaa",
+      "meaning": "Next station / next stop",
+      "unit": 3,
+      "theme": "Public Transit",
+      "category": "Bus & Train Announcements",
+      "tts": "תַּחֲנָה הַבָּאָה",
+      "words": [
+        {
+          "he": "תַּחֲנָה",
+          "th": "תַּחֲנָה",
+          "ro": "tachana",
+          "en": "station / stop"
+        },
+        {
+          "he": "הַבָּאָה",
+          "th": "הַבָּאָה",
+          "ro": "haba'a",
+          "en": "the next / coming (f)"
+        }
+      ],
+      "streetShift": "This phrase is broadcast over the loudspeaker before every bus and train stop across the country: 'הַתַּחֲנָה הַבָּאָה: רַכֶּבֶת הַשָּׁלוֹם'.",
+      "scene": "🚊 Inside Tel Aviv Light Rail (Dankal)",
+      "dialogue": {
+        "speakerA": "📢 כְּרוּז (Automated PA Announcement)",
+        "lineHebrewA": "!הַתַּחֲנָה הַבָּאָה: שְׂדֵרוֹת יְהוּדִית",
+        "lineSpokenA": "Hatachana haba'a: Sderot Yehudit!",
+        "lineEnglishA": "The next station: Yehudit Boulevard!",
+        "ttsA": "הַתַּחֲנָה הַבָּאָה",
+        "speakerB": "🙋 אַתָּה (You)",
+        "lineHebrewB": "!אָחִי, אֲנִי יוֹרֵד בַּתַּחֲנָה הַבָּאָה, תֵּן לַעֲבֹר",
+        "lineSpokenB": "Achi, ani yored batachana haba'a, ten la'avor!",
+        "lineEnglishB": "Bro, I'm getting off at the next stop, let me pass!",
+        "ttsB": "אֲנִי יוֹרֵד בַּתַּחֲנָה הַבָּאָה"
+      },
+      "exampleSentence": {
+        "hebrew": "?נַהָג, אַתָּה עוֹצֵר בַּתַּחֲנָה הַבָּאָה",
+        "spoken": "Nahag, ata otzer batachana haba'a?",
+        "english": "Driver, are you stopping at the next stop?",
+        "tts": "אַתָּה עוֹצֵר בַּתַּחֲנָה הַבָּאָה?"
+      },
+      "situationPrompt": "You hear the bus automated voice chime: 'הַתַּחֲנָה הַבָּאָה...'. What is it alerting passengers to?",
+      "situationAudio": "הַתַּחֲנָה הַבָּאָה!",
+      "situationCorrect": "The next upcoming bus/train stop",
+      "situationDistractors": [
+        "The bus driver's shift has ended",
+        "The ticket price is going up",
+        "The card reader is broken"
+      ]
+    },
+    {
+      "id": "ST_sherut",
+      "hebrew": "שֵׁרוּת",
+      "thai": "שֵׁרוּת",
+      "spoken": "she-rút",
+      "roman": "sherut",
+      "meaning": "Sherut (Shared yellow minivan taxi, e.g. Monit Sherut)",
+      "unit": 3,
+      "theme": "Public Transit",
+      "category": "Transit Mode",
+      "tts": "שֵׁרוּת",
+      "words": [
+        {
+          "he": "שֵׁרוּת",
+          "th": "שֵׁרוּת",
+          "ro": "sherut",
+          "en": "service / shared taxi"
+        }
+      ],
+      "streetShift": "'מוֹנִית שֵׁרוּת' are 10-seater yellow minivans following bus routes. Crucially, sherut vans run on Shabbat (Friday night & Saturday) when regular public buses shut down!",
+      "scene": "🚐 Curbside Sherut Van, Tel Aviv",
+      "dialogue": {
+        "speakerA": "🙋 אַתָּה (You)",
+        "lineHebrewA": "?שֵׁרוּת קַו 4 לַתַּחֲנָה הַמֶּרְכָּזִית",
+        "lineSpokenA": "Sherut kav 4 latachana hamerkazit?",
+        "lineEnglishA": "Yes, there is an open seat in back, hop on!",
+        "ttsA": "שֵׁרוּת לַתַּחֲנָה הַמֶּרְכָּזִית?",
+        "speakerB": "👨‍💼 נַהָג (Driver)",
+        "lineHebrewB": "!כֵּן, יֵשׁ מָקוֹם פָּנוּי מֵאָחוֹר, תַּעֲלֶה",
+        "lineSpokenB": "Ken, yesh makom panui me'achor, ta'ale!",
+        "ttsB": "כֵּן, תַּעֲלֶה"
+      },
+      "exampleSentence": {
+        "hebrew": "!בְּשַׁבָּת אֵין אוֹטוֹבּוּסִים אָז אֲנִי נוֹסֵעַ בְּשֵׁרוּת",
+        "spoken": "Beshabat ein otobusim az ani nose'a besherut!",
+        "english": "On Shabbat there are no buses, so I ride a sherut minivan!",
+        "tts": "בְּשַׁבָּת אֲנִי נוֹסֵעַ בְּשֵׁרוּת"
+      },
+      "situationPrompt": "It's Saturday afternoon and buses are not running. You need to get from Tel Aviv to Netanya or along Ben Yehuda St. What shared transit van do you look for?",
+      "situationAudio": "שֵׁרוּת לְתֵל אָבִיב?",
+      "situationCorrect": "שֵׁרוּת (sherut) — Shared yellow minivan taxi",
+      "situationDistractors": [
+        "הָפוּך גָּדוֹל (hafuch gadol) — Large cappuccino",
+        "אֶפְשָׁר חֶשְׁבּוֹן? (efshar cheshbon?) — Can I have the check?",
+        "בְּלִי סֻכָּר (bli sukar) — Without sugar"
+      ]
+    },
+    {
+      "id": "ST_ba_li",
+      "hebrew": "בָּא לִי",
+      "thai": "בָּא לִי",
+      "spoken": "ba li",
+      "roman": "ba li",
+      "meaning": "'I feel like / I'm craving' (literally: it comes to me)",
+      "unit": 4,
+      "theme": "Everyday Speech",
+      "category": "Desire & Craving",
+      "tts": "בָּא לִי",
+      "words": [
+        {
+          "he": "בָּא",
+          "th": "בָּא",
+          "ro": "ba",
+          "en": "comes"
+        },
+        {
+          "he": "לִי",
+          "th": "לִי",
+          "ro": "li",
+          "en": "to me"
+        }
+      ],
+      "streetShift": "Israelis rarely use the formal verb 'אֲנִי רוֹצֶה' (I want) when talking about food, cravings, or spontaneous ideas. Instead, they say '!בָּא לִי' (I feel like / craving).",
+      "scene": "🥙 Lunch Break, Rothschild Blvd.",
+      "dialogue": {
+        "speakerA": "🙋 חָבֵר (Friend)",
+        "lineHebrewA": "?אָחִי, מָה אוֹכְלִים הַיּוֹם לִצָהֳרַיִם",
+        "lineSpokenA": "Achi, ma ochlim hayom letsohorayim?",
+        "lineEnglishA": "Bro, what are we eating today for lunch?",
+        "ttsA": "מָה אוֹכְלִים הַיּוֹם לִצָהֳרַיִם?",
+        "speakerB": "🙋 אַתָּה (You)",
+        "lineHebrewB": "!מַמָּשׁ בָּא לִי שַׁוַארְמָה עִם הַרְבֵּה טְחִינָה",
+        "lineSpokenB": "Mamash ba li shavarma im harbe tchina!",
+        "lineEnglishB": "I'm really craving shawarma with plenty of tahini!",
+        "ttsB": "בָּא לִי שַׁוַארְמָה"
+      },
+      "exampleSentence": {
+        "hebrew": "!בָּא לִי לָלֶכֶת לַיָּם עַכְשָׁו",
+        "spoken": "Ba li lalechet layam achshav!",
+        "english": "I feel like going to the beach right now!",
+        "tts": "בָּא לִי לָלֶכֶת לַיָּם עַכְשָׁו"
+      },
+      "situationPrompt": "Your friend asks what you feel like eating. You have a sudden urge for hot falafel. How do you express this craving like a true local?",
+      "situationAudio": "מָה בָּא לְךָ לֶאֱכֹל?",
+      "situationCorrect": "בָּא לִי פָלָאפֶל! (ba li falafel!) — I'm craving / feel like falafel!",
+      "situationDistractors": [
+        "אֵין מַצָּב (ein matzav) — No way",
+        "עַל הַפָּנִים (al hapanim) — Terrible",
+        "תַּפְעִיל מוֹנֶה (taf'il mone) — Turn on the meter"
+      ]
+    },
+    {
+      "id": "ST_lo_ba_li",
+      "hebrew": "לֹא בָּא לִי",
+      "thai": "לֹא בָּא לִי",
+      "spoken": "lo ba li",
+      "roman": "lo ba li",
+      "meaning": "'I don't feel like it / I'm not in the mood'",
+      "unit": 4,
+      "theme": "Everyday Speech",
+      "category": "Refusal & Reluctance",
+      "tts": "לֹא בָּא לִי",
+      "words": [
+        {
+          "he": "לֹא",
+          "th": "לֹא",
+          "ro": "lo",
+          "en": "not"
+        },
+        {
+          "he": "בָּא לִי",
+          "th": "בָּא לִי",
+          "ro": "ba li",
+          "en": "it comes to me"
+        }
+      ],
+      "streetShift": "The quintessential Israeli phrase for declining invitations or activities when you just aren't in the mood: '!לֹא בָּא לִי' (I don't feel like it). Direct, honest, and universally understood.",
+      "scene": "🛋️ Living Room Sofa, Tel Aviv",
+      "dialogue": {
+        "speakerA": "🙋 שֻׁתָּף (Roommate)",
+        "lineHebrewA": "?בָּא לְךָ לָצֵאת לַמְּסִבָּה הַיּוֹם",
+        "lineSpokenA": "Ba lecha latzet lamesiba hayom?",
+        "lineEnglishA": "Do you feel like going out to the party tonight?",
+        "ttsA": "בָּא לְךָ לָצֵאת לַמְּסִבָּה?",
+        "speakerB": "🙋 אַתָּה (You)",
+        "lineHebrewB": "!מַמָּשׁ לֹא בָּא לִי, אֲנִי גָּמוּר מֵעֲיֵפוּת",
+        "lineSpokenB": "Mamash lo ba li, ani gamur me'ayefut!",
+        "lineEnglishB": "I really don't feel like it, I'm wiped out!",
+        "ttsB": "מַמָּשׁ לֹא בָּא לִי"
+      },
+      "exampleSentence": {
+        "hebrew": "!לֹא בָּא לִי לְבַשֵּׁל הַיּוֹם, נַזְמִין מַשֶּׁהוּ",
+        "spoken": "Lo ba li levashel hayom, nazmin mashehu!",
+        "english": "I don't feel like cooking today, let's order in!",
+        "tts": "לֹא בָּא לִי לְבַשֵּׁל הַיּוֹם"
+      },
+      "situationPrompt": "Someone invites you to a crowded bar on a rainy Tuesday, but you just want to stay in bed and watch TV. How do you decline naturally?",
+      "situationAudio": "בָּא לְךָ לָצֵאת?",
+      "situationCorrect": "לֹא בָּא לִי (lo ba li) — I don't feel like it / not in the mood",
+      "situationDistractors": [
+        "סַבָּבָה לְגַמְרֵי (sababa legamrei) — Totally cool",
+        "הָפוּך גָּדוֹל (hafuch gadol) — Large cappuccino",
+        "בְּלִי עַמְבָּה (bli amba) — Without amba"
+      ]
+    },
+    {
+      "id": "ST_ein_matzav",
+      "hebrew": "אֵין מַצָּב",
+      "thai": "אֵין מַצָּב",
+      "spoken": "ein matz-záv",
+      "roman": "ein matzav",
+      "meaning": "'No way! / Absolutely no chance' (literally: there is no situation)",
+      "unit": 4,
+      "theme": "Everyday Speech",
+      "category": "Strong Negation",
+      "tts": "אֵין מַצָּב",
+      "words": [
+        {
+          "he": "אֵין",
+          "th": "אֵין",
+          "ro": "ein",
+          "en": "there is no"
+        },
+        {
+          "he": "מַצָּב",
+          "th": "מַצָּב",
+          "ro": "matzav",
+          "en": "situation / scenario"
+        }
+      ],
+      "streetShift": "'אֵין מַצָּב' is Israel's #1 emphatic refusal. It translates to 'under no circumstances / impossible / no way in hell!'.",
+      "scene": "☕ Cafe Table, Tel Aviv",
+      "dialogue": {
+        "speakerA": "🙋 חָבֵר (Friend)",
+        "lineHebrewA": "?תָּבוֹא לַמִּשְׂרָד בְּיוֹם שִׁשִּׁי בַּבֹּקֶר",
+        "lineSpokenA": "Tavo lamisrad beyom shishi baboker?",
+        "lineEnglishA": "Will you come to the office on Friday morning?",
+        "ttsA": "תָּבוֹא לַמִּשְׂרָד בְּיוֹם שִׁשִּׁי?",
+        "speakerB": "🙋 אַתָּה (You)",
+        "lineHebrewB": "!אֵין מַצָּב בָּעוֹלָם, זֶה יוֹם הַחֹפֶשׁ שֶׁלִּי",
+        "lineSpokenB": "Ein matzav ba'olam, ze yom hachofesh sheli!",
+        "lineEnglishB": "No way in the world, that's my day off!",
+        "ttsB": "אֵין מַצָּב בָּעוֹלָם"
+      },
+      "exampleSentence": {
+        "hebrew": "!אֵין מַצָּב שֶׁנַּסְפִּיק אֶת הָרַכֶּבֶת, הִיא כְּבָר יוֹצֵאת",
+        "spoken": "Ein matzav shenaspik et harakevet, hi kvar yotzet!",
+        "english": "No way we catch the train, it's already leaving!",
+        "tts": "אֵין מַצָּב שֶׁנַּסְפִּיק אֶת הָרַכֶּבֶת"
+      },
+      "situationPrompt": "Someone asks if you're willing to pay 100 shekels for a single cup of lukewarm tea. What emphatic refusal do you blurt out?",
+      "situationAudio": "תְּשַׁלֵּם מֵאָה שֶׁקֶל עַל תֵּה?",
+      "situationCorrect": "אֵין מַצָּב! (ein matzav!) — No way! / Absolutely no chance!",
+      "situationDistractors": [
+        "סוֹף הַדֶּרֶךְ (sof haderech) — Outstanding",
+        "יָשָׁר יָשָׁר (yashar yashar) — Straight ahead",
+        "רַק טְחִינָה (rak tchina) — Only tahini"
+      ]
+    },
+    {
+      "id": "ST_yesh_matzav",
+      "hebrew": "יֵשׁ מַצָּב",
+      "thai": "יֵשׁ מַצָּב",
+      "spoken": "yesh matz-záv",
+      "roman": "yesh matzav",
+      "meaning": "'There's a chance / Quite possible / Definite maybe'",
+      "unit": 4,
+      "theme": "Everyday Speech",
+      "category": "Possibility",
+      "tts": "יֵשׁ מַצָּב",
+      "words": [
+        {
+          "he": "יֵשׁ",
+          "th": "יֵשׁ",
+          "ro": "yesh",
+          "en": "there is"
+        },
+        {
+          "he": "מַצָּב",
+          "th": "מַצָּב",
+          "ro": "matzav",
+          "en": "situation / possibility"
+        }
+      ],
+      "streetShift": "The flip side of 'אין מצב'. 'יֵשׁ מַצָּב' means 'there's a real possibility / probably yes / it could happen'.",
+      "scene": "📱 Phone Chat, Tel Aviv",
+      "dialogue": {
+        "speakerA": "🙋 חָבֵר (Friend)",
+        "lineHebrewA": "?רוֹאִים אוֹתְךָ בַּבָּר הָעֶרֶב",
+        "lineSpokenA": "Ro'im otcha babar ha'erev?",
+        "lineEnglishA": "Are we seeing you at the bar tonight?",
+        "ttsA": "רוֹאִים אוֹתְךָ הָעֶרֶב?",
+        "speakerB": "🙋 אַתָּה (You)",
+        "lineHebrewB": "!יֵשׁ מַצָּב, תְּעַדְכֵּן אוֹתִי כְּשֶׁאַתֶּם שָׁם",
+        "lineSpokenB": "Yesh matz-záv, te'adken oti kshe'atem sham!",
+        "lineEnglishB": "There's a good chance, text me when you get there!",
+        "ttsB": "יֵשׁ מַצָּב, תְּעַדְכֵּן אוֹתִי"
+      },
+      "exampleSentence": {
+        "hebrew": "!יֵשׁ מַצָּב שֶׁיֵּרֵד גֶּשֶׁם מָחָר בַּבֹּקֶר",
+        "spoken": "Yesh matzav sheyered geshem machar baboker!",
+        "english": "There's a good chance it'll rain tomorrow morning!",
+        "tts": "יֵשׁ מַצָּב שֶׁיֵּרֵד גֶּשֶׁם מָחָר"
+      },
+      "situationPrompt": "A friend asks if you'll join them at the concert on Friday. You're 80% likely to go if you finish work early. What phrase conveys this?",
+      "situationAudio": "תָּבוֹא לַהוֹפָעָה בְּשִׁשִּׁי?",
+      "situationCorrect": "יֵשׁ מַצָּב (yesh matzav) — There's a good chance / quite possible",
+      "situationDistractors": [
+        "עַל הַפָּנִים (al hapanim) — Terrible",
+        "בְּלִי עַמְבָּה (bli amba) — Without amba",
+        "שִׂים מוֹנֶה (sim mone) — Turn on the meter"
+      ]
+    },
+    {
+      "id": "ST_tagid",
+      "hebrew": "תַּגִּיד",
+      "thai": "תַּגִּיד",
+      "spoken": "ta-gíd",
+      "roman": "tagid",
+      "meaning": "'Say... / Tell me...' (Conversational opening to a male)",
+      "unit": 4,
+      "theme": "Conversational Openers",
+      "category": "Interlocutor Hook (m)",
+      "tts": "תַּגִּיד",
+      "words": [
+        {
+          "he": "תַּגִּיד",
+          "th": "תַּגִּיד",
+          "ro": "tagid",
+          "en": "tell / say (m)"
+        }
+      ],
+      "streetShift": "When addressing any man on the street to ask a question, Israelis begin with 'תַּגִּיד...' (Say...). It instantly softens the question and grabs attention.",
+      "scene": "🚶 Sidewalk, King George St.",
+      "dialogue": {
+        "speakerA": "🙋 אַתָּה (You)",
+        "lineHebrewA": "?תַּגִּיד אָחִי, מָה הַשָּׁעָה",
+        "lineSpokenA": "Ta-gíd achi, ma hasha'a?",
+        "lineEnglishA": "Say bro, what time is it?",
+        "ttsA": "תַּגִּיד אָחִי, מָה הַשָּׁעָה?",
+        "speakerB": "👨‍💼 בָּחוּר (Guy)",
+        "lineHebrewB": "!שְׁלוֹשׁ וָחֵצִי, גֶּבֶר",
+        "lineSpokenB": "Shlosh vachetzi, gever!",
+        "lineEnglishB": "3:30, champ!",
+        "ttsB": "שְׁלוֹשׁ וָחֵצִי, גֶּבֶר"
+      },
+      "exampleSentence": {
+        "hebrew": "?תַּגִּיד, אַתָּה יוֹדֵעַ אֵיפֹה יֵשׁ כַּסְפּוֹמָט פֹּה",
+        "spoken": "Tagid, ata yode'a eifo yesh kaspomat po?",
+        "english": "Say, do you know where there's an ATM here?",
+        "tts": "תַּגִּיד, אֵיפֹה יֵשׁ כַּסְפּוֹמָט פֹּה?"
+      },
+      "situationPrompt": "You need to ask a male passerby on the street for directions. What word do you open your sentence with?",
+      "situationAudio": "תַּגִּיד אָחִי, אֵיפֹה הַיָּם?",
+      "situationCorrect": "תַּגִּיד... (tagid...) — Say... / Tell me... (to a male)",
+      "situationDistractors": [
+        "תַּגִּידִי (tagidi) — Say... (to a female)",
+        "טִיפּ בִּפְנִים (tip bifnim) — Tip inside",
+        "בְּלִי סֻכָּר (bli sukar) — Without sugar"
+      ]
+    },
+    {
+      "id": "ST_tagidi",
+      "hebrew": "תַּגִּידִי",
+      "thai": "תַּגִּידִי",
+      "spoken": "ta-gí-di",
+      "roman": "tagidi",
+      "meaning": "'Say... / Tell me...' (Conversational opening to a female)",
+      "unit": 4,
+      "theme": "Conversational Openers",
+      "category": "Interlocutor Hook (f)",
+      "tts": "תַּגִּידִי",
+      "words": [
+        {
+          "he": "תַּגִּידִי",
+          "th": "תַּגִּידִי",
+          "ro": "tagidi",
+          "en": "tell / say (f)"
+        }
+      ],
+      "streetShift": "The feminine equivalent of 'תַּגִּיד'. When asking a woman for the time, directions, or her opinion, open with 'תַּגִּידִי...'.",
+      "scene": "🚏 Bus Station, Dizengoff Center",
+      "dialogue": {
+        "speakerA": "🙋 אַתָּה (You)",
+        "lineHebrewA": "?תַּגִּידִי, הַקַּו הַזֶּה מַגִּיעַ לָרַכֶּבֶת",
+        "lineSpokenA": "Ta-gí-di, hakav haze magia larakevet?",
+        "lineEnglishA": "Say, does this bus line reach the train station?",
+        "ttsA": "תַּגִּידִי, הַקַּו הַזֶּה מַגִּיעַ לָרַכֶּבֶת?",
+        "speakerB": "👩‍💼 בַּחוּרָה (Woman)",
+        "lineHebrewB": "!כֵּן, תֵּרֵד בַּתַּחֲנָה הַשְּׁלִישִׁית",
+        "lineSpokenB": "Ken, tered batachana hashlishit!",
+        "lineEnglishB": "Yes, get off at the 3rd stop!",
+        "ttsB": "כֵּן, תֵּרֵד בַּתַּחֲנָה הַשְּׁלִישִׁית"
+      },
+      "exampleSentence": {
+        "hebrew": "?תַּגִּידִי, מָה דַּעְתֵּךְ עַל הַמָּקוֹם הַזֶּה",
+        "spoken": "Tagidi, ma da'tech al hamakom haze?",
+        "english": "Say, what's your take on this place?",
+        "tts": "תַּגִּידִי, מָה דַּעְתֵּךְ עַל הַמָּקוֹם?"
+      },
+      "situationPrompt": "You want to ask a woman waiting at the bus stop if the #5 bus already passed. What word begins your sentence?",
+      "situationAudio": "תַּגִּידִי, קַו 5 כְּבָר עָבַר?",
+      "situationCorrect": "תַּגִּידִי... (tagidi...) — Say... / Tell me... (to a female)",
+      "situationDistractors": [
+        "תַּגִּיד (tagid) — Say... (to a male)",
+        "הָפוּך חַלָּשׁ (hafuch chalash) — Mild cappuccino",
+        "רַב-קַו (rav-kav) — Transit card"
+      ]
+    },
+    {
+      "id": "ST_ma_pitom",
+      "hebrew": "מָה פִּתְאוֹם?!",
+      "thai": "מָה פִּתְאוֹם?!",
+      "spoken": "ma pit-óm?!",
+      "roman": "ma pitom",
+      "meaning": "'What on earth?! / Are you kidding?! / No way!'",
+      "unit": 4,
+      "theme": "Reactions & Slang",
+      "category": "Exclamation of Disbelief",
+      "tts": "מָה פִּתְאוֹם?!",
+      "words": [
+        {
+          "he": "מָה",
+          "th": "מָה",
+          "ro": "ma",
+          "en": "what"
+        },
+        {
+          "he": "פִּתְאוֹם",
+          "th": "פִּתְאוֹם",
+          "ro": "pit'om",
+          "en": "suddenly / on earth"
+        }
+      ],
+      "streetShift": "Literally 'what suddenly?'. In reality, '!מָה פִּתְאוֹם' is the ultimate Israeli exclamation of indignance, shock, or disbelief: 'Are you crazy?! No way!'",
+      "scene": "☕ Cafe Bench, Habima",
+      "dialogue": {
+        "speakerA": "🙋 חָבֵר (Friend)",
+        "lineHebrewA": "?שָׁמַעְתִּי שֶׁאַתָּה עוֹזֵב אֶת הָאָרֶץ",
+        "lineSpokenA": "Shamati she'ata ozev et ha'aretz?",
+        "lineEnglishA": "I heard you're leaving the country?",
+        "ttsA": "שָׁמַעְתִּי שֶׁאַתָּה עוֹזֵב אֶת הָאָרֶץ?",
+        "speakerB": "🙋 אַתָּה (You)",
+        "lineHebrewB": "!מָה פִּתְאוֹם?! מִי סִפֵּר לְךָ אֶת זֶה?! אֲנִי נִשְׁאָר פֹּה",
+        "lineSpokenB": "Ma pit-óm?! Mi siper lecha et ze?! Ani nish'ar po!",
+        "lineEnglishB": "What on earth?! Who told you that?! I'm staying right here!",
+        "ttsB": "מָה פִּתְאוֹם?! אֲנִי נִשְׁאָר פֹּה"
+      },
+      "exampleSentence": {
+        "hebrew": "!מָה פִּתְאוֹם שֶׁנְּשַׁלֵּם מָחָר, נְשַׁלֵּם עַכְשָׁו",
+        "spoken": "Ma pit'om sheneshalem machar, neshalem achshav!",
+        "english": "No way we pay tomorrow, let's pay right now!",
+        "tts": "מָה פִּתְאוֹם שֶׁנְּשַׁלֵּם מָחָר!"
+      },
+      "situationPrompt": "A coworker spreads a rumor that you are resigning next week. You are stunned and completely deny it. What classic exclamation do you make?",
+      "situationAudio": "מָה פִּתְאוֹם?!",
+      "situationCorrect": "מָה פִּתְאוֹם?! (ma pit'om?!) — What on earth?! / Are you kidding?!",
+      "situationDistractors": [
+        "סַבָּבָה (sababa) — Great / cool",
+        "עִם הַכֹּל (im hakol) — With everything",
+        "יָשָׁר יָשָׁר (yashar yashar) — Straight ahead"
+      ]
+    },
+    {
+      "id": "ST_al_hapanim",
+      "hebrew": "עַל הַפָּנִים",
+      "thai": "עַל הַפָּנִים",
+      "spoken": "al ha-pa-ním",
+      "roman": "al hapanim",
+      "meaning": "'Terrible / Awful / In shambles' (literally: on the face)",
+      "unit": 4,
+      "theme": "Reactions & Slang",
+      "category": "Negative Review",
+      "tts": "עַל הַפָּנִים",
+      "words": [
+        {
+          "he": "עַל",
+          "th": "עַל",
+          "ro": "al",
+          "en": "on"
+        },
+        {
+          "he": "הַפָּנִים",
+          "th": "הַפָּנִים",
+          "ro": "hapanim",
+          "en": "the face"
+        }
+      ],
+      "streetShift": "When something is a disaster—food was tasteless, service was horrific, weather is miserable, or you feel sick—Israelis say it is '!עַל הַפָּנִים' (faceplanted / terrible).",
+      "scene": "🎬 Movie Theater Exit, Dizengoff",
+      "dialogue": {
+        "speakerA": "🙋 חָבֵר (Friend)",
+        "lineHebrewA": "?אֵיךְ הָיָה הַסֶּרֶט שֶׁרָאִיתָ",
+        "lineSpokenA": "Eich haya haseret shera'ita?",
+        "lineEnglishA": "How was the movie you saw?",
+        "ttsA": "אֵיךְ הָיָה הַסֶּרֶט?",
+        "speakerB": "🙋 אַתָּה (You)",
+        "lineHebrewB": "!הָיָה עַל הַפָּנִים, מַמָּשׁ בִּזְבּוּז שֶׁל זְמַן",
+        "lineSpokenB": "Haya al ha-pa-ním, mamash bizbuz shel zman!",
+        "lineEnglishB": "It was terrible, a total waste of time!",
+        "ttsB": "הָיָה עַל הַפָּנִים"
+      },
+      "exampleSentence": {
+        "hebrew": "!הַשֵּׁרוּת שָׁם הָיָה עַל הַפָּנִים, לֹא חוֹזֵר לְשָׁם",
+        "spoken": "Hasherut sham haya al hapanim, lo chozer lesham!",
+        "english": "The service there was awful, I'm never going back!",
+        "tts": "הַשֵּׁרוּת הָיָה עַל הַפָּנִים"
+      },
+      "situationPrompt": "You tried a newly opened restaurant that served cold soggy food and overcharged you. A friend asks how it was. What candid slang review do you give?",
+      "situationAudio": "הָיָה עַל הַפָּנִים!",
+      "situationCorrect": "עַל הַפָּנִים (al hapanim) — Terrible / Awful / In shambles",
+      "situationDistractors": [
+        "סוֹף הַדֶּרֶךְ (sof haderech) — Outstanding",
+        "אַחְלָה (achla) — Great",
+        "סַבָּבָה (sababa) — Awesome"
+      ]
+    },
+    {
+      "id": "ST_yalla",
+      "hebrew": "יַאלְלָה",
+      "thai": "יַאלְלָה",
+      "spoken": "yál-la",
+      "roman": "yalla",
+      "meaning": "'Let's go! / Come on! / Wrap it up'",
+      "unit": 4,
+      "theme": "Action Drivers",
+      "category": "Momentum Driver",
+      "tts": "יַאלְלָה",
+      "words": [
+        {
+          "he": "יַאלְלָה",
+          "th": "יַאלְלָה",
+          "ro": "yalla",
+          "en": "let's go / come on"
+        }
+      ],
+      "streetShift": "Originally Arabic, 'יַאלְלָה' is Israel's universally spoken motor word: 'יאללה נזוז' (let's get moving), 'יאללה ביי' (alright bye), or 'יאללה תביא' (come on, hand it over).",
+      "scene": "☕ Cafe Departure, Tel Aviv",
+      "dialogue": {
+        "speakerA": "🙋 חָבֵר (Friend)",
+        "lineHebrewA": "?אָז מָתַי יוֹצְאִים לַדֶּרֶךְ",
+        "lineSpokenA": "Az matai yotz'im laderech?",
+        "lineEnglishA": "So when are we hitting the road?",
+        "ttsA": "מָתַי יוֹצְאִים לַדֶּרֶךְ?",
+        "speakerB": "🙋 אַתָּה (You)",
+        "lineHebrewB": "!יַאלְלָה, קוּם, כְּבָר מְאֻחָר",
+        "lineSpokenB": "Yál-la, kum, kvar me'uchar!",
+        "lineEnglishB": "Let's go, get up, it's already late!",
+        "ttsB": "יַאלְלָה, קוּם נָזוּז"
+      },
+      "exampleSentence": {
+        "hebrew": "!יַאלְלָה, בּוֹאוּ נִסְגֹּר חֶשְׁבּוֹן וְנֵלֵךְ",
+        "spoken": "Yalla, bo'u nisgor cheshbon venelech!",
+        "english": "Come on, let's close the check and go!",
+        "tts": "יַאלְלָה, בּוֹאוּ נֵלֵךְ"
+      },
+      "situationPrompt": "You are sitting with friends who are dawdling while the movie starts in 10 minutes. What high-energy word do you use to rally everyone up?",
+      "situationAudio": "יַאלְלָה, זוּז!",
+      "situationCorrect": "יַאלְלָה! (yalla!) — Let's go! / Come on! / Move it!",
+      "situationDistractors": [
+        "סְתָם (stam) — Just because / not serious",
+        "בְּלִי חָרִיף (bli charif) — Without spicy",
+        "קַבָּלָה בְּסִמְס (kabala besms) — Receipt by text"
+      ]
+    },
+    {
+      "id": "ST_tachles",
+      "hebrew": "תַּכְלֶ'ס",
+      "thai": "תַּכְלֶ'ס",
+      "spoken": "tách-les",
+      "roman": "tachles",
+      "meaning": "'Bottom line / Let's get to the point / Realistically'",
+      "unit": 4,
+      "theme": "Action Drivers",
+      "category": "Directness Marker",
+      "tts": "תַּכְלֶס",
+      "words": [
+        {
+          "he": "תַּכְלֶ'ס",
+          "th": "תַּכְלֶ'ס",
+          "ro": "tachles",
+          "en": "bottom line / purpose"
+        }
+      ],
+      "streetShift": "Originally Yiddish (from Hebrew 'תַּכְלִית' - purpose). 'תכל'ס' is the cornerstone of Israeli pragmatism. It cuts through chit-chat: 'Cut the nonsense, what's the bottom line?'.",
+      "scene": "💼 Startup Meeting / Cafe Chat, Tel Aviv",
+      "dialogue": {
+        "speakerA": "🙋 חָבֵר (Friend)",
+        "lineHebrewA": "?אָז מָה נִסְגַּר אִתּוֹ בַּסּוֹף",
+        "lineSpokenA": "Az ma nisgar ito basof?",
+        "lineEnglishA": "So what was the conclusion with him in the end?",
+        "ttsA": "אָז מָה נִסְגַּר?",
+        "speakerB": "🙋 אַתָּה (You)",
+        "lineHebrewB": "!תַּכְלֶ'ס, הוּא צָדַק בְּמֵאָה אָחוּז",
+        "lineSpokenB": "Tách-les, hu tzadek beme'a achuz!",
+        "lineEnglishB": "Bottom line, he was 100% right!",
+        "ttsB": "תַּכְלֶס, הוּא צָדַק"
+      },
+      "exampleSentence": {
+        "hebrew": "!בּוֹא נְדַבֵּר תַּכְלֶ'ס, כַּמָּה זֶה עוֹלֶה",
+        "spoken": "Bo nedaber tachles, kama ze ole?",
+        "english": "Let's talk bottom line, how much does it actually cost?",
+        "tts": "בּוֹא נְדַבֵּר תַּכְלֶס, כַּמָּה זֶה עוֹלֶה?"
+      },
+      "situationPrompt": "A vendor is giving a long windy sales speech about a phone plan. You want the raw facts without the fluff. What quintessential Israeli word do you invoke?",
+      "situationAudio": "בּוֹא נְדַבֵּר תַּכְלֶס!",
+      "situationCorrect": "תַּכְלֶ'ס (tachles) — Bottom line / Let's get real",
+      "situationDistractors": [
+        "עַל הַפָּנִים (al hapanim) — Terrible",
+        "בְּלִי סֻכָּר (bli sukar) — Without sugar",
+        "רַב-קַו (rav-kav) — Transit card"
+      ]
+    },
+    {
+      "id": "ST_sababa",
+      "hebrew": "סַבָּבָה",
+      "thai": "סַבָּבָה",
+      "spoken": "sa-ba-ba",
+      "roman": "sababa",
+      "meaning": "'Awesome / Great / Cool / Sounds good'",
+      "unit": 5,
+      "theme": "Slang & Vibes",
+      "category": "Agreement & Approval",
+      "tts": "סַבָּבָה",
+      "words": [
+        {
+          "he": "סַבָּבָה",
+          "th": "סַבָּבָה",
+          "ro": "sababa",
+          "en": "great / cool / fine"
+        }
+      ],
+      "streetShift": "Originally Arabic (meaning great/fine). 'סַבָּבָה' is Israel's most ubiquitous slang word. It functions as 'cool', 'sounds like a plan', 'no problem', or 'I'm good'.",
+      "scene": "🏖️ Frishman Beach, Tel Aviv",
+      "dialogue": {
+        "speakerA": "🙋 חָבֵר (Friend)",
+        "lineHebrewA": "?נִפָּגֵשׁ בְּשֶׁבַע בַּיָּם לִשְׁקִיעָה",
+        "lineSpokenA": "Nipagesh besheva bayam lishki'a?",
+        "lineEnglishA": "Meet at 7 at the beach for sunset?",
+        "ttsA": "נִפָּגֵשׁ בְּשֶׁבַע בַּיָּם?",
+        "speakerB": "🙋 אַתָּה (You)",
+        "lineHebrewB": "!סַבָּבָה לְגַמְרֵי, נִתְרָאֶה שָׁם",
+        "lineSpokenB": "Sa-ba-ba legamrei, nitra'e sham!",
+        "lineEnglishB": "Totally cool, see you there!",
+        "ttsB": "סַבָּבָה לְגַמְרֵי, נִתְרָאֶה"
+      },
+      "exampleSentence": {
+        "hebrew": "!הַכֹּל סַבָּבָה, אֵין מָה לִדְאֹג",
+        "spoken": "Hakol sababa, ein ma lid'og!",
+        "english": "Everything is great, nothing to worry about!",
+        "tts": "הַכֹּל סַבָּבָה, אֵין מָה לִדְאֹג"
+      },
+      "situationPrompt": "A friend proposes getting pizza and drinks on Thursday evening. You are totally on board with the plan. What 1-word slang agreement do you reply?",
+      "situationAudio": "נִפָּגֵשׁ בַּחוֹף?",
+      "situationCorrect": "סַבָּבָה! (sababa!) — Awesome / Sounds good / Cool!",
+      "situationDistractors": [
+        "עַל הַפָּנִים (al hapanim) — Terrible",
+        "אֵין מַצָּב (ein matzav) — No way",
+        "בְּלִי סֻכָּר (bli sukar) — Without sugar"
+      ]
+    },
+    {
+      "id": "ST_magniv",
+      "hebrew": "מַגְנִיב",
+      "thai": "מַגְנִיב",
+      "spoken": "mag-nív",
+      "roman": "magniv",
+      "meaning": "'Cool / Slick / Impressive'",
+      "unit": 5,
+      "theme": "Slang & Vibes",
+      "category": "Praise",
+      "tts": "מַגְנִיב",
+      "words": [
+        {
+          "he": "מַגְנִיב",
+          "th": "מַגְנִיב",
+          "ro": "magniv",
+          "en": "cool / slick"
+        }
+      ],
+      "streetShift": "Derived from the root ג-נ-ב (to steal/sneak), 'מַגְנִיב' means something that steals your attention—clever, stylish, or impressive.",
+      "scene": "🛹 Skatepark, Tel Aviv Boardwalk",
+      "dialogue": {
+        "speakerA": "🙋 חָבֵר (Friend)",
+        "lineHebrewA": "!קָנִיתִי אֶתְמוֹל גִּיטָרָה חֲדָשָׁה וּמַדְלִיקָה",
+        "lineSpokenA": "Kaniti etmol gitara chadasha umadlika!",
+        "lineEnglishA": "I bought a cool new electric guitar yesterday!",
+        "ttsA": "קָנִיתִי גִּיטָרָה חֲדָשָׁה!",
+        "speakerB": "🙋 אַתָּה (You)",
+        "lineHebrewB": "!וָואוּ, מַגְנִיב רֶצַח, תַּרְאֶה לִי",
+        "lineSpokenB": "Wow, mag-nív retzach, tar'e li!",
+        "lineEnglishB": "Wow, super cool, show me!",
+        "ttsB": "וָואוּ, מַגְנִיב רֶצַח"
+      },
+      "exampleSentence": {
+        "hebrew": "!זֶה רַעְיוֹן מַמָּשׁ מַגְנִיב, בּוֹא נַעֲשֶׂה אֶת זֶה",
+        "spoken": "Ze ra'ayon mamash magniv, bo na'ase et ze!",
+        "english": "That's a really cool idea, let's do it!",
+        "tts": "זֶה רַעְיוֹן מַמָּשׁ מַגְנִיב"
+      },
+      "situationPrompt": "Someone demonstrates a slick smartphone shortcut that solves your problem in 2 seconds. What word praises the feature as cool and clever?",
+      "situationAudio": "וָואוּ, מַגְנִיב!",
+      "situationCorrect": "מַגְנִיב! (magniv!) — Cool / Slick / Impressive!",
+      "situationDistractors": [
+        "עַל הַפָּנִים (al hapanim) — Terrible",
+        "רַב-קַו (rav-kav) — Transit card",
+        "בְּלִי חָרִיף (bli charif) — Without spicy"
+      ]
+    },
+    {
+      "id": "ST_achla",
+      "hebrew": "אַחְלָה",
+      "thai": "אַחְלָה",
+      "spoken": "ách-la",
+      "roman": "achla",
+      "meaning": "'Awesome / Great / Superb' (e.g. אחלה מקום)",
+      "unit": 5,
+      "theme": "Slang & Vibes",
+      "category": "High Quality",
+      "tts": "אַחְלָה",
+      "words": [
+        {
+          "he": "אַחְלָה",
+          "th": "אַחְלָה",
+          "ro": "achla",
+          "en": "sweetest / superb"
+        }
+      ],
+      "streetShift": "From Arabic 'aḥlā' (sweetest/best). Israelis use 'אַחְלָה' as an adjective placed before nouns: 'אחלה בן אדם' (a great guy), 'אחלה רעיון' (great idea), or standalone '!אחלה' (great!).",
+      "scene": "☕ Hip Cafe, Jaffa Flea Market",
+      "dialogue": {
+        "speakerA": "🙋 חָבֵר (Friend)",
+        "lineHebrewA": "?אֵיךְ הַמִּסְעָדָה הַזֹּאת שֶׁשָּׁמַעְתָּ עָלֶיהָ",
+        "lineSpokenA": "Eich hamis'ada hazot sheshamata aleha?",
+        "lineEnglishA": "How is that restaurant you heard about?",
+        "ttsA": "אֵיךְ הַמִּסְעָדָה הַזֹּאת?",
+        "speakerB": "🙋 אַתָּה (You)",
+        "lineHebrewB": "!אַחְלָה מָקוֹם, שֵׁרוּת פְּצָצָה וְאוֹכֶל מְעֻלֶּה",
+        "lineSpokenB": "Ách-la makom, sherut petzatza ve'ochel me'ule!",
+        "lineEnglishB": "Superb place, bomb service and excellent food!",
+        "ttsB": "אַחְלָה מָקוֹם, שֵׁרוּת פְּצָצָה"
+      },
+      "exampleSentence": {
+        "hebrew": "!דָּנִי הוּא אַחְלָה גֶּבֶר, תָּמִיד עוֹזֵר לְכֻלָּם",
+        "spoken": "Dani hu achla gever, tamid ozer lekulam!",
+        "english": "Dani is a great guy, always helps everyone!",
+        "tts": "דָּנִי הוּא אַחְלָה גֶּבֶר"
+      },
+      "situationPrompt": "You want to recommend a rooftop hangout to your friend as a great spot with good music. What phrase do you use?",
+      "situationAudio": "אַחְלָה מָקוֹם!",
+      "situationCorrect": "אַחְלָה מָקוֹם (achla makom) — Great / Superb place",
+      "situationDistractors": [
+        "עַל הַפָּנִים (al hapanim) — Terrible",
+        "חַי בְּסֶרֶט (chai beseret) — Living in a movie",
+        "מוֹנֶה (mone) — Meter"
+      ]
+    },
+    {
+      "id": "ST_esh",
+      "hebrew": "אֵשׁ",
+      "thai": "אֵשׁ",
+      "spoken": "esh",
+      "roman": "esh",
+      "meaning": "'Fire! / Awesome! / Super exciting!'",
+      "unit": 5,
+      "theme": "Slang & Vibes",
+      "category": "Hype & Excitement",
+      "tts": "אֵשׁ",
+      "words": [
+        {
+          "he": "אֵשׁ",
+          "th": "אֵשׁ",
+          "ro": "esh",
+          "en": "fire / lit"
+        }
+      ],
+      "streetShift": "Just like 'fire / lit' in modern English slang, young Israelis shout '!אֵשׁ' when plans are confirmed, when a DJ drops a banger track, or when great news arrives.",
+      "scene": "🎶 Music Concert / Bar, Tel Aviv",
+      "dialogue": {
+        "speakerA": "🙋 חָבֵר (Friend)",
+        "lineHebrewA": "!הִשַּׂגְתִּי לָנוּ כַּרְטִיסִים לַמִּשְׂחָק בַּשַּׁבָּת",
+        "lineSpokenA": "Hisagti lanu kartisim lamischak bashabat!",
+        "lineEnglishA": "I scored us tickets to the big match on Saturday!",
+        "ttsA": "הִשַּׂגְתִּי כַּרְטִיסִים לַמִּשְׂחָק!",
+        "speakerB": "🙋 אַתָּה (You)",
+        "lineHebrewB": "!אֵשׁ! אַתָּה תּוֹתָח, כַּמָּה אֲנִי חַיָּב לְךָ",
+        "lineSpokenB": "Esh! Ata totach, kama ani chayav lecha?",
+        "lineEnglishB": "Fire! You're a legend, how much do I owe you?",
+        "ttsB": "אֵשׁ! אַתָּה תּוֹתָח"
+      },
+      "exampleSentence": {
+        "hebrew": "!הָיְתָה מְסִבָּה אֵשׁ אֶתְמוֹל בַּלַּיְלָה",
+        "spoken": "Hayta mesiba esh etmol balayla!",
+        "english": "It was a lit / fire party last night!",
+        "tts": "הָיְתָה מְסִבָּה אֵשׁ"
+      },
+      "situationPrompt": "Your friend texts that your group just got VIP access to an exclusive DJ set. What 1-word reaction expresses maximum hype?",
+      "situationAudio": "אֵשׁ, אָחִי!",
+      "situationCorrect": "אֵשׁ! (esh!) — Fire! / Awesome! / Hyped!",
+      "situationDistractors": [
+        "סְתָם (stam) — Just kidding",
+        "בְּלִי סֻכָּר (bli sukar) — Without sugar",
+        "לָקַחַת (lakachat) — Takeaway"
+      ]
+    },
+    {
+      "id": "ST_balagan",
+      "hebrew": "בָּלָגָן",
+      "thai": "בָּלָגָן",
+      "spoken": "ba-la-gán",
+      "roman": "balagan",
+      "meaning": "'A total mess / Chaos / Wild disorder'",
+      "unit": 5,
+      "theme": "Everyday Realities",
+      "category": "Chaos & Confusion",
+      "tts": "בָּלָגָן",
+      "words": [
+        {
+          "he": "בָּלָגָן",
+          "th": "בָּלָגָן",
+          "ro": "balagan",
+          "en": "mess / chaos"
+        }
+      ],
+      "streetShift": "Originally from Russian/Persian (puppet booth / uproar), 'בָּלָגָן' is Israel's defining sociological term. Traffic jams, disorganized events, unruly crowds, or a messy room are all 'בָּלָגָן'.",
+      "scene": "🌪️ Central Bus Station Traffic, Tel Aviv",
+      "dialogue": {
+        "speakerA": "🙋 חָבֵר (Friend)",
+        "lineHebrewA": "?מָה הוֹלֵךְ שָׁם בַּכְּבִישׁ",
+        "lineSpokenA": "Ma holech sham bakvish?",
+        "lineEnglishA": "What's going on over there on the road?",
+        "ttsA": "מָה הוֹלֵךְ שָׁם?",
+        "speakerB": "🙋 אַתָּה (You)",
+        "lineHebrewB": "!בָּלָגָן שָׁלֵם, שְׁנֵי אוֹטוֹבּוּסִים חָסְמוּ אֶת הַכֹּל",
+        "lineSpokenB": "Ba-la-gán shalem, shnei otobusim chasmu et hakol!",
+        "lineEnglishB": "Total chaos, two buses blocked everything!",
+        "ttsB": "בָּלָגָן שָׁלֵם שָׁם"
+      },
+      "exampleSentence": {
+        "hebrew": "!יֵשׁ לִי בָּלָגָן בַּחֶדֶר, אֲנִי חַיָּב לְסַדֵּר",
+        "spoken": "Yesh li balagan bacheder, ani chayav lesader!",
+        "english": "I have a total mess in my room, I have to tidy up!",
+        "tts": "יֵשׁ לִי בָּלָגָן בַּחֶדֶר"
+      },
+      "situationPrompt": "You walk into an airport terminal where flights are delayed, bags are piled high, and everyone is shouting over each other. How do you summarize the scene?",
+      "situationAudio": "בָּלָגָן שָׁלֵם!",
+      "situationCorrect": "בָּלָגָן (balagan) — Total chaos / Wild disorder / A mess",
+      "situationDistractors": [
+        "סוֹף הַדֶּרֶךְ (sof haderech) — Outstanding",
+        "יָשָׁר יָשָׁר (yashar yashar) — Straight ahead",
+        "רַק טְחִינָה (rak tchina) — Only tahini"
+      ]
+    },
+    {
+      "id": "ST_stam",
+      "hebrew": "סְתָם",
+      "thai": "סְתָם",
+      "spoken": "stam",
+      "roman": "stam",
+      "meaning": "'Just kidding / For no reason / Not serious / Just because'",
+      "unit": 5,
+      "theme": "Particles & Nuance",
+      "category": "Minimizer & Irony",
+      "tts": "סְתָם",
+      "words": [
+        {
+          "he": "סְתָם",
+          "th": "סְתָם",
+          "ro": "stam",
+          "en": "plainly / just kidding / for nothing"
+        }
+      ],
+      "streetShift": "'סְתָם' is a magical Israeli word. After a prank: '!סְתָם' (just kidding!). When asked why you called: 'סְתָם, רָצִיתִי לִשְׁמֹעַ מָה נִשְׁמַע' (no reason, just wanted to say hi).",
+      "scene": "☕ Street Bench Chat, Tel Aviv",
+      "dialogue": {
+        "speakerA": "🙋 חָבֵר (Friend)",
+        "lineHebrewA": "?לָמָּה שָׁאַלְתָּ אֶת הַשְּׁאֵלָה הַזֹּאת",
+        "lineSpokenA": "Lama sha'alta et hashe'ela hazot?",
+        "lineEnglishA": "Why did you ask that question?",
+        "ttsA": "לָמָּה שָׁאַלְתָּ אֶת זֶה?",
+        "speakerB": "🙋 אַתָּה (You)",
+        "lineHebrewB": "!סְתָם, לֹא בֶּאֱמֶת מַשֶּׁהוּ חָשׁוּב",
+        "lineSpokenB": "Stam, lo be'emet mashehu chashuv!",
+        "lineEnglishB": "Just because, not really anything important!",
+        "ttsB": "סְתָם, לֹא מַשֶּׁהוּ חָשׁוּב"
+      },
+      "exampleSentence": {
+        "hebrew": "!אַל תִּתְרַגֵּשׁ מִמֶּנּוּ, הוּא סְתָם צוֹחֵק",
+        "spoken": "Al titragesh mimenu, hu stam tzochek!",
+        "english": "Don't get upset with him, he's just joking around!",
+        "tts": "הוּא סְתָם צוֹחֵק אִתְּךָ"
+      },
+      "situationPrompt": "You tease a colleague with a mock-serious face, then smile so they know you weren't serious. What word immediately reveals you were just joking?",
+      "situationAudio": "סְתָם, צָחַקְתִּי!",
+      "situationCorrect": "סְתָם! (stam!) — Just kidding! / For no reason / Not serious",
+      "situationDistractors": [
+        "תַּכְלֶ'ס (tachles) — Bottom line",
+        "עַל הַפָּנִים (al hapanim) — Terrible",
+        "מוֹנֶה (mone) — Meter"
+      ]
+    },
+    {
+      "id": "ST_davka",
+      "hebrew": "דַּוְקָא",
+      "thai": "דַּוְקָא",
+      "spoken": "dáv-ka",
+      "roman": "davka",
+      "meaning": "'Actually / Specifically / Contrary to expectations'",
+      "unit": 5,
+      "theme": "Particles & Nuance",
+      "category": "Contrastive Particle",
+      "tts": "דַּוְקָא",
+      "words": [
+        {
+          "he": "דַּוְקָא",
+          "th": "דַּוְקָא",
+          "ro": "davka",
+          "en": "specifically / actually"
+        }
+      ],
+      "streetShift": "Originally Aramaic ('precisely'). In Israeli Hebrew, 'דַּוְקָא' is used when reality defies expectations: 'Everyone said the movie sucked, but דַּוְקָא I loved it!'.",
+      "scene": "☕ Office Kitchenette, Tel Aviv",
+      "dialogue": {
+        "speakerA": "🙋 חָבֵר (Friend)",
+        "lineHebrewA": "?בֶּטַח הָיָה קָשֶׁה מְאוֹד הַמִּבְחָן",
+        "lineSpokenA": "Betach haya kashe me'od hamivchan?",
+        "lineEnglishA": "The exam was probably very difficult?",
+        "ttsA": "בֶּטַח הָיָה קָשֶׁה מְאוֹד?",
+        "speakerB": "🙋 אַתָּה (You)",
+        "lineHebrewB": "!דַּוְקָא הָיָה מַמָּשׁ הוֹגֵן וְקַל",
+        "lineSpokenB": "Dáv-ka haya mamash hogen vekal!",
+        "lineEnglishB": "Actually, contrary to expectations, it was really fair and easy!",
+        "ttsB": "דַּוְקָא הָיָה קַל"
+      },
+      "exampleSentence": {
+        "hebrew": "!דַּוְקָא הַיּוֹם לֹא יוֹרֵד גֶּשֶׁם כְּמוֹ שֶׁאָמְרוּ",
+        "spoken": "Davka hayom lo yored geshem kmo she'amru!",
+        "english": "Actually today it's not raining like they said it would!",
+        "tts": "דַּוְקָא הַיּוֹם אֵין גֶּשֶׁם"
+      },
+      "situationPrompt": "Everyone warned you that the new restaurant had bad reviews, but your meal turned out to be delicious. What nuance word introduces your pleasant surprise?",
+      "situationAudio": "דַּוְקָא הָיָה מְעֻלֶּה!",
+      "situationCorrect": "דַּוְקָא (davka) — Actually / Contrary to what was expected",
+      "situationDistractors": [
+        "אֵין מַצָּב (ein matzav) — No way",
+        "בְּלִי עַמְבָּה (bli amba) — Without amba",
+        "שִׂים מוֹנֶה (sim mone) — Put on the meter"
+      ]
+    },
+    {
+      "id": "ST_walla",
+      "hebrew": "וַאלְלָה",
+      "thai": "וַאלְלָה",
+      "spoken": "wál-la",
+      "roman": "walla",
+      "meaning": "'Really? / Wow / I see / No kidding!'",
+      "unit": 5,
+      "theme": "Reactions & Slang",
+      "category": "Surprise & Acknowledgement",
+      "tts": "וַאלְלָה",
+      "words": [
+        {
+          "he": "וַאלְלָה",
+          "th": "וַאלְלָה",
+          "ro": "walla",
+          "en": "really / by God / wow"
+        }
+      ],
+      "streetShift": "From Arabic 'wa-llāh' (by God). 'וַאלְלָה' changes meaning with intonation: rising '?וַאלְלָה' = 'Really?! No kidding!'; falling 'וַאלְלָה...' = 'I see / Gotcha'.",
+      "scene": "☕ Cafe Encounter, Shenkin St.",
+      "dialogue": {
+        "speakerA": "🙋 חָבֵר (Friend)",
+        "lineHebrewA": "!הִתְחַלְתִּי לִלְמֹד עִבְרִית כָּל יוֹם",
+        "lineSpokenA": "Hitchalti lilmod ivrit kol yom!",
+        "lineEnglishA": "I started studying Hebrew every single day!",
+        "ttsA": "הִתְחַלְתִּי לִלְמֹד עִבְרִית!",
+        "speakerB": "🙋 אַתָּה (You)",
+        "lineHebrewB": "!וַאלְלָה?! כָּל הַכָּבוֹד אָחִי, בְּהַצְלָחָה",
+        "lineSpokenB": "Wál-la?! Kol hakavod achi, behatzlacha!",
+        "lineEnglishB": "Really?! Respect bro, best of luck!",
+        "ttsB": "וַאלְלָה?! כָּל הַכָּבוֹד"
+      },
+      "exampleSentence": {
+        "hebrew": "!וַאלְלָה, לֹא יָדַעְתִּי שֶׁאַתָּה גָּר פֹּה בַּשְּׁכוּנָה",
+        "spoken": "Walla, lo yadati she'ata gar po bashchuna!",
+        "english": "Really, I had no idea you live here in the neighborhood!",
+        "tts": "וַאלְלָה, לֹא יָדַעְתִּי שֶׁאַתָּה גָּר פֹּה"
+      },
+      "situationPrompt": "An acquaintance tells you they just bought an apartment right down your street. What 1-word reaction expresses genuine surprise and interest?",
+      "situationAudio": "וַאלְלָה?! בֶּאֱמֶת?",
+      "situationCorrect": "וַאלְלָה! (walla!) — Really?! / Wow / No kidding!",
+      "situationDistractors": [
+        "בְּלִי סֻכָּר (bli sukar) — Without sugar",
+        "תַּפְעִיל מוֹנֶה (taf'il mone) — Turn on the meter",
+        "עַל הַפָּנִים (al hapanim) — Terrible"
+      ]
+    },
+    {
+      "id": "ST_kapara",
+      "hebrew": "כַּפָּרָה",
+      "thai": "כַּפָּרָה",
+      "spoken": "ka-pa-ra",
+      "roman": "kapara",
+      "meaning": "'Darling / Honey / Sweetheart' (e.g. כפרה עליך)",
+      "unit": 5,
+      "theme": "Warmth & Affection",
+      "category": "Term of Endearment",
+      "tts": "כַּפָּרָה",
+      "words": [
+        {
+          "he": "כַּפָּרָה",
+          "th": "כַּפָּרָה",
+          "ro": "kapara",
+          "en": "atonement / darling"
+        }
+      ],
+      "streetShift": "Originally referring to the Yom Kippur atonement ritual, 'כַּפָּרָה עָלֶיךָ' (kapara alecha) evolved into Israel's warmest, most affectionate slang term: 'my sweetheart / bless your soul!'.",
+      "scene": "👵 Grandmother's Kitchen / Market Stall, Shuk HaTikva",
+      "dialogue": {
+        "speakerA": "👵 סָבְתָא / מוֹכֶרֶת (Elder / Vendor)",
+        "lineHebrewA": "!תּוֹדָה רַבָּה שֶׁעֲזַרְתָּ לִי עִם הַסַּלִּים",
+        "lineSpokenA": "Toda raba she'azarta li im hasalim!",
+        "lineEnglishA": "Thank you so much for helping me carry the market baskets!",
+        "ttsA": "תּוֹדָה שֶׁעֲזַרְתָּ לִי עִם הַסַּלִּים!",
+        "speakerB": "🙋 אַתָּה (You)",
+        "lineHebrewB": "!בְּכֵיף, כַּפָּרָה עָלַיִךְ, שֶׁיִּהְיֶה יוֹם מַקְסִים",
+        "lineSpokenB": "Bekef, ka-pa-ra alayich, sheyihye yom maksim!",
+        "lineEnglishB": "With pleasure darling, have a wonderful day!",
+        "ttsB": "בְּכֵיף, כַּפָּרָה עָלַיִךְ"
+      },
+      "exampleSentence": {
+        "hebrew": "!בּוֹא שֵׁב תֹּאכַל מַשֶּׁהוּ, כַּפָּרָה עָלֶיךָ",
+        "spoken": "Bo shev tochal mashehu, kapara alecha!",
+        "english": "Come sit eat something, sweetheart / bless you!",
+        "tts": "בּוֹא שֵׁב תֹּאכַל, כַּפָּרָה עָלֶיךָ"
+      },
+      "situationPrompt": "An elderly lady in the market smiles warmly after you help her reach the top shelf and calls you 'כפרה עליך'. What emotion is she expressing?",
+      "situationAudio": "תּוֹדָה, כַּפָּרָה עָלֶיךָ!",
+      "situationCorrect": "Deep affection, gratitude, and blessing ('Darling / Bless your soul')",
+      "situationDistractors": [
+        "She is scolding you for dropping a fruit",
+        "She is asking you for change for a 50 shekel bill",
+        "She is telling you the store is closed"
+      ]
+    },
+    {
+      "id": "ST_chai_beseret",
+      "hebrew": "חַי בְּסֶרֶט",
+      "thai": "חַי בְּסֶרֶט",
+      "spoken": "chai be-sé-ret",
+      "roman": "chai beseret",
+      "meaning": "'Living in a movie / Delusional / Out of touch with reality'",
+      "unit": 5,
+      "theme": "Everyday Slang",
+      "category": "Reality Check",
+      "tts": "חַי בְּסֶרֶט",
+      "words": [
+        {
+          "he": "חַי",
+          "th": "חַי",
+          "ro": "chai",
+          "en": "lives"
+        },
+        {
+          "he": "בְּסֶרֶט",
+          "th": "בְּסֶרֶט",
+          "ro": "beseret",
+          "en": "in a movie"
+        }
+      ],
+      "streetShift": "When someone makes absurdly unrealistic demands, has an overinflated ego, or expects miracles, Israelis say: '!אַתָּה חַי בְּסֶרֶט' (You're living in a fantasy movie!).",
+      "scene": "🏙️ Apartment Hunting, Tel Aviv",
+      "dialogue": {
+        "speakerA": "🙋 שֻׁתָּף (Friend)",
+        "lineHebrewA": "!הוּא דּוֹרֵשׁ עֲשֶׂרֶת אֲלָפִים שֶׁקֶל עַל דִּירַת חֶדֶר מִתְפָּרֶקֶת",
+        "lineSpokenA": "Hu doresh aseret alafim shekel al dirat cheder mitpareket!",
+        "lineEnglishA": "He's demanding 10,000 NIS for a crumbling studio apartment!",
+        "ttsA": "הוּא דּוֹרֵשׁ עֲשֶׂרֶת אֲלָפִים שֶׁקֶל!",
+        "speakerB": "🙋 אַתָּה (You)",
+        "lineHebrewB": "!הוּא מַמָּשׁ חַי בְּסֶרֶט, אַף אֶחָד לֹא יִשְׂכֹּר אֶת זֶה",
+        "lineSpokenB": "Hu mamash chai be-sé-ret, af echad lo yiskor et ze!",
+        "lineEnglishB": "He is truly living in a fantasy movie, nobody will rent that!",
+        "ttsB": "הוּא מַמָּשׁ חַי בְּסֶרֶט"
+      },
+      "exampleSentence": {
+        "hebrew": "!אִם אַתָּה חוֹשֵׁב שֶׁתִּמְצָא חֲנָיָה בְּתֵל אָבִיב בְּשַׁבָּת, אַתָּה חַי בְּסֶרֶט",
+        "spoken": "Im ata choshev shetimtza chanaya betel aviv beshabat, ata chai beseret!",
+        "english": "If you think you'll find parking in Tel Aviv on Saturday, you're delusional!",
+        "tts": "אַתָּה חַי בְּסֶרֶט אִם תַּחְשֹׁב כָּכָה"
+      },
+      "situationPrompt": "A friend claims he will become a millionaire next month without working. What classic Israeli phrase tells him he's completely detached from reality?",
+      "situationAudio": "אַתָּה חַי בְּסֶרֶט, אָחִי!",
+      "situationCorrect": "חַי בְּסֶרֶט (chai beseret) — Delusional / Living in a movie fantasy",
+      "situationDistractors": [
+        "סוֹף הַדֶּרֶךְ (sof haderech) — Outstanding",
+        "סַבָּבָה לְגַמְרֵי (sababa legamrei) — Totally great",
+        "עִם הַכֹּל (im hakol) — With everything"
+      ]
+    },
+    {
+      "id": "ST_achi",
+      "hebrew": "אָחִי",
+      "thai": "אָחִי",
+      "spoken": "a-chí",
+      "roman": "achi",
+      "meaning": "'Bro / My brother' (Universal informal address)",
+      "unit": 6,
+      "theme": "Social Dynamics",
+      "category": "Informal Address",
+      "tts": "אָחִי",
+      "words": [
+        {
+          "he": "אָחִי",
+          "th": "אָחִי",
+          "ro": "achi",
+          "en": "my brother"
+        }
+      ],
+      "streetShift": "'אָחִי' is used dozens of times a day in Israel to greet strangers, cashiers, friends, drivers, and waiters. It establishes instant warm egalitarian rapport.",
+      "scene": "☕ Kiosk Counter, Tel Aviv",
+      "dialogue": {
+        "speakerA": "🙋 אַתָּה (You)",
+        "lineHebrewA": "?אָחִי, מָה נִשְׁמַע, יֵשׁ מַיִם קָרִים",
+        "lineSpokenA": "A-chí, ma nishma, yesh mayim karim?",
+        "lineEnglishA": "Bro, how's it going, do you have cold water?",
+        "ttsA": "אָחִי, יֵשׁ מַיִם קָרִים?",
+        "speakerB": "👨‍💼 מוֹכֵר (Vendor)",
+        "lineHebrewB": "!בֶּטַח אָחִי, בַּמְּקָרֵר מֵאָחוֹר",
+        "lineSpokenB": "Bétach achi, bamekarer me'achor!",
+        "lineEnglishB": "Sure bro, in the fridge in the back!",
+        "ttsB": "בֶּטַח אָחִי, קַח"
+      },
+      "exampleSentence": {
+        "hebrew": "!תּוֹדָה רַבָּה אָחִי, עָזַרְתָּ לִי מְאוֹד",
+        "spoken": "Toda raba achi, azarta li me'od!",
+        "english": "Thanks a lot bro, you helped me so much!",
+        "tts": "תּוֹדָה רַבָּה אָחִי"
+      },
+      "situationPrompt": "You walk up to a street kiosk to buy water. What universal friendly address word instantly builds warm rapport with the guy behind the counter?",
+      "situationAudio": "אָחִי, מָה קוֹרֶה?",
+      "situationCorrect": "אָחִי (achi) — Bro / My brother",
+      "situationDistractors": [
+        "מוֹתֶק (motek) — Sweetie (to females/children)",
+        "עַל הַפָּנִים (al hapanim) — Terrible",
+        "בְּלִי סֻכָּר (bli sukar) — Without sugar"
+      ]
+    },
+    {
+      "id": "ST_gever",
+      "hebrew": "גֶּבֶר",
+      "thai": "גֶּבֶר",
+      "spoken": "gé-ver",
+      "roman": "gever",
+      "meaning": "'Man / Buddy / Champ' (Addressing a male)",
+      "unit": 6,
+      "theme": "Social Dynamics",
+      "category": "Informal Address",
+      "tts": "גֶּבֶר",
+      "words": [
+        {
+          "he": "גֶּבֶר",
+          "th": "גֶּבֶר",
+          "ro": "gever",
+          "en": "man / real man"
+        }
+      ],
+      "streetShift": "Literally 'man'. Used as friendly address to any guy ('תודה גבר' — thanks man). When someone does you a huge favor, calling them 'גבר-גבר' means 'a true mensch / absolute legend'.",
+      "scene": "🚗 Parking Spot / Street, Tel Aviv",
+      "dialogue": {
+        "speakerA": "🙋 אַתָּה (You)",
+        "lineHebrewA": "!תּוֹדָה רַבָּה שֶׁשָּׁמַרְתָּ לִי אֶת הַחֲנָיָה, גֶּבֶר",
+        "lineSpokenA": "Toda raba sheshamarta li et hachanaya, gé-ver!",
+        "lineEnglishA": "Thanks so much for saving the parking spot for me, man!",
+        "ttsA": "תּוֹדָה רַבָּה, גֶּבֶר!",
+        "speakerB": "👨‍💼 בָּחוּר (Guy)",
+        "lineHebrewB": "!בְּכֵיף גֶּבֶר, שֶׁיִּהְיֶה יוֹם מְעֻלֶּה",
+        "lineSpokenB": "Bekef gever, sheyihye yom me'ule!",
+        "lineEnglishB": "With pleasure man, have a great day!",
+        "ttsB": "בְּכֵיף גֶּבֶר, יוֹם טוֹב"
+      },
+      "exampleSentence": {
+        "hebrew": "!אַתָּה גֶּבֶר אֲמִתִּי, אֵין עָלֶיךָ",
+        "spoken": "Ata gever amiti, ein alecha!",
+        "english": "You're a true mensch / real champ, you're unbeatable!",
+        "tts": "אַתָּה גֶּבֶר אֲמִתִּי"
+      },
+      "situationPrompt": "A guy holds the elevator door open when your hands are full of bags. How do you thank him casually as a peer?",
+      "situationAudio": "תּוֹדָה רַבָּה, גֶּבֶר!",
+      "situationCorrect": "תּוֹדָה, גֶּבֶר! (toda, gever!) — Thanks, man / champ!",
+      "situationDistractors": [
+        "בְּלִי עַמְבָּה (bli amba) — Without amba",
+        "שִׂים מוֹנֶה (sim mone) — Turn on the meter",
+        "חַי בְּסֶרֶט (chai beseret) — Living in a movie"
+      ]
+    },
+    {
+      "id": "ST_motek",
+      "hebrew": "מוֹתֶק",
+      "thai": "מוֹתֶק",
+      "spoken": "mó-tek",
+      "roman": "motek",
+      "meaning": "'Sweetie / Honey / Dear'",
+      "unit": 6,
+      "theme": "Social Dynamics",
+      "category": "Endearment",
+      "tts": "מוֹתֶק",
+      "words": [
+        {
+          "he": "מוֹתֶק",
+          "th": "מוֹתֶק",
+          "ro": "motek",
+          "en": "sweetness / sweetie"
+        }
+      ],
+      "streetShift": "Derived from 'מָתוֹק' (sweet). Friendly servers, market sellers, and friends frequently address people as 'מוֹתֶק' (sweetie).",
+      "scene": "☕ Neighborhood Bakery, Tel Aviv",
+      "dialogue": {
+        "speakerA": "👩‍💼 מוֹכֶרֶת (Baker)",
+        "lineHebrewA": "?מָה תִּרְצֶה לֶאֱכֹל הַבֹּקֶר, מוֹתֶק",
+        "lineSpokenA": "Ma tirtze le'echol haboker, mó-tek?",
+        "lineEnglishA": "What would you like to eat this morning, sweetie?",
+        "ttsA": "מָה תִּרְצֶה, מוֹתֶק?",
+        "speakerB": "🙋 אַתָּה (You)",
+        "lineHebrewB": "!רַק קְרוּאָסוֹן חַם וְקָפֶה קָטָן, תּוֹדָה",
+        "lineSpokenB": "Rak croissant cham vekafe katan, toda!",
+        "lineEnglishB": "Just a warm croissant and small coffee, thanks!",
+        "ttsB": "רַק קְרוּאָסוֹן חַם, תּוֹדָה"
+      },
+      "exampleSentence": {
+        "hebrew": "!בֹּקֶר טוֹב מוֹתֶק, אֵיךְ יָשַׁנְתָּ הַלַּיְלָה",
+        "spoken": "Boker tov motek, eich yashanta halayla?",
+        "english": "Good morning sweetie, how did you sleep last night?",
+        "tts": "בֹּקֶר טוֹב מוֹתֶק"
+      },
+      "situationPrompt": "The friendly barista at your local morning cafe greets you with a warm smile: '?מָה בִּשְׁבִילְךָ מוֹתֶק'. What does 'מוֹתֶק' mean?",
+      "situationAudio": "מָה בִּשְׁבִילְךָ מוֹתֶק?",
+      "situationCorrect": "Sweetie / Honey / Dear",
+      "situationDistractors": [
+        "Sir / Commander",
+        "Stranger / Visitor",
+        "Customer number one"
+      ]
+    },
+    {
+      "id": "ST_chavibi",
+      "hebrew": "חַבִּיבִּי",
+      "thai": "חַבִּיבִּי",
+      "spoken": "cha-bí-bi",
+      "roman": "chavibi",
+      "meaning": "'My friend / Pal' (Warm Arabic loanword)",
+      "unit": 6,
+      "theme": "Social Dynamics",
+      "category": "Warm Address",
+      "tts": "חַבִּיבִּי",
+      "words": [
+        {
+          "he": "חַבִּיבִּי",
+          "th": "חַבִּיבִּי",
+          "ro": "chabibi",
+          "en": "my beloved / my pal"
+        }
+      ],
+      "streetShift": "Originally Arabic 'ḥabībī' (my beloved / friend). In Israeli street culture, fruit stall owners, market vendors, and cab drivers use 'חַבִּיבִּי' to beckon customers with warmth.",
+      "scene": "🍉 Fruit Stall, Shuk HaCarmel",
+      "dialogue": {
+        "speakerA": "👨‍💼 מוֹכֵר בַּשּׁוּק (Market Vendor)",
+        "lineHebrewA": "!בּוֹא חַבִּיבִּי, קַח אֲבַטִּיחַ עַל הַסַּכִּין, מָתוֹק דְּבַשׁ",
+        "lineSpokenA": "Bo cha-bí-bi, kach avati'ach al hasakin, matok dvash!",
+        "lineEnglishA": "Come my friend, taste fresh watermelon cut on the knife, sweet as honey!",
+        "ttsA": "בּוֹא חַבִּיבִּי, קַח אֲבַטִּיחַ!",
+        "speakerB": "🙋 אַתָּה (You)",
+        "lineHebrewB": "!תֵּן לִי חֲצִי אֲבַטִּיחַ, חַבִּיבִּי",
+        "lineSpokenB": "Ten li chatzi avati'ach, chabibi!",
+        "lineEnglishB": "Give me half a watermelon, my friend!",
+        "ttsB": "תֵּן לִי חֲצִי אֲבַטִּיחַ"
+      },
+      "exampleSentence": {
+        "hebrew": "!שְׁמַע לִי חַבִּיבִּי, הַמָּקוֹם הַזֶּה הֲכִי טוֹב בָּעִיר",
+        "spoken": "Shma li chabibi, hamakom haze hachi tov ba'ir!",
+        "english": "Listen to me my friend, this place is the best in town!",
+        "tts": "שְׁמַע לִי חַבִּיבִּי"
+      },
+      "situationPrompt": "A lively fruit vendor in the Carmel Market shouts over the crowd: '!בּוֹא חַבִּיבִּי, טְעַם תּוּרְמוּס'. What word is he using to address you warmly?",
+      "situationAudio": "בּוֹא חַבִּיבִּי!",
+      "situationCorrect": "חַבִּיבִּי (chavibi) — My friend / Pal",
+      "situationDistractors": [
+        "עַל הַפָּנִים (al hapanim) — Terrible",
+        "בְּלִי עַמְבָּה (bli amba) — Without amba",
+        "רַב-קַו (rav-kav) — Transit card"
+      ]
+    },
+    {
+      "id": "ST_ma_nish",
+      "hebrew": "מָה נִשְׁ?",
+      "thai": "מָה נִשְׁ?",
+      "spoken": "ma nish?",
+      "roman": "ma nish",
+      "meaning": "'What's up?' (Fast youth shorthand for מָה נִשְׁמַע)",
+      "unit": 6,
+      "theme": "Greetings",
+      "category": "Casual Greeting",
+      "tts": "מָה נִשְׁמַע?",
+      "words": [
+        {
+          "he": "מָה",
+          "th": "מָה",
+          "ro": "ma",
+          "en": "what"
+        },
+        {
+          "he": "נִשְׁ",
+          "th": "נִשְׁ",
+          "ro": "nish",
+          "en": "is heard (short for נשמע)"
+        }
+      ],
+      "streetShift": "Israelis speak fast. Instead of the full 'מָה נִשְׁמַע' (ma nishma), teenagers and young adults clip it down to '?מָה נִשְׁ' (ma nish?). The classic answer is '!הַכֹּל טוֹב' (all good) or '!הַכֹּל דְּבַשׁ' (all honey!).",
+      "scene": "👋 Street Corner Greeting, Tel Aviv",
+      "dialogue": {
+        "speakerA": "🙋 חָבֵר (Friend)",
+        "lineHebrewA": "?אָחִי, מָה נִשְׁ",
+        "lineSpokenA": "Achi, ma nish?",
+        "lineEnglishA": "Bro, what's up?",
+        "ttsA": "אָחִי, מָה נִשְׁמַע?",
+        "speakerB": "🙋 אַתָּה (You)",
+        "lineHebrewB": "!הַכֹּל טוֹב, מָה קוֹרֶה אִתְּךָ",
+        "lineSpokenB": "Hakol tov, ma kore itcha?",
+        "lineEnglishB": "All good, what's going on with you?",
+        "ttsB": "הַכֹּל טוֹב, מָה קוֹרֶה?"
+      },
+      "exampleSentence": {
+        "hebrew": "!מָה נִשְׁ חֲבֵרִים, כַּמָּה זְמַן לֹא הִתְרָאֵינוּ",
+        "spoken": "Ma nish chaverim, kama zman lo hitra'enu!",
+        "english": "What's up friends, how long since we last saw each other!",
+        "tts": "מָה נִשְׁמַע חֲבֵרִים"
+      },
+      "situationPrompt": "You run into a close friend on the beach boardwalk. What 2-word fast spoken greeting do they shoot at you?",
+      "situationAudio": "אָחִי, מָה נִשְׁ?",
+      "situationCorrect": "מָה נִשְׁ? (ma nish?) — What's up? (Short for מה נשמע)",
+      "situationDistractors": [
+        "אֶפְשָׁר חֶשְׁבּוֹן? (efshar cheshbon?) — Can I have the check?",
+        "תַּפְעִיל מוֹנֶה (taf'il mone) — Turn on the meter",
+        "חַי בְּסֶרֶט (chai beseret) — Living in a movie"
+      ]
+    },
+    {
+      "id": "ST_ma_kore",
+      "hebrew": "מָה קוֹרֶה?",
+      "thai": "מָה קוֹרֶה?",
+      "spoken": "ma ko-ré?",
+      "roman": "ma kore",
+      "meaning": "'What's happening? / What's going on?'",
+      "unit": 6,
+      "theme": "Greetings",
+      "category": "Casual Greeting",
+      "tts": "מָה קוֹרֶה?",
+      "words": [
+        {
+          "he": "מָה",
+          "th": "מָה",
+          "ro": "ma",
+          "en": "what"
+        },
+        {
+          "he": "קוֹרֶה",
+          "th": "קוֹרֶה",
+          "ro": "kore",
+          "en": "happening / occurring"
+        }
+      ],
+      "streetShift": "Along with 'מה נשמע', '?מָה קוֹרֶה' (literally 'what is happening?') is the most natural greeting in daily Israeli life. Answer: '!הַכֹּל בְּסֵדֶר' (everything's in order) or '!הַכֹּל רָגִיל' (everything normal).",
+      "scene": "📱 Phone Pickup / Street Meeting",
+      "dialogue": {
+        "speakerA": "🙋 חָבֵר (Friend)",
+        "lineHebrewA": "?הַי אָחִי, מָה קוֹרֶה",
+        "lineSpokenA": "Hai achi, ma ko-ré?",
+        "lineEnglishA": "Hey bro, what's happening?",
+        "ttsA": "הַי אָחִי, מָה קוֹרֶה?",
+        "speakerB": "🙋 אַתָּה (You)",
+        "lineHebrewB": "!בַּדֶּרֶךְ אֵלֶיךָ, עוֹד חָמֵשׁ דַּקּוֹת אֲנִי שָׁם",
+        "lineSpokenB": "Baderech elecha, od chamesh dakot ani sham!",
+        "lineEnglishB": "On my way to you, there in 5 minutes!",
+        "ttsB": "בַּדֶּרֶךְ אֵלֶיךָ, עוֹד מְעַט"
+      },
+      "exampleSentence": {
+        "hebrew": "?מָה קוֹרֶה אָחִי, אֵיפֹה אַתֶּם יוֹשְׁבִים עַכְשָׁו",
+        "spoken": "Ma kore achi, eifo atem yoshvim achshav?",
+        "english": "What's up bro, where are you guys sitting right now?",
+        "tts": "מָה קוֹרֶה אָחִי?"
+      },
+      "situationPrompt": "You answer a phone call from a buddy. He says: '?שָׁלוֹם, מָה קוֹרֶה'. What is he asking?",
+      "situationAudio": "מָה קוֹרֶה אָחִי?",
+      "situationCorrect": "What's happening? / How are things going?",
+      "situationDistractors": [
+        "Where are you traveling next week?",
+        "Can you lend me some money?",
+        "What did you buy at the grocery store?"
+      ]
+    },
+    {
+      "id": "ST_hevaniti",
+      "hebrew": "הֵבַנְתִּי",
+      "thai": "הֵבַנְתִּי",
+      "spoken": "he-ván-ti",
+      "roman": "hevanti",
+      "meaning": "'Got it / Understood / I hear you'",
+      "unit": 6,
+      "theme": "Conversation Management",
+      "category": "Comprehension Confirmation",
+      "tts": "הֵבַנְתִּי",
+      "words": [
+        {
+          "he": "הֵבַנְתִּי",
+          "th": "הֵבַנְתִּי",
+          "ro": "hevanti",
+          "en": "I understood / got it"
+        }
+      ],
+      "streetShift": "When someone explains directions, explains a rule, or clarifies a plan, say '!הֵבַנְתִּי' (got it). It signals that their explanation was crystal clear and no repetition is needed.",
+      "scene": "🗺️ Asking for Directions, Allenby St.",
+      "dialogue": {
+        "speakerA": "👨‍💼 עוֹבֵר אֹרַח (Passerby)",
+        "lineHebrewA": "!תֵּלֵךְ יָשָׁר וְאָז תִּפְנֶה שְׂמֹאלָה בַּכִּכָּר",
+        "lineSpokenA": "Telech yashar ve'az tifne smola bakikar!",
+        "lineEnglishA": "Walk straight and then turn left at the traffic circle!",
+        "ttsA": "תֵּלֵךְ יָשָׁר וְאָז שְׂמֹאלָה",
+        "speakerB": "🙋 אַתָּה (You)",
+        "lineHebrewB": "!הֵבַנְתִּי, תּוֹדָה רַבָּה לְךָ",
+        "lineSpokenB": "He-ván-ti, toda raba lecha!",
+        "lineEnglishB": "Got it, thank you so much!",
+        "ttsB": "הֵבַנְתִּי, תּוֹדָה רַבָּה"
+      },
+      "exampleSentence": {
+        "hebrew": "!הֵבַנְתִּי אֶת הַבְּעָיָה, אֲנִי אֲטַפֵּל בָּהּ מִיָּד",
+        "spoken": "Hevanti et habe'aya, ani atapel bah miyad!",
+        "english": "I understood the problem, I will take care of it right away!",
+        "tts": "הֵבַנְתִּי אֶת הַבְּעָיָה"
+      },
+      "situationPrompt": "A coworker explains a 3-step software process to you. You understand everything perfectly. What 1-word confirmation do you give?",
+      "situationAudio": "הֵבַנְתִּי, תּוֹדָה!",
+      "situationCorrect": "הֵבַנְתִּי (hevanti) — Got it / Understood / I hear you",
+      "situationDistractors": [
+        "מָה פִּתְאוֹם (ma pit'om) — No way",
+        "בְּלִי עַמְבָּה (bli amba) — Without amba",
+        "תַּפְעִיל מוֹנֶה (taf'il mone) — Turn on the meter"
+      ]
+    },
+    {
+      "id": "ST_sof_haderech",
+      "hebrew": "סוֹף הַדֶּרֶךְ",
+      "thai": "סוֹף הַדֶּרֶךְ",
+      "spoken": "sof ha-dé-rech",
+      "roman": "sof haderech",
+      "meaning": "'Outstanding / Top-notch / Unbeatable' (literally: end of the road)",
+      "unit": 6,
+      "theme": "Superlative Praise",
+      "category": "Highest Praise",
+      "tts": "סוֹף הַדֶּרֶךְ",
+      "words": [
+        {
+          "he": "סוֹף",
+          "th": "סוֹף",
+          "ro": "sof",
+          "en": "end of"
+        },
+        {
+          "he": "הַדֶּרֶךְ",
+          "th": "הַדֶּרֶךְ",
+          "ro": "haderech",
+          "en": "the road"
+        }
+      ],
+      "streetShift": "Literally 'the end of the road'—meaning you can search the entire world and won't find anything better. It is Israel's highest praise for exquisite food or experiences.",
+      "scene": "🥙 Authentic Hummus Parlor, Jaffa",
+      "dialogue": {
+        "speakerA": "🙋 חָבֵר (Friend)",
+        "lineHebrewA": "?אֵיךְ הַמַּסַבָּחָה פֹּה, הָיְתָה טוֹבָה",
+        "lineSpokenA": "Eich hamasabacha po, hayta tova?",
+        "lineEnglishA": "How is the masabacha here, was it good?",
+        "ttsA": "אֵיךְ הָיְתָה הַמָּנָה?",
+        "speakerB": "🙋 אַתָּה (You)",
+        "lineHebrewB": "!וָואוּ, סוֹף הַדֶּרֶךְ, הַחוּמוּס הֲכִי טָעִים שֶׁאָכַלְתִּי",
+        "lineSpokenB": "Wow, sof ha-dé-rech, hachumus hachi taim she'achalti!",
+        "lineEnglishB": "Wow, outstanding, the tastiest hummus I've ever eaten!",
+        "ttsB": "וָואוּ, סוֹף הַדֶּרֶךְ"
+      },
+      "exampleSentence": {
+        "hebrew": "!הָיְתָה חֻפְשָׁה סוֹף הַדֶּרֶךְ בְּאֵילַת",
+        "spoken": "Hayta chufsha sof haderech be'eilat!",
+        "english": "It was an unbeatable / top-notch vacation in Eilat!",
+        "tts": "הָיְתָה חֻפְשָׁה סוֹף הַדֶּרֶךְ"
+      },
+      "situationPrompt": "You just ate the most delicious fresh warm pita with tahini of your entire life. How do you describe the meal to your friends?",
+      "situationAudio": "סוֹף הַדֶּרֶךְ!",
+      "situationCorrect": "סוֹף הַדֶּרֶךְ (sof haderech) — Outstanding / Top-notch / Unbeatable",
+      "situationDistractors": [
+        "עַל הַפָּנִים (al hapanim) — Terrible",
+        "חַי בְּסֶרֶט (chai beseret) — Living in a movie",
+        "בְּלִי סֻכָּר (bli sukar) — Without sugar"
+      ]
+    },
+    {
+      "id": "ST_ein_dvarim_kaele",
+      "hebrew": "אֵין דְּבָרִים כָּאֵלֶּה",
+      "thai": "אֵין דְּבָרִים כָּאֵלֶּה",
+      "spoken": "ein dva-rím ka-é-le",
+      "roman": "ein dvarim kaele",
+      "meaning": "'Unbelievable! / There is nothing like this in the world!'",
+      "unit": 6,
+      "theme": "Superlative Praise",
+      "category": "Astonishment & Praise",
+      "tts": "אֵין דְּבָרִים כָּאֵלֶּה",
+      "words": [
+        {
+          "he": "אֵין",
+          "th": "אֵין",
+          "ro": "ein",
+          "en": "there are no"
+        },
+        {
+          "he": "דְּבָרִים",
+          "th": "דְּבָרִים",
+          "ro": "dvarim",
+          "en": "things"
+        },
+        {
+          "he": "כָּאֵלֶּה",
+          "th": "כָּאֵלֶּה",
+          "ro": "ka'ele",
+          "en": "like these"
+        }
+      ],
+      "streetShift": "Literally 'no such things exist'. Israelis say this when a concert, dessert, sunset, or view is so mind-blowing that it defies imagination: '!אֵין דְּבָרִים כָּאֵלֶּה'.",
+      "scene": "🌅 Cliffside View, Old Jaffa",
+      "dialogue": {
+        "speakerA": "🙋 חָבֵר (Friend)",
+        "lineHebrewA": "?רָאִיתָ אֶת הַשְּׁקִיעָה מֵהַטַּיֶּלֶת",
+        "lineSpokenA": "Ra'ita et hashki'a mehatayelet?",
+        "lineEnglishA": "Did you see the sunset from the boardwalk?",
+        "ttsA": "רָאִיתָ אֶת הַשְּׁקִיעָה?",
+        "speakerB": "🙋 אַתָּה (You)",
+        "lineHebrewB": "!וָואוּ, אֵין דְּבָרִים כָּאֵלֶּה, הַשָּׁמַיִם אֲדֻמִּים לְגַמְרֵי",
+        "lineSpokenB": "Wow, ein dva-rím ka-é-le, hashamayim adumim legamrei!",
+        "lineEnglishB": "Wow, unbelievable, the sky was completely crimson red!",
+        "ttsB": "וָואוּ, אֵין דְּבָרִים כָּאֵלֶּה"
+      },
+      "exampleSentence": {
+        "hebrew": "!הַכְּנָאפֶה הַזֶּה כָּל כָּךְ טָעִים, אֵין דְּבָרִים כָּאֵלֶּה",
+        "spoken": "Haknafe haze kol kach taim, ein dvarim ka'ele!",
+        "english": "This knafeh is so delicious, there is nothing like this!",
+        "tts": "אֵין דְּבָרִים כָּאֵלֶּה בָּעוֹלָם"
+      },
+      "situationPrompt": "You taste a fresh artisan pastry from a legendary bakery in Jaffa that melts in your mouth. What phrase of peak awe and astonishment do you use?",
+      "situationAudio": "אֵין דְּבָרִים כָּאֵלֶּה!",
+      "situationCorrect": "אֵין דְּבָרִים כָּאֵלֶּה (ein dvarim ka'ele) — Unbelievable! / There is nothing like this!",
+      "situationDistractors": [
+        "עַל הַפָּנִים (al hapanim) — Terrible",
+        "חַי בְּסֶרֶט (chai beseret) — Living in a movie",
+        "תַּפְעִיל מוֹנֶה (taf'il mone) — Turn on the meter"
+      ]
+    },
+    {
+      "id": "ST_yalla_baye",
+      "hebrew": "יַאלְלָה בַּיי",
+      "thai": "יַאלְלָה בַּיי",
+      "spoken": "yál-la baye",
+      "roman": "yalla baye",
+      "meaning": "'Alright, bye! / Take care! / Catch you later!'",
+      "unit": 6,
+      "theme": "Sign-Offs",
+      "category": "Farewell",
+      "tts": "יַאלְלָה בַּיי",
+      "words": [
+        {
+          "he": "יַאלְלָה",
+          "th": "יַאלְלָה",
+          "ro": "yalla",
+          "en": "come on / alright"
+        },
+        {
+          "he": "בַּיי",
+          "th": "בַּיי",
+          "ro": "bye",
+          "en": "bye"
+        }
+      ],
+      "streetShift": "The universal Hebrew sign-off for ending phone calls, leaving a cafe, or parting ways on the street: '!יַאלְלָה בַּיי' (combining Arabic 'yalla' + English 'bye'). Quick, cheerful, and iconic.",
+      "scene": "📱 Ending Phone Call / Leaving Friends",
+      "dialogue": {
+        "speakerA": "🙋 חָבֵר (Friend)",
+        "lineHebrewA": "!טוֹב אָחִי, הָאוֹטוֹבּוּס שֶׁלִּי הִגִּיעַ, אֲנִי עַף",
+        "lineSpokenA": "Tov achi, ha'otobus sheli higia, ani af!",
+        "lineEnglishA": "Alright bro, my bus arrived, I gotta fly!",
+        "ttsA": "טוֹב אָחִי, אֲנִי עַף!",
+        "speakerB": "🙋 אַתָּה (You)",
+        "lineHebrewB": "!סַבָּבָה, יַאלְלָה בַּיי, נְדַבֵּר בָּעֶרֶב",
+        "lineSpokenB": "Sababa, yál-la baye, nedaber ba'erev!",
+        "lineEnglishB": "Cool, alright bye, we'll talk this evening!",
+        "ttsB": "סַבָּבָה, יַאלְלָה בַּיי"
+      },
+      "exampleSentence": {
+        "hebrew": "!נִסְגֹּר אֶת זֶה מָחָר, יַאלְלָה בַּיי חֲבֵרִים",
+        "spoken": "Nisgor et ze machar, yalla baye chaverim!",
+        "english": "We'll finalize this tomorrow, alright bye friends!",
+        "tts": "יַאלְלָה בַּיי חֲבֵרִים"
+      },
+      "situationPrompt": "You are wrapping up a quick phone call with a friend and want to hang up in the standard casual Israeli way. What signature farewell do you say?",
+      "situationAudio": "סַבָּבָה, יַאלְלָה בַּיי!",
+      "situationCorrect": "יַאלְלָה בַּיי (yalla baye) — Alright bye! / Take care!",
+      "situationDistractors": [
+        "אֶפְשָׁר חֶשְׁבּוֹן? (efshar cheshbon?) — Can I have the check?",
+        "בְּלִי סֻכָּר (bli sukar) — Without sugar",
+        "רַב-קַו (rav-kav) — Transit card"
+      ]
+    }
+  ],
+  "street_curriculum": [
+    {
+      "unit": 1,
+      "title": "Street Food & Shuk Markets",
+      "subtitle": "Order falafel, shawarma, pita wraps & custom toppings like a local",
+      "color": "amber",
+      "nodes": [
+        {
+          "id": "s1_n1",
+          "title": "Falafel & Shawarma Counter",
+          "type": "street",
+          "icon": "🥙",
+          "description": "Gradual buildup: lafa (flatbread wrap) → pita (pocket) → im hakol (the works) → harbe charif (spicy) → bli amba",
+          "itemIds": [
+            "ST_lafa",
+            "ST_pita",
+            "ST_im_hakol",
+            "ST_harbe_charif",
+            "ST_bli_amba"
+          ]
+        },
+        {
+          "id": "s1_n2",
+          "title": "Shuk & Stand Customization",
+          "type": "street",
+          "icon": "🌶️",
+          "description": "Customizing your order: rak tchinah (only tahini) → lashevet (for here) → lakachat (takeaway) → titchadesh (enjoy it)",
+          "itemIds": [
+            "ST_rak_tchinah",
+            "ST_lashevet",
+            "ST_lakachat",
+            "ST_titchadesh"
+          ]
+        },
+        {
+          "id": "s1_n3",
+          "title": "Checkout & Wrap-Up",
+          "type": "street",
+          "icon": "🛍️",
+          "description": "Vendor questions & wrapping up: od mashehu (anything else?) → ze hakol (that's all)",
+          "itemIds": [
+            "ST_od_mashehu",
+            "ST_ze_hakol"
+          ]
+        }
+      ]
+    },
+    {
+      "unit": 2,
+      "title": "Cafes, AM:PM & Cashless Paying",
+      "subtitle": "Order cafe hafuch, oat milk, pay with Bit or credit & request the bill",
+      "color": "amber",
+      "nodes": [
+        {
+          "id": "s2_n1",
+          "title": "Israeli Coffee Culture",
+          "type": "street",
+          "icon": "☕",
+          "description": "Daily coffee orders: hafuch gadol (large cappuccino) → chalav shibolet (oat milk) → bli sukar (no sugar) → hafuch chalash → kafe kar",
+          "itemIds": [
+            "ST_hafuch_gadol",
+            "ST_chalav_shibolet",
+            "ST_bli_sukar",
+            "ST_hafuch_chalash",
+            "ST_kar"
+          ]
+        },
+        {
+          "id": "s2_n2",
+          "title": "The Bill & Closing Tabs",
+          "type": "street",
+          "icon": "🧾",
+          "description": "Asking for the check & paying: efshar cheshbon → tisgor li → ashrai o mezuman → tip bifnim",
+          "itemIds": [
+            "ST_efshar_cheshbon",
+            "ST_tisgor_li",
+            "ST_ashrai_o_mizuman",
+            "ST_tip_bifnim"
+          ]
+        },
+        {
+          "id": "s2_n3",
+          "title": "AM:PM & Corner Shop Checkout",
+          "type": "street",
+          "icon": "🏪",
+          "description": "Everyday city groceries: Bit payment app → receipt via SMS → bag fee inquiry",
+          "itemIds": [
+            "ST_bit",
+            "ST_kabala_besms",
+            "ST_tsarich_sakit"
+          ]
+        }
+      ]
+    },
+    {
+      "unit": 3,
+      "title": "Taxis, Gett, Buses & Navigation",
+      "subtitle": "Hail Gett taxis, insist on the meter, navigate turns & use Rav-Kav transit",
+      "color": "amber",
+      "nodes": [
+        {
+          "id": "s3_n1",
+          "title": "Hailing Taxis & Gett",
+          "type": "street",
+          "icon": "🚕",
+          "description": "Taking taxis: Gett app → mone (the meter) → ata panui? → kama ze ad...?",
+          "itemIds": [
+            "ST_gett",
+            "ST_mone",
+            "ST_ata_panoi",
+            "ST_kama_ze_ad"
+          ]
+        },
+        {
+          "id": "s3_n2",
+          "title": "Turn-by-Turn Navigation",
+          "type": "street",
+          "icon": "🧭",
+          "description": "Guiding drivers: yashar yashar (straight) → yemina baramzor (right at light) → smola (left) → po bapina (here at corner)",
+          "itemIds": [
+            "ST_yashar_yashar",
+            "ST_yemina_barmzor",
+            "ST_smola",
+            "ST_po_bapina"
+          ]
+        },
+        {
+          "id": "s3_n3",
+          "title": "Buses, Sherut & Rav-Kav",
+          "type": "street",
+          "icon": "🚌",
+          "description": "Israeli public transit: Rav-Kav card → tachana haba'a (next stop) → sherut (shared minivan)",
+          "itemIds": [
+            "ST_rav_kav",
+            "ST_tachana_habaa",
+            "ST_sherut"
+          ]
+        }
+      ]
+    },
+    {
+      "unit": 4,
+      "title": "Spoken Sound Shifts & Fast Contractions",
+      "subtitle": "Natural spoken Israeli shortcuts, cravings, refusals & conversation starters",
+      "color": "amber",
+      "nodes": [
+        {
+          "id": "s4_n1",
+          "title": "Spoken Desires & Possibilities",
+          "type": "street",
+          "icon": "💭",
+          "description": "Expressing cravings: ba li (I feel like) → lo ba li (not in the mood) → ein matzav (no way) → yesh matzav (maybe / likely)",
+          "itemIds": [
+            "ST_ba_li",
+            "ST_lo_ba_li",
+            "ST_ein_matzav",
+            "ST_yesh_matzav"
+          ]
+        },
+        {
+          "id": "s4_n2",
+          "title": "Conversational Hooks & Reactions",
+          "type": "street",
+          "icon": "🗣️",
+          "description": "Engaging people: tagid / tagidi (say/tell me) → ma pitom (no way/what?!) → al hapanim (terrible)",
+          "itemIds": [
+            "ST_tagid",
+            "ST_tagidi",
+            "ST_ma_pitom",
+            "ST_al_hapanim"
+          ]
+        },
+        {
+          "id": "s4_n3",
+          "title": "Action Drivers & Momentum",
+          "type": "street",
+          "icon": "⚡",
+          "description": "Moving things forward: yalla (let's go / come on) → tachles (bottom line / let's be real)",
+          "itemIds": [
+            "ST_yalla",
+            "ST_tachles"
+          ]
+        }
+      ]
+    },
+    {
+      "unit": 5,
+      "title": "Everyday Slang, Particles & Vibe Markers",
+      "subtitle": "Master sababa, balagan, stam, davka, kapara & authentic Israeli slang",
+      "color": "amber",
+      "nodes": [
+        {
+          "id": "s5_n1",
+          "title": "Vibe Approvals & Coolness",
+          "type": "street",
+          "icon": "🤙",
+          "description": "Positive vibes: sababa (great/cool) → magniv (cool/impressive) → achla (great) → esh (fire/awesome)",
+          "itemIds": [
+            "ST_sababa",
+            "ST_magniv",
+            "ST_achla",
+            "ST_esh"
+          ]
+        },
+        {
+          "id": "s5_n2",
+          "title": "Israeli Irony & Reality Nuances",
+          "type": "street",
+          "icon": "🌪️",
+          "description": "The nuances of daily life: balagan (chaos) → stam (just kidding/random) → davka (actually/specifically) → walla (really?)",
+          "itemIds": [
+            "ST_balagan",
+            "ST_stam",
+            "ST_davka",
+            "ST_walla"
+          ]
+        },
+        {
+          "id": "s5_n3",
+          "title": "Affection & Reality Checks",
+          "type": "street",
+          "icon": "❤️",
+          "description": "Expressions: kapara (darling/blessing) → chai beseret (living in a fantasy/delusional)",
+          "itemIds": [
+            "ST_kapara",
+            "ST_chai_beseret"
+          ]
+        }
+      ]
+    },
+    {
+      "unit": 6,
+      "title": "Casual Pronouns, Israeli Reactions & Social Dynamics",
+      "subtitle": "Connect with locals: achi, gever, ma nish?, sof haderech & social sign-offs",
+      "color": "amber",
+      "nodes": [
+        {
+          "id": "s6_n1",
+          "title": "Informal Addressing & Nicknames",
+          "type": "street",
+          "icon": "🤝",
+          "description": "Addressing anyone: achi (bro) → gever (man/buddy) → motek (sweetie) → chavibi (my pal)",
+          "itemIds": [
+            "ST_achi",
+            "ST_gever",
+            "ST_motek",
+            "ST_chavibi"
+          ]
+        },
+        {
+          "id": "s6_n2",
+          "title": "Street Greetings & Fast Checks",
+          "type": "street",
+          "icon": "👋",
+          "description": "Quick check-ins: ma nish? (what's up?) → ma kore? (what's happening?) → hevanti (got it/understood)",
+          "itemIds": [
+            "ST_ma_nish",
+            "ST_ma_kore",
+            "ST_hevaniti"
+          ]
+        },
+        {
+          "id": "s6_n3",
+          "title": "High Praise & Departure Sign-Offs",
+          "type": "street",
+          "icon": "🚀",
+          "description": "Wrapping up like a local: sof haderech (outstanding) → ein dvarim ka'ele (unbelievable) → yalla baye",
+          "itemIds": [
+            "ST_sof_haderech",
+            "ST_ein_dvarim_kaele",
+            "ST_yalla_baye"
+          ]
+        }
+      ]
+    }
+  ],
+  "letters": [
+    {
+      "id": "L_alef",
+      "char": "א",
+      "display": "א",
+      "thai": "א",
+      "tts": "אָלֶף",
+      "sound": "Silent / Vowel Carrier",
+      "name": "Alef",
+      "category": "Guttural Carrier",
+      "position": "First letter of Alef-Bet",
+      "clue": "An 'X' shape with a diagonal spine. A quiet carrier that takes the sound of any vowel attached to it.",
+      "unit": 1
+    },
+    {
+      "id": "L_shin",
+      "char": "שׁ",
+      "display": "שׁ",
+      "thai": "שׁ",
+      "tts": "שִׁין",
+      "sound": "sh (as in shoe)",
+      "name": "Shin",
+      "category": "Sibilant Consonant",
+      "position": "Base consonant",
+      "clue": "Looks like a crown with 3 horns. A dot on the right top horn says 'sh'!",
+      "unit": 1
+    },
+    {
+      "id": "L_lamed",
+      "char": "ל",
+      "display": "ל",
+      "thai": "ל",
+      "tts": "לָמֶד",
+      "sound": "l (as in light)",
+      "name": "Lamed",
+      "category": "Lingual Consonant",
+      "position": "Tallest letter",
+      "clue": "The tallest letter in Hebrew, reaching up high like a giraffe neck or flagpole. Sound: 'l'.",
+      "unit": 1
+    },
+    {
+      "id": "L_mem",
+      "char": "מ",
+      "display": "מ",
+      "thai": "מ",
+      "tts": "מֵם",
+      "sound": "m (as in mama)",
+      "name": "Mem",
+      "category": "Labial Consonant",
+      "position": "Base consonant (non-final)",
+      "clue": "Has an open bottom-left corner like an open wave or mouth. Sound: 'm'.",
+      "unit": 1
+    },
+    {
+      "id": "L_mem_sofit",
+      "char": "ם",
+      "display": "ם",
+      "thai": "ם",
+      "tts": "מֵם סוֹפִית",
+      "sound": "m (word-ending)",
+      "name": "Mem Sofit (Final Mem)",
+      "category": "Sofit (Final Form)",
+      "position": "End of word only",
+      "clue": "A neat closed square box. At the end of a word, Mem turns into this closed square box!",
+      "unit": 1
+    },
+    {
+      "id": "L_bet",
+      "char": "בּ",
+      "display": "בּ",
+      "thai": "בּ",
+      "tts": "בֵּית",
+      "sound": "b (as in boy)",
+      "name": "Bet",
+      "category": "Dagesh Consonant",
+      "position": "Base consonant",
+      "clue": "A square house with an open left door and a dot (Dagesh) in its belly: Belly dot = 'b'!",
+      "unit": 2
+    },
+    {
+      "id": "L_vet",
+      "char": "ב",
+      "display": "ב",
+      "thai": "ב",
+      "tts": "בֵית",
+      "sound": "v (as in vine)",
+      "name": "Vet",
+      "category": "Soft Consonant",
+      "position": "Base consonant",
+      "clue": "Same shape as Bet, but WITHOUT the belly dot. It makes a soft 'v' sound.",
+      "unit": 2
+    },
+    {
+      "id": "L_kuf",
+      "char": "ק",
+      "display": "ק",
+      "thai": "ק",
+      "tts": "קוּף",
+      "sound": "k (as in kite)",
+      "name": "Kuf",
+      "category": "Velar Consonant",
+      "position": "Base consonant",
+      "clue": "Looks like a key with a tail hanging below the baseline. Makes a crisp 'k' sound.",
+      "unit": 2
+    },
+    {
+      "id": "L_pei",
+      "char": "פּ",
+      "display": "פּ",
+      "thai": "פּ",
+      "tts": "פֵּא",
+      "sound": "p (as in pizza)",
+      "name": "Pei",
+      "category": "Dagesh Consonant",
+      "position": "Base consonant",
+      "clue": "Looks like an open mouth with a tooth (the dot). 'P' for pizza with a dot!",
+      "unit": 2
+    },
+    {
+      "id": "L_fei_sofit",
+      "char": "ף",
+      "display": "ף",
+      "thai": "ף",
+      "tts": "פֵא סוֹפִית",
+      "sound": "f (word-ending)",
+      "name": "Fei Sofit (Final Fei)",
+      "category": "Sofit (Final Form)",
+      "position": "End of word only",
+      "clue": "At the end of a word, Pei uncurls its tail straight down and loses the dot, making a soft 'f' sound.",
+      "unit": 2
+    },
+    {
+      "id": "L_chet",
+      "char": "ח",
+      "display": "ח",
+      "thai": "ח",
+      "tts": "חֵית",
+      "sound": "ch / kh (throaty like Bach)",
+      "name": "Chet",
+      "category": "Throat Guttural",
+      "position": "Base consonant",
+      "clue": "A solid doorway or arch with an unbroken roof bridge. Makes that famous Israeli throaty 'ch' sound!",
+      "unit": 3
+    },
+    {
+      "id": "L_resh",
+      "char": "ר",
+      "display": "ר",
+      "thai": "ר",
+      "tts": "רֵישׁ",
+      "sound": "r (modern Israeli throat r)",
+      "name": "Resh",
+      "category": "Liquid Consonant",
+      "position": "Base consonant",
+      "clue": "A rounded right-angle corner (like a rounded right turn). Gently rolled in the back of the throat.",
+      "unit": 3
+    },
+    {
+      "id": "L_tav",
+      "char": "ת",
+      "display": "ת",
+      "thai": "ת",
+      "tts": "תָּו",
+      "sound": "t (as in table)",
+      "name": "Tav",
+      "category": "Dental Consonant",
+      "position": "Base consonant",
+      "clue": "Has a solid left foot sticking out like a heavy toe. Sound: 't'.",
+      "unit": 3
+    },
+    {
+      "id": "L_yod",
+      "char": "י",
+      "display": "י",
+      "thai": "י",
+      "tts": "יוֹד",
+      "sound": "y / ee (as in yes / meet)",
+      "name": "Yod",
+      "category": "Semi-vowel",
+      "position": "Top floating letter",
+      "clue": "The smallest letter in Hebrew, floating like a little apostrophe near the top. Sound: 'y' or 'ee'.",
+      "unit": 3
+    },
+    {
+      "id": "L_dalet",
+      "char": "ד",
+      "display": "ד",
+      "thai": "ד",
+      "tts": "דָּלֶת",
+      "sound": "d (as in door)",
+      "name": "Dalet",
+      "category": "Dental Consonant",
+      "position": "Base consonant",
+      "clue": "Looks like a door frame with a small ledge sticking out at the top-right corner. Sound: 'd'.",
+      "unit": 4
+    },
+    {
+      "id": "L_kaf",
+      "char": "כּ",
+      "display": "כּ",
+      "thai": "כּ",
+      "tts": "כַּף",
+      "sound": "k (as in king)",
+      "name": "Kaf",
+      "category": "Dagesh Consonant",
+      "position": "Base consonant",
+      "clue": "A rounded crescent C-shape with a dot inside. Makes a crisp 'k' sound.",
+      "unit": 4
+    },
+    {
+      "id": "L_khaf",
+      "char": "כ",
+      "display": "כ",
+      "thai": "כ",
+      "tts": "כַף",
+      "sound": "ch / kh (throaty)",
+      "name": "Khaf",
+      "category": "Soft Consonant",
+      "position": "Base consonant",
+      "clue": "Same rounded crescent shape as Kaf, but without the dot. Makes the throaty 'ch' sound.",
+      "unit": 4
+    },
+    {
+      "id": "L_khaf_sofit",
+      "char": "ך",
+      "display": "ך",
+      "thai": "ך",
+      "tts": "כַּף סוֹפִית",
+      "sound": "ch / kh (word-ending)",
+      "name": "Khaf Sofit (Final Khaf)",
+      "category": "Sofit (Final Form)",
+      "position": "End of word only",
+      "clue": "At the end of a word, Khaf drops its lower bar straight down into a long tail below the baseline.",
+      "unit": 4
+    },
+    {
+      "id": "L_nun",
+      "char": "נ",
+      "display": "נ",
+      "thai": "נ",
+      "tts": "נוּן",
+      "sound": "n (as in night)",
+      "name": "Nun",
+      "category": "Lingual Consonant",
+      "position": "Base consonant (non-final)",
+      "clue": "A narrow hook sitting on a base line. Sound: 'n'.",
+      "unit": 4
+    },
+    {
+      "id": "L_nun_sofit",
+      "char": "ן",
+      "display": "ן",
+      "thai": "ן",
+      "tts": "נוּן סוֹפִית",
+      "sound": "n (word-ending)",
+      "name": "Nun Sofit (Final Nun)",
+      "category": "Sofit (Final Form)",
+      "position": "End of word only",
+      "clue": "At the end of a word, Nun straightens out into a long vertical line below the baseline.",
+      "unit": 4
+    },
+    {
+      "id": "L_samech",
+      "char": "ס",
+      "display": "ס",
+      "thai": "ס",
+      "tts": "סָמֶךְ",
+      "sound": "s (as in sun)",
+      "name": "Samech",
+      "category": "Sibilant Consonant",
+      "position": "Base consonant",
+      "clue": "A completely closed round circle or oval. Pure clean 's' sound.",
+      "unit": 5
+    },
+    {
+      "id": "L_ayin",
+      "char": "ע",
+      "display": "ע",
+      "thai": "ע",
+      "tts": "עַיִן",
+      "sound": "Deep Guttural carrier / stop",
+      "name": "Ayin",
+      "category": "Deep Guttural",
+      "position": "Base consonant",
+      "clue": "Looks like a 'Y' with two branches meeting. Means 'eye' in Hebrew; carries vowels with deep resonance.",
+      "unit": 5
+    },
+    {
+      "id": "L_tsadi",
+      "char": "צ",
+      "display": "צ",
+      "thai": "צ",
+      "tts": "צָדִי",
+      "sound": "ts (as in pizza cats)",
+      "name": "Tsadi",
+      "category": "Affricate Consonant",
+      "position": "Base consonant (non-final)",
+      "clue": "Looks like an antenna with a little arm. Makes the snappy 'ts' sound.",
+      "unit": 5
+    },
+    {
+      "id": "L_tsadi_sofit",
+      "char": "ץ",
+      "display": "ץ",
+      "thai": "ץ",
+      "tts": "צָדִי סוֹפִית",
+      "sound": "ts (word-ending)",
+      "name": "Tsadi Sofit (Final Tsadi)",
+      "category": "Sofit (Final Form)",
+      "position": "End of word only",
+      "clue": "At the end of a word, Tsadi unrolls its bottom bar into a long tail dropping below the line.",
+      "unit": 5
+    },
+    {
+      "id": "L_zayin",
+      "char": "ז",
+      "display": "ז",
+      "thai": "ז",
+      "tts": "זַיִן",
+      "sound": "z (as in zebra)",
+      "name": "Zayin",
+      "category": "Sibilant Consonant",
+      "position": "Base consonant",
+      "clue": "A slender vertical rod with a crowned hammer cap. Sound: 'z'.",
+      "unit": 5
+    },
+    {
+      "id": "L_he",
+      "char": "ה",
+      "display": "ה",
+      "thai": "ה",
+      "tts": "הֵא",
+      "sound": "h (as in hope) / silent end",
+      "name": "He",
+      "category": "Guttural Breath",
+      "position": "Base / Word ending",
+      "clue": "Looks like a doorway with a gap in the top-left corner. Breath of air 'h'.",
+      "unit": 6
+    },
+    {
+      "id": "L_vav",
+      "char": "ו",
+      "display": "ו",
+      "thai": "ו",
+      "tts": "וָו",
+      "sound": "v / o / u",
+      "name": "Vav",
+      "category": "Versatile Hook",
+      "position": "Base / Vowel letter",
+      "clue": "A simple vertical nail with a small hook on top. Can sound like 'v', 'o' (וֹ), or 'u' (וּ).",
+      "unit": 6
+    },
+    {
+      "id": "L_tet",
+      "char": "ט",
+      "display": "ט",
+      "thai": "ט",
+      "tts": "טֵית",
+      "sound": "t (as in tea)",
+      "name": "Tet",
+      "category": "Emphatic Dental",
+      "position": "Base consonant",
+      "clue": "A curved basket or pot curling in from the right. Crisp 't' sound.",
+      "unit": 6
+    },
+    {
+      "id": "L_sin",
+      "char": "שׂ",
+      "display": "שׂ",
+      "thai": "שׂ",
+      "tts": "שִׂין",
+      "sound": "s (as in sea)",
+      "name": "Sin",
+      "category": "Sibilant Consonant",
+      "position": "Base consonant",
+      "clue": "The same 3-pronged crown as Shin, but with the dot on the LEFT top horn, giving it a clean 's' sound.",
+      "unit": 6
+    }
+  ],
+  "words": [
+    {
+      "id": "W_shalom",
+      "thai": "שָׁלוֹם",
+      "hebrew": "שָׁלוֹם",
+      "roman": "shalom",
+      "meaning": "Peace / Hello / Goodbye",
+      "unit": 1,
+      "seconds": 15,
+      "timestamp": "0:15",
+      "videoContext": "The universal Israeli greeting used day and night across the country: 'שלום, מה נשמע?'.",
+      "letters": [
+        {
+          "char": "ש",
+          "role": "Initial 'sh' (Shin)"
+        },
+        {
+          "char": "ל",
+          "role": "Middle 'l' (Lamed)"
+        },
+        {
+          "char": "ו",
+          "role": "Vowel 'o' (Cholam via Vav)"
+        },
+        {
+          "char": "ם",
+          "role": "Final 'm' (Mem Sofit)"
+        }
+      ],
+      "syllables": [
+        {
+          "th": "שָׁ",
+          "he": "שָׁ",
+          "ro": "sha",
+          "en": "peace"
+        },
+        {
+          "th": "לוֹם",
+          "he": "לוֹם",
+          "ro": "lom",
+          "en": "wholeness"
+        }
+      ],
+      "distractors": [
+        "Good morning",
+        "Thank you",
+        "Where is the beach?"
+      ]
+    },
+    {
+      "id": "W_shem",
+      "thai": "שֵׁם",
+      "hebrew": "שֵׁם",
+      "roman": "shem",
+      "meaning": "Name",
+      "unit": 1,
+      "seconds": 45,
+      "timestamp": "0:45",
+      "videoContext": "Used when asking names: 'מה השם שלך?' (What is your name?).",
+      "letters": [
+        {
+          "char": "ש",
+          "role": "Initial 'sh' (Shin)"
+        },
+        {
+          "char": "ם",
+          "role": "Final 'm' (Mem Sofit)"
+        }
+      ],
+      "syllables": [
+        {
+          "th": "שֵׁם",
+          "he": "שֵׁם",
+          "ro": "shem",
+          "en": "name"
+        }
+      ],
+      "distractors": [
+        "Book",
+        "City",
+        "Time"
+      ]
+    },
+    {
+      "id": "W_ima",
+      "thai": "אִמָּא",
+      "hebrew": "אִמָּא",
+      "roman": "ima",
+      "meaning": "Mom / Mother",
+      "unit": 1,
+      "seconds": 75,
+      "timestamp": "1:15",
+      "videoContext": "Everyday Hebrew word for Mom, heard in every Israeli home.",
+      "letters": [
+        {
+          "char": "א",
+          "role": "Initial carrier 'i' (Alef + Chirik)"
+        },
+        {
+          "char": "מ",
+          "role": "Middle 'm' (Mem)"
+        },
+        {
+          "char": "א",
+          "role": "Ending carrier 'a' (Alef)"
+        }
+      ],
+      "syllables": [
+        {
+          "th": "אִ",
+          "he": "אִ",
+          "ro": "i",
+          "en": "i-"
+        },
+        {
+          "th": "מָּא",
+          "he": "מָּא",
+          "ro": "ma",
+          "en": "ma"
+        }
+      ],
+      "distractors": [
+        "Dad",
+        "Friend",
+        "Sister"
+      ]
+    },
+    {
+      "id": "W_sham",
+      "thai": "שָׁם",
+      "hebrew": "שָׁם",
+      "roman": "sham",
+      "meaning": "There / Over there",
+      "unit": 1,
+      "seconds": 105,
+      "timestamp": "1:45",
+      "videoContext": "Directional pointer: 'הוא שם' (He is over there).",
+      "letters": [
+        {
+          "char": "ש",
+          "role": "Initial 'sh' (Shin)"
+        },
+        {
+          "char": "ם",
+          "role": "Final 'm' (Mem Sofit)"
+        }
+      ],
+      "syllables": [
+        {
+          "th": "שָׁם",
+          "he": "שָׁם",
+          "ro": "sham",
+          "en": "there"
+        }
+      ],
+      "distractors": [
+        "Here",
+        "Now",
+        "Always"
+      ]
+    },
+    {
+      "id": "W_kafe",
+      "thai": "קָפֶה",
+      "hebrew": "קָפֶה",
+      "roman": "kafe",
+      "meaning": "Coffee",
+      "unit": 2,
+      "seconds": 15,
+      "timestamp": "0:15",
+      "videoContext": "The fuel of Israel. Essential in every cafe and morning routine: 'אפשר קפה?'.",
+      "letters": [
+        {
+          "char": "ק",
+          "role": "Initial 'k' (Kuf)"
+        },
+        {
+          "char": "פ",
+          "role": "Middle 'f' (Fei without dagesh)"
+        },
+        {
+          "char": "ה",
+          "role": "Ending vowel carrier 'e' (He)"
+        }
+      ],
+      "syllables": [
+        {
+          "th": "קָ",
+          "he": "קָ",
+          "ro": "ka",
+          "en": "ka-"
+        },
+        {
+          "th": "פֶה",
+          "he": "פֶה",
+          "ro": "fe",
+          "en": "fe"
+        }
+      ],
+      "distractors": [
+        "Tea",
+        "Juice",
+        "Water"
+      ]
+    },
+    {
+      "id": "W_boker",
+      "thai": "בֹּקֶר",
+      "hebrew": "בֹּקֶר",
+      "roman": "boker",
+      "meaning": "Morning",
+      "unit": 2,
+      "seconds": 45,
+      "timestamp": "0:45",
+      "videoContext": "Found in 'בוקר טוב' (boker tov - good morning), greeted every sunrise.",
+      "letters": [
+        {
+          "char": "ב",
+          "role": "Initial 'b' (Bet with Cholam)"
+        },
+        {
+          "char": "ק",
+          "role": "Middle 'k' (Kuf)"
+        },
+        {
+          "char": "ר",
+          "role": "Final 'r' (Resh)"
+        }
+      ],
+      "syllables": [
+        {
+          "th": "בֹּ",
+          "he": "בֹּ",
+          "ro": "bo",
+          "en": "bo-"
+        },
+        {
+          "th": "קֶר",
+          "he": "קֶר",
+          "ro": "ker",
+          "en": "ker"
+        }
+      ],
+      "distractors": [
+        "Night",
+        "Evening",
+        "Afternoon"
+      ]
+    },
+    {
+      "id": "W_po",
+      "thai": "פֹּה",
+      "hebrew": "פֹּה",
+      "roman": "po",
+      "meaning": "Here",
+      "unit": 2,
+      "seconds": 75,
+      "timestamp": "1:15",
+      "videoContext": "Opposite of 'שם' (sham). Used in 'אני פה' (I am here).",
+      "letters": [
+        {
+          "char": "פ",
+          "role": "Initial 'p' (Pei with dagesh)"
+        },
+        {
+          "char": "ה",
+          "role": "Silent ending carrier (He)"
+        }
+      ],
+      "syllables": [
+        {
+          "th": "פֹּה",
+          "he": "פֹּה",
+          "ro": "po",
+          "en": "here"
+        }
+      ],
+      "distractors": [
+        "There",
+        "Far",
+        "Where"
+      ]
+    },
+    {
+      "id": "W_kol",
+      "thai": "קוֹל",
+      "hebrew": "קוֹל",
+      "roman": "kol",
+      "meaning": "Voice / Sound",
+      "unit": 2,
+      "seconds": 105,
+      "timestamp": "1:45",
+      "videoContext": "Spoken Hebrew word for voice or audio sound: 'איזה קול יפה!'.",
+      "letters": [
+        {
+          "char": "ק",
+          "role": "Initial 'k' (Kuf)"
+        },
+        {
+          "char": "ו",
+          "role": "Vowel 'o' (Cholam via Vav)"
+        },
+        {
+          "char": "ל",
+          "role": "Ending 'l' (Lamed)"
+        }
+      ],
+      "syllables": [
+        {
+          "th": "קוֹל",
+          "he": "קוֹל",
+          "ro": "kol",
+          "en": "voice / sound"
+        }
+      ],
+      "distractors": [
+        "Silence",
+        "Light",
+        "Word"
+      ]
+    },
+    {
+      "id": "W_toda",
+      "thai": "תּוֹדָה",
+      "hebrew": "תּוֹדָה",
+      "roman": "toda",
+      "meaning": "Thank you",
+      "unit": 3,
+      "seconds": 15,
+      "timestamp": "0:15",
+      "videoContext": "Universal expression of gratitude across all Hebrew conversations: 'תודה רבה!'.",
+      "letters": [
+        {
+          "char": "ת",
+          "role": "Initial 't' (Tav)"
+        },
+        {
+          "char": "ו",
+          "role": "Vowel 'o' (Cholam via Vav)"
+        },
+        {
+          "char": "ד",
+          "role": "Middle 'd' (Dalet)"
+        },
+        {
+          "char": "ה",
+          "role": "Ending 'a' carrier (He)"
+        }
+      ],
+      "syllables": [
+        {
+          "th": "תּוֹ",
+          "he": "תּוֹ",
+          "ro": "to",
+          "en": "to-"
+        },
+        {
+          "th": "דָה",
+          "he": "דָה",
+          "ro": "da",
+          "en": "da"
+        }
+      ],
+      "distractors": [
+        "Please",
+        "Sorry",
+        "Welcome"
+      ]
+    },
+    {
+      "id": "W_chaver",
+      "thai": "חָבֵר",
+      "hebrew": "חָבֵר",
+      "roman": "chaver",
+      "meaning": "Friend (male)",
+      "unit": 3,
+      "seconds": 45,
+      "timestamp": "0:45",
+      "videoContext": "Essential social word: friend, companion, or boyfriend.",
+      "letters": [
+        {
+          "char": "ח",
+          "role": "Initial throaty 'ch' (Chet)"
+        },
+        {
+          "char": "ב",
+          "role": "Middle soft 'v' (Vet without dagesh)"
+        },
+        {
+          "char": "ר",
+          "role": "Final 'r' (Resh)"
+        }
+      ],
+      "syllables": [
+        {
+          "th": "חָ",
+          "he": "חָ",
+          "ro": "cha",
+          "en": "cha-"
+        },
+        {
+          "th": "בֵר",
+          "he": "בֵר",
+          "ro": "ver",
+          "en": "ver"
+        }
+      ],
+      "distractors": [
+        "Boss",
+        "Neighbor",
+        "Stranger"
+      ]
+    },
+    {
+      "id": "W_bayit",
+      "thai": "בַּיִת",
+      "hebrew": "בַּיִת",
+      "roman": "bayit",
+      "meaning": "Home / House",
+      "unit": 3,
+      "seconds": 75,
+      "timestamp": "1:15",
+      "videoContext": "Home and shelter: 'אני בבית' (I am at home).",
+      "letters": [
+        {
+          "char": "ב",
+          "role": "Initial 'b' (Bet with dagesh)"
+        },
+        {
+          "char": "י",
+          "role": "Middle 'y' (Yod)"
+        },
+        {
+          "char": "ת",
+          "role": "Final 't' (Tav)"
+        }
+      ],
+      "syllables": [
+        {
+          "th": "בַּ",
+          "he": "בַּ",
+          "ro": "ba",
+          "en": "ba-"
+        },
+        {
+          "th": "יִת",
+          "he": "יִת",
+          "ro": "yit",
+          "en": "yit"
+        }
+      ],
+      "distractors": [
+        "Street",
+        "Hotel",
+        "Room"
+      ]
+    },
+    {
+      "id": "W_lechem",
+      "thai": "לֶחֶם",
+      "hebrew": "לֶחֶם",
+      "roman": "lechem",
+      "meaning": "Bread",
+      "unit": 3,
+      "seconds": 105,
+      "timestamp": "1:45",
+      "videoContext": "Fresh bread at every bakery and table across Israel.",
+      "letters": [
+        {
+          "char": "ל",
+          "role": "Initial 'l' (Lamed)"
+        },
+        {
+          "char": "ח",
+          "role": "Middle 'ch' (Chet)"
+        },
+        {
+          "char": "ם",
+          "role": "Final 'm' (Mem Sofit)"
+        }
+      ],
+      "syllables": [
+        {
+          "th": "לֶ",
+          "he": "לֶ",
+          "ro": "le",
+          "en": "le-"
+        },
+        {
+          "th": "חֶם",
+          "he": "חֶם",
+          "ro": "chem",
+          "en": "chem"
+        }
+      ],
+      "distractors": [
+        "Cheese",
+        "Salad",
+        "Water"
+      ]
+    },
+    {
+      "id": "W_ken",
+      "thai": "כֵּן",
+      "hebrew": "כֵּן",
+      "roman": "ken",
+      "meaning": "Yes",
+      "unit": 4,
+      "seconds": 15,
+      "timestamp": "0:15",
+      "videoContext": "The fundamental positive response in Hebrew: 'כן, בטח!'.",
+      "letters": [
+        {
+          "char": "כ",
+          "role": "Initial 'k' (Kaf with dagesh)"
+        },
+        {
+          "char": "ן",
+          "role": "Final 'n' (Nun Sofit)"
+        }
+      ],
+      "syllables": [
+        {
+          "th": "כֵּן",
+          "he": "כֵּן",
+          "ro": "ken",
+          "en": "yes"
+        }
+      ],
+      "distractors": [
+        "No",
+        "Maybe",
+        "Never"
+      ]
+    },
+    {
+      "id": "W_derech",
+      "thai": "דֶּרֶךְ",
+      "hebrew": "דֶּרֶךְ",
+      "roman": "derech",
+      "meaning": "Way / Road / Path",
+      "unit": 4,
+      "seconds": 45,
+      "timestamp": "0:45",
+      "videoContext": "Heard in navigation and in 'סוף הדרך' (top-notch).",
+      "letters": [
+        {
+          "char": "ד",
+          "role": "Initial 'd' (Dalet)"
+        },
+        {
+          "char": "ר",
+          "role": "Middle 'r' (Resh)"
+        },
+        {
+          "char": "ך",
+          "role": "Final 'ch' (Khaf Sofit)"
+        }
+      ],
+      "syllables": [
+        {
+          "th": "דֶּ",
+          "he": "דֶּ",
+          "ro": "de",
+          "en": "de-"
+        },
+        {
+          "th": "רֶךְ",
+          "he": "רֶךְ",
+          "ro": "rech",
+          "en": "rech"
+        }
+      ],
+      "distractors": [
+        "City",
+        "Car",
+        "House"
+      ]
+    },
+    {
+      "id": "W_karich",
+      "thai": "כָּרִיךְ",
+      "hebrew": "כָּרִיךְ",
+      "roman": "karich",
+      "meaning": "Sandwich",
+      "unit": 4,
+      "seconds": 75,
+      "timestamp": "1:15",
+      "videoContext": "The formal Hebrew word for a sandwich, on cafe display boards.",
+      "letters": [
+        {
+          "char": "כ",
+          "role": "Initial 'k' (Kaf with dagesh)"
+        },
+        {
+          "char": "ר",
+          "role": "Middle 'r' (Resh)"
+        },
+        {
+          "char": "י",
+          "role": "Vowel 'ee' (Yod)"
+        },
+        {
+          "char": "ך",
+          "role": "Final 'ch' (Khaf Sofit)"
+        }
+      ],
+      "syllables": [
+        {
+          "th": "כָּ",
+          "he": "כָּ",
+          "ro": "ka",
+          "en": "ka-"
+        },
+        {
+          "th": "רִיךְ",
+          "he": "רִיךְ",
+          "ro": "rich",
+          "en": "rich"
+        }
+      ],
+      "distractors": [
+        "Soup",
+        "Cake",
+        "Pizza"
+      ]
+    },
+    {
+      "id": "W_dag",
+      "thai": "דָּג",
+      "hebrew": "דָּג",
+      "roman": "dag",
+      "meaning": "Fish",
+      "unit": 4,
+      "seconds": 105,
+      "timestamp": "1:45",
+      "videoContext": "Fresh Mediterranean fish on coastal restaurant menus.",
+      "letters": [
+        {
+          "char": "ד",
+          "role": "Initial 'd' (Dalet with dagesh)"
+        },
+        {
+          "char": "ג",
+          "role": "Final 'g' (Gimel)"
+        }
+      ],
+      "syllables": [
+        {
+          "th": "דָּג",
+          "he": "דָּג",
+          "ro": "dag",
+          "en": "fish"
+        }
+      ],
+      "distractors": [
+        "Meat",
+        "Chicken",
+        "Egg"
+      ]
+    },
+    {
+      "id": "W_beseder",
+      "thai": "בְּסֵדֶר",
+      "hebrew": "בְּסֵדֶר",
+      "roman": "beseder",
+      "meaning": "Alright / In order / Okay",
+      "unit": 5,
+      "seconds": 15,
+      "timestamp": "0:15",
+      "videoContext": "Literally 'in order'. The universal 'everything is fine' in Hebrew.",
+      "letters": [
+        {
+          "char": "ב",
+          "role": "Prefix 'in / at' (Bet)"
+        },
+        {
+          "char": "ס",
+          "role": "Sibilant 's' (Samech)"
+        },
+        {
+          "char": "ד",
+          "role": "Dental 'd' (Dalet)"
+        },
+        {
+          "char": "ר",
+          "role": "Final 'r' (Resh)"
+        }
+      ],
+      "syllables": [
+        {
+          "th": "בְּ",
+          "he": "בְּ",
+          "ro": "be",
+          "en": "in-"
+        },
+        {
+          "th": "סֵ",
+          "he": "סֵ",
+          "ro": "se",
+          "en": "or-"
+        },
+        {
+          "th": "דֶר",
+          "he": "דֶר",
+          "ro": "der",
+          "en": "der"
+        }
+      ],
+      "distractors": [
+        "Terrible",
+        "Broken",
+        "Expensive"
+      ]
+    },
+    {
+      "id": "W_ir",
+      "thai": "עִיר",
+      "hebrew": "עִיר",
+      "roman": "ir",
+      "meaning": "City / Town",
+      "unit": 5,
+      "seconds": 45,
+      "timestamp": "0:45",
+      "videoContext": "City: Tel Aviv, Jerusalem, Haifa: 'עיר ללא הפסקה' (City that never stops).",
+      "letters": [
+        {
+          "char": "ע",
+          "role": "Initial deep guttural (Ayin)"
+        },
+        {
+          "char": "י",
+          "role": "Vowel 'ee' (Yod)"
+        },
+        {
+          "char": "ר",
+          "role": "Final 'r' (Resh)"
+        }
+      ],
+      "syllables": [
+        {
+          "th": "עִיר",
+          "he": "עִיר",
+          "ro": "ir",
+          "en": "city"
+        }
+      ],
+      "distractors": [
+        "Village",
+        "Sea",
+        "Mountain"
+      ]
+    },
+    {
+      "id": "W_mitz",
+      "thai": "מִיץ",
+      "hebrew": "מִיץ",
+      "roman": "mitz",
+      "meaning": "Juice",
+      "unit": 5,
+      "seconds": 75,
+      "timestamp": "1:15",
+      "videoContext": "Freshly squeezed juice stands on every corner (e.g. מיץ תפוזים).",
+      "letters": [
+        {
+          "char": "מ",
+          "role": "Initial 'm' (Mem)"
+        },
+        {
+          "char": "י",
+          "role": "Vowel 'ee' (Yod)"
+        },
+        {
+          "char": "ץ",
+          "role": "Final 'ts' (Tsadi Sofit)"
+        }
+      ],
+      "syllables": [
+        {
+          "th": "מִיץ",
+          "he": "מִיץ",
+          "ro": "mitz",
+          "en": "juice"
+        }
+      ],
+      "distractors": [
+        "Coffee",
+        "Beer",
+        "Milk"
+      ]
+    },
+    {
+      "id": "W_zman",
+      "thai": "זְמַן",
+      "hebrew": "זְמַן",
+      "roman": "zman",
+      "meaning": "Time",
+      "unit": 5,
+      "seconds": 105,
+      "timestamp": "1:45",
+      "videoContext": "Time and scheduling: 'אין לי זמן' (I don't have time).",
+      "letters": [
+        {
+          "char": "ז",
+          "role": "Initial 'z' (Zayin)"
+        },
+        {
+          "char": "מ",
+          "role": "Middle 'm' (Mem)"
+        },
+        {
+          "char": "ן",
+          "role": "Final 'n' (Nun Sofit)"
+        }
+      ],
+      "syllables": [
+        {
+          "th": "זְמַן",
+          "he": "זְמַן",
+          "ro": "zman",
+          "en": "time"
+        }
+      ],
+      "distractors": [
+        "Money",
+        "Work",
+        "Place"
+      ]
+    },
+    {
+      "id": "W_cheshbon",
+      "thai": "חֶשְׁבּוֹן",
+      "hebrew": "חֶשְׁבּוֹן",
+      "roman": "cheshbon",
+      "meaning": "Bill / Check / Account",
+      "unit": 6,
+      "seconds": 15,
+      "timestamp": "0:15",
+      "videoContext": "The bill in restaurants: 'אפשר חשבון?' (Can I have the check?).",
+      "letters": [
+        {
+          "char": "ח",
+          "role": "Initial 'ch' (Chet)"
+        },
+        {
+          "char": "ש",
+          "role": "Sibilant 'sh' (Shin)"
+        },
+        {
+          "char": "ב",
+          "role": "'b' (Bet with dagesh)"
+        },
+        {
+          "char": "ו",
+          "role": "Vowel 'o' (Cholam via Vav)"
+        },
+        {
+          "char": "ן",
+          "role": "Final 'n' (Nun Sofit)"
+        }
+      ],
+      "syllables": [
+        {
+          "th": "חֶשְׁ",
+          "he": "חֶשְׁ",
+          "ro": "chesh",
+          "en": "chesh-"
+        },
+        {
+          "th": "בּוֹן",
+          "he": "בּוֹן",
+          "ro": "bon",
+          "en": "bon"
+        }
+      ],
+      "distractors": [
+        "Receipt",
+        "Menu",
+        "Discount"
+      ]
+    },
+    {
+      "id": "W_taim",
+      "thai": "טָעִים",
+      "hebrew": "טָעִים",
+      "roman": "ta'im",
+      "meaning": "Delicious / Tasty",
+      "unit": 6,
+      "seconds": 45,
+      "timestamp": "0:45",
+      "videoContext": "Said after every delicious bite: 'ממש טעים!' (Really delicious!).",
+      "letters": [
+        {
+          "char": "ט",
+          "role": "Initial 't' (Tet)"
+        },
+        {
+          "char": "ע",
+          "role": "Middle guttural (Ayin)"
+        },
+        {
+          "char": "י",
+          "role": "Vowel 'ee' (Yod)"
+        },
+        {
+          "char": "ם",
+          "role": "Final 'm' (Mem Sofit)"
+        }
+      ],
+      "syllables": [
+        {
+          "th": "טָ",
+          "he": "טָ",
+          "ro": "ta",
+          "en": "ta-"
+        },
+        {
+          "th": "עִים",
+          "he": "עִים",
+          "ro": "im",
+          "en": "im"
+        }
+      ],
+      "distractors": [
+        "Salty",
+        "Cold",
+        "Sweet"
+      ]
+    },
+    {
+      "id": "W_yetsia",
+      "thai": "יְצִיאָה",
+      "hebrew": "יְצִיאָה",
+      "roman": "yetsi'a",
+      "meaning": "Exit",
+      "unit": 6,
+      "seconds": 75,
+      "timestamp": "1:15",
+      "videoContext": "Seen on green glowing signs over every emergency exit and train station door.",
+      "letters": [
+        {
+          "char": "י",
+          "role": "Initial 'y' (Yod)"
+        },
+        {
+          "char": "צ",
+          "role": "Affricate 'ts' (Tsadi)"
+        },
+        {
+          "char": "י",
+          "role": "Vowel 'ee' (Yod)"
+        },
+        {
+          "char": "א",
+          "role": "Silent carrier (Alef)"
+        },
+        {
+          "char": "ה",
+          "role": "Ending 'a' (He)"
+        }
+      ],
+      "syllables": [
+        {
+          "th": "יְ",
+          "he": "יְ",
+          "ro": "ye",
+          "en": "ye-"
+        },
+        {
+          "th": "צִי",
+          "he": "צִי",
+          "ro": "tsi",
+          "en": "tsi-"
+        },
+        {
+          "th": "אָה",
+          "he": "אָה",
+          "ro": "a",
+          "en": "a"
+        }
+      ],
+      "distractors": [
+        "Entrance",
+        "Elevator",
+        "Stairs"
+      ]
+    },
+    {
+      "id": "W_echad",
+      "thai": "אֶחָד",
+      "hebrew": "אֶחָד",
+      "roman": "echad",
+      "meaning": "One (number 1)",
+      "unit": 6,
+      "seconds": 105,
+      "timestamp": "1:45",
+      "videoContext": "Number one: 'קפה אחד בבקשה' (One coffee please).",
+      "letters": [
+        {
+          "char": "א",
+          "role": "Initial vowel carrier 'e' (Alef)"
+        },
+        {
+          "char": "ח",
+          "role": "Middle throaty 'ch' (Chet)"
+        },
+        {
+          "char": "ד",
+          "role": "Final 'd' (Dalet)"
+        }
+      ],
+      "syllables": [
+        {
+          "th": "אֶ",
+          "he": "אֶ",
+          "ro": "e",
+          "en": "e-"
+        },
+        {
+          "th": "חָד",
+          "he": "חָד",
+          "ro": "chad",
+          "en": "chad"
+        }
+      ],
+      "distractors": [
+        "Two",
+        "Three",
+        "Zero"
+      ]
+    }
+  ],
+  "units_curriculum": [
+    {
+      "unit": 1,
+      "title": "Unit 1: First Letters & Core Vowels",
+      "subtitle": "Master א, שׁ, ל, מ, ם + vowels, then read your first Hebrew words",
+      "color": "sky",
+      "nodes": [
+        {
+          "id": "u1_n1",
+          "title": "Meet א, שׁ, ל",
+          "type": "letters",
+          "icon": "א",
+          "description": "Learn the silent carrier Alef (א), crown Shin (שׁ), and tall Lamed (ל)",
+          "letterIds": [
+            "L_alef",
+            "L_shin",
+            "L_lamed"
+          ],
+          "wordIds": []
+        },
+        {
+          "id": "u1_n2",
+          "title": "Meet מ & Final ם",
+          "type": "letters",
+          "icon": "מ",
+          "description": "Discover open Mem (מ) and closed square Final Mem (ם)",
+          "letterIds": [
+            "L_mem",
+            "L_mem_sofit"
+          ],
+          "wordIds": []
+        },
+        {
+          "id": "u1_n3",
+          "title": "Read First Words",
+          "type": "words",
+          "icon": "📖",
+          "description": "Decode and spell shalom (שָׁלוֹם), shem (שֵׁם), ima (אִמָּא) & sham (שָׁם)",
+          "letterIds": [
+            "L_alef",
+            "L_shin",
+            "L_lamed",
+            "L_mem",
+            "L_mem_sofit"
+          ],
+          "wordIds": [
+            "W_shalom",
+            "W_shem",
+            "W_ima",
+            "W_sham"
+          ]
+        }
+      ]
+    },
+    {
+      "unit": 2,
+      "title": "Unit 2: Cafe & Food Foundations",
+      "subtitle": "Explore Dagesh belly dots: בּ vs ב, ק, פּ vs ף and order kafe (קפה)",
+      "color": "sky",
+      "nodes": [
+        {
+          "id": "u2_n1",
+          "title": "Letters בּ/ב & ק",
+          "type": "letters",
+          "icon": "בּ",
+          "description": "Master Bet with belly dot ('b') vs Vet ('v'), and key-tailed Kuf ('k')",
+          "letterIds": [
+            "L_bet",
+            "L_vet",
+            "L_kuf"
+          ],
+          "wordIds": []
+        },
+        {
+          "id": "u2_n2",
+          "title": "Letters פּ & Final ף",
+          "type": "letters",
+          "icon": "פּ",
+          "description": "Learn Pei with tooth dot ('p') and drooping Final Fei ('f')",
+          "letterIds": [
+            "L_pei",
+            "L_fei_sofit"
+          ],
+          "wordIds": []
+        },
+        {
+          "id": "u2_n3",
+          "title": "Decode Cafe Words",
+          "type": "words",
+          "icon": "☕",
+          "description": "Read coffee (קָפֶה), morning (בֹּקֶר), here (פֹּה) & voice (קוֹל)",
+          "letterIds": [
+            "L_bet",
+            "L_vet",
+            "L_kuf",
+            "L_pei",
+            "L_fei_sofit"
+          ],
+          "wordIds": [
+            "W_kafe",
+            "W_boker",
+            "W_po",
+            "W_kol"
+          ]
+        }
+      ]
+    },
+    {
+      "unit": 3,
+      "title": "Unit 3: Street Life & Throat Gutturals",
+      "subtitle": "Unlock throaty ח (Chet), Israeli ר (Resh), footed ת (Tav) & tiny י (Yod)",
+      "color": "sky",
+      "nodes": [
+        {
+          "id": "u3_n1",
+          "title": "Consonants ח & ר",
+          "type": "letters",
+          "icon": "ח",
+          "description": "The throaty arch Chet ('ch') and the smooth rounded Resh ('r')",
+          "letterIds": [
+            "L_chet",
+            "L_resh"
+          ],
+          "wordIds": []
+        },
+        {
+          "id": "u3_n2",
+          "title": "Letters ת & י",
+          "type": "letters",
+          "icon": "ת",
+          "description": "The footed Tav ('t') and floating apostrophe Yod ('y' / 'ee')",
+          "letterIds": [
+            "L_tav",
+            "L_yod"
+          ],
+          "wordIds": []
+        },
+        {
+          "id": "u3_n3",
+          "title": "Daily Words",
+          "type": "words",
+          "icon": "🏠",
+          "description": "Read thank you (תּוֹדָה), friend (חָבֵר), home (בַּיִת) & bread (לֶחֶם)",
+          "letterIds": [
+            "L_chet",
+            "L_resh",
+            "L_tav",
+            "L_yod"
+          ],
+          "wordIds": [
+            "W_toda",
+            "W_chaver",
+            "W_bayit",
+            "W_lechem"
+          ]
+        }
+      ]
+    },
+    {
+      "unit": 4,
+      "title": "Unit 4: Closed Syllables & Final Forms",
+      "subtitle": "Conquer Dalet (ד), crescent כּ/כ/ך (Kaf/Khaf) and hook נ/ן (Nun)",
+      "color": "sky",
+      "nodes": [
+        {
+          "id": "u4_n1",
+          "title": "Consonants ד & כּ/כ/ך",
+          "type": "letters",
+          "icon": "כּ",
+          "description": "Ledge Dalet ('d') and crescent Kaf/Khaf with its long tail Sofit",
+          "letterIds": [
+            "L_dalet",
+            "L_kaf",
+            "L_khaf",
+            "L_khaf_sofit"
+          ],
+          "wordIds": []
+        },
+        {
+          "id": "u4_n2",
+          "title": "Letters נ & Final ן",
+          "type": "letters",
+          "icon": "נ",
+          "description": "Bent hook Nun ('n') and straight vertical Final Nun ('n')",
+          "letterIds": [
+            "L_nun",
+            "L_nun_sofit"
+          ],
+          "wordIds": []
+        },
+        {
+          "id": "u4_n3",
+          "title": "Read Dish & Life Words",
+          "type": "words",
+          "icon": "🥪",
+          "description": "Decode yes (כֵּן), road (דֶּרֶךְ), sandwich (כָּרִיךְ) & fish (דָּג)",
+          "letterIds": [
+            "L_dalet",
+            "L_kaf",
+            "L_khaf",
+            "L_khaf_sofit",
+            "L_nun",
+            "L_nun_sofit"
+          ],
+          "wordIds": [
+            "W_ken",
+            "W_derech",
+            "W_karich",
+            "W_dag"
+          ]
+        }
+      ]
+    },
+    {
+      "unit": 5,
+      "title": "Unit 5: Sibilants, Gutturals & Nuances",
+      "subtitle": "Circle ס (Samech), deep ע (Ayin), antenna צ/ץ (Tsadi) & crowned ז (Zayin)",
+      "color": "sky",
+      "nodes": [
+        {
+          "id": "u5_n1",
+          "title": "Letters ס & ז",
+          "type": "letters",
+          "icon": "ס",
+          "description": "Closed oval Samech ('s') and slender crowned Zayin ('z')",
+          "letterIds": [
+            "L_samech",
+            "L_zayin"
+          ],
+          "wordIds": []
+        },
+        {
+          "id": "u5_n2",
+          "title": "Deep ע & Tsadi צ/ץ",
+          "type": "letters",
+          "icon": "ע",
+          "description": "Deep resonance Ayin (ע) and snappy antenna Tsadi with final tail",
+          "letterIds": [
+            "L_ayin",
+            "L_tsadi",
+            "L_tsadi_sofit"
+          ],
+          "wordIds": []
+        },
+        {
+          "id": "u5_n3",
+          "title": "Full Reading Words",
+          "type": "words",
+          "icon": "🏙️",
+          "description": "Read alright (בְּסֵדֶר), city (עִיר), juice (מִיץ) & time (זְמַן)",
+          "letterIds": [
+            "L_samech",
+            "L_zayin",
+            "L_ayin",
+            "L_tsadi",
+            "L_tsadi_sofit"
+          ],
+          "wordIds": [
+            "W_beseder",
+            "W_ir",
+            "W_mitz",
+            "W_zman"
+          ]
+        }
+      ]
+    },
+    {
+      "unit": 6,
+      "title": "Unit 6: Signs, Menus & Fast Real Hebrew",
+      "subtitle": "Breath ה (He), hook ו (Vav), curved ט (Tet), Sin (שׂ) & street signage",
+      "color": "sky",
+      "nodes": [
+        {
+          "id": "u6_n1",
+          "title": "Letters ה, ו, ט, שׂ",
+          "type": "letters",
+          "icon": "ה",
+          "description": "Breath He ('h'), hook Vav ('v/o/u'), pot Tet ('t') and left-dot Sin ('s')",
+          "letterIds": [
+            "L_he",
+            "L_vav",
+            "L_tet",
+            "L_sin"
+          ],
+          "wordIds": []
+        },
+        {
+          "id": "u6_n2",
+          "title": "Real Israeli Signs & Words",
+          "type": "words",
+          "icon": "📜",
+          "description": "Read check (חֶשְׁבּוֹן), delicious (טָעִים), exit (יְצִיאָה) & one (אֶחָד)",
+          "letterIds": [
+            "L_he",
+            "L_vav",
+            "L_tet",
+            "L_sin"
+          ],
+          "wordIds": [
+            "W_cheshbon",
+            "W_taim",
+            "W_yetsia",
+            "W_echad"
+          ]
+        }
+      ]
+    }
+  ]
+}

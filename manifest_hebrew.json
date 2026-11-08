@@ -1,0 +1,26 @@
+{
+  "name": "Hebrew Reading & Street Mastery",
+  "short_name": "Hebrew Mastery",
+  "description": "Letters to Everyday Spoken Hebrew by Theme",
+  "start_url": "./hebrew_reading_path_adaptive_mastery_engine.html",
+  "display": "standalone",
+  "background_color": "#0e0f12",
+  "theme_color": "#0e0f12",
+  "icons": [
+    {
+      "src": "hebrew_icon_32.png",
+      "sizes": "32x32",
+      "type": "image/png"
+    },
+    {
+      "src": "hebrew_icon_192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "hebrew_icon.png",
+      "sizes": "256x256",
+      "type": "image/png"
+    }
+  ]
+}
