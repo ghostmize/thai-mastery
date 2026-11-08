@@ -42,11 +42,11 @@
       },
       "situationPrompt": "You stand before the sizzling rotating shawarma spit. The carver raises his knife and asks: '?פִּיתָה אוֹ לַאפָה'. You want the large, rolled flatbread wrap. What do you say?",
       "situationAudio": "פִּיתָה אוֹ לַאפַה?",
-      "situationCorrect": "בְּלַאפָה, בְּבַקָּשָׁה (b'lafa, bevakasha) — In a lafa wrap, please",
+      "situationCorrect": "בְּלַאפָה, בְּבַקָּשָׁה (b'lafa, bevakasha)",
       "situationDistractors": [
-        "בְּלִי סֻכָּר (bli sukar) — Without sugar",
-        "אֶפְשָׁר חֶשְׁבּוֹן? (efshar cheshbon?) — Can I have the check?",
-        "יְמִינָה בָּרַמְזוֹר (yemina baramzor) — Right at the traffic light"
+        "בְּלִי סֻכָּר (bli sukar)",
+        "אֶפְשָׁר חֶשְׁבּוֹן? (efshar cheshbon?)",
+        "יְמִינָה בָּרַמְזוֹר (yemina baramzor)"
       ]
     },
     {
@@ -90,11 +90,11 @@
       },
       "situationPrompt": "The falafel master points with his tongs: '?בְּמָה לָשִׂים לְךָ'. You want the classic fluffy pocket bread. What do you reply?",
       "situationAudio": "בְּמָה לָשִׂים לְךָ?",
-      "situationCorrect": "בְּפִיתָה, תּוֹדָה (b'pita, toda) — In a pita, thanks",
+      "situationCorrect": "בְּפִיתָה, תּוֹדָה (b'pita, toda)",
       "situationDistractors": [
-        "תַּפְעִיל מוֹנֶה (taf'il mone) — Turn on the meter",
-        "עַל הַפָּנִים (al hapanim) — Terrible / Horrible",
-        "רַב-קַו (rav-kav) — Transit smartcard"
+        "תַּפְעִיל מוֹנֶה (taf'il mone)",
+        "עַל הַפָּנִים (al hapanim)",
+        "רַב-קַו (rav-kav)"
       ]
     },
     {
@@ -144,11 +144,11 @@
       },
       "situationPrompt": "You are at a crowded shawarma counter. The vendor holds the tongs ready over 8 salad trays and asks: '?מָה לָשִׂים לְךָ'. You want the works—all salads, pickles, and tahini. What do you shout?",
       "situationAudio": "מָה לָשִׂים לְךָ בַּמָּנָה?",
-      "situationCorrect": "עִם הַכֹּל, בְּבַקָּשָׁה! (im hakol, bevakasha!) — With everything / the works!",
+      "situationCorrect": "עִם הַכֹּל, בְּבַקָּשָׁה! (im hakol, bevakasha!)",
       "situationDistractors": [
-        "כְּמוֹ שֶׁהוּא (kmo shehu) — As it is (unnatural textbook)",
-        "בְּלִי סֻכָּר (bli sukar) — Without sugar",
-        "אֶפְשָׁר חֶשְׁבּוֹן? (efshar cheshbon?) — Can I have the check?"
+        "כְּמוֹ שֶׁהוּא (kmo shehu)",
+        "בְּלִי סֻכָּר (bli sukar)",
+        "אֶפְשָׁר חֶשְׁבּוֹן? (efshar cheshbon?)"
       ]
     },
     {
@@ -198,11 +198,11 @@
       },
       "situationPrompt": "The vendor lifts a spoonful of fiery red and green schug: '?רוֹצֶה חָרִיף'. You love strong chili heat. How do you instruct him?",
       "situationAudio": "לָשִׂים לְךָ חָרִיף?",
-      "situationCorrect": "שִׂים הַרְבֵּה חָרִיף! (sim harbe charif!) — Put plenty of spicy!",
+      "situationCorrect": "שִׂים הַרְבֵּה חָרִיף! (sim harbe charif!)",
       "situationDistractors": [
-        "בְּלִי חָלָב (bli chalav) — Without milk",
-        "קַבָּלָה בְּסִמְס (kabala besms) — Receipt by text",
-        "תַּחֲנָה הַבָּאָה (tachana haba'a) — Next stop"
+        "בְּלִי חָלָב (bli chalav)",
+        "קַבָּלָה בְּסִמְס (kabala besms)",
+        "תַּחֲנָה הַבָּאָה (tachana haba'a)"
       ]
     },
     {
@@ -253,11 +253,11 @@
       },
       "situationPrompt": "The sabich maker hovers a ladle of bright yellow pickled mango sauce over your pita and asks: '?לָשִׂים עַמְבָּה'. You dislike fenugreek. How do you halt him?",
       "situationAudio": "לָשִׂים עַם-בָּה מֵעַל?",
-      "situationCorrect": "בְּלִי עַמְבָּה, תּוֹדָה (bli amba, toda) — Without amba, thanks",
+      "situationCorrect": "בְּלִי עַמְבָּה, תּוֹדָה (bli amba, toda)",
       "situationDistractors": [
-        "עִם חֲלַב שִׁבּוֹלֶת (im chalav shibolet) — With oat milk",
-        "תִּסְגֹּר לִי (tisgor li) — Close my tab",
-        "יָשָׁר יָשָׁר (yashar yashar) — Straight ahead"
+        "עִם חֲלַב שִׁבּוֹלֶת (im chalav shibolet)",
+        "תִּסְגֹּר לִי (tisgor li)",
+        "יָשָׁר יָשָׁר (yashar yashar)"
       ]
     },
     {
@@ -307,11 +307,11 @@
       },
       "situationPrompt": "The vendor asks: '?אֵיזֶה רְטָבִים' (Which sauces?). You want pure sesame puree and zero hot peppers. What do you order?",
       "situationAudio": "אֵיזֶה רְטָבִים לָשִׂים לְךָ?",
-      "situationCorrect": "רַק טְחִינָה, בְּבַקָּשָׁה (rak tchina, bevakasha) — Only tahini, please",
+      "situationCorrect": "רַק טְחִינָה, בְּבַקָּשָׁה (rak tchina, bevakasha)",
       "situationDistractors": [
-        "הָפוּך חַלָּשׁ (hafuch chalash) — Mild cappuccino",
-        "אַשְׁרַאי אוֹ מְזֻמָּן (ashrai o mezuman) — Credit or cash",
-        "צָרִיךְ שַׂקִּית? (tsarich sakit?) — Need a bag?"
+        "הָפוּך חַלָּשׁ (hafuch chalash)",
+        "אַשְׁרַאי אוֹ מְזֻמָּן (ashrai o mezuman)",
+        "צָרִיךְ שַׂקִּית? (tsarich sakit?)"
       ]
     },
     {
@@ -355,11 +355,11 @@
       },
       "situationPrompt": "You arrive at Abu Hassan in Jaffa. The host asks at the door: '?לָשֶׁבֶת אוֹ לָקַחַת'. You want a table inside. What is your response?",
       "situationAudio": "לָשֶׁבֶת אוֹ לָקַחַת?",
-      "situationCorrect": "לָשֶׁבֶת, תּוֹדָה (lashevet, toda) — For here / Dine in, thanks",
+      "situationCorrect": "לָשֶׁבֶת, תּוֹדָה (lashevet, toda)",
       "situationDistractors": [
-        "לָקַחַת (lakachat) — To go / Takeaway",
-        "בְּלִי סֻכָּר (bli sukar) — Without sugar",
-        "תַּפְעִיל מוֹנֶה (taf'il mone) — Turn on the meter"
+        "לָקַחַת (lakachat)",
+        "בְּלִי סֻכָּר (bli sukar)",
+        "תַּפְעִיל מוֹנֶה (taf'il mone)"
       ]
     },
     {
@@ -403,11 +403,11 @@
       },
       "situationPrompt": "You are on your lunch break heading back to the office. The bakery cashier asks: '?לָשֶׁבֶת אוֹ לָקַחַת'. What is your answer?",
       "situationAudio": "זֶה לָשֶׁבֶת פֹּה אוֹ לָקַחַת?",
-      "situationCorrect": "לָקַחַת, בְּבַקָּשָׁה (lakachat, bevakasha) — To go / Takeaway, please",
+      "situationCorrect": "לָקַחַת, בְּבַקָּשָׁה (lakachat, bevakasha)",
       "situationDistractors": [
-        "לָשֶׁבֶת (lashevet) — Dine in",
-        "שְׂמֹאלָה בַּכִּכָּר (smola bakikar) — Left at roundabout",
-        "חַי בְּסֶרֶט (chai beseret) — Living in a movie"
+        "לָשֶׁבֶת (lashevet)",
+        "שְׂמֹאלָה בַּכִּכָּר (smola bakikar)",
+        "חַי בְּסֶרֶט (chai beseret)"
       ]
     },
     {
@@ -559,11 +559,11 @@
       },
       "situationPrompt": "The bakery clerk holds the tongs waiting to see if you want cookies too: '?עוֹד מַשֶּׁהוּ'. You are finished ordering. How do you signal wrap-up?",
       "situationAudio": "עוֹד מַשֶּׁהוּ בִּשְׁבִילְךָ?",
-      "situationCorrect": "זֶה הַכֹּל, תּוֹדָה (ze hakol, toda) — That's all / that's everything, thanks",
+      "situationCorrect": "זֶה הַכֹּל, תּוֹדָה (ze hakol, toda)",
       "situationDistractors": [
-        "הָפוּך גָּדוֹל (hafuch gadol) — Large cappuccino",
-        "עַל הַפָּנִים (al hapanim) — Terrible",
-        "תַּפְעִיל מוֹנֶה (taf'il mone) — Put on the meter"
+        "הָפוּך גָּדוֹל (hafuch gadol)",
+        "עַל הַפָּנִים (al hapanim)",
+        "תַּפְעִיל מוֹנֶה (taf'il mone)"
       ]
     },
     {
@@ -613,11 +613,11 @@
       },
       "situationPrompt": "You walk into Aroma or a hip Tel Aviv cafe at 8:30 AM. The barista looks up: '?מָה תִּרְצֶה'. You want Israel's signature large layered latte. What do you order?",
       "situationAudio": "בֹּקֶר טוֹב, מָה בִּשְׁבִילְךָ?",
-      "situationCorrect": "הָפוּך גָּדוֹל, בְּבַקָּשָׁה (hafuch gadol, bevakasha) — Large cafe hafuch, please",
+      "situationCorrect": "הָפוּך גָּדוֹל, בְּבַקָּשָׁה (hafuch gadol, bevakasha)",
       "situationDistractors": [
-        "בְּלִי עַמְבָּה (bli amba) — Without amba",
-        "אֵין מַצָּב (ein matzav) — No way",
-        "קַבָּלָה בְּסִמְס (kabala besms) — Receipt by text"
+        "בְּלִי עַמְבָּה (bli amba)",
+        "אֵין מַצָּב (ein matzav)",
+        "קַבָּלָה בְּסִמְס (kabala besms)"
       ]
     },
     {
@@ -667,11 +667,11 @@
       },
       "situationPrompt": "You ordered a cappuccino and the barista asks: '?עִם אֵיזֶה חָלָב' (Which milk?). You want oat milk. How do you specify?",
       "situationAudio": "עִם אֵיזֶה חָלָב לַעֲשׂוֹת לְךָ?",
-      "situationCorrect": "חֲלַב שִׁבּוֹלֶת, בְּבַקָּשָׁה (chalav shibolet, bevakasha) — Oat milk, please",
+      "situationCorrect": "חֲלַב שִׁבּוֹלֶת, בְּבַקָּשָׁה (chalav shibolet, bevakasha)",
       "situationDistractors": [
-        "הַרְבֵּה חָרִיף (harbe charif) — Plenty of spicy",
-        "תַּפְעִיל מוֹנֶה (taf'il mone) — Turn on the meter",
-        "יָשָׁר יָשָׁר (yashar yashar) — Straight ahead"
+        "הַרְבֵּה חָרִיף (harbe charif)",
+        "תַּפְעִיל מוֹנֶה (taf'il mone)",
+        "יָשָׁר יָשָׁר (yashar yashar)"
       ]
     },
     {
@@ -721,11 +721,11 @@
       },
       "situationPrompt": "The barista pauses with a spoon over the sugar container: '?כַּמָּה סֻכָּר' (How much sugar?). You prefer unsweetened. What do you say?",
       "situationAudio": "לָשִׂים לְךָ סֻכָּר בַּקָּפֶה?",
-      "situationCorrect": "בְּלִי סֻכָּר, תּוֹדָה (bli sukar, toda) — Without sugar, thanks",
+      "situationCorrect": "בְּלִי סֻכָּר, תּוֹדָה (bli sukar, toda)",
       "situationDistractors": [
-        "עִם הַכֹּל (im hakol) — With everything",
-        "בְּאַשְׁרַאי (be'ashrai) — By credit card",
-        "עַל הַפָּנִים (al hapanim) — Awful / In shambles"
+        "עִם הַכֹּל (im hakol)",
+        "בְּאַשְׁרַאי (be'ashrai)",
+        "עַל הַפָּנִים (al hapanim)"
       ]
     },
     {
@@ -775,11 +775,11 @@
       },
       "situationPrompt": "It's 6:00 PM and you want a warm milky coffee without staying awake all night. What specific drink type do you ask the barista for?",
       "situationAudio": "רוֹצֶה אֶת הַקָּפֶה חָזָק אוֹ חַלָּשׁ?",
-      "situationCorrect": "הָפוּך חַלָּשׁ (hafuch chalash) — Mild / single-shot cappuccino",
+      "situationCorrect": "הָפוּך חַלָּשׁ (hafuch chalash)",
       "situationDistractors": [
-        "הַרְבֵּה חָרִיף (harbe charif) — Plenty of spicy",
-        "בְּלִי עַמְבָּה (bli amba) — Without amba",
-        "תִּסְגֹּר לִי (tisgor li) — Close my tab"
+        "הַרְבֵּה חָרִיף (harbe charif)",
+        "בְּלִי עַמְבָּה (bli amba)",
+        "תִּסְגֹּר לִי (tisgor li)"
       ]
     },
     {
@@ -823,11 +823,11 @@
       },
       "situationPrompt": "It's 34°C (93°F) in July on Bograshov St. The barista asks: '?חַם אוֹ קַר' (Hot or iced?). What 1-word answer do you give?",
       "situationAudio": "חַם אוֹ קַר?",
-      "situationCorrect": "קַר, בְּבַקָּשָׁה (kar, bevakasha) — Iced / Cold, please",
+      "situationCorrect": "קַר, בְּבַקָּשָׁה (kar, bevakasha)",
       "situationDistractors": [
-        "חַם (cham) — Hot",
-        "לָקַחַת (lakachat) — Takeaway",
-        "מוֹנֶה (mone) — Meter"
+        "חַם (cham)",
+        "לָקַחַת (lakachat)",
+        "מוֹנֶה (mone)"
       ]
     },
     {
@@ -877,11 +877,11 @@
       },
       "situationPrompt": "You and your friends finished dinner. Plates have been cleared for 20 minutes and you want to leave. What phrase do you call to the server?",
       "situationAudio": "סְלִיחָה, אֶפְשָׁר חֶשְׁבּוֹן?",
-      "situationCorrect": "אֶפְשָׁר חֶשְׁבּוֹן? (efshar cheshbon?) — Can I have the check please?",
+      "situationCorrect": "אֶפְשָׁר חֶשְׁבּוֹן? (efshar cheshbon?)",
       "situationDistractors": [
-        "מָה פִּתְאוֹם?! (ma pit'om?!) — Are you kidding?!",
-        "עִם הַכֹּל (im hakol) — With everything",
-        "יְמִינָה בָּרַמְזוֹר (yemina baramzor) — Right at the light"
+        "מָה פִּתְאוֹם?! (ma pit'om?!)",
+        "עִם הַכֹּל (im hakol)",
+        "יְמִינָה בָּרַמְזוֹר (yemina baramzor)"
       ]
     },
     {
@@ -931,11 +931,11 @@
       },
       "situationPrompt": "You're at a crowded neighborhood pub in Florentin and ready to leave. You opened a tab with your name on it. What casual 2-word phrase do you say to the bartender?",
       "situationAudio": "אָחִי, תִּסְגֹּר לִי שָׁם בַּבָּר!",
-      "situationCorrect": "תִּסְגֹּר לִי (tisgor li) — Close my tab",
+      "situationCorrect": "תִּסְגֹּר לִי (tisgor li)",
       "situationDistractors": [
-        "בְּלִי עַמְבָּה (bli amba) — Without amba",
-        "תַּחֲנָה הַבָּאָה (tachana haba'a) — Next stop",
-        "חַי בְּסֶרֶט (chai beseret) — Living in a movie"
+        "בְּלִי עַמְבָּה (bli amba)",
+        "תַּחֲנָה הַבָּאָה (tachana haba'a)",
+        "חַי בְּסֶרֶט (chai beseret)"
       ]
     },
     {
@@ -1045,11 +1045,11 @@
       },
       "situationPrompt": "The server presents the card terminal with your 90 NIS bill. You want to round it to 105 NIS so the 15 NIS tip is charged directly to your card. What phrase do you tell him?",
       "situationAudio": "לְהוֹסִיף שֵׁרוּת בַּכַּרְטִיס?",
-      "situationCorrect": "טִיפּ בִּפְנִים (tip bifnim) — Tip included inside",
+      "situationCorrect": "טִיפּ בִּפְנִים (tip bifnim)",
       "situationDistractors": [
-        "בְּלִי סֻכָּר (bli sukar) — Without sugar",
-        "שְׂמֹאלָה בַּכִּכָּר (smola bakikar) — Left at roundabout",
-        "עַל הַפָּנִים (al hapanim) — Terrible"
+        "בְּלִי סֻכָּר (bli sukar)",
+        "שְׂמֹאלָה בַּכִּכָּר (smola bakikar)",
+        "עַל הַפָּנִים (al hapanim)"
       ]
     },
     {
@@ -1093,11 +1093,11 @@
       },
       "situationPrompt": "You covered your coworker's lunch bill. He opens his wallet and realizes he has no cash. What universal Israeli app do you tell him to use?",
       "situationAudio": "אֵיךְ לְהַחְזִיר לְךָ?",
-      "situationCorrect": "תַּעֲבִיר לִי בְּבִּיט (ta'avir li be-bit) — Transfer it to me on Bit",
+      "situationCorrect": "תַּעֲבִיר לִי בְּבִּיט (ta'avir li be-bit)",
       "situationDistractors": [
-        "שִׂים מוֹנֶה (sim mone) — Turn on the meter",
-        "רַב-קַו (rav-kav) — Transit card",
-        "בְּלִי עַמְבָּה (bli amba) — Without amba"
+        "שִׂים מוֹנֶה (sim mone)",
+        "רַב-קַו (rav-kav)",
+        "בְּלִי עַמְבָּה (bli amba)"
       ]
     },
     {
@@ -1249,11 +1249,11 @@
       },
       "situationPrompt": "You and your friends are leaving a party late at night with no buses running. How do you propose hailing a ride via smartphone?",
       "situationAudio": "אֵיךְ נַגִּיעַ לַחוֹף?",
-      "situationCorrect": "נַזְמִין גֶּט (nazmin gett) — Let's order a Gett taxi",
+      "situationCorrect": "נַזְמִין גֶּט (nazmin gett)",
       "situationDistractors": [
-        "הָפוּך גָּדוֹל (hafuch gadol) — Large cappuccino",
-        "בְּלִי סֻכָּר (bli sukar) — Without sugar",
-        "עַל הַפָּנִים (al hapanim) — Terrible"
+        "הָפוּך גָּדוֹל (hafuch gadol)",
+        "בְּלִי סֻכָּר (bli sukar)",
+        "עַל הַפָּנִים (al hapanim)"
       ]
     },
     {
@@ -1297,11 +1297,11 @@
       },
       "situationPrompt": "You get into a taxi outside the train station. The driver offers a fixed 70 NIS flat price. What assertive phrase ensures you pay the fair legal fare?",
       "situationAudio": "חֲמִשִּׁים שֶׁקֶל וְנִסַּע?",
-      "situationCorrect": "שִׂים מוֹנֶה, בְּבַקָּשָׁה (sim mone, bevakasha) — Put on the meter, please",
+      "situationCorrect": "שִׂים מוֹנֶה, בְּבַקָּשָׁה (sim mone, bevakasha)",
       "situationDistractors": [
-        "טִיפּ בִּפְנִים (tip bifnim) — Tip inside",
-        "עִם הַכֹּל (im hakol) — With everything",
-        "יָשָׁר יָשָׁר (yashar yashar) — Straight ahead"
+        "טִיפּ בִּפְנִים (tip bifnim)",
+        "עִם הַכֹּל (im hakol)",
+        "יָשָׁר יָשָׁר (yashar yashar)"
       ]
     },
     {
@@ -1351,11 +1351,11 @@
       },
       "situationPrompt": "A white taxi rolls up slowly to the curb with its rooftop light on. You peek in the front window. What polite question do you ask the driver?",
       "situationAudio": "שָׁלוֹם, אַתָּה פָּנוּי?",
-      "situationCorrect": "אַתָּה פָּנוּי? (ata panui?) — Are you free / available?",
+      "situationCorrect": "אַתָּה פָּנוּי? (ata panui?)",
       "situationDistractors": [
-        "אֶפְשָׁר חֶשְׁבּוֹן? (efshar cheshbon?) — Check please",
-        "בְּלִי עַמְבָּה (bli amba) — Without amba",
-        "צָרִיךְ שַׂקִּית? (tsarich sakit?) — Need a bag?"
+        "אֶפְשָׁר חֶשְׁבּוֹן? (efshar cheshbon?)",
+        "בְּלִי עַמְבָּה (bli amba)",
+        "צָרִיךְ שַׂקִּית? (tsarich sakit?)"
       ]
     },
     {
@@ -1411,11 +1411,11 @@
       },
       "situationPrompt": "You need to know the approximate cab fare before hopping in for a ride to Jerusalem. What formula do you use?",
       "situationAudio": "כַּמָּה זֶה עַד יְרוּשָׁלַיִם?",
-      "situationCorrect": "כַּמָּה זֶה עַד...? (kama ze ad...?) — How much is it to...?",
+      "situationCorrect": "כַּמָּה זֶה עַד...? (kama ze ad...?)",
       "situationDistractors": [
-        "תַּכְלֶ'ס (tachles) — Bottom line",
-        "בְּלִי סֻכָּר (bli sukar) — Without sugar",
-        "עַל הַפָּנִים (al hapanim) — Terrible"
+        "תַּכְלֶ'ס (tachles)",
+        "בְּלִי סֻכָּר (bli sukar)",
+        "עַל הַפָּנִים (al hapanim)"
       ]
     },
     {
@@ -1465,11 +1465,11 @@
       },
       "situationPrompt": "The driver slows down approaching an intersection and asks which way to turn. You want him to continue straight without turning. What do you instruct?",
       "situationAudio": "לְאָן עַכְשָׁו, לִפְנוֹת פֹּה?",
-      "situationCorrect": "יָשָׁר יָשָׁר (yashar yashar) — Straight ahead / keep going straight",
+      "situationCorrect": "יָשָׁר יָשָׁר (yashar yashar)",
       "situationDistractors": [
-        "שְׂמֹאלָה (smola) — Left",
-        "רַק טְחִינָה (rak tchina) — Only tahini",
-        "בִּיט (bit) — Bit payment app"
+        "שְׂמֹאלָה (smola)",
+        "רַק טְחִינָה (rak tchina)",
+        "בִּיט (bit)"
       ]
     },
     {
@@ -1519,11 +1519,11 @@
       },
       "situationPrompt": "The cab driver is in the center lane and asks where your turn is. You need him to turn right at the upcoming signals. What do you call out?",
       "situationAudio": "אֵיפֹה לִפְנוֹת אָחִי?",
-      "situationCorrect": "יְמִינָה בָּרַמְזוֹר (yemina baramzor) — Right at the traffic light",
+      "situationCorrect": "יְמִינָה בָּרַמְזוֹר (yemina baramzor)",
       "situationDistractors": [
-        "שְׂמֹאלָה בַּכִּכָּר (smola bakikar) — Left at roundabout",
-        "בְּלִי סֻכָּר (bli sukar) — Without sugar",
-        "אֵין מַצָּב (ein matzav) — No way"
+        "שְׂמֹאלָה בַּכִּכָּר (smola bakikar)",
+        "בְּלִי סֻכָּר (bli sukar)",
+        "אֵין מַצָּב (ein matzav)"
       ]
     },
     {
@@ -1567,11 +1567,11 @@
       },
       "situationPrompt": "The driver asks if he should turn right at the square. You need him to turn left. What 1-word direction command do you say?",
       "situationAudio": "לִפְנוֹת יְמִינָה?",
-      "situationCorrect": "שְׂמֹאלָה (smola) — To the left / turn left",
+      "situationCorrect": "שְׂמֹאלָה (smola)",
       "situationDistractors": [
-        "יְמִינָה (yemina) — To the right",
-        "עַל הַפָּנִים (al hapanim) — Terrible",
-        "רַב-קַו (rav-kav) — Transit card"
+        "יְמִינָה (yemina)",
+        "עַל הַפָּנִים (al hapanim)",
+        "רַב-קַו (rav-kav)"
       ]
     },
     {
@@ -1621,11 +1621,11 @@
       },
       "situationPrompt": "You see your destination 20 meters ahead, but traffic is backing up before the alley. How do you tell the driver to let you out right at the intersection?",
       "situationAudio": "אֵיפֹה לַעֲצֹר לְךָ?",
-      "situationCorrect": "פֹּה בַּפִּנָּה, תּוֹדָה (po bapina, toda) — Right here at the corner, thanks",
+      "situationCorrect": "פֹּה בַּפִּנָּה, תּוֹדָה (po bapina, toda)",
       "situationDistractors": [
-        "הַרְבֵּה חָרִיף (harbe charif) — Plenty of spicy",
-        "אֶפְשָׁר חֶשְׁבּוֹן? (efshar cheshbon?) — Can I have the check?",
-        "חַי בְּסֶרֶט (chai beseret) — Living in a movie"
+        "הַרְבֵּה חָרִיף (harbe charif)",
+        "אֶפְשָׁר חֶשְׁבּוֹן? (efshar cheshbon?)",
+        "חַי בְּסֶרֶט (chai beseret)"
       ]
     },
     {
@@ -1675,11 +1675,11 @@
       },
       "situationPrompt": "A transit ticket inspector boards the bus and asks all passengers to present their payment card. What item do you show him?",
       "situationAudio": "תִּקַּפְתָּ בְּרַב-קַו?",
-      "situationCorrect": "רַב-קַו (rav-kav) — National transit smartcard",
+      "situationCorrect": "רַב-קַו (rav-kav)",
       "situationDistractors": [
-        "בִּיט (bit) — Bit payment app",
-        "קַבָּלָה בְּסִמְס (kabala besms) — Receipt by text",
-        "שַׂקִּית (sakit) — Shopping bag"
+        "בִּיט (bit)",
+        "קַבָּלָה בְּסִמְס (kabala besms)",
+        "שַׂקִּית (sakit)"
       ]
     },
     {
@@ -1776,11 +1776,11 @@
       },
       "situationPrompt": "It's Saturday afternoon and buses are not running. You need to get from Tel Aviv to Netanya or along Ben Yehuda St. What shared transit van do you look for?",
       "situationAudio": "שֵׁרוּת לְתֵל אָבִיב?",
-      "situationCorrect": "שֵׁרוּת (sherut) — Shared yellow minivan taxi",
+      "situationCorrect": "שֵׁרוּת (sherut)",
       "situationDistractors": [
-        "הָפוּך גָּדוֹל (hafuch gadol) — Large cappuccino",
-        "אֶפְשָׁר חֶשְׁבּוֹן? (efshar cheshbon?) — Can I have the check?",
-        "בְּלִי סֻכָּר (bli sukar) — Without sugar"
+        "הָפוּך גָּדוֹל (hafuch gadol)",
+        "אֶפְשָׁר חֶשְׁבּוֹן? (efshar cheshbon?)",
+        "בְּלִי סֻכָּר (bli sukar)"
       ]
     },
     {
@@ -1830,11 +1830,11 @@
       },
       "situationPrompt": "Your friend asks what you feel like eating. You have a sudden urge for hot falafel. How do you express this craving like a true local?",
       "situationAudio": "מָה בָּא לְךָ לֶאֱכֹל?",
-      "situationCorrect": "בָּא לִי פָלָאפֶל! (ba li falafel!) — I'm craving / feel like falafel!",
+      "situationCorrect": "בָּא לִי פָלָאפֶל! (ba li falafel!)",
       "situationDistractors": [
-        "אֵין מַצָּב (ein matzav) — No way",
-        "עַל הַפָּנִים (al hapanim) — Terrible",
-        "תַּפְעִיל מוֹנֶה (taf'il mone) — Turn on the meter"
+        "אֵין מַצָּב (ein matzav)",
+        "עַל הַפָּנִים (al hapanim)",
+        "תַּפְעִיל מוֹנֶה (taf'il mone)"
       ]
     },
     {
@@ -1884,11 +1884,11 @@
       },
       "situationPrompt": "Someone invites you to a crowded bar on a rainy Tuesday, but you just want to stay in bed and watch TV. How do you decline naturally?",
       "situationAudio": "בָּא לְךָ לָצֵאת?",
-      "situationCorrect": "לֹא בָּא לִי (lo ba li) — I don't feel like it / not in the mood",
+      "situationCorrect": "לֹא בָּא לִי (lo ba li)",
       "situationDistractors": [
-        "סַבָּבָה לְגַמְרֵי (sababa legamrei) — Totally cool",
-        "הָפוּך גָּדוֹל (hafuch gadol) — Large cappuccino",
-        "בְּלִי עַמְבָּה (bli amba) — Without amba"
+        "סַבָּבָה לְגַמְרֵי (sababa legamrei)",
+        "הָפוּך גָּדוֹל (hafuch gadol)",
+        "בְּלִי עַמְבָּה (bli amba)"
       ]
     },
     {
@@ -1938,11 +1938,11 @@
       },
       "situationPrompt": "Someone asks if you're willing to pay 100 shekels for a single cup of lukewarm tea. What emphatic refusal do you blurt out?",
       "situationAudio": "תְּשַׁלֵּם מֵאָה שֶׁקֶל עַל תֵּה?",
-      "situationCorrect": "אֵין מַצָּב! (ein matzav!) — No way! / Absolutely no chance!",
+      "situationCorrect": "אֵין מַצָּב! (ein matzav!)",
       "situationDistractors": [
-        "סוֹף הַדֶּרֶךְ (sof haderech) — Outstanding",
-        "יָשָׁר יָשָׁר (yashar yashar) — Straight ahead",
-        "רַק טְחִינָה (rak tchina) — Only tahini"
+        "סוֹף הַדֶּרֶךְ (sof haderech)",
+        "יָשָׁר יָשָׁר (yashar yashar)",
+        "רַק טְחִינָה (rak tchina)"
       ]
     },
     {
@@ -1992,11 +1992,11 @@
       },
       "situationPrompt": "A friend asks if you'll join them at the concert on Friday. You're 80% likely to go if you finish work early. What phrase conveys this?",
       "situationAudio": "תָּבוֹא לַהוֹפָעָה בְּשִׁשִּׁי?",
-      "situationCorrect": "יֵשׁ מַצָּב (yesh matzav) — There's a good chance / quite possible",
+      "situationCorrect": "יֵשׁ מַצָּב (yesh matzav)",
       "situationDistractors": [
-        "עַל הַפָּנִים (al hapanim) — Terrible",
-        "בְּלִי עַמְבָּה (bli amba) — Without amba",
-        "שִׂים מוֹנֶה (sim mone) — Turn on the meter"
+        "עַל הַפָּנִים (al hapanim)",
+        "בְּלִי עַמְבָּה (bli amba)",
+        "שִׂים מוֹנֶה (sim mone)"
       ]
     },
     {
@@ -2040,11 +2040,11 @@
       },
       "situationPrompt": "You need to ask a male passerby on the street for directions. What word do you open your sentence with?",
       "situationAudio": "תַּגִּיד אָחִי, אֵיפֹה הַיָּם?",
-      "situationCorrect": "תַּגִּיד... (tagid...) — Say... / Tell me... (to a male)",
+      "situationCorrect": "תַּגִּיד... (tagid...)",
       "situationDistractors": [
-        "תַּגִּידִי (tagidi) — Say... (to a female)",
-        "טִיפּ בִּפְנִים (tip bifnim) — Tip inside",
-        "בְּלִי סֻכָּר (bli sukar) — Without sugar"
+        "תַּגִּידִי (tagidi)",
+        "טִיפּ בִּפְנִים (tip bifnim)",
+        "בְּלִי סֻכָּר (bli sukar)"
       ]
     },
     {
@@ -2088,11 +2088,11 @@
       },
       "situationPrompt": "You want to ask a woman waiting at the bus stop if the #5 bus already passed. What word begins your sentence?",
       "situationAudio": "תַּגִּידִי, קַו 5 כְּבָר עָבַר?",
-      "situationCorrect": "תַּגִּידִי... (tagidi...) — Say... / Tell me... (to a female)",
+      "situationCorrect": "תַּגִּידִי... (tagidi...)",
       "situationDistractors": [
-        "תַּגִּיד (tagid) — Say... (to a male)",
-        "הָפוּך חַלָּשׁ (hafuch chalash) — Mild cappuccino",
-        "רַב-קַו (rav-kav) — Transit card"
+        "תַּגִּיד (tagid)",
+        "הָפוּך חַלָּשׁ (hafuch chalash)",
+        "רַב-קַו (rav-kav)"
       ]
     },
     {
@@ -2142,11 +2142,11 @@
       },
       "situationPrompt": "A coworker spreads a rumor that you are resigning next week. You are stunned and completely deny it. What classic exclamation do you make?",
       "situationAudio": "מָה פִּתְאוֹם?!",
-      "situationCorrect": "מָה פִּתְאוֹם?! (ma pit'om?!) — What on earth?! / Are you kidding?!",
+      "situationCorrect": "מָה פִּתְאוֹם?! (ma pit'om?!)",
       "situationDistractors": [
-        "סַבָּבָה (sababa) — Great / cool",
-        "עִם הַכֹּל (im hakol) — With everything",
-        "יָשָׁר יָשָׁר (yashar yashar) — Straight ahead"
+        "סַבָּבָה (sababa)",
+        "עִם הַכֹּל (im hakol)",
+        "יָשָׁר יָשָׁר (yashar yashar)"
       ]
     },
     {
@@ -2196,11 +2196,11 @@
       },
       "situationPrompt": "You tried a newly opened restaurant that served cold soggy food and overcharged you. A friend asks how it was. What candid slang review do you give?",
       "situationAudio": "הָיָה עַל הַפָּנִים!",
-      "situationCorrect": "עַל הַפָּנִים (al hapanim) — Terrible / Awful / In shambles",
+      "situationCorrect": "עַל הַפָּנִים (al hapanim)",
       "situationDistractors": [
-        "סוֹף הַדֶּרֶךְ (sof haderech) — Outstanding",
-        "אַחְלָה (achla) — Great",
-        "סַבָּבָה (sababa) — Awesome"
+        "סוֹף הַדֶּרֶךְ (sof haderech)",
+        "אַחְלָה (achla)",
+        "סַבָּבָה (sababa)"
       ]
     },
     {
@@ -2244,11 +2244,11 @@
       },
       "situationPrompt": "You are sitting with friends who are dawdling while the movie starts in 10 minutes. What high-energy word do you use to rally everyone up?",
       "situationAudio": "יַאלְלָה, זוּז!",
-      "situationCorrect": "יַאלְלָה! (yalla!) — Let's go! / Come on! / Move it!",
+      "situationCorrect": "יַאלְלָה! (yalla!)",
       "situationDistractors": [
-        "סְתָם (stam) — Just because / not serious",
-        "בְּלִי חָרִיף (bli charif) — Without spicy",
-        "קַבָּלָה בְּסִמְס (kabala besms) — Receipt by text"
+        "סְתָם (stam)",
+        "בְּלִי חָרִיף (bli charif)",
+        "קַבָּלָה בְּסִמְס (kabala besms)"
       ]
     },
     {
@@ -2292,11 +2292,11 @@
       },
       "situationPrompt": "A vendor is giving a long windy sales speech about a phone plan. You want the raw facts without the fluff. What quintessential Israeli word do you invoke?",
       "situationAudio": "בּוֹא נְדַבֵּר תַּכְלֶס!",
-      "situationCorrect": "תַּכְלֶ'ס (tachles) — Bottom line / Let's get real",
+      "situationCorrect": "תַּכְלֶ'ס (tachles)",
       "situationDistractors": [
-        "עַל הַפָּנִים (al hapanim) — Terrible",
-        "בְּלִי סֻכָּר (bli sukar) — Without sugar",
-        "רַב-קַו (rav-kav) — Transit card"
+        "עַל הַפָּנִים (al hapanim)",
+        "בְּלִי סֻכָּר (bli sukar)",
+        "רַב-קַו (rav-kav)"
       ]
     },
     {
@@ -2340,11 +2340,11 @@
       },
       "situationPrompt": "A friend proposes getting pizza and drinks on Thursday evening. You are totally on board with the plan. What 1-word slang agreement do you reply?",
       "situationAudio": "נִפָּגֵשׁ בַּחוֹף?",
-      "situationCorrect": "סַבָּבָה! (sababa!) — Awesome / Sounds good / Cool!",
+      "situationCorrect": "סַבָּבָה! (sababa!)",
       "situationDistractors": [
-        "עַל הַפָּנִים (al hapanim) — Terrible",
-        "אֵין מַצָּב (ein matzav) — No way",
-        "בְּלִי סֻכָּר (bli sukar) — Without sugar"
+        "עַל הַפָּנִים (al hapanim)",
+        "אֵין מַצָּב (ein matzav)",
+        "בְּלִי סֻכָּר (bli sukar)"
       ]
     },
     {
@@ -2388,11 +2388,11 @@
       },
       "situationPrompt": "Someone demonstrates a slick smartphone shortcut that solves your problem in 2 seconds. What word praises the feature as cool and clever?",
       "situationAudio": "וָואוּ, מַגְנִיב!",
-      "situationCorrect": "מַגְנִיב! (magniv!) — Cool / Slick / Impressive!",
+      "situationCorrect": "מַגְנִיב! (magniv!)",
       "situationDistractors": [
-        "עַל הַפָּנִים (al hapanim) — Terrible",
-        "רַב-קַו (rav-kav) — Transit card",
-        "בְּלִי חָרִיף (bli charif) — Without spicy"
+        "עַל הַפָּנִים (al hapanim)",
+        "רַב-קַו (rav-kav)",
+        "בְּלִי חָרִיף (bli charif)"
       ]
     },
     {
@@ -2436,11 +2436,11 @@
       },
       "situationPrompt": "You want to recommend a rooftop hangout to your friend as a great spot with good music. What phrase do you use?",
       "situationAudio": "אַחְלָה מָקוֹם!",
-      "situationCorrect": "אַחְלָה מָקוֹם (achla makom) — Great / Superb place",
+      "situationCorrect": "אַחְלָה מָקוֹם (achla makom)",
       "situationDistractors": [
-        "עַל הַפָּנִים (al hapanim) — Terrible",
-        "חַי בְּסֶרֶט (chai beseret) — Living in a movie",
-        "מוֹנֶה (mone) — Meter"
+        "עַל הַפָּנִים (al hapanim)",
+        "חַי בְּסֶרֶט (chai beseret)",
+        "מוֹנֶה (mone)"
       ]
     },
     {
@@ -2484,11 +2484,11 @@
       },
       "situationPrompt": "Your friend texts that your group just got VIP access to an exclusive DJ set. What 1-word reaction expresses maximum hype?",
       "situationAudio": "אֵשׁ, אָחִי!",
-      "situationCorrect": "אֵשׁ! (esh!) — Fire! / Awesome! / Hyped!",
+      "situationCorrect": "אֵשׁ! (esh!)",
       "situationDistractors": [
-        "סְתָם (stam) — Just kidding",
-        "בְּלִי סֻכָּר (bli sukar) — Without sugar",
-        "לָקַחַת (lakachat) — Takeaway"
+        "סְתָם (stam)",
+        "בְּלִי סֻכָּר (bli sukar)",
+        "לָקַחַת (lakachat)"
       ]
     },
     {
@@ -2532,11 +2532,11 @@
       },
       "situationPrompt": "You walk into an airport terminal where flights are delayed, bags are piled high, and everyone is shouting over each other. How do you summarize the scene?",
       "situationAudio": "בָּלָגָן שָׁלֵם!",
-      "situationCorrect": "בָּלָגָן (balagan) — Total chaos / Wild disorder / A mess",
+      "situationCorrect": "בָּלָגָן (balagan)",
       "situationDistractors": [
-        "סוֹף הַדֶּרֶךְ (sof haderech) — Outstanding",
-        "יָשָׁר יָשָׁר (yashar yashar) — Straight ahead",
-        "רַק טְחִינָה (rak tchina) — Only tahini"
+        "סוֹף הַדֶּרֶךְ (sof haderech)",
+        "יָשָׁר יָשָׁר (yashar yashar)",
+        "רַק טְחִינָה (rak tchina)"
       ]
     },
     {
@@ -2580,11 +2580,11 @@
       },
       "situationPrompt": "You tease a colleague with a mock-serious face, then smile so they know you weren't serious. What word immediately reveals you were just joking?",
       "situationAudio": "סְתָם, צָחַקְתִּי!",
-      "situationCorrect": "סְתָם! (stam!) — Just kidding! / For no reason / Not serious",
+      "situationCorrect": "סְתָם! (stam!)",
       "situationDistractors": [
-        "תַּכְלֶ'ס (tachles) — Bottom line",
-        "עַל הַפָּנִים (al hapanim) — Terrible",
-        "מוֹנֶה (mone) — Meter"
+        "תַּכְלֶ'ס (tachles)",
+        "עַל הַפָּנִים (al hapanim)",
+        "מוֹנֶה (mone)"
       ]
     },
     {
@@ -2628,11 +2628,11 @@
       },
       "situationPrompt": "Everyone warned you that the new restaurant had bad reviews, but your meal turned out to be delicious. What nuance word introduces your pleasant surprise?",
       "situationAudio": "דַּוְקָא הָיָה מְעֻלֶּה!",
-      "situationCorrect": "דַּוְקָא (davka) — Actually / Contrary to what was expected",
+      "situationCorrect": "דַּוְקָא (davka)",
       "situationDistractors": [
-        "אֵין מַצָּב (ein matzav) — No way",
-        "בְּלִי עַמְבָּה (bli amba) — Without amba",
-        "שִׂים מוֹנֶה (sim mone) — Put on the meter"
+        "אֵין מַצָּב (ein matzav)",
+        "בְּלִי עַמְבָּה (bli amba)",
+        "שִׂים מוֹנֶה (sim mone)"
       ]
     },
     {
@@ -2676,11 +2676,11 @@
       },
       "situationPrompt": "An acquaintance tells you they just bought an apartment right down your street. What 1-word reaction expresses genuine surprise and interest?",
       "situationAudio": "וַאלְלָה?! בֶּאֱמֶת?",
-      "situationCorrect": "וַאלְלָה! (walla!) — Really?! / Wow / No kidding!",
+      "situationCorrect": "וַאלְלָה! (walla!)",
       "situationDistractors": [
-        "בְּלִי סֻכָּר (bli sukar) — Without sugar",
-        "תַּפְעִיל מוֹנֶה (taf'il mone) — Turn on the meter",
-        "עַל הַפָּנִים (al hapanim) — Terrible"
+        "בְּלִי סֻכָּר (bli sukar)",
+        "תַּפְעִיל מוֹנֶה (taf'il mone)",
+        "עַל הַפָּנִים (al hapanim)"
       ]
     },
     {
@@ -2778,11 +2778,11 @@
       },
       "situationPrompt": "A friend claims he will become a millionaire next month without working. What classic Israeli phrase tells him he's completely detached from reality?",
       "situationAudio": "אַתָּה חַי בְּסֶרֶט, אָחִי!",
-      "situationCorrect": "חַי בְּסֶרֶט (chai beseret) — Delusional / Living in a movie fantasy",
+      "situationCorrect": "חַי בְּסֶרֶט (chai beseret)",
       "situationDistractors": [
-        "סוֹף הַדֶּרֶךְ (sof haderech) — Outstanding",
-        "סַבָּבָה לְגַמְרֵי (sababa legamrei) — Totally great",
-        "עִם הַכֹּל (im hakol) — With everything"
+        "סוֹף הַדֶּרֶךְ (sof haderech)",
+        "סַבָּבָה לְגַמְרֵי (sababa legamrei)",
+        "עִם הַכֹּל (im hakol)"
       ]
     },
     {
@@ -2826,11 +2826,11 @@
       },
       "situationPrompt": "You walk up to a street kiosk to buy water. What universal friendly address word instantly builds warm rapport with the guy behind the counter?",
       "situationAudio": "אָחִי, מָה קוֹרֶה?",
-      "situationCorrect": "אָחִי (achi) — Bro / My brother",
+      "situationCorrect": "אָחִי (achi)",
       "situationDistractors": [
-        "מוֹתֶק (motek) — Sweetie (to females/children)",
-        "עַל הַפָּנִים (al hapanim) — Terrible",
-        "בְּלִי סֻכָּר (bli sukar) — Without sugar"
+        "מוֹתֶק (motek)",
+        "עַל הַפָּנִים (al hapanim)",
+        "בְּלִי סֻכָּר (bli sukar)"
       ]
     },
     {
@@ -2874,11 +2874,11 @@
       },
       "situationPrompt": "A guy holds the elevator door open when your hands are full of bags. How do you thank him casually as a peer?",
       "situationAudio": "תּוֹדָה רַבָּה, גֶּבֶר!",
-      "situationCorrect": "תּוֹדָה, גֶּבֶר! (toda, gever!) — Thanks, man / champ!",
+      "situationCorrect": "תּוֹדָה, גֶּבֶר! (toda, gever!)",
       "situationDistractors": [
-        "בְּלִי עַמְבָּה (bli amba) — Without amba",
-        "שִׂים מוֹנֶה (sim mone) — Turn on the meter",
-        "חַי בְּסֶרֶט (chai beseret) — Living in a movie"
+        "בְּלִי עַמְבָּה (bli amba)",
+        "שִׂים מוֹנֶה (sim mone)",
+        "חַי בְּסֶרֶט (chai beseret)"
       ]
     },
     {
@@ -2970,11 +2970,11 @@
       },
       "situationPrompt": "A lively fruit vendor in the Carmel Market shouts over the crowd: '!בּוֹא חַבִּיבִּי, טְעַם תּוּרְמוּס'. What word is he using to address you warmly?",
       "situationAudio": "בּוֹא חַבִּיבִּי!",
-      "situationCorrect": "חַבִּיבִּי (chavibi) — My friend / Pal",
+      "situationCorrect": "חַבִּיבִּי (chavibi)",
       "situationDistractors": [
-        "עַל הַפָּנִים (al hapanim) — Terrible",
-        "בְּלִי עַמְבָּה (bli amba) — Without amba",
-        "רַב-קַו (rav-kav) — Transit card"
+        "עַל הַפָּנִים (al hapanim)",
+        "בְּלִי עַמְבָּה (bli amba)",
+        "רַב-קַו (rav-kav)"
       ]
     },
     {
@@ -3024,11 +3024,11 @@
       },
       "situationPrompt": "You run into a close friend on the beach boardwalk. What 2-word fast spoken greeting do they shoot at you?",
       "situationAudio": "אָחִי, מָה נִשְׁ?",
-      "situationCorrect": "מָה נִשְׁ? (ma nish?) — What's up? (Short for מה נשמע)",
+      "situationCorrect": "מָה נִשְׁ? (ma nish?)",
       "situationDistractors": [
-        "אֶפְשָׁר חֶשְׁבּוֹן? (efshar cheshbon?) — Can I have the check?",
-        "תַּפְעִיל מוֹנֶה (taf'il mone) — Turn on the meter",
-        "חַי בְּסֶרֶט (chai beseret) — Living in a movie"
+        "אֶפְשָׁר חֶשְׁבּוֹן? (efshar cheshbon?)",
+        "תַּפְעִיל מוֹנֶה (taf'il mone)",
+        "חַי בְּסֶרֶט (chai beseret)"
       ]
     },
     {
@@ -3126,11 +3126,11 @@
       },
       "situationPrompt": "A coworker explains a 3-step software process to you. You understand everything perfectly. What 1-word confirmation do you give?",
       "situationAudio": "הֵבַנְתִּי, תּוֹדָה!",
-      "situationCorrect": "הֵבַנְתִּי (hevanti) — Got it / Understood / I hear you",
+      "situationCorrect": "הֵבַנְתִּי (hevanti)",
       "situationDistractors": [
-        "מָה פִּתְאוֹם (ma pit'om) — No way",
-        "בְּלִי עַמְבָּה (bli amba) — Without amba",
-        "תַּפְעִיל מוֹנֶה (taf'il mone) — Turn on the meter"
+        "מָה פִּתְאוֹם (ma pit'om)",
+        "בְּלִי עַמְבָּה (bli amba)",
+        "תַּפְעִיל מוֹנֶה (taf'il mone)"
       ]
     },
     {
@@ -3180,11 +3180,11 @@
       },
       "situationPrompt": "You just ate the most delicious fresh warm pita with tahini of your entire life. How do you describe the meal to your friends?",
       "situationAudio": "סוֹף הַדֶּרֶךְ!",
-      "situationCorrect": "סוֹף הַדֶּרֶךְ (sof haderech) — Outstanding / Top-notch / Unbeatable",
+      "situationCorrect": "סוֹף הַדֶּרֶךְ (sof haderech)",
       "situationDistractors": [
-        "עַל הַפָּנִים (al hapanim) — Terrible",
-        "חַי בְּסֶרֶט (chai beseret) — Living in a movie",
-        "בְּלִי סֻכָּר (bli sukar) — Without sugar"
+        "עַל הַפָּנִים (al hapanim)",
+        "חַי בְּסֶרֶט (chai beseret)",
+        "בְּלִי סֻכָּר (bli sukar)"
       ]
     },
     {
@@ -3240,11 +3240,11 @@
       },
       "situationPrompt": "You taste a fresh artisan pastry from a legendary bakery in Jaffa that melts in your mouth. What phrase of peak awe and astonishment do you use?",
       "situationAudio": "אֵין דְּבָרִים כָּאֵלֶּה!",
-      "situationCorrect": "אֵין דְּבָרִים כָּאֵלֶּה (ein dvarim ka'ele) — Unbelievable! / There is nothing like this!",
+      "situationCorrect": "אֵין דְּבָרִים כָּאֵלֶּה (ein dvarim ka'ele)",
       "situationDistractors": [
-        "עַל הַפָּנִים (al hapanim) — Terrible",
-        "חַי בְּסֶרֶט (chai beseret) — Living in a movie",
-        "תַּפְעִיל מוֹנֶה (taf'il mone) — Turn on the meter"
+        "עַל הַפָּנִים (al hapanim)",
+        "חַי בְּסֶרֶט (chai beseret)",
+        "תַּפְעִיל מוֹנֶה (taf'il mone)"
       ]
     },
     {
@@ -3294,11 +3294,11 @@
       },
       "situationPrompt": "You are wrapping up a quick phone call with a friend and want to hang up in the standard casual Israeli way. What signature farewell do you say?",
       "situationAudio": "סַבָּבָה, יַאלְלָה בַּיי!",
-      "situationCorrect": "יַאלְלָה בַּיי (yalla baye) — Alright bye! / Take care!",
+      "situationCorrect": "יַאלְלָה בַּיי (yalla baye)",
       "situationDistractors": [
-        "אֶפְשָׁר חֶשְׁבּוֹן? (efshar cheshbon?) — Can I have the check?",
-        "בְּלִי סֻכָּר (bli sukar) — Without sugar",
-        "רַב-קַו (rav-kav) — Transit card"
+        "אֶפְשָׁר חֶשְׁבּוֹן? (efshar cheshbon?)",
+        "בְּלִי סֻכָּר (bli sukar)",
+        "רַב-קַו (rav-kav)"
       ]
     }
   ],
