@@ -11,6 +11,9 @@
  */
 
 (function () {
+  const IS_LOGGED_IN_KEY = 'mastery_is_authenticated_v1';
+  const USERNAME_KEY = 'mastery_auth_username_v1';
+
   window.MASTER_FIREBASE_CONFIG = window.MASTER_FIREBASE_CONFIG || {
     apiKey: "AIzaSyDOJyD7e38ij7DY65zoQgqXy46Nml8Dokg",
     authDomain: "ilearn-c1baa.firebaseapp.com",
@@ -98,9 +101,17 @@
 
     // Lock Screen Gatekeeper Management
     mountGatekeeperUI() {
+      const wasLoggedIn = localStorage.getItem(IS_LOGGED_IN_KEY) === 'true';
+      const initialOverlayClass = wasLoggedIn ? 'hidden opacity-0 pointer-events-none' : 'flex opacity-100';
+
+      if (wasLoggedIn) {
+        const cachedName = localStorage.getItem(USERNAME_KEY) || 'Learner';
+        this.updateNavbar({ displayName: cachedName });
+      }
+
       // 1. Gatekeeper Fullscreen Overlay
       const gatekeeperHtml = `
-      <div id="mastery-gatekeeper-overlay" class="fixed inset-0 z-[99999] bg-[#08090d]/95 backdrop-blur-xl flex items-center justify-center p-4 transition-opacity duration-300">
+      <div id="mastery-gatekeeper-overlay" class="fixed inset-0 z-[99999] bg-[#08090d]/95 backdrop-blur-xl ${initialOverlayClass} items-center justify-center p-4 transition-opacity duration-300">
         <div class="bg-[#12141c] border border-[#232735] rounded-3xl max-w-sm w-full p-7 space-y-5 shadow-2xl relative text-slate-200">
           
           <div class="text-center space-y-2">
@@ -177,6 +188,8 @@
     }
 
     lockApp() {
+      localStorage.removeItem(IS_LOGGED_IN_KEY);
+      localStorage.removeItem(USERNAME_KEY);
       const overlay = document.getElementById('mastery-gatekeeper-overlay');
       if (overlay) {
         overlay.classList.remove('hidden', 'opacity-0', 'pointer-events-none');
@@ -186,19 +199,26 @@
     }
 
     unlockApp(user) {
+      localStorage.setItem(IS_LOGGED_IN_KEY, 'true');
+      const name = this.getUserDisplayName();
+      if (name) localStorage.setItem(USERNAME_KEY, name);
+
       const overlay = document.getElementById('mastery-gatekeeper-overlay');
       if (overlay) {
         overlay.classList.add('opacity-0', 'pointer-events-none');
-        setTimeout(() => overlay.classList.add('hidden'), 300);
+        overlay.classList.add('hidden');
+        overlay.classList.remove('flex');
       }
       this.updateNavbar(user);
     }
 
     getUserDisplayName() {
-      if (!this.currentUser) return '';
-      const email = this.currentUser.email || '';
-      const raw = email.split('@')[0];
-      return raw.charAt(0).toUpperCase() + raw.slice(1);
+      if (this.currentUser && this.currentUser.email) {
+        const email = this.currentUser.email;
+        const raw = email.split('@')[0];
+        return raw.charAt(0).toUpperCase() + raw.slice(1);
+      }
+      return localStorage.getItem(USERNAME_KEY) || 'Learner';
     }
 
     updateNavbar(user) {
@@ -258,12 +278,15 @@
 
     async logout() {
       if (!this.auth) return;
+      localStorage.removeItem(IS_LOGGED_IN_KEY);
+      localStorage.removeItem(USERNAME_KEY);
       if (this.unsubscribeSnapshot) {
         this.unsubscribeSnapshot();
         this.unsubscribeSnapshot = null;
       }
       this.closeUserModal();
       await this.auth.signOut();
+      this.lockApp();
       this.notifyToast('Logged out');
     }
 
