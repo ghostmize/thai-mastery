@@ -17,6 +17,7 @@
   <meta name="apple-mobile-web-app-title" content="Hebrew Mastery" />
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script src="./firebase_sync.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Heebo:wght@400;500;600;700;800;900&family=Rubik:wght@400;500;600;700&display=swap" rel="stylesheet" />
@@ -277,17 +278,17 @@
           </span>
 
           <div class="inline-flex items-center bg-[#14161f] p-0.5 rounded-xl border border-[#25293a] gap-0.5">
-            <button type="button" id="global-lvl-btn-1" onclick="setCourseLevel(1, true)" class="px-2.5 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-1 text-slate-400 hover:text-white" title="Level 1: Core Survival Chunks • Slower Audio (0.80x) • Easier Questions">
-              <span>🌱</span><span>Lv.1</span>
+            <button type="button" id="global-lvl-btn-1" onclick="setCourseLevel(1, true)" class="px-2.5 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 text-slate-400 hover:text-white" title="Level 1: Easy • Core Survival Chunks • Slower Audio (0.80x)">
+              <span>Lv 1</span><span class="text-[10px] text-emerald-400 font-semibold hidden sm:inline">Easy</span>
             </button>
-            <button type="button" id="global-lvl-btn-2" onclick="setCourseLevel(2, true)" class="px-2.5 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-1 bg-amber-400 text-[#0e0f12] shadow-xs" title="Level 2: Everyday Polite Street Sentences • Native Speed (1.0x)">
-              <span>⚡</span><span>Lv.2</span>
+            <button type="button" id="global-lvl-btn-2" onclick="setCourseLevel(2, true)" class="px-2.5 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 bg-amber-400 text-[#0e0f12] shadow-xs" title="Level 2: Normal • Everyday Polite Street Sentences • Native Speed (1.0x)">
+              <span>Lv 2</span><span class="text-[10px] text-[#0e0f12] font-semibold hidden sm:inline">Normal</span>
             </button>
-            <button type="button" id="global-lvl-btn-3" onclick="setCourseLevel(3, true)" class="px-2.5 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-1 text-slate-400 hover:text-white" title="Level 3: Longer Sentences + Israeli Street Slang + Bonus Theme Words + Harder Convo Questions">
-              <span>🔥</span><span>Lv.3</span>
+            <button type="button" id="global-lvl-btn-3" onclick="setCourseLevel(3, true)" class="px-2.5 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 text-slate-400 hover:text-white" title="Level 3: Hard • Longer Sentences + Israeli Street Slang + Bonus Words">
+              <span>Lv 3</span><span class="text-[10px] text-rose-400 font-semibold hidden sm:inline">Hard</span>
             </button>
-            <button type="button" id="global-lvl-btn-overdrive" onclick="toggleOverdriveLevel(true)" class="px-2.5 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-1 text-slate-400 hover:text-white" title="Lv.3+ Overdrive: Rapid Native Flow (1.18x) + Multi-Clause Slang + 5-Exchange Convo">
-              <span>🚀</span><span class="hidden sm:inline">Overdrive</span><span class="sm:hidden">3+</span>
+            <button type="button" id="global-lvl-btn-overdrive" onclick="toggleOverdriveLevel(true)" class="px-2.5 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 text-slate-400 hover:text-white" title="Max: Challenge Overdrive • Rapid Native Flow (1.18x) & 5-Turn Convo">
+              <span>Max</span>
             </button>
           </div>
 
@@ -386,18 +387,18 @@
       <!-- Right: Compact Level Segmented Control + Step Counter + Gemini -->
       <div class="flex items-center gap-1.5 shrink-0">
         <!-- Compact Level Segmented Pill -->
-        <div class="inline-flex items-center bg-[#14161f] p-0.5 rounded-xl border border-[#252a38] gap-0.5">
-          <button type="button" id="lesson-lvl-btn-1" onclick="setCourseLevel(1, true)" class="px-2 py-0.5 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-0.5 text-slate-400 hover:text-white" title="Lv.1 Survival Core">
-            <span>🌱</span><span class="text-[10px] hidden sm:inline">1</span>
+        <div class="inline-flex items-center bg-[#14161f] p-0.5 rounded-xl border border-[#252a38] gap-0.5" title="Course Difficulty: 1 (Easy) | 2 (Normal) | 3 (Hard) | Max">
+          <button type="button" id="lesson-lvl-btn-1" onclick="setCourseLevel(1, true)" class="px-2.5 py-0.5 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center justify-center text-slate-400 hover:text-white" title="Level 1: Easy (Core Chunks, 0.8x Audio)">
+            1
           </button>
-          <button type="button" id="lesson-lvl-btn-2" onclick="setCourseLevel(2, true)" class="px-2 py-0.5 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-0.5 bg-amber-400 text-[#0e0f12]" title="Lv.2 Natural Street">
-            <span>⚡</span><span class="text-[10px] hidden sm:inline">2</span>
+          <button type="button" id="lesson-lvl-btn-2" onclick="setCourseLevel(2, true)" class="px-2.5 py-0.5 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center justify-center bg-amber-400 text-[#0e0f12]" title="Level 2: Normal (Everyday Sentences, 1.0x Audio)">
+            2
           </button>
-          <button type="button" id="lesson-lvl-btn-3" onclick="setCourseLevel(3, true)" class="px-2 py-0.5 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-0.5 text-slate-400 hover:text-white" title="Lv.3 Fluent + Slang">
-            <span>🔥</span><span class="text-[10px] hidden sm:inline">3</span>
+          <button type="button" id="lesson-lvl-btn-3" onclick="setCourseLevel(3, true)" class="px-2.5 py-0.5 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center justify-center text-slate-400 hover:text-white" title="Level 3: Hard (Longer Sentences, Slang)">
+            3
           </button>
-          <button type="button" id="lesson-lvl-btn-overdrive" onclick="toggleOverdriveLevel(true)" class="px-2 py-0.5 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-0.5 text-slate-400 hover:text-white" title="Lv.3+ Overdrive: Max Speed & Compound Slang">
-            <span>🚀</span>
+          <button type="button" id="lesson-lvl-btn-overdrive" onclick="toggleOverdriveLevel(true)" class="px-2.5 py-0.5 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center justify-center text-slate-400 hover:text-white" title="Max: Challenge Overdrive (Rapid Native Flow)">
+            Max
           </button>
         </div>
 
@@ -6739,10 +6740,10 @@
 
       if (isManual) {
         const toastMap = {
-          '1': '🌱 Level 1 Set • Core Survival Chunks, Slower 0.80x Audio & 4-Line Convo',
-          '2': '⚡ Level 2 Set • Everyday Polite Sentences, 1.0x Audio & 6-Line Convo',
-          '3': '🔥 Level 3 Set • Longer Sentences, Israeli Slang, Bonus Theme Words & 8-Line Convo',
-          '3+': '🚀 Lv.3+ Overdrive • Rapid Native Flow (1.15x), Multi-Clause Slang & 10-Line Convo!'
+          '1': 'Level 1 (Easy) • Short survival chunks, gentle 0.80x audio & 4-line dialogue',
+          '2': 'Level 2 (Normal) • Everyday polite sentences, 1.0x native audio & 6-line dialogue',
+          '3': 'Level 3 (Hard) • Longer sentences, Israeli slang, bonus words & 8-line dialogue',
+          '3+': 'Max (Overdrive) • Rapid native speed (1.15x), multi-clause slang & 10-line dialogue'
         };
         const key = (targetLvl === 3 && appState.levelOverdrive) ? '3+' : String(targetLvl);
         showToast(toastMap[key] || toastMap['2']);
@@ -6766,7 +6767,7 @@
         } else if (cur === 3 && !isOverdrive) {
           setCourseLevel(3, true, true);
         } else {
-          showToast('🚀 Already at Maximum Level (Lv.3+ Overdrive)!');
+          showToast('Already at Maximum Level (Max)');
         }
       } else if (delta < 0) {
         if (cur === 3 && isOverdrive) {
@@ -6774,7 +6775,7 @@
         } else if (cur > 1) {
           setCourseLevel(cur - 1, true, false);
         } else {
-          showToast('🌱 Already at Level 1 (Core Survival Mode)');
+          showToast('Already at Level 1 (Easy)');
         }
       }
     }
@@ -6804,11 +6805,11 @@
           const nextLvl = cur + 1;
           appState.levelStreak = 0;
           setCourseLevel(nextLvl, false, false);
-          showToast(`🚀 Auto-Level Up → Lv.${nextLvl}! Same theme, longer sentences & richer street talk!`);
+          showToast(`Auto-Level Up → Level ${nextLvl} • Same theme, longer sentences & richer talk`);
         } else if (cur === 3 && !isOverdrive && appState.levelStreak >= 4) {
           appState.levelStreak = 0;
           setCourseLevel(3, false, true);
-          showToast('🚀 Auto-Adapt Overdrive Activated (Lv.3+)! Maximum street slang & 5-turn convo unlocked!');
+          showToast('Auto-Adapt: Max Level Activated • Fast Israeli slang & 5-turn dialogue');
         }
       } else if (!isCorrect) {
         appState.levelStruggle = (appState.levelStruggle || 0) + 1;
@@ -6819,11 +6820,11 @@
           appState.levelStruggle = 0;
           if (cur === 3 && isOverdrive) {
             setCourseLevel(3, false, false);
-            showToast('🌱 Auto-Adapted → Lv.3 (Stepped down from Overdrive to consolidate this theme)');
+            showToast('Auto-Adapted → Level 3 (Stepped down from Max to consolidate this theme)');
           } else if (cur > 1) {
             const prevLvl = cur - 1;
             setCourseLevel(prevLvl, false, false);
-            showToast(`🌱 Auto-Adapted → Lv.${prevLvl} • Shorter sentences & clearer audio for this theme`);
+            showToast(`Auto-Adapted → Level ${prevLvl} • Shorter sentences & clearer audio`);
           }
         }
       } else {
@@ -6944,7 +6945,7 @@
           { he: 'הָפוּךְ חָזָק', ro: 'hafuch chazak', en: 'Strong cappuccino (everyday Israeli cafe staple)' },
           { he: 'לָקַחַת', ro: 'lakachat', en: 'To-go / takeaway' }
         ];
-        drillTwist = '🔥 Lv.3 Cafe Twist: Morning rush at Aroma — place a natural multi-part order with milk type & takeaway cue!';
+        drillTwist = 'Level 3 Cafe Twist: Morning rush at Aroma — place a natural multi-part order with milk type & takeaway cue!';
         drillCompoundSuffix = { spoken: 'u-lakachat be-vakasha', he: 'וּלְקַחַת בְּבַקָּשָׁה', meaning: '+ to-go please' };
       } else if (theme.includes('food') || theme.includes('falafel') || theme.includes('shawarma') || theme.includes('restaurant') || theme.includes('אוכל')) {
         longerHebrew = `אָחִי, תַּעֲשֶׂה לִי ${baseHebrew} כָּל הַסָּלָטִים, הַרְבֵּה טְחִינָה וּקְצָת חָרִיף בַּצַּד`;
@@ -6954,7 +6955,7 @@
           { he: 'אָחִי', ro: 'achi', en: 'My brother / friend (warm Israeli street address)' },
           { he: 'כָּל הַסָּלָטִים', ro: 'kol ha-salatim', en: 'All the salads (falafel counter staple)' }
         ];
-        drillTwist = '🔥 Lv.3 Street Food Twist: The counter is buzzing — call the vendor smoothly and customize toppings!';
+        drillTwist = 'Level 3 Street Food Twist: The counter is buzzing — call the vendor smoothly and customize toppings!';
         drillCompoundSuffix = { spoken: 'kol ha-salatim ve-tchina', he: 'כָּל הַסָּלָטִים וּטְחִינָה', meaning: '+ all salads & tahini' };
       } else if (theme.includes('taxi') || theme.includes('bus') || theme.includes('transport') || theme.includes('מונית') || theme.includes('תחבורה')) {
         longerHebrew = `נַהָג, ${baseHebrew} עִם מוֹנֶה בְּבַקָּשָׁה וְתַעֲצוֹר לִי בַּפִּנָּה מֵאַחֲרֵי הָרַמְזוֹר`;
@@ -6964,7 +6965,7 @@
           { he: 'תַּפְעִיל מוֹנֶה', ro: 'taf\'il mone', en: 'Turn on the meter (essential Israeli taxi rule)' },
           { he: 'בַּפִּנָּה', ro: 'ba-pina', en: 'At the corner (driver shortcut drop-off)' }
         ];
-        drillTwist = '🔥 Lv.3 Taxi Twist: Fast-paced traffic — ask to run the meter and specify the exact corner drop-off!';
+        drillTwist = 'Level 3 Taxi Twist: Fast-paced traffic — ask to run the meter and specify the exact corner drop-off!';
         drillCompoundSuffix = { spoken: 'im mone be-vakasha', he: 'עִם מוֹנֶה בְּבַקָּשָׁה', meaning: '+ on the meter please' };
       } else if (theme.includes('market') || theme.includes('shuk') || theme.includes('price') || theme.includes('שוק') || theme.includes('קניות')) {
         longerHebrew = `סְלִיחָה, ${baseHebrew} — אֶפְשָׁר הֲנָחָה קְטַנָּה אִם אֲנִי לוֹקֵחַ שְׁנַיִם וּמְשַׁלֵּם בְּבִיט?`;
@@ -6974,7 +6975,7 @@
           { he: 'בְּבִיט', ro: 'be-Bit', en: 'Pay via Bit app (universal Israeli mobile payment)' },
           { he: 'כַּמָּה יַחַד?', ro: 'kama yachad?', en: 'How much for both combined?' }
         ];
-        drillTwist = '🔥 Lv.3 Shuk Twist: Shuk Carmel bargaining — negotiate a friendly bundle deal and confirm payment!';
+        drillTwist = 'Level 3 Shuk Twist: Shuk Carmel bargaining — negotiate a friendly bundle deal and confirm payment!';
         drillCompoundSuffix = { spoken: 'efshar be-Bit?', he: 'אֶפְשָׁר בְּבִיט?', meaning: '+ can I pay via Bit?' };
       } else {
         longerHebrew = `תוֹדָה רַבָּה לְךָ אָחִי, ${baseHebrew} — אֵין עָלֶיךָ וְשֶׁיִּהְיֶה לְךָ יוֹם מְצוּיָּן!`;
@@ -6984,7 +6985,7 @@
           { he: 'אֵין עָלֶיךָ', ro: 'ein alecha', en: 'You are the best! (warmest Israeli street slang)' },
           { he: 'הַכֹּל טוֹב', ro: 'hakol tov', en: 'All good / no worries' }
         ];
-        drillTwist = '🔥 Lv.3 Everyday Flow: Respond with authentic Israeli rhythm and warm street particles!';
+        drillTwist = 'Level 3 Everyday Flow: Respond with authentic Israeli rhythm and warm street particles!';
       }
 
       if (appState.levelOverdrive) {
@@ -7071,17 +7072,17 @@
       let lessonText = '';
 
       if (lvl === 1) {
-        globalText = '🌱 Lv.1 Core Survival • Short 1–2 word chunks, 0.80x audio, hints on & 4-line convo';
-        lessonText = '🌱 Lv.1 • Short Survival Chunks & 0.80x Audio';
+        globalText = 'Level 1 (Easy) • Short survival chunks, 0.80x audio & simple questions';
+        lessonText = 'Level 1 (Easy) • Short Chunks & 0.80x Audio';
       } else if (lvl === 2) {
-        globalText = '⚡ Lv.2 Everyday Street • Full polite sentences, 1.0x native audio & 6-line convo';
-        lessonText = '⚡ Lv.2 • Full Polite Sentences & 1.0x Audio';
+        globalText = 'Level 2 (Normal) • Full polite sentences, 1.0x native audio & 6-line convo';
+        lessonText = 'Level 2 (Normal) • Polite Sentences & 1.0x Audio';
       } else if (!isOverdrive) {
-        globalText = '🔥 Lv.3 Street Flow • Longer sentences, Israeli slang, +1 bonus theme word & 8-line convo';
-        lessonText = '🔥 Lv.3 • Longer Sentences + Israeli Slang + Harder Qs';
+        globalText = 'Level 3 (Hard) • Longer sentences, Israeli slang, +1 bonus word & 8-line convo';
+        lessonText = 'Level 3 (Hard) • Longer Sentences + Israeli Slang';
       } else {
-        globalText = '🚀 Lv.3+ Overdrive • Rapid 1.15x flow, multi-clause slang, +2 bonus words & 10-line convo';
-        lessonText = '🚀 Lv.3+ Overdrive • Max Israeli Slang & 5-Turn Convo';
+        globalText = 'Max (Overdrive) • Rapid 1.15x flow, multi-clause slang & 10-line convo';
+        lessonText = 'Max (Overdrive) • Max Israeli Slang & 5-Turn Convo';
       }
 
       if (gDesc) gDesc.textContent = globalText;
@@ -7860,7 +7861,7 @@
                 </span>
                 ${step.isBonusThemeWord ? `
                   <span class="px-2 py-0.5 rounded-full bg-rose-500/20 border border-rose-400/40 text-rose-300 text-[10px] font-bold">
-                    🔥 Lv.3 Bonus Theme Phrase
+                    Lv 3 Bonus Theme Phrase
                   </span>
                 ` : ''}
               </div>
@@ -7871,7 +7872,7 @@
               <!-- Level 1 Core Survival Chunk Focus Box -->
               <div class="bg-emerald-500/10 border border-emerald-500/30 rounded-2xl px-4 py-2.5 flex flex-wrap items-center justify-between gap-2 text-left">
                 <div class="text-xs">
-                  <span class="text-emerald-300 font-extrabold uppercase tracking-wider text-[10px] block">🌱 Lv.1 Core Survival Anchor (Start with this 1–2 word chunk):</span>
+                  <span class="text-emerald-300 font-extrabold uppercase tracking-wider text-[10px] block">Lv 1 Core Survival Word:</span>
                   <span class="text-white font-bold font-mono">${exp.coreWord.ro}</span>
                   <span class="text-amber-300 font-hebrew font-bold mx-1" dir="rtl">(${exp.coreWord.he})</span>
                   <span class="text-emerald-200">= "${exp.coreWord.en}"</span>
@@ -7914,8 +7915,7 @@
               <div class="bg-gradient-to-br from-rose-500/12 via-[#191622] to-amber-500/10 border border-rose-400/35 rounded-2xl p-4 text-left space-y-3 shadow-lg">
                 <div class="flex items-center justify-between gap-2">
                   <span class="text-[11px] font-extrabold uppercase tracking-wider ${isOverdrive ? 'text-fuchsia-300' : 'text-rose-300'} flex items-center gap-1.5">
-                    <span>${isOverdrive ? '🚀' : '🔥'}</span>
-                    <span>${isOverdrive ? 'Lv.3+ Overdrive: Full Israeli Street Flow & Slang' : 'Lv.3 Expansion: Longer Sentence & Israeli Slang'}</span>
+                    <span>${isOverdrive ? 'Max Overdrive: Full Israeli Street Flow & Slang' : 'Level 3 Expansion: Longer Sentence & Israeli Slang'}</span>
                   </span>
                   <button type="button" onclick="playHebrewAudio('${exp.longerHebrew}', this)" class="px-2.5 py-1 rounded-xl bg-rose-500/25 hover:bg-rose-500/40 border border-rose-400/40 text-rose-200 text-xs font-bold flex items-center gap-1 cursor-pointer active:scale-95 shrink-0">
                     <span>🔊</span><span>Hear Longer Sentence</span>
@@ -8305,7 +8305,7 @@
                 <div class="pt-3 border-t border-[#1c1f28] text-left">
                   <div class="flex items-center justify-between gap-2 bg-rose-500/10 border border-rose-400/30 rounded-xl px-3.5 py-2.5">
                     <div class="text-xs space-y-0.5">
-                      <span class="text-[10px] font-extrabold uppercase tracking-wider text-rose-300 block">🔥 Lv.3 Real-Life Sentence Context:</span>
+                      <span class="text-[10px] font-extrabold uppercase tracking-wider text-rose-300 block">Level 3 Real-Life Sentence Context:</span>
                       <span class="font-hebrew text-amber-300 font-bold text-base" dir="rtl">סְלִיחָה, אֶפְשָׁר אֶת הַ${w.thai || w.hebrew} הַזֶּה בְּבַקָּשָׁה?</span>
                       <span class="text-slate-300 font-mono text-[11px] block">slicha, efshar et ha-${w.roman} haze bevakasha?</span>
                     </div>
@@ -8675,33 +8675,33 @@
       }
     };
 
-    function getConvoTurnForItem(itemId, isSpiral = false, spiralSourceTitle = '') {
+    function getConvoTurnForItem(itemId, isSpiral = false, spiralSourceTitle = '', siblingId = null, remixSeed = 0, exchangeIdx = 0) {
       // 1. Check explicit override / word map first
       const mapped = HEBREW_CONVO_TURNS_MAP[itemId];
       const stItem = (typeof STREET_DB !== 'undefined' && STREET_DB.find(s => s.id === itemId)) || null;
       const wItem = (!stItem && typeof getAllWords === 'function' ? getAllWords().find(w => w.id === itemId) : null);
       const rawItem = stItem || wItem || {};
 
+      let baseTurn = null;
       if (mapped) {
-        return {
+        baseTurn = {
           itemId,
           isSpiral,
           spiralSourceTitle: isSpiral ? (spiralSourceTitle || 'Past Known Word') : 'New in This Lesson',
           role: mapped.role,
           partner: { ...mapped.partner },
           user: { ...mapped.user },
+          siblingUser: null,
           intentCue: mapped.intentCue,
           earDistractors: [...(mapped.earDistractors || [])],
           targetPhrase: rawItem.hebrew || rawItem.thai || mapped.user.script,
           targetSpoken: rawItem.spoken || rawItem.roman || mapped.user.spoken,
           targetMeaning: rawItem.meaning || mapped.user.meaning
         };
-      }
-
-      // 2. For the 54 STREET_DB items where dialogue.speakerA is already the partner (Vendor/Driver/Friend)
-      if (stItem && stItem.dialogue && stItem.dialogue.lineHebrewA && stItem.dialogue.lineHebrewB) {
+      } else if (stItem && stItem.dialogue && stItem.dialogue.lineHebrewA && stItem.dialogue.lineHebrewB) {
+        // 2. For the 54 STREET_DB items where dialogue.speakerA is already the partner (Vendor/Driver/Friend)
         const d = stItem.dialogue;
-        return {
+        baseTurn = {
           itemId,
           isSpiral,
           spiralSourceTitle: isSpiral ? (spiralSourceTitle || 'Past Known Phrase') : 'New in This Lesson',
@@ -8718,6 +8718,7 @@
             meaning: d.lineEnglishB || stItem.meaning,
             tts: d.ttsB || d.lineHebrewB
           },
+          siblingUser: null,
           intentCue: `💬 Respond using ${stItem.hebrew} (${stItem.spoken} — ${stItem.meaning})`,
           earDistractors: [
             'Ask where the nearest train exit is located',
@@ -8728,36 +8729,107 @@
           targetSpoken: stItem.spoken,
           targetMeaning: stItem.meaning
         };
+      } else {
+        // 3. Fallback
+        baseTurn = {
+          itemId,
+          isSpiral,
+          spiralSourceTitle: isSpiral ? 'Past Known Word' : 'New in This Lesson',
+          role: '🗣️ חָבֵר יִשְׂרְאֵלִי (Israeli Friend)',
+          partner: {
+            script: 'שָׁלוֹם אָחִי, מָה קוֹרֶה הַיּוֹם?',
+            spoken: 'Shalom achi, ma kore hayom?',
+            meaning: 'Hello bro, what is going on today?',
+            tts: 'שָׁלוֹם אָחִי, מָה קוֹרֶה הַיּוֹם?'
+          },
+          user: {
+            script: rawItem.hebrew || rawItem.thai || 'הַכֹּל סַבָּבָה, תּוֹדָה!',
+            spoken: rawItem.spoken || rawItem.roman || 'Hakol sababa, toda!',
+            meaning: rawItem.meaning || 'Everything is cool, thanks!',
+            tts: rawItem.tts || rawItem.hebrew || rawItem.thai || 'הַכֹּל סַבָּבָה, תּוֹדָה'
+          },
+          siblingUser: null,
+          intentCue: `💬 Respond naturally using ${rawItem.spoken || rawItem.roman || 'this phrase'}`,
+          earDistractors: [
+            'Ask for the bill at the table',
+            'Tell the taxi driver to stop at the corner',
+            'Order a large coffee with oat milk'
+          ],
+          targetPhrase: rawItem.hebrew || rawItem.thai || '',
+          targetSpoken: rawItem.spoken || rawItem.roman || '',
+          targetMeaning: rawItem.meaning || ''
+        };
       }
 
-      // 3. Fallback
-      return {
-        itemId,
-        isSpiral,
-        spiralSourceTitle: isSpiral ? 'Past Known Word' : 'New in This Lesson',
-        role: '🗣️ חָבֵר יִשְׂרְאֵלִי (Israeli Friend)',
-        partner: {
-          script: 'שָׁלוֹם אָחִי, מָה קוֹרֶה הַיּוֹם?',
-          spoken: 'Shalom achi, ma kore hayom?',
-          meaning: 'Hello bro, what is going on today?',
-          tts: 'שָׁלוֹם אָחִי, מָה קוֹרֶה הַיּוֹם?'
-        },
-        user: {
-          script: rawItem.hebrew || rawItem.thai || 'הַכֹּל סַבָּבָה, תּוֹדָה!',
-          spoken: rawItem.spoken || rawItem.roman || 'Hakol sababa, toda!',
-          meaning: rawItem.meaning || 'Everything is cool, thanks!',
-          tts: rawItem.tts || rawItem.hebrew || rawItem.thai || 'הַכֹּל סַבָּבָה, תּוֹדָה'
-        },
-        intentCue: `💬 Respond naturally using ${rawItem.spoken || rawItem.roman || 'this phrase'}`,
-        earDistractors: [
-          'Ask for the bill at the table',
-          'Tell the taxi driver to stop at the corner',
-          'Order a large coffee with oat milk'
-        ],
-        targetPhrase: rawItem.hebrew || rawItem.thai || '',
-        targetSpoken: rawItem.spoken || rawItem.roman || '',
-        targetMeaning: rawItem.meaning || ''
-      };
+      // Street Natural Variation (Simple, non-identical surprise)
+      if (!isSpiral && siblingId && siblingId !== itemId) {
+        const sibSt = (typeof STREET_DB !== 'undefined' && STREET_DB.find(s => s.id === siblingId)) || null;
+        const sibW = (!sibSt && typeof getAllWords === 'function' ? getAllWords().find(w => w.id === siblingId) : null);
+        const sibRaw = sibSt || sibW || {};
+        const sibHeb = sibRaw.hebrew || sibRaw.thai || '';
+        const sibSpoken = sibRaw.spoken || sibRaw.roman || '';
+        const sibMean = (sibRaw.meaning || '').split('(')[0].trim();
+        const itemHeb = baseTurn.targetPhrase;
+        const itemSpoken = baseTurn.targetSpoken;
+        const itemMean = (baseTurn.targetMeaning || '').split('(')[0].trim();
+
+        const v = Math.abs((remixSeed + exchangeIdx * 7 + (itemId ? itemId.length : 0)) % 3);
+
+        if (exchangeIdx === 0 && sibHeb && sibHeb !== itemHeb) {
+          if (v === 1) {
+            // Curveball A: Choice between item and sibling
+            baseTurn.partner = {
+              script: `לָשִׂים לְךָ ${itemHeb} אוֹ ${sibHeb}?`,
+              spoken: `Lasim lecha ${itemSpoken} o ${sibSpoken}?`,
+              meaning: `${itemMean} or ${sibMean}?`,
+              tts: `לָשִׂים לְךָ ${itemHeb} אוֹ ${sibHeb}`
+            };
+            baseTurn.user = {
+              script: `${itemHeb} בְּבַקָּשָׁה!`,
+              spoken: `${itemSpoken} bevakasha!`,
+              meaning: `${itemMean} please!`,
+              tts: `${itemHeb} בְּבַקָּשָׁה`
+            };
+            baseTurn.siblingUser = {
+              script: `${sibHeb} בְּבַקָּשָׁה!`,
+              spoken: `${sibSpoken} bevakasha!`,
+              meaning: `${sibMean} please!`
+            };
+          } else if (v === 2) {
+            // Curveball B: Dine-in vs Takeaway check
+            baseTurn.partner = {
+              script: `${itemHeb} — לְכָאן אוֹ לָקַחַת?`,
+              spoken: `${itemSpoken} — lekan o lakachat?`,
+              meaning: `${itemMean} — for here or to go?`,
+              tts: `${itemHeb} לְכָאן אוֹ לָקַחַת`
+            };
+            baseTurn.user = {
+              script: `${itemHeb} לְכָאן, תּוֹדָה!`,
+              spoken: `${itemSpoken} lekan, toda!`,
+              meaning: `${itemMean} for here, thanks!`,
+              tts: `${itemHeb} לְכָאן, תּוֹדָה`
+            };
+          }
+        } else if (exchangeIdx === 1 && sibHeb && sibHeb !== itemHeb) {
+          if (v === 1) {
+            // Curveball C: Follow-up check
+            baseTurn.partner = {
+              script: `וְ${itemHeb} גַּם לָשִׂים?`,
+              spoken: `Ve-${itemSpoken} gam lasim?`,
+              meaning: `And put ${itemMean} as well?`,
+              tts: `וְ${itemHeb} גַּם לָשִׂים`
+            };
+            baseTurn.user = {
+              script: `כֵּן, וְשִׂים גַּם ${itemHeb}!`,
+              spoken: `Ken, vesim gam ${itemSpoken}!`,
+              meaning: `Yes, and put ${itemMean} too!`,
+              tts: `כֵּן, וְשִׂים גַּם ${itemHeb}`
+            };
+          }
+        }
+      }
+
+      return baseTurn;
     }
 
     // Collects OLD / KNOWN items from earlier nodes and appState.itemStats
@@ -8913,29 +8985,40 @@
       //    - Overdrive (Lv.3+): 5 exchanges = 10 rapid lines (New + Bonus Theme + Old + 3 Compound Old+New turns!)
       const selectedTurns = [];
       if (difficulty === 'easier') {
-        shuffledNew.slice(0, 2).forEach(id => selectedTurns.push(getConvoTurnForItem(id, false, 'New in This Lesson')));
-        if (selectedTurns.length < 2 && shuffledKnown.length > 0) {
-          selectedTurns.push(getConvoTurnForItem(shuffledKnown[0].id, true, `Known • ${shuffledKnown[0].sourceTitle}`));
+        const s0 = shuffledNew[1] || (shuffledKnown[0] ? shuffledKnown[0].id : null);
+        selectedTurns.push(getConvoTurnForItem(shuffledNew[0], false, 'New in This Lesson', s0, remixSeed, 0));
+        if (shuffledNew.length > 1) {
+          selectedTurns.push(getConvoTurnForItem(shuffledNew[1], false, 'New in This Lesson', shuffledNew[0], remixSeed, 1));
+        } else if (shuffledKnown.length > 0) {
+          selectedTurns.push(getConvoTurnForItem(shuffledKnown[0].id, true, `Known • ${shuffledKnown[0].sourceTitle}`, shuffledNew[0], remixSeed, 1));
         }
       } else if (difficulty === 'standard') {
-        shuffledNew.slice(0, 2).forEach(id => selectedTurns.push(getConvoTurnForItem(id, false, 'New in This Lesson')));
+        const s0 = shuffledNew[1] || (shuffledKnown[0] ? shuffledKnown[0].id : null);
+        selectedTurns.push(getConvoTurnForItem(shuffledNew[0], false, 'New in This Lesson', s0, remixSeed, 0));
+        if (shuffledNew.length > 1) {
+          selectedTurns.push(getConvoTurnForItem(shuffledNew[1], false, 'New in This Lesson', shuffledNew[0], remixSeed, 1));
+        }
         if (shuffledKnown.length > 0 && shuffledNew.length >= 3) {
           const tNew = getConvoTurnForItem(shuffledNew[2], false, 'New in This Lesson');
           const tOld = getConvoTurnForItem(shuffledKnown[0].id, true, `Known • ${shuffledKnown[0].sourceTitle}`);
           selectedTurns.push(createCompoundOldNewTurn(tNew, tOld));
         } else if (shuffledKnown.length > 0) {
-          selectedTurns.push(getConvoTurnForItem(shuffledKnown[0].id, true, `Known • ${shuffledKnown[0].sourceTitle}`));
+          selectedTurns.push(getConvoTurnForItem(shuffledKnown[0].id, true, `Known • ${shuffledKnown[0].sourceTitle}`, null, remixSeed, 2));
         } else if (shuffledNew.length >= 3) {
-          selectedTurns.push(getConvoTurnForItem(shuffledNew[2], false, 'New in This Lesson'));
+          selectedTurns.push(getConvoTurnForItem(shuffledNew[2], false, 'New in This Lesson', null, remixSeed, 2));
         }
       } else if (difficulty === 'overdrive') {
         // Lv.3+ Overdrive: Up to 5 exchanges (10 lines) with multiple compound turns
-        shuffledNew.slice(0, 4).forEach(id => selectedTurns.push(getConvoTurnForItem(id, false, 'New in This Lesson')));
+        const s0 = shuffledNew[1] || (shuffledKnown[0] ? shuffledKnown[0].id : null);
+        selectedTurns.push(getConvoTurnForItem(shuffledNew[0], false, 'New in This Lesson', s0, remixSeed, 0));
+        if (shuffledNew.length > 1) selectedTurns.push(getConvoTurnForItem(shuffledNew[1], false, 'New in This Lesson', shuffledNew[0], remixSeed, 1));
         if (shuffledKnown.length > 0) {
-          selectedTurns.splice(1, 0, getConvoTurnForItem(shuffledKnown[0].id, true, `Known • ${shuffledKnown[0].sourceTitle}`));
+          selectedTurns.splice(1, 0, getConvoTurnForItem(shuffledKnown[0].id, true, `Known • ${shuffledKnown[0].sourceTitle}`, null, remixSeed, 2));
         }
+        if (shuffledNew.length > 2) selectedTurns.push(getConvoTurnForItem(shuffledNew[2], false, 'New in This Lesson', null, remixSeed, 3));
+        if (shuffledNew.length > 3) selectedTurns.push(getConvoTurnForItem(shuffledNew[3], false, 'New in This Lesson', null, remixSeed, 4));
         if (selectedTurns.length < 5 && shuffledKnown.length > 1) {
-          selectedTurns.push(getConvoTurnForItem(shuffledKnown[1].id, true, `Known • ${shuffledKnown[1].sourceTitle}`));
+          selectedTurns.push(getConvoTurnForItem(shuffledKnown[1].id, true, `Known • ${shuffledKnown[1].sourceTitle}`, null, remixSeed, 5));
         }
         if (selectedTurns.length > 5) selectedTurns.length = 5;
         // Upgrade up to 2 exchanges into compound turns
@@ -8948,10 +9031,14 @@
         }
       } else {
         // Harder (Lv.3): 4 exchanges (8 lines) with Compound Old+New sentences!
-        shuffledNew.slice(0, 3).forEach(id => selectedTurns.push(getConvoTurnForItem(id, false, 'New in This Lesson')));
+        const s0 = shuffledNew[1] || (shuffledKnown[0] ? shuffledKnown[0].id : null);
+        selectedTurns.push(getConvoTurnForItem(shuffledNew[0], false, 'New in This Lesson', s0, remixSeed, 0));
+        if (shuffledNew.length > 1) selectedTurns.push(getConvoTurnForItem(shuffledNew[1], false, 'New in This Lesson', shuffledNew[0], remixSeed, 1));
         if (shuffledKnown.length > 0) {
-          selectedTurns.splice(1, 0, getConvoTurnForItem(shuffledKnown[0].id, true, `Known • ${shuffledKnown[0].sourceTitle}`));
+          selectedTurns.splice(1, 0, getConvoTurnForItem(shuffledKnown[0].id, true, `Known • ${shuffledKnown[0].sourceTitle}`, null, remixSeed, 2));
         }
+        if (shuffledNew.length > 2 && selectedTurns.length < 4) selectedTurns.push(getConvoTurnForItem(shuffledNew[2], false, 'New in This Lesson', null, remixSeed, 3));
+        if (shuffledNew.length > 3 && selectedTurns.length < 4) selectedTurns.push(getConvoTurnForItem(shuffledNew[3], false, 'New in This Lesson', null, remixSeed, 4));
         if (selectedTurns.length > 4) selectedTurns.length = 4;
         if (selectedTurns.length >= 2) {
           const lastIdx = selectedTurns.length - 1;
@@ -9029,6 +9116,17 @@
 
         const seenScripts = new Set([correctOpt.script]);
         const distOpts = [];
+        if (ex.siblingUser && ex.siblingUser.script && !seenScripts.has(ex.siblingUser.script)) {
+          seenScripts.add(ex.siblingUser.script);
+          distOpts.push({
+            id: `q_${qIdx}_sib`,
+            text: ex.siblingUser.meaning,
+            script: ex.siblingUser.script,
+            spoken: ex.siblingUser.spoken,
+            tts: ex.siblingUser.script,
+            isCorrect: false
+          });
+        }
         const candidates = distractorIdPool
           .filter(cid => cid !== ex.itemId && cid !== ex.wovenOldId)
           .sort(() => Math.random() - 0.5);
@@ -10907,6 +11005,10 @@ Return ONLY valid JSON array of 3 exchange objects with keys:
 
     async function syncWithCloud(manual = false) {
       const token = getCloudToken();
+      if (!token) {
+        // Prevent anonymous visitors from overwriting with or downloading personal gist
+        return;
+      }
       updateCloudIndicator('syncing', 'Syncing with GitHub Cloud...');
       try {
         const headers = { 'Accept': 'application/vnd.github+json' };

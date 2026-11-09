@@ -17,6 +17,7 @@
   <meta name="apple-mobile-web-app-title" content="Thai Mastery" />
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script src="./firebase_sync.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Kanit:wght@400;500;600;700&family=Noto+Sans+Thai+Looped:wght@400;500;600;700&family=Sarabun:wght@400;500;600;700&display=swap" rel="stylesheet" />
@@ -287,17 +288,17 @@
           </span>
 
           <div class="inline-flex items-center bg-[#14161f] p-0.5 rounded-xl border border-[#25293a] gap-0.5">
-            <button type="button" id="global-lvl-btn-1" onclick="setCourseLevel(1, true)" class="px-2.5 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-1 text-slate-400 hover:text-white" title="Level 1: Core Survival Chunks • Slower Audio (0.80x) • Easier Questions">
-              <span>🌱</span><span>Lv.1</span>
+            <button type="button" id="global-lvl-btn-1" onclick="setCourseLevel(1, true)" class="px-2.5 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 text-slate-400 hover:text-white" title="Level 1: Easy • Core Survival Chunks • Slower Audio (0.80x)">
+              <span>Lv 1</span><span class="text-[10px] text-emerald-400 font-semibold hidden sm:inline">Easy</span>
             </button>
-            <button type="button" id="global-lvl-btn-2" onclick="setCourseLevel(2, true)" class="px-2.5 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-1 bg-amber-400 text-[#0e0f12] shadow-xs" title="Level 2: Everyday Polite Street Sentences • Native Speed (1.0x)">
-              <span>⚡</span><span>Lv.2</span>
+            <button type="button" id="global-lvl-btn-2" onclick="setCourseLevel(2, true)" class="px-2.5 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 bg-amber-400 text-[#0e0f12] shadow-xs" title="Level 2: Normal • Everyday Polite Sentences • Native Speed (1.0x)">
+              <span>Lv 2</span><span class="text-[10px] text-[#0e0f12] font-semibold hidden sm:inline">Normal</span>
             </button>
-            <button type="button" id="global-lvl-btn-3" onclick="setCourseLevel(3, true)" class="px-2.5 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-1 text-slate-400 hover:text-white" title="Level 3: Longer Sentences + Street Slang + Bonus Theme Words + Harder Convo Questions">
-              <span>🔥</span><span>Lv.3</span>
+            <button type="button" id="global-lvl-btn-3" onclick="setCourseLevel(3, true)" class="px-2.5 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 text-slate-400 hover:text-white" title="Level 3: Hard • Longer Sentences + Street Slang + Bonus Theme Words">
+              <span>Lv 3</span><span class="text-[10px] text-rose-400 font-semibold hidden sm:inline">Hard</span>
             </button>
-            <button type="button" id="global-lvl-btn-overdrive" onclick="toggleOverdriveLevel(true)" class="px-2.5 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-1 text-slate-400 hover:text-white" title="Lv.3+ Overdrive: Rapid Native Flow (1.18x) + Multi-Clause Slang + 5-Exchange Convo">
-              <span>🚀</span><span class="hidden sm:inline">Overdrive</span><span class="sm:hidden">3+</span>
+            <button type="button" id="global-lvl-btn-overdrive" onclick="toggleOverdriveLevel(true)" class="px-2.5 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 text-slate-400 hover:text-white" title="Max: Challenge Overdrive • Rapid Native Flow (1.18x) & 5-Turn Convo">
+              <span>Max</span>
             </button>
           </div>
 
@@ -396,18 +397,18 @@
       <!-- Right: Compact Level Segmented Control + Step Counter + Gemini -->
       <div class="flex items-center gap-1.5 shrink-0">
         <!-- Compact Level Segmented Pill -->
-        <div class="inline-flex items-center bg-[#14161f] p-0.5 rounded-xl border border-[#252a38] gap-0.5">
-          <button type="button" id="lesson-lvl-btn-1" onclick="setCourseLevel(1, true)" class="px-2 py-0.5 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-0.5 text-slate-400 hover:text-white" title="Lv.1 Survival Core">
-            <span>🌱</span><span class="text-[10px] hidden sm:inline">1</span>
+        <div class="inline-flex items-center bg-[#14161f] p-0.5 rounded-xl border border-[#252a38] gap-0.5" title="Course Difficulty: 1 (Easy) | 2 (Normal) | 3 (Hard) | Max">
+          <button type="button" id="lesson-lvl-btn-1" onclick="setCourseLevel(1, true)" class="px-2.5 py-0.5 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center justify-center text-slate-400 hover:text-white" title="Level 1: Easy (Core Chunks, 0.8x Audio)">
+            1
           </button>
-          <button type="button" id="lesson-lvl-btn-2" onclick="setCourseLevel(2, true)" class="px-2 py-0.5 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-0.5 bg-amber-400 text-[#0e0f12]" title="Lv.2 Natural Street">
-            <span>⚡</span><span class="text-[10px] hidden sm:inline">2</span>
+          <button type="button" id="lesson-lvl-btn-2" onclick="setCourseLevel(2, true)" class="px-2.5 py-0.5 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center justify-center bg-amber-400 text-[#0e0f12]" title="Level 2: Normal (Everyday Sentences, 1.0x Audio)">
+            2
           </button>
-          <button type="button" id="lesson-lvl-btn-3" onclick="setCourseLevel(3, true)" class="px-2 py-0.5 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-0.5 text-slate-400 hover:text-white" title="Lv.3 Fluent + Slang">
-            <span>🔥</span><span class="text-[10px] hidden sm:inline">3</span>
+          <button type="button" id="lesson-lvl-btn-3" onclick="setCourseLevel(3, true)" class="px-2.5 py-0.5 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center justify-center text-slate-400 hover:text-white" title="Level 3: Hard (Longer Sentences, Slang)">
+            3
           </button>
-          <button type="button" id="lesson-lvl-btn-overdrive" onclick="toggleOverdriveLevel(true)" class="px-2 py-0.5 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-0.5 text-slate-400 hover:text-white" title="Lv.3+ Overdrive: Max Speed & Compound Slang">
-            <span>🚀</span>
+          <button type="button" id="lesson-lvl-btn-overdrive" onclick="toggleOverdriveLevel(true)" class="px-2.5 py-0.5 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center justify-center text-slate-400 hover:text-white" title="Max: Challenge Overdrive (Rapid Native Flow)">
+            Max
           </button>
         </div>
 
@@ -4940,10 +4941,10 @@
 
       if (isManual) {
         const toastMap = {
-          '1': '🌱 Level 1 Set • Core Survival Chunks, Slower 0.80x Audio & 4-Line Convo',
-          '2': '⚡ Level 2 Set • Everyday Polite Sentences, 1.0x Audio & 6-Line Convo',
-          '3': '🔥 Level 3 Set • Longer Sentences, Street Slang, Bonus Theme Words & 8-Line Convo',
-          '3+': '🚀 Lv.3+ Overdrive • Rapid Native Flow (1.15x), Multi-Clause Slang & 10-Line Convo!'
+          '1': 'Level 1 (Easy) • Short survival chunks, gentle 0.80x audio & 4-line dialogue',
+          '2': 'Level 2 (Normal) • Everyday polite sentences, 1.0x native audio & 6-line dialogue',
+          '3': 'Level 3 (Hard) • Longer sentences, street slang, bonus words & 8-line dialogue',
+          '3+': 'Max (Overdrive) • Rapid native speed (1.15x), multi-clause slang & 10-line dialogue'
         };
         const key = (targetLvl === 3 && appState.levelOverdrive) ? '3+' : String(targetLvl);
         showToast(toastMap[key] || toastMap['2']);
@@ -4967,7 +4968,7 @@
         } else if (cur === 3 && !isOverdrive) {
           setCourseLevel(3, true, true);
         } else {
-          showToast('🚀 Already at Maximum Level (Lv.3+ Overdrive)!');
+          showToast('Already at Maximum Level (Max)');
         }
       } else if (delta < 0) {
         if (cur === 3 && isOverdrive) {
@@ -4975,7 +4976,7 @@
         } else if (cur > 1) {
           setCourseLevel(cur - 1, true, false);
         } else {
-          showToast('🌱 Already at Level 1 (Core Survival Mode)');
+          showToast('Already at Level 1 (Easy)');
         }
       }
     }
@@ -5005,11 +5006,11 @@
           const nextLvl = cur + 1;
           appState.levelStreak = 0;
           setCourseLevel(nextLvl, false, false);
-          showToast(`🚀 Auto-Level Up → Lv.${nextLvl}! Same theme, longer sentences & richer street talk!`);
+          showToast(`Auto-Level Up → Level ${nextLvl} • Same theme, longer sentences & richer talk`);
         } else if (cur === 3 && !isOverdrive && appState.levelStreak >= 4) {
           appState.levelStreak = 0;
           setCourseLevel(3, false, true);
-          showToast('🚀 Auto-Adapt Overdrive Activated (Lv.3+)! Maximum street slang & 5-turn convo unlocked!');
+          showToast('Auto-Adapt: Max Level Activated • Fast street slang & 5-turn dialogue');
         }
       } else if (!isCorrect) {
         appState.levelStruggle = (appState.levelStruggle || 0) + 1;
@@ -5020,11 +5021,11 @@
           appState.levelStruggle = 0;
           if (cur === 3 && isOverdrive) {
             setCourseLevel(3, false, false);
-            showToast('🌱 Auto-Adapted → Lv.3 (Stepped down from Overdrive to consolidate this theme)');
+            showToast('Auto-Adapted → Level 3 (Stepped down from Max to consolidate this theme)');
           } else if (cur > 1) {
             const prevLvl = cur - 1;
             setCourseLevel(prevLvl, false, false);
-            showToast(`🌱 Auto-Adapted → Lv.${prevLvl} • Shorter sentences & clearer audio for this theme`);
+            showToast(`Auto-Adapted → Level ${prevLvl} • Shorter sentences & clearer audio`);
           }
         }
       } else {
@@ -5145,7 +5146,7 @@
           { th: 'พิเศษ', ro: 'phí-sèet', en: 'Extra large / special portion (street stall staple)' },
           { th: 'แซ่บมาก', ro: 'sɛ̂ɛp mâak', en: 'Super zesty & delicious! (authentic street slang)' }
         ];
-        drillTwist = '🔥 Lv.3 Street Twist: The stall is packed & loud — reply with a full, natural multi-part street sentence!';
+        drillTwist = 'Level 3 Street Twist: The stall is packed & loud — reply with a full, natural multi-part street sentence!';
         drillCompoundSuffix = { spoken: 'phí-sèet ná khá', thai: 'พิเศษนะคะ', meaning: '+ make it special/extra' };
       } else if (theme.includes('cafe') || theme.includes('drink') || theme.includes('7-eleven') || theme.includes('sweet')) {
         longerThai = `น้องคะ ${baseThai} หวานน้อย ใส่ถุงกลับบ้านนะคะ`;
@@ -5155,7 +5156,7 @@
           { th: 'หวานน้อย', ro: 'wǎan nɔ́ɔi', en: 'Less sweet (essential Bangkok cafe modifier)' },
           { th: 'กลับบ้าน', ro: 'klàp bâan', en: 'Takeaway / to-go' }
         ];
-        drillTwist = '🔥 Lv.3 Cafe Twist: You are in a rush before the BTS train — combine your order with a natural takeaway/sweetness cue!';
+        drillTwist = 'Level 3 Cafe Twist: You are in a rush before the BTS train — combine your order with a natural takeaway/sweetness cue!';
         drillCompoundSuffix = { spoken: 'klàp bâan ná khá', thai: 'กลับบ้านนะคะ', meaning: '+ to-go please' };
       } else if (theme.includes('taxi') || theme.includes('transport') || theme.includes('grab') || theme.includes('direction') || theme.includes('ride')) {
         longerThai = `พี่คะ ${baseThai} เลยเซเว่นไปนิดนึง จอดซ้ายได้เลยค่ะ`;
@@ -5165,7 +5166,7 @@
           { th: 'เลยไปนิดนึง', ro: 'ləəi pai nít nưng', en: 'Just a tiny bit past (driver shortcut phrase)' },
           { th: 'จอดป้ายหน้า', ro: 'jɔ̀ɔt pâai nâa', en: 'Drop me at the next stop / sign' }
         ];
-        drillTwist = '🔥 Lv.3 Traffic Twist: The driver is merging fast — give the exact natural street instruction!';
+        drillTwist = 'Level 3 Traffic Twist: The driver is merging fast — give the exact natural street instruction!';
         drillCompoundSuffix = { spoken: 'ตรงนี้เลยค่ะ (trong níi ləəi khâ)', thai: 'ตรงนี้เลยค่ะ', meaning: '+ right here please' };
       } else if (theme.includes('market') || theme.includes('shop') || theme.includes('price') || theme.includes('bargain') || theme.includes('pay')) {
         longerThai = `แม่ค้าคะ ${baseThai} ลดหน่อยได้ไหมคะ เดี๋ยวสแกนจ่ายเลยค่ะ`;
@@ -5175,7 +5176,7 @@
           { th: 'สแกนจ่าย', ro: 'sà-kɛɛn jàai', en: 'Pay by QR scan (PromptPay — used everywhere)' },
           { th: 'ลดหน่อย', ro: 'lót nɔ̀i', en: 'Drop the price a bit (friendly bargaining)' }
         ];
-        drillTwist = '🔥 Lv.3 Night Market Twist: Negotiate smoothly like a Bangkok local and confirm payment!';
+        drillTwist = 'Level 3 Market Twist: Negotiate smoothly like a Bangkok local and confirm payment!';
         drillCompoundSuffix = { spoken: 'สแกนจ่ายนะคะ (sà-kɛɛn jàai ná khá)', thai: 'สแกนจ่ายนะคะ', meaning: '+ paying by QR scan' };
       } else {
         longerThai = `พี่คะ ${baseThai} ด้วยนะคะ ขอบคุณมากเลยค่ะ`;
@@ -5185,7 +5186,7 @@
           { th: 'ได้เลย', ro: 'dâi ləəi', en: 'Sure thing! / Right away! (everyday street reply)' },
           { th: 'ไม่เป็นไร', ro: 'mâi pen rai', en: 'No worries / All good' }
         ];
-        drillTwist = '🔥 Lv.3 Everyday Flow: Respond with natural spoken rhythm and polite street particles!';
+        drillTwist = 'Level 3 Everyday Flow: Respond with natural spoken rhythm and polite street particles!';
       }
 
       if (appState.levelOverdrive) {
@@ -5272,17 +5273,17 @@
       let lessonText = '';
 
       if (lvl === 1) {
-        globalText = '🌱 Lv.1 Core Survival • Short 1–2 word chunks, 0.80x audio, hints on & 4-line convo';
-        lessonText = '🌱 Lv.1 • Short Survival Chunks & 0.80x Audio';
+        globalText = 'Level 1 (Easy) • Short survival chunks, 0.80x audio & simple questions';
+        lessonText = 'Level 1 (Easy) • Short Chunks & 0.80x Audio';
       } else if (lvl === 2) {
-        globalText = '⚡ Lv.2 Everyday Street • Full polite sentences, 1.0x native audio & 6-line convo';
-        lessonText = '⚡ Lv.2 • Full Polite Sentences & 1.0x Audio';
+        globalText = 'Level 2 (Normal) • Full polite sentences, 1.0x native audio & 6-line convo';
+        lessonText = 'Level 2 (Normal) • Polite Sentences & 1.0x Audio';
       } else if (!isOverdrive) {
-        globalText = '🔥 Lv.3 Street Flow • Longer sentences, street slang, +1 bonus theme word & 8-line convo';
-        lessonText = '🔥 Lv.3 • Longer Sentences + Street Slang + Harder Qs';
+        globalText = 'Level 3 (Hard) • Longer sentences, street slang, +1 bonus word & 8-line convo';
+        lessonText = 'Level 3 (Hard) • Longer Sentences + Street Slang';
       } else {
-        globalText = '🚀 Lv.3+ Overdrive • Rapid 1.15x flow, multi-clause slang, +2 bonus words & 10-line convo';
-        lessonText = '🚀 Lv.3+ Overdrive • Max Street Slang & 5-Turn Convo';
+        globalText = 'Max (Overdrive) • Rapid 1.15x flow, multi-clause slang & 10-line convo';
+        lessonText = 'Max (Overdrive) • Max Street Slang & 5-Turn Convo';
       }
 
       if (gDesc) gDesc.textContent = globalText;
@@ -6024,7 +6025,7 @@
                 </span>
                 ${step.isBonusThemeWord ? `
                   <span class="px-2 py-0.5 rounded-full bg-rose-500/20 border border-rose-400/40 text-rose-300 text-[10px] font-bold">
-                    🔥 Lv.3 Bonus Theme Phrase
+                    Lv 3 Bonus Theme Phrase
                   </span>
                 ` : ''}
               </div>
@@ -6035,7 +6036,7 @@
               <!-- Level 1 Core Survival Chunk Focus Box -->
               <div class="bg-emerald-500/10 border border-emerald-500/30 rounded-2xl px-4 py-2.5 flex flex-wrap items-center justify-between gap-2 text-left">
                 <div class="text-xs">
-                  <span class="text-emerald-300 font-extrabold uppercase tracking-wider text-[10px] block">🌱 Lv.1 Core Survival Anchor (Start with this 1–2 word chunk):</span>
+                  <span class="text-emerald-300 font-extrabold uppercase tracking-wider text-[10px] block">Lv 1 Core Survival Word:</span>
                   <span class="text-white font-bold font-mono">${exp.coreWord.ro}</span>
                   <span class="text-amber-300 font-thai font-bold mx-1">(${exp.coreWord.th})</span>
                   <span class="text-emerald-200">= "${exp.coreWord.en}"</span>
@@ -6071,8 +6072,7 @@
               <div class="bg-gradient-to-br from-rose-500/12 via-[#191622] to-amber-500/10 border border-rose-400/35 rounded-2xl p-4 text-left space-y-3 shadow-lg">
                 <div class="flex items-center justify-between gap-2">
                   <span class="text-[11px] font-extrabold uppercase tracking-wider ${isOverdrive ? 'text-fuchsia-300' : 'text-rose-300'} flex items-center gap-1.5">
-                    <span>${isOverdrive ? '🚀' : '🔥'}</span>
-                    <span>${isOverdrive ? 'Lv.3+ Overdrive: Full Local Street Flow & Slang' : 'Lv.3 Expansion: Longer Sentence & Street Slang'}</span>
+                    <span>${isOverdrive ? 'Max Overdrive: Full Local Street Flow & Slang' : 'Level 3 Expansion: Longer Sentence & Street Slang'}</span>
                   </span>
                   <button type="button" onclick="playThaiAudio('${exp.longerThai}', this)" class="px-2.5 py-1 rounded-xl bg-rose-500/25 hover:bg-rose-500/40 border border-rose-400/40 text-rose-200 text-xs font-bold flex items-center gap-1 cursor-pointer active:scale-95 shrink-0">
                     <span>🔊</span><span>Hear Longer Sentence</span>
@@ -6449,7 +6449,7 @@
                 <div class="pt-3 border-t border-[#1c1f28] text-left">
                   <div class="flex items-center justify-between gap-2 bg-rose-500/10 border border-rose-400/30 rounded-xl px-3.5 py-2.5">
                     <div class="text-xs space-y-0.5">
-                      <span class="text-[10px] font-extrabold uppercase tracking-wider text-rose-300 block">🔥 Lv.3 Real-Life Sentence Context:</span>
+                      <span class="text-[10px] font-extrabold uppercase tracking-wider text-rose-300 block">Level 3 Real-Life Sentence Context:</span>
                       <span class="font-thai text-amber-300 font-bold text-sm">พี่คะ เอา${w.thai}อันนี้ด้วยนะคะ</span>
                       <span class="text-slate-300 font-mono text-[11px] block">phîi khá, ao ${w.roman} an níi dûai ná khá</span>
                     </div>
@@ -7184,17 +7184,87 @@
       }
     };
 
-    function getConvoTurnDataForItem(item, isSpiral = false) {
+    function getConvoTurnDataForItem(item, isSpiral = false, sibling = null, remixSeed = 0, exchangeIdx = 0) {
       if (!item) return null;
       const mapped = THAI_CONVO_TURNS_MAP[item.id];
+      const itemThai = item.thai || item.display || (mapped ? mapped.user.script.replace(/ค่ะ|ครับ/g, '').trim() : '');
+      const itemSpoken = item.spoken || item.roman || (mapped ? mapped.user.spoken.replace(/khâ|kháp/gi, '').trim() : '');
+      const itemMeaning = (item.meaning || (mapped ? mapped.user.meaning : '')).split('(')[0].trim();
+
       if (mapped) {
+        let partner = { ...mapped.partner };
+        let user = { ...mapped.user };
+        let siblingUser = null;
+
+        // Street Natural Variation: introduces authentic curveballs without repeating the spotlight drill verbatim
+        if (!isSpiral && sibling) {
+          const sibThai = sibling.thai || sibling.display || '';
+          const sibSpoken = sibling.spoken || sibling.roman || '';
+          const sibMeaning = (sibling.meaning || '').split('(')[0].trim();
+          const v = Math.abs((remixSeed + exchangeIdx * 7 + (item.id ? item.id.length : 0)) % 3);
+
+          if (exchangeIdx === 0 && sibThai && sibThai !== itemThai) {
+            if (v === 1) {
+              // Curveball A: Choice between item and sibling
+              partner = {
+                script: `${itemThai} หรือ ${sibThai} ดีครับ?`,
+                spoken: `${itemSpoken} rǔue ${sibSpoken} dii kháp?`,
+                meaning: `${itemMeaning} or ${sibMeaning}?`,
+                tts: `${itemThai} หรือ ${sibThai} ดีครับ`
+              };
+              user = {
+                script: `เอา${itemThai}ค่ะ`,
+                spoken: `ao ${itemSpoken} khâ`,
+                meaning: `I'll take the ${itemMeaning}.`,
+                tts: `เอา${itemThai}ค่ะ`
+              };
+              siblingUser = {
+                script: `เอา${sibThai}ค่ะ`,
+                spoken: `ao ${sibSpoken} khâ`,
+                meaning: `I'll take the ${sibMeaning}.`
+              };
+            } else if (v === 2) {
+              // Curveball B: Dine-in vs Takeaway check
+              partner = {
+                script: `รับ${itemThai} ทานนี่หรือใส่ถุงครับ?`,
+                spoken: `ráp ${itemSpoken}, thaan nîi rǔue sài thǔng kháp?`,
+                meaning: `${itemMeaning} — eating here or takeaway?`,
+                tts: `รับ${itemThai} ทานนี่หรือใส่ถุงครับ`
+              };
+              user = {
+                script: `เอา${itemThai} ทานนี่ค่ะ`,
+                spoken: `ao ${itemSpoken}, thaan nîi khâ`,
+                meaning: `${itemMeaning}, eating here please.`,
+                tts: `เอา${itemThai} ทานนี่ค่ะ`
+              };
+            }
+          } else if (exchangeIdx === 1 && sibThai && sibThai !== itemThai) {
+            if (v === 1) {
+              // Curveball C: Follow-up check on customization
+              partner = {
+                script: `แล้ว${itemThai}ด้วยไหมครับ?`,
+                spoken: `láaeo ${itemSpoken} dûay mǎi kháp?`,
+                meaning: `And ${itemMeaning} as well?`,
+                tts: `แล้ว${itemThai}ด้วยไหมครับ`
+              };
+              user = {
+                script: `${itemThai}ด้วยค่ะ`,
+                spoken: `${itemSpoken} dûay khâ`,
+                meaning: `Yes, ${itemMeaning} too please.`,
+                tts: `${itemThai}ด้วยค่ะ`
+              };
+            }
+          }
+        }
+
         return {
           itemId: item.id,
           item,
           isSpiral,
           role: mapped.role,
-          partner: { ...mapped.partner },
-          user: { ...mapped.user },
+          partner,
+          user,
+          siblingUser,
           intentCue: mapped.intentCue,
           earDistractors: mapped.earDistractors || [
             'Do you want a plastic bag for your drinks?',
@@ -7202,7 +7272,7 @@
             'Would you like your tea with 50% sugar?'
           ],
           usedWords: [
-            { script: item.thai || item.display || '', spoken: item.spoken || item.roman || '', meaning: item.meaning || '', isSpiral }
+            { script: itemThai, spoken: itemSpoken, meaning: item.meaning || mapped.user.meaning, isSpiral }
           ]
         };
       }
@@ -7391,28 +7461,37 @@
       const coreNew = remixSeed > 0 ? [...newItems].sort(() => Math.random() - 0.5) : [...newItems];
 
       if (difficulty === 'easier') {
-        coreNew.slice(0, 2).forEach(it => rawTurns.push(getConvoTurnDataForItem(it, false)));
-        if (rawTurns.length < 2 && shuffledOld.length > 0) {
-          rawTurns.push(getConvoTurnDataForItem(shuffledOld[0], true));
+        const s0 = coreNew[1] || shuffledOld[0] || null;
+        rawTurns.push(getConvoTurnDataForItem(coreNew[0], false, s0, remixSeed, 0));
+        if (coreNew.length > 1) {
+          rawTurns.push(getConvoTurnDataForItem(coreNew[1], false, coreNew[0], remixSeed, 1));
+        } else if (shuffledOld.length > 0) {
+          rawTurns.push(getConvoTurnDataForItem(shuffledOld[0], true, coreNew[0], remixSeed, 1));
         }
       } else if (difficulty === 'standard') {
-        coreNew.slice(0, 2).forEach(it => rawTurns.push(getConvoTurnDataForItem(it, false)));
+        const s0 = coreNew[1] || shuffledOld[0] || null;
+        rawTurns.push(getConvoTurnDataForItem(coreNew[0], false, s0, remixSeed, 0));
+        if (coreNew.length > 1) {
+          rawTurns.push(getConvoTurnDataForItem(coreNew[1], false, coreNew[0], remixSeed, 1));
+        }
         if (shuffledOld.length > 0 && coreNew.length >= 3) {
           // 3rd exchange weaves 3rd New item + 1st Old Known item into a single compound exchange!
           rawTurns.push(createCompoundOldNewTurn(coreNew[2], shuffledOld[0], true));
         } else if (shuffledOld.length > 0) {
-          rawTurns.push(getConvoTurnDataForItem(shuffledOld[0], true));
+          rawTurns.push(getConvoTurnDataForItem(shuffledOld[0], true, null, remixSeed, 2));
         } else if (coreNew.length >= 3) {
-          rawTurns.push(getConvoTurnDataForItem(coreNew[2], false));
+          rawTurns.push(getConvoTurnDataForItem(coreNew[2], false, null, remixSeed, 2));
         }
       } else if (difficulty === 'overdrive') {
         // Lv.3+ Overdrive: Up to 5 exchanges (10 lines) with 3 Compound Multi-Clause turns!
-        coreNew.slice(0, 4).forEach(it => rawTurns.push(getConvoTurnDataForItem(it, false)));
-        if (shuffledOld.length > 0) {
-          rawTurns.splice(1, 0, getConvoTurnDataForItem(shuffledOld[0], true));
-        }
+        const s0 = coreNew[1] || shuffledOld[0] || null;
+        rawTurns.push(getConvoTurnDataForItem(coreNew[0], false, s0, remixSeed, 0));
+        if (coreNew.length > 1) rawTurns.push(getConvoTurnDataForItem(coreNew[1], false, coreNew[0], remixSeed, 1));
+        if (shuffledOld.length > 0) rawTurns.splice(1, 0, getConvoTurnDataForItem(shuffledOld[0], true, null, remixSeed, 2));
+        if (coreNew.length > 2) rawTurns.push(getConvoTurnDataForItem(coreNew[2], false, null, remixSeed, 3));
+        if (coreNew.length > 3) rawTurns.push(getConvoTurnDataForItem(coreNew[3], false, null, remixSeed, 4));
         if (rawTurns.length < 5 && shuffledOld.length > 1) {
-          rawTurns.push(getConvoTurnDataForItem(shuffledOld[1], true));
+          rawTurns.push(getConvoTurnDataForItem(shuffledOld[1], true, null, remixSeed, 5));
         }
         if (rawTurns.length > 5) rawTurns.length = 5;
         // Upgrade up to 2 exchanges into Compound Multi-Chunk Old+New sentences
@@ -7432,12 +7511,12 @@
         }
       } else {
         // Harder (Lv.3): 4 exchanges (8 lines) with Compound Old+New sentences!
-        coreNew.slice(0, 3).forEach(it => rawTurns.push(getConvoTurnDataForItem(it, false)));
-        if (shuffledOld.length > 0) {
-          rawTurns.splice(1, 0, getConvoTurnDataForItem(shuffledOld[0], true));
-        } else if (coreNew.length >= 4) {
-          rawTurns.push(getConvoTurnDataForItem(coreNew[3], false));
-        }
+        const s0 = coreNew[1] || shuffledOld[0] || null;
+        rawTurns.push(getConvoTurnDataForItem(coreNew[0], false, s0, remixSeed, 0));
+        if (coreNew.length > 1) rawTurns.push(getConvoTurnDataForItem(coreNew[1], false, coreNew[0], remixSeed, 1));
+        if (shuffledOld.length > 0) rawTurns.splice(1, 0, getConvoTurnDataForItem(shuffledOld[0], true, null, remixSeed, 2));
+        if (coreNew.length > 2 && rawTurns.length < 4) rawTurns.push(getConvoTurnDataForItem(coreNew[2], false, null, remixSeed, 3));
+        if (coreNew.length > 3 && rawTurns.length < 4) rawTurns.push(getConvoTurnDataForItem(coreNew[3], false, null, remixSeed, 4));
         if (rawTurns.length > 4) rawTurns.length = 4;
         // Upgrade the final exchange into a Compound Multi-Chunk Old+New sentence
         if (coreNew.length >= 2) {
@@ -7514,6 +7593,17 @@
 
         const seenScripts = new Set([correctOpt.script]);
         const distOpts = [];
+        if (ex.siblingUser && ex.siblingUser.script && !seenScripts.has(ex.siblingUser.script)) {
+          seenScripts.add(ex.siblingUser.script);
+          distOpts.push({
+            id: `q_${qIdx}_sib`,
+            text: ex.siblingUser.meaning,
+            script: ex.siblingUser.script,
+            spoken: ex.siblingUser.spoken,
+            tts: ex.siblingUser.script,
+            isCorrect: false
+          });
+        }
         const candidates = allCandidatePool
           .filter(cand => cand && cand.id !== ex.itemId && cand.id !== ex.secondaryItemId)
           .filter((cand, cIdx, arr) => arr.findIndex(x => x.id === cand.id) === cIdx)
@@ -9394,6 +9484,10 @@ Return ONLY valid JSON array of 3 exchange objects with exact keys:
 
     async function syncWithCloud(manual = false) {
       const token = getCloudToken();
+      if (!token) {
+        // Prevent anonymous visitors from overwriting with or downloading personal gist
+        return;
+      }
       updateCloudIndicator('syncing', 'Syncing with GitHub Cloud...');
       try {
         const headers = { 'Accept': 'application/vnd.github+json' };
