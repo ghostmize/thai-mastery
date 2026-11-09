@@ -4604,29 +4604,9 @@
     window.addEventListener('keydown', (e) => {
       const overlay = document.getElementById('lesson-overlay');
       if (overlay && !overlay.classList.contains('hidden')) {
-        // 2-Person Convo: arrows/Enter walk line-by-line, 1-5 answer the Your-Turn pick
-        const convoStep = activeSession?.steps?.[activeSession.currentIndex];
+        // 2-Person Convo: player keys (Space play/pause, arrows, Enter, 1-5 replies)
         const typingTarget = e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA');
-        if (convoStep && convoStep.type === 'live_conversation' && !typingTarget) {
-          ensureConvoState(convoStep);
-          const inPlay = convoStep.phase !== 'recap';
-          if (inPlay && /^[1-5]$/.test(e.key)) {
-            const q = getConvoLineTask(convoStep, convoStep.dialogueLines[convoStep.cursor]);
-            const opt = q && !q.answered ? q.options[Number(e.key) - 1] : null;
-            if (opt) { e.preventDefault(); handleConvoQuestionSelect(q.qIdx, opt.id); }
-            return;
-          }
-          if (e.key === 'ArrowRight' || e.key === 'Enter') {
-            e.preventDefault();
-            if (inPlay) advanceLiveConvoTurn(); else handleLessonFooterAction();
-            return;
-          }
-          if (e.key === 'ArrowLeft') {
-            e.preventDefault();
-            if (!convoStepBack()) handleLessonPrev();
-            return;
-          }
-        }
+        if (!typingTarget && typeof handleConvoKeydown === 'function' && handleConvoKeydown(e)) return;
         if (e.key === 'ArrowLeft') {
           handleLessonPrev();
         } else if (e.key === 'ArrowRight') {
@@ -7598,7 +7578,7 @@
         correctTurnsCount: 0,
         cursor: 0,
         maxReached: 0,
-        phase: 'play',
+        phase: 'listen',
         slow: false,
         _autoPlayedOnce: false
       };
@@ -7609,25 +7589,6 @@
       if (difficulty === 'overdrive') return 1.18;
       if (difficulty === 'harder') return 1.12;
       return 1.0;
-    }
-
-    // Space / Replay: replays the current line (or the line being replied to on a Your-Turn pick)
-    function replayCurrentConvoPartnerAudio(slowOverride = false) {
-      const step = getActiveConvoStep();
-      if (!step) return;
-      ensureConvoState(step);
-      if (step.phase === 'recap') {
-        playFullConversationThread(slowOverride);
-        return;
-      }
-      const lines = step.dialogueLines || [];
-      const line = lines[step.cursor];
-      const q = getConvoLineTask(step, line);
-      const target = (q && !q.answered) ? lines[step.cursor - 1] : line;
-      if (!target) return;
-      stopFullConversationPlayback();
-      const bubble = document.getElementById(`convo-line-bubble-${target.lineIdx}`);
-      playThaiAudio(target.tts, bubble, slowOverride ? 0.72 : getConvoRate(step));
     }
 
     function handleConvoDifficultyChange(newDiff) {
@@ -7667,12 +7628,23 @@
       showToast(labels[newDiff] || 'Difficulty updated');
     }
 
-    // ---------------------------------------------------------------------
-    // 2-PERSON CONVO: STEP-THROUGH PLAYER (one message at a time)
-    //   - cursor walks line by line; Speaker A lines auto-play, Speaker B lines are "Your Turn" picks
-    //   - each bubble reveals progressively: audio -> Thai -> sound (romanization) -> English
-    //   - after the last line a recap shows the words used + the full annotated conversation
-    // ---------------------------------------------------------------------
+    // =====================================================================
+    // 2-PERSON CONVO PLAYER (4 phases)
+    //   🎧 Listen    – whole chat visible + media player (play/pause, prev/next, repeat line, slow)
+    //   🎭 Role-play – you are Speaker B: hear Speaker A, pick your reply, hear the real line
+    //   🧠 Recall    – "vanishing chat": your lines turn into blanks; say them from memory, tap to check
+    //   ✓ Recap      – words used + full annotated conversation
+    // =====================================================================
+    const CONVO_PHASES = [
+      { id: 'listen', icon: '🎧', label: 'Listen' },
+      { id: 'roleplay', icon: '🎭', label: 'Role-play' },
+      { id: 'recall', icon: '🧠', label: 'Recall' },
+      { id: 'recap', icon: '🏁', label: 'Recap' }
+    ];
+    let convoAudioToken = 0;
+    let convoChainTimer = null;
+    const convoPlayer = { playing: false };
+
     function getActiveConvoStep() {
       if (!activeSession) return null;
       const step = activeSession.steps?.[activeSession.currentIndex];
@@ -7693,12 +7665,19 @@
       return step && step.slow ? 0.72 : getConvoAudioSpeed(step ? step.difficulty : 'standard');
     }
 
-    function getConvoBaseReveal(diff) { return diff === 'easier' ? 2 : 0; }
-    function getConvoPastReveal(diff) { return (diff === 'harder' || diff === 'overdrive') ? 1 : 2; }
-    function convoShowRomanInOptions(step) {
-      const d = step.difficulty || 'standard';
-      return appState.pace !== 'intensive' && (d === 'easier' || d === 'standard');
+    function isHardConvo(step) {
+      return step.difficulty === 'harder' || step.difficulty === 'overdrive';
     }
+
+    // Speaker A lines in Role-play: shown as text for Lv.1/2, audio-first for Lv.3+
+    function getConvoBaseReveal(diff) {
+      return (diff === 'harder' || diff === 'overdrive') ? 0 : 2;
+    }
+
+    function convoShowRomanInOptions(step) {
+      return appState.pace !== 'intensive' && !isHardConvo(step);
+    }
+
     function getConvoLineTask(step, line) {
       return line && typeof line.taskIdx === 'number' ? ((step.questions || [])[line.taskIdx] || null) : null;
     }
@@ -7706,10 +7685,18 @@
     // Normalizes state for fresh, AI-generated and legacy convo steps
     function ensureConvoState(step) {
       const lines = step.dialogueLines || [];
-      if (typeof step.cursor !== 'number') step.cursor = 0;
-      step.cursor = Math.max(0, Math.min(step.cursor, Math.max(0, lines.length - 1)));
-      if (typeof step.maxReached !== 'number') step.maxReached = step.cursor;
-      if (!step.phase) step.phase = step.allTurnsCompleted ? 'recap' : 'play';
+      if (step.phase === 'play') step.phase = 'roleplay';
+      if (!CONVO_PHASES.some(p => p.id === step.phase)) step.phase = step.allTurnsCompleted ? 'recap' : 'listen';
+      if (!Array.isArray(step.phasesReached)) step.phasesReached = ['listen'];
+      if (!step.phasesReached.includes(step.phase)) step.phasesReached.push(step.phase);
+      if (typeof step.listenIdx !== 'number') step.listenIdx = 0;
+      step.listenIdx = Math.max(0, Math.min(step.listenIdx, Math.max(0, lines.length - 1)));
+      if (typeof step.rpIdx !== 'number') step.rpIdx = 0;
+      if (typeof step.showText !== 'boolean') step.showText = true;
+      if (typeof step.showRoman !== 'boolean') step.showRoman = !isHardConvo(step) && appState.pace !== 'intensive';
+      if (typeof step.showEnglish !== 'boolean') step.showEnglish = step.difficulty === 'easier';
+      if (typeof step.repeatLine !== 'boolean') step.repeatLine = false;
+      if (!step.recall || typeof step.recall !== 'object') step.recall = {};
       const base = getConvoBaseReveal(step.difficulty);
       lines.forEach((l, i) => {
         l.lineIdx = i;
@@ -7718,10 +7705,11 @@
       });
       (step.questions || []).forEach((q, qi) => {
         if (typeof q.lineIdx !== 'number') q.lineIdx = qi * 2 + 1;
-        if (!q.qIdx && q.qIdx !== 0) q.qIdx = qi;
+        if (typeof q.qIdx !== 'number') q.qIdx = qi;
         const ln = lines[q.lineIdx];
         if (ln) ln.taskIdx = qi;
       });
+      step.rpIdx = Math.max(0, Math.min(step.rpIdx, Math.max(0, (step.questions || []).length - 1)));
     }
 
     function getConvoSpeakerMeta(name) {
@@ -7734,159 +7722,241 @@
       return { emoji, label };
     }
 
-    // Called whenever the cursor lands on a line: plays it (unless it's an unanswered Your-Turn pick)
-    function onConvoLineEntered(step) {
-      const line = (step.dialogueLines || [])[step.cursor];
-      if (!line) return;
-      step.maxReached = Math.max(step.maxReached || 0, step.cursor);
-      const q = getConvoLineTask(step, line);
-      if (q && !q.answered) {
-        step._taskStart = Date.now();
-        return;
-      }
-      setTimeout(() => playThaiAudio(line.tts, null, getConvoRate(step)), 120);
+    // ---------- Audio with "finished" detection (Audio element or Web Speech) ----------
+    function stopConvoAudio() {
+      convoAudioToken++;
+      clearTimeout(convoChainTimer);
+      convoChainTimer = null;
+      convoPlayer.playing = false;
+      try { if (typeof currentAudio !== 'undefined' && currentAudio) currentAudio.pause(); } catch (e) {}
+      try { if ('speechSynthesis' in window) window.speechSynthesis.cancel(); } catch (e) {}
     }
 
-    function advanceLiveConvoTurn() {
+    function playConvoAudioThen(text, rate, onDone) {
+      clearTimeout(convoChainTimer);
+      const token = ++convoAudioToken;
+      playThaiAudio(text, null, rate);
+      const audioObj = (typeof currentAudio !== 'undefined') ? currentAudio : null;
+      const started = Date.now();
+      const est = Math.max(1500, Math.round(((text || '').length * 140) / (rate || 1)));
+      const poll = setInterval(() => {
+        if (token !== convoAudioToken) { clearInterval(poll); return; }
+        const elapsed = Date.now() - started;
+        if (elapsed < 700) return;
+        const audioBusy = !!(audioObj && !audioObj.paused && !audioObj.ended);
+        const speechBusy = 'speechSynthesis' in window && (window.speechSynthesis.speaking || window.speechSynthesis.pending);
+        if ((!audioBusy && !speechBusy) || elapsed > est * 3 + 4000) {
+          clearInterval(poll);
+          if (onDone) convoChainTimer = setTimeout(() => { if (token === convoAudioToken) onDone(); }, 450);
+        }
+      }, 150);
+    }
+
+    // Legacy names used elsewhere in the app
+    function stopFullConversationPlayback() {
+      stopConvoAudio();
+    }
+
+    function playFullConversationThread(slowOverride = false) {
       const step = getActiveConvoStep();
       if (!step) return;
       ensureConvoState(step);
-      stopFullConversationPlayback();
-
-      if (step.phase === 'recap') {
-        step.allTurnsCompleted = true;
-        activeSession.stepAnswered = true;
-        handleLessonFooterAction();
-        return;
-      }
-
-      const lines = step.dialogueLines || [];
-      const line = lines[step.cursor];
-      const q = getConvoLineTask(step, line);
-      if (q && !q.answered) {
-        showToast(`Your turn first: pick the reply (1–${q.options.length})`);
-        return;
-      }
-      if (line) line.reveal = Math.max(line.reveal || 0, getConvoPastReveal(step.difficulty));
-
-      if (step.cursor < lines.length - 1) {
-        step.cursor += 1;
+      if (convoPlayer.playing) {
+        stopConvoAudio();
         rerenderLiveConvo(step);
-        onConvoLineEntered(step);
         return;
       }
-
-      // Finished the last line -> Recap
-      step.phase = 'recap';
-      step.allTurnsCompleted = true;
-      step.transcriptUnlocked = true;
-      activeSession.stepAnswered = true;
-      rerenderLiveConvo(step);
+      if (slowOverride) step.slow = true;
+      stopConvoAudio();
+      convoListenPlayLine(step, 0, true);
     }
 
-    function convoStepBack() {
-      const step = getActiveConvoStep();
-      if (!step) return false;
-      ensureConvoState(step);
-      stopFullConversationPlayback();
-      if (step.phase === 'recap') {
-        step.phase = 'play';
-        step.allTurnsCompleted = false;
-        step.cursor = (step.dialogueLines || []).length - 1;
-      } else if (step.cursor > 0) {
-        step.cursor -= 1;
-      } else {
-        return false;
+    // ---------- 🎧 LISTEN: media player ----------
+    function convoListenPlayLine(step, idx, continueAfter) {
+      const lines = step.dialogueLines || [];
+      if (idx < 0 || idx >= lines.length) {
+        convoPlayer.playing = false;
+        rerenderLiveConvo(step);
+        return;
       }
+      step.listenIdx = idx;
+      step._listenEnded = false;
+      convoPlayer.playing = !!continueAfter;
       rerenderLiveConvo(step);
-      onConvoLineEntered(step);
-      return true;
+      playConvoAudioThen(lines[idx].tts, getConvoRate(step), () => {
+        if (getActiveConvoStep() !== step || !convoPlayer.playing) return;
+        if (step.repeatLine) return convoListenPlayLine(step, idx, true);
+        if (idx + 1 < lines.length) return convoListenPlayLine(step, idx + 1, true);
+        convoPlayer.playing = false;
+        step.listenedOnce = true;
+        step._listenEnded = true;
+        rerenderLiveConvo(step);
+      });
     }
 
-    function jumpToConvoLine(lineIdx) {
+    function convoTogglePlay() {
       const step = getActiveConvoStep();
       if (!step) return;
       ensureConvoState(step);
-      if (step.phase !== 'recap' && lineIdx > (step.maxReached || 0)) return;
-      stopFullConversationPlayback();
-      step.phase = 'play';
-      step.allTurnsCompleted = false;
-      step.cursor = lineIdx;
-      step.maxReached = Math.max(step.maxReached || 0, lineIdx);
+      if (convoPlayer.playing) {
+        stopConvoAudio();
+        rerenderLiveConvo(step);
+        return;
+      }
+      const start = step._listenEnded ? 0 : step.listenIdx;
+      stopConvoAudio();
+      convoListenPlayLine(step, start, true);
+    }
+
+    function convoListenStep(delta) {
+      const step = getActiveConvoStep();
+      if (!step) return;
+      ensureConvoState(step);
+      const n = (step.dialogueLines || []).length;
+      const idx = Math.max(0, Math.min(n - 1, step.listenIdx + delta));
+      const keepPlaying = convoPlayer.playing;
+      stopConvoAudio();
+      convoListenPlayLine(step, idx, keepPlaying);
+    }
+
+    function convoListenJump(idx) {
+      const step = getActiveConvoStep();
+      if (!step) return;
+      ensureConvoState(step);
+      const keepPlaying = convoPlayer.playing;
+      stopConvoAudio();
+      convoListenPlayLine(step, idx, keepPlaying);
+    }
+
+    function convoToggleRepeat() {
+      const step = getActiveConvoStep();
+      if (!step) return;
+      step.repeatLine = !step.repeatLine;
       rerenderLiveConvo(step);
-      onConvoLineEntered(step);
     }
 
-    function revealConvoLine(lineIdx) {
+    function convoToggleView(key) {
       const step = getActiveConvoStep();
-      if (!step) return;
-      const line = step.dialogueLines?.[lineIdx];
-      if (!line) return;
-      line.reveal = Math.min(3, (line.reveal || 0) + 1);
+      if (!step || !['showText', 'showRoman', 'showEnglish'].includes(key)) return;
+      step[key] = !step[key];
       rerenderLiveConvo(step);
-    }
-
-    function playConvoLineAudio(lineIdx, el = null) {
-      const step = getActiveConvoStep();
-      if (!step) return;
-      const line = step.dialogueLines?.[lineIdx];
-      if (!line) return;
-      stopFullConversationPlayback();
-      playThaiAudio(line.tts, el, getConvoRate(step));
-    }
-
-    function playConvoOptionAudio(qIdx, optIdx) {
-      const step = getActiveConvoStep();
-      if (!step) return;
-      const opt = step.questions?.[qIdx]?.options?.[optIdx];
-      if (!opt) return;
-      stopFullConversationPlayback();
-      playThaiAudio(opt.tts || opt.script, null, getConvoRate(step));
-    }
-
-    function showConvoWordGloss(lineIdx, wordIdx) {
-      const step = getActiveConvoStep();
-      if (!step) return;
-      const w = step.dialogueLines?.[lineIdx]?.usedWords?.[wordIdx];
-      if (!w) return;
-      playThaiAudio(w.script, null, getConvoRate(step));
-      showToast(`${w.script} · ${w.spoken} = ${w.meaning}`);
     }
 
     function toggleConvoSlow() {
       const step = getActiveConvoStep();
       if (!step) return;
+      ensureConvoState(step);
       step.slow = !step.slow;
-      rerenderLiveConvo(step);
-      replayCurrentConvoPartnerAudio();
+      if (step.phase === 'listen' && convoPlayer.playing) {
+        stopConvoAudio();
+        convoListenPlayLine(step, step.listenIdx, true);
+      } else {
+        rerenderLiveConvo(step);
+      }
     }
 
-    // Legacy hooks (kept for compatibility with older saved steps / buttons)
-    function toggleConvoTranscriptReveal() {
+    // ---------- Phase navigation ----------
+    function goConvoPhase(phaseId) {
+      const step = getActiveConvoStep();
+      if (!step || !CONVO_PHASES.some(p => p.id === phaseId)) return;
+      ensureConvoState(step);
+      stopConvoAudio();
+      step.phase = phaseId;
+      if (!step.phasesReached.includes(phaseId)) step.phasesReached.push(phaseId);
+      step.allTurnsCompleted = phaseId === 'recap';
+      if (phaseId === 'recap') {
+        step.transcriptUnlocked = true;
+        activeSession.stepAnswered = true;
+      }
+      rerenderLiveConvo(step);
+      if (phaseId === 'roleplay') enterRoleplayExchange(step);
+    }
+
+    // Footer / Enter / →
+    function advanceLiveConvoTurn() {
       const step = getActiveConvoStep();
       if (!step) return;
       ensureConvoState(step);
-      const allShown = step.dialogueLines.every(l => l.reveal >= 3);
-      step.dialogueLines.forEach(l => { l.reveal = allShown ? getConvoBaseReveal(step.difficulty) : 3; });
-      rerenderLiveConvo(step);
+
+      if (step.phase === 'listen') { goConvoPhase('roleplay'); return; }
+
+      if (step.phase === 'roleplay') {
+        const qs = step.questions || [];
+        const q = qs[step.rpIdx];
+        if (q && !q.answered) {
+          showToast(`Your turn first: pick your reply (1–${q.options.length})`);
+          return;
+        }
+        if (step.rpIdx < qs.length - 1) {
+          stopConvoAudio();
+          step.rpIdx += 1;
+          rerenderLiveConvo(step);
+          enterRoleplayExchange(step);
+          return;
+        }
+        goConvoPhase('recall');
+        return;
+      }
+
+      if (step.phase === 'recall') { goConvoPhase('recap'); return; }
+
+      // recap -> next lesson step
+      step.allTurnsCompleted = true;
+      activeSession.stepAnswered = true;
+      handleLessonFooterAction();
     }
 
-    function toggleConvoLinePeek(lineIdx) {
-      revealConvoLine(lineIdx);
+    // ← : one step back inside the module (returns false at the very start)
+    function convoStepBack() {
+      const step = getActiveConvoStep();
+      if (!step) return false;
+      ensureConvoState(step);
+      if (step.phase === 'listen') {
+        if (step.listenIdx === 0) return false;
+        convoListenStep(-1);
+        return true;
+      }
+      if (step.phase === 'roleplay') {
+        if (step.rpIdx > 0) {
+          stopConvoAudio();
+          step.rpIdx -= 1;
+          rerenderLiveConvo(step);
+          enterRoleplayExchange(step);
+        } else {
+          goConvoPhase('listen');
+        }
+        return true;
+      }
+      goConvoPhase(step.phase === 'recall' ? 'roleplay' : 'recall');
+      return true;
     }
 
-    function remixLiveConversation() {
-      if (!activeSession) return;
-      const step = activeSession.steps?.[activeSession.currentIndex];
-      if (!step || step.type !== 'live_conversation') return;
-      stopFullConversationPlayback();
-      const allCurricula = [...UNITS_CURRICULUM, ...STREET_CURRICULUM];
-      const node = allCurricula.flatMap(u => u.nodes).find(n => n.id === step.nodeId) || allCurricula[0].nodes[0];
-      const nextSeed = (step.remixSeed || 0) + 1;
-      const rebuilt = createLiveConversationStep(node, step.difficulty, nextSeed);
-      activeSession.steps[activeSession.currentIndex] = rebuilt;
-      renderCurrentLessonStep();
-      showToast('🔄 Remixed the conversation with a fresh mix of new + known words');
+    // Space
+    function replayCurrentConvoPartnerAudio(slowOverride = false) {
+      const step = getActiveConvoStep();
+      if (!step) return;
+      ensureConvoState(step);
+      if (step.phase === 'listen') { convoTogglePlay(); return; }
+      if (step.phase === 'recap') { playFullConversationThread(slowOverride); return; }
+      if (step.phase === 'roleplay') {
+        const q = (step.questions || [])[step.rpIdx];
+        if (!q) return;
+        const line = step.dialogueLines[q.answered ? q.lineIdx : q.lineIdx - 1];
+        if (line) playConvoAudioThen(line.tts, slowOverride ? 0.72 : getConvoRate(step), null);
+      }
+    }
+
+    // ---------- 🎭 ROLE-PLAY ----------
+    function enterRoleplayExchange(step) {
+      const q = (step.questions || [])[step.rpIdx];
+      if (!q) return;
+      step._taskStart = Date.now();
+      const aLine = step.dialogueLines[q.lineIdx - 1];
+      if (aLine && !q.answered) {
+        setTimeout(() => {
+          if (getActiveConvoStep() === step && step.phase === 'roleplay') playConvoAudioThen(aLine.tts, getConvoRate(step), null);
+        }, 250);
+      }
     }
 
     function handleConvoQuestionSelect(qIdx, optId) {
@@ -7917,66 +7987,573 @@
         recordItemAttempt(q.secondaryItemId, isRight, elapsed);
       }
 
-      // Reveal the real line fully and play it, so ear + script + meaning link up right away
       const line = step.dialogueLines?.[q.lineIdx];
       if (line) line.reveal = 3;
-      playThaiAudio(q.targetTts, null, getConvoRate(step));
+      rerenderLiveConvo(step);
 
+      // Hear the real line; if correct, flow straight on to the next exchange
+      playConvoAudioThen(q.targetTts, getConvoRate(step), () => {
+        if (!isRight || getActiveConvoStep() !== step || step.phase !== 'roleplay') return;
+        if (step.rpIdx === qIdx && step.rpIdx < step.questions.length - 1) {
+          step.rpIdx += 1;
+          rerenderLiveConvo(step);
+          enterRoleplayExchange(step);
+        }
+      });
+    }
+
+    function revealConvoLine(lineIdx) {
+      const step = getActiveConvoStep();
+      if (!step) return;
+      const line = step.dialogueLines?.[lineIdx];
+      if (!line) return;
+      line.reveal = Math.min(3, (line.reveal || 0) + 1);
       rerenderLiveConvo(step);
     }
 
-    let fullConvoPlaybackTimer = null;
-    let isFullConvoPlaying = false;
-
-    function stopFullConversationPlayback() {
-      clearTimeout(fullConvoPlaybackTimer);
-      fullConvoPlaybackTimer = null;
-      isFullConvoPlaying = false;
-      document.querySelectorAll('.convo-playing-ring').forEach(el => {
-        el.classList.remove('ring-2', 'ring-amber-400', 'convo-playing-ring');
-      });
-      const playBtnLabel = document.getElementById('convo-master-play-label');
-      if (playBtnLabel) playBtnLabel.textContent = 'Play all';
-    }
-
-    function playFullConversationThread(slowOverride = false) {
+    function playConvoLineAudio(lineIdx, el = null) {
       const step = getActiveConvoStep();
       if (!step) return;
+      const line = step.dialogueLines?.[lineIdx];
+      if (!line) return;
+      if (el) {
+        el.classList.add('ring-2', 'ring-sky-400');
+        setTimeout(() => el.classList.remove('ring-2', 'ring-sky-400'), 450);
+      }
+      playConvoAudioThen(line.tts, getConvoRate(step), null);
+    }
 
-      if (isFullConvoPlaying && !slowOverride) {
-        stopFullConversationPlayback();
-        return;
+    function playConvoOptionAudio(qIdx, optIdx) {
+      const step = getActiveConvoStep();
+      if (!step) return;
+      const opt = step.questions?.[qIdx]?.options?.[optIdx];
+      if (!opt) return;
+      playConvoAudioThen(opt.tts || opt.script, getConvoRate(step), null);
+    }
+
+    function showConvoWordGloss(lineIdx, wordIdx) {
+      const step = getActiveConvoStep();
+      if (!step) return;
+      const w = step.dialogueLines?.[lineIdx]?.usedWords?.[wordIdx];
+      if (!w) return;
+      playConvoAudioThen(w.script, getConvoRate(step), null);
+      showToast(`${w.script} · ${w.spoken} = ${w.meaning}`);
+    }
+
+    // ---------- 🧠 RECALL (vanishing chat) ----------
+    function convoRecallReveal(lineIdx) {
+      const step = getActiveConvoStep();
+      if (!step) return;
+      const line = step.dialogueLines?.[lineIdx];
+      if (!line) return;
+      step.recall[lineIdx] = 'shown';
+      rerenderLiveConvo(step);
+      playConvoAudioThen(line.tts, getConvoRate(step), null);
+    }
+
+    function convoRecallGrade(lineIdx, knewIt) {
+      const step = getActiveConvoStep();
+      if (!step) return;
+      step.recall[lineIdx] = knewIt ? 'knew' : 'again';
+      rerenderLiveConvo(step);
+    }
+
+    function convoRecallResetAll() {
+      const step = getActiveConvoStep();
+      if (!step) return;
+      step.recall = {};
+      rerenderLiveConvo(step);
+    }
+
+    // Legacy hooks (kept for compatibility with older saved steps / buttons)
+    function toggleConvoTranscriptReveal() { convoToggleView('showEnglish'); }
+    function toggleConvoLinePeek(lineIdx) { revealConvoLine(lineIdx); }
+
+    function remixLiveConversation() {
+      if (!activeSession) return;
+      const step = activeSession.steps?.[activeSession.currentIndex];
+      if (!step || step.type !== 'live_conversation') return;
+      stopConvoAudio();
+      const allCurricula = [...UNITS_CURRICULUM, ...STREET_CURRICULUM];
+      const node = allCurricula.flatMap(u => u.nodes).find(n => n.id === step.nodeId) || allCurricula[0].nodes[0];
+      const rebuilt = createLiveConversationStep(node, step.difficulty, (step.remixSeed || 0) + 1);
+      activeSession.steps[activeSession.currentIndex] = rebuilt;
+      renderCurrentLessonStep();
+      showToast('🔄 Remixed the conversation with a fresh mix of new + known words');
+    }
+
+    // Keyboard: returns true when the convo module handled the key
+    function handleConvoKeydown(e) {
+      const step = getActiveConvoStep();
+      if (!step) return false;
+      ensureConvoState(step);
+      if (/^[1-5]$/.test(e.key)) {
+        if (step.phase === 'roleplay') {
+          const q = (step.questions || [])[step.rpIdx];
+          const opt = q && !q.answered ? q.options[Number(e.key) - 1] : null;
+          if (opt) { e.preventDefault(); handleConvoQuestionSelect(q.qIdx, opt.id); }
+        }
+        return true;
+      }
+      if (e.code === 'Space') { e.preventDefault(); replayCurrentConvoPartnerAudio(); return true; }
+      if (e.key === 'Enter') { e.preventDefault(); handleLessonFooterAction(); return true; }
+      if (e.key === 'ArrowRight') {
+        e.preventDefault();
+        if (step.phase === 'listen') convoListenStep(1); else handleLessonFooterAction();
+        return true;
+      }
+      if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        if (!convoStepBack()) handleLessonPrev();
+        return true;
+      }
+      return false;
+    }
+
+    // =====================================================================
+    // RENDERING
+    // =====================================================================
+    function escapeConvoAttr(s) {
+      return String(s || '').replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
+    }
+
+    // Underlines the lesson words inside a line; tapping one plays it + shows its meaning
+    function highlightConvoLineWords(line, idx) {
+      const full = line.script || '';
+      let html = full;
+      (line.usedWords || []).forEach((w, wIdx) => {
+        const s = (w.script || '').trim();
+        if (!s || s.length > full.length * 0.8) return;
+        const pos = html.indexOf(s);
+        if (pos === -1) return;
+        html = html.slice(0, pos)
+          + `<span onclick="event.stopPropagation(); showConvoWordGloss(${idx}, ${wIdx})" class="underline decoration-dotted decoration-sky-400/80 underline-offset-[6px] cursor-help" title="${escapeConvoAttr(w.meaning)}">${s}</span>`
+          + html.slice(pos + s.length);
+      });
+      return html;
+    }
+
+    // Length-proportional pseudo waveform for audio-only bubbles
+    function renderConvoWaveform(line) {
+      const t = line.tts || line.script || '';
+      const n = Math.max(6, Math.min(22, Math.round(t.length / 2)));
+      let bars = '';
+      for (let i = 0; i < n; i++) {
+        const c = t.charCodeAt(i % Math.max(1, t.length)) || 0;
+        const h = 30 + ((c * 37 + i * 53) % 70);
+        bars += `<span class="w-[3px] rounded-full bg-current" style="height:${h}%"></span>`;
+      }
+      return `
+        <div class="flex items-center gap-2.5 py-0.5">
+          <span class="text-sm">🔊</span>
+          <span class="flex items-center gap-[3px] h-5 opacity-80">${bars}</span>
+        </div>`;
+    }
+
+    // Blank-line hint for Recall: first word(s) of the pronunciation + bars for the rest
+    function renderConvoHint(line, revealWords) {
+      const words = (line.spoken || '').split(/\s+/).filter(Boolean);
+      if (!words.length) return '<span class="text-slate-500">· · ·</span>';
+      return words.map((w, i) => i < revealWords
+        ? `<span class="text-emerald-200">${w}</span>`
+        : `<span class="inline-block align-middle h-2.5 rounded-sm bg-white/15" style="width:${Math.max(14, Math.min(52, w.length * 7))}px"></span>`
+      ).join(' ');
+    }
+
+    function renderConvoText(line, idx, o) {
+      return `
+        <div  class="font-thai font-bold text-amber-200 ${o.big ? 'text-base sm:text-lg' : 'text-sm sm:text-base'} leading-snug">${highlightConvoLineWords(line, idx)}</div>
+        ${o.roman && line.spoken ? `<div class="font-mono text-[11px] sm:text-xs text-slate-300 mt-0.5">${line.spoken}</div>` : ''}
+        ${o.english && line.meaning ? `<div class="text-[11px] sm:text-xs text-slate-400 italic mt-1">${line.meaning}</div>` : ''}`;
+    }
+
+    // Generic chat bubble. o: { body, active, dim, label, onclick, tone, extras, anchor }
+    function renderConvoBubble(step, line, idx, o = {}) {
+      const isA = line.speaker === 'A';
+      const meta = getConvoSpeakerMeta(line.speakerName);
+      const tone = o.tone || (isA
+        ? 'bg-[#181c29] border-[#262d42] rounded-bl-md text-amber-300'
+        : 'bg-[#10201f] border-emerald-500/30 rounded-br-md text-emerald-300');
+      const ring = o.active ? (isA ? 'ring-2 ring-amber-400/80' : 'ring-2 ring-emerald-400/80') : '';
+      return `
+        <div ${o.anchor ? 'id="convo-current-anchor"' : ''} class="flex items-end gap-2 ${isA ? '' : 'flex-row-reverse'} ${o.dim ? 'opacity-45 hover:opacity-100' : ''} transition-opacity scroll-mt-24 scroll-mb-32">
+          <div class="w-8 h-8 shrink-0 rounded-full flex items-center justify-center text-base ${isA ? 'bg-amber-500/10 border border-amber-400/30' : 'bg-emerald-500/10 border border-emerald-400/30'}" title="${escapeConvoAttr(meta.label)}">${meta.emoji}</div>
+          <div class="min-w-0 max-w-[82%] flex flex-col ${isA ? 'items-start' : 'items-end'}">
+            ${o.label ? `<span class="text-[10px] font-semibold mb-1 px-1 ${isA ? 'text-amber-300/80' : 'text-emerald-300/80'}">${o.label === true ? meta.label : o.label}</span>` : ''}
+            <div id="convo-line-bubble-${idx}" onclick="${o.onclick || `playConvoLineAudio(${idx}, this)`}"
+                 class="cursor-pointer select-none rounded-2xl border px-3.5 py-2.5 text-left transition-all hover:brightness-110 ${tone} ${ring}">
+              ${o.body || renderConvoText(line, idx, { roman: true, english: true })}
+            </div>
+            ${o.extras ? `<div class="flex items-center gap-2 mt-1 px-1 text-[11px] flex-wrap ${isA ? '' : 'justify-end'}">${o.extras}</div>` : ''}
+          </div>
+        </div>`;
+    }
+
+    function renderConvoPhaseTabs(step) {
+      const curIdx = CONVO_PHASES.findIndex(p => p.id === step.phase);
+      return `
+        <div class="flex items-center gap-1 p-1 rounded-2xl bg-[#0e1119] border border-[#20263a]">
+          ${CONVO_PHASES.map((p, i) => {
+            const reached = step.phasesReached.includes(p.id) || i === curIdx + 1;
+            const active = i === curIdx;
+            const done = step.phasesReached.includes(p.id) && i < curIdx;
+            return `
+              <button type="button" ${reached && !active ? `onclick="goConvoPhase('${p.id}')"` : ''} ${reached ? '' : 'disabled'}
+                      class="flex-1 min-w-0 h-8 rounded-xl text-[11px] sm:text-xs font-bold flex items-center justify-center gap-1 transition-all ${
+                        active ? 'bg-amber-400 text-[#0e0f12] shadow' : reached ? 'text-slate-300 hover:bg-white/5 cursor-pointer' : 'text-slate-600 cursor-default'
+                      }">
+                <span>${done ? '✓' : p.icon}</span><span class="truncate">${p.label}</span>
+              </button>`;
+          }).join('')}
+        </div>`;
+    }
+
+    function convoChip(label, on, onclick, title = '') {
+      return `<button type="button" onclick="${onclick}" title="${title}"
+                class="h-7 px-2.5 rounded-lg border text-[11px] font-semibold cursor-pointer transition-all ${
+                  on ? 'bg-sky-500/15 border-sky-400/40 text-sky-200' : 'bg-transparent border-[#262c3e] text-slate-500 hover:text-slate-300'
+                }">${label}</button>`;
+    }
+
+    // ---------- 🎧 LISTEN view ----------
+    function renderConvoListen(step) {
+      const lines = step.dialogueLines || [];
+      const playing = convoPlayer.playing;
+      const segs = lines.map((line, i) => `
+        <button type="button" onclick="convoListenJump(${i})" title="Line ${i + 1}"
+                class="flex-1 rounded-full cursor-pointer transition-all hover:brightness-125 ${i === step.listenIdx ? 'h-2.5 ring-2 ring-white/60' : 'h-1.5'} ${
+                  i < step.listenIdx || step.listenedOnce ? (line.speaker === 'A' ? 'bg-amber-400/80' : 'bg-emerald-400/80') : (i === step.listenIdx ? (line.speaker === 'A' ? 'bg-amber-400' : 'bg-emerald-400') : 'bg-white/10')
+                }"></button>`).join('');
+
+      const bubbles = lines.map((line, i) => {
+        const active = i === step.listenIdx;
+        const body = step.showText
+          ? renderConvoText(line, i, { big: false, roman: step.showRoman, english: step.showEnglish })
+          : renderConvoWaveform(line);
+        return renderConvoBubble(step, line, i, {
+          body,
+          active,
+          anchor: active,
+          onclick: `convoListenJump(${i})`
+        });
+      }).join('');
+
+      const btn = 'h-9 w-9 rounded-xl bg-[#1d2231] hover:bg-[#262c3f] border border-[#2a3147] text-slate-200 text-sm flex items-center justify-center cursor-pointer transition-all active:scale-95';
+      return `
+        <div class="flex items-center justify-between gap-2">
+          <span class="text-[11px] text-slate-400">${step.listenedOnce ? '✓ Heard it all — replay any line, or start practice' : 'Listen to the whole conversation first'}</span>
+          <div class="flex items-center gap-1">
+            ${convoChip('Thai', step.showText, "convoToggleView('showText')", 'Show the script')}
+            ${convoChip('Sound', step.showRoman, "convoToggleView('showRoman')", 'Show pronunciation')}
+            ${convoChip('EN', step.showEnglish, "convoToggleView('showEnglish')", 'Show English')}
+          </div>
+        </div>
+
+        <div class="space-y-2.5" id="live-convo-thread">${bubbles}</div>
+
+        <div class="sticky bottom-0 z-10 -mx-2 px-2 pt-3 pb-1 bg-gradient-to-t from-[#12141c] via-[#12141c] to-transparent">
+          <div class="rounded-2xl bg-[#161a26] border border-[#262d42] p-2 space-y-2 shadow-xl">
+            <div class="flex items-center gap-1 px-1">${segs}</div>
+            <div class="flex items-center justify-between gap-2">
+              <div class="flex items-center gap-1.5">
+                <button type="button" onclick="convoListenStep(-1)" title="Previous line (←)" class="${btn}">⏮</button>
+                <button type="button" onclick="convoTogglePlay()" title="Play / Pause (Space)"
+                        class="h-10 w-10 rounded-full bg-amber-400 hover:bg-amber-300 text-[#0e0f12] text-base font-bold flex items-center justify-center cursor-pointer shadow active:scale-95 transition-all">${playing ? '⏸' : '▶'}</button>
+                <button type="button" onclick="convoListenStep(1)" title="Next line (→)" class="${btn}">⏭</button>
+              </div>
+              <span class="text-[11px] font-mono text-slate-400">${step.listenIdx + 1} / ${lines.length}</span>
+              <div class="flex items-center gap-1.5">
+                <button type="button" onclick="convoToggleRepeat()" title="Repeat current line"
+                        class="h-9 px-2.5 rounded-xl border text-xs font-semibold cursor-pointer transition-all ${step.repeatLine ? 'bg-sky-500/20 border-sky-400/50 text-sky-200' : 'bg-[#1d2231] border-[#2a3147] text-slate-400 hover:text-slate-200'}">🔁${step.repeatLine ? ' Line' : ''}</button>
+                <button type="button" onclick="toggleConvoSlow()" title="Slow audio (0.72x)"
+                        class="h-9 px-2.5 rounded-xl border text-xs font-semibold cursor-pointer transition-all ${step.slow ? 'bg-sky-500/20 border-sky-400/50 text-sky-200' : 'bg-[#1d2231] border-[#2a3147] text-slate-400 hover:text-slate-200'}">🐢${step.slow ? ' Slow' : ''}</button>
+              </div>
+            </div>
+          </div>
+        </div>`;
+    }
+
+    // ---------- 🎭 ROLE-PLAY view ----------
+    function renderConvoTaskCard(step, q, line) {
+      const meta = getConvoSpeakerMeta(line.speakerName);
+      const showRoman = convoShowRomanInOptions(step);
+      const opts = q.options.map((opt, oi) => `
+        <div role="button" tabindex="0" onclick="handleConvoQuestionSelect(${q.qIdx}, '${opt.id}')"
+             class="flex items-center gap-2.5 p-2.5 rounded-xl border border-[#273047] bg-[#0f121b] hover:border-emerald-400/60 hover:bg-[#121a1f] cursor-pointer transition-all active:scale-[0.99]">
+          <span class="w-5 h-5 rounded-md bg-white/5 text-[10px] text-slate-400 font-mono flex items-center justify-center shrink-0">${oi + 1}</span>
+          <div class="min-w-0 flex-1 text-left">
+            <div  class="font-thai text-amber-200 font-bold text-sm sm:text-base leading-snug">${opt.script || opt.text}</div>
+            ${showRoman && opt.spoken ? `<div class="text-[11px] font-mono text-slate-400">${opt.spoken}</div>` : ''}
+          </div>
+          <button type="button" onclick="event.stopPropagation(); playConvoOptionAudio(${q.qIdx}, ${oi})"
+                  class="w-8 h-8 rounded-lg bg-white/5 hover:bg-white/10 text-xs flex items-center justify-center shrink-0 cursor-pointer" title="Hear this reply">🔊</button>
+        </div>`).join('');
+
+      return `
+        <div id="convo-current-anchor" class="flex items-end gap-2 flex-row-reverse scroll-mt-24 scroll-mb-32">
+          <div class="w-8 h-8 shrink-0 rounded-full flex items-center justify-center text-base bg-emerald-500/10 border border-emerald-400/50 animate-pulse">${meta.emoji}</div>
+          <div class="flex-1 min-w-0 rounded-2xl rounded-br-md border border-emerald-400/40 bg-emerald-500/[0.05] p-3 space-y-2">
+            <div class="flex items-center justify-between gap-2">
+              <span class="text-xs font-bold text-emerald-300">Your turn — what do you say?</span>
+              <span class="text-[10px] text-slate-500 hidden sm:inline">keys 1–${q.options.length}</span>
+            </div>
+            <div class="space-y-1.5">${opts}</div>
+          </div>
+        </div>`;
+    }
+
+    function renderConvoRoleplay(step) {
+      const lines = step.dialogueLines || [];
+      const qs = step.questions || [];
+      const q = qs[step.rpIdx];
+      const upto = q ? q.lineIdx : lines.length - 1;
+      const nextLabels = { 1: 'Show Thai', 2: 'Show sound', 3: 'Show English' };
+
+      const items = [];
+      for (let i = 0; i <= upto && i < lines.length; i++) {
+        const line = lines[i];
+        const task = getConvoLineTask(step, line);
+        if (i === upto && task && !task.answered) {
+          items.push(renderConvoTaskCard(step, task, line));
+          continue;
+        }
+        const isCue = i === upto - 1;
+        if (line.speaker === 'A' || !task) {
+          const reveal = line.reveal || 0;
+          items.push(renderConvoBubble(step, line, i, {
+            body: reveal === 0 ? renderConvoWaveform(line) : renderConvoText(line, i, { big: isCue, roman: reveal >= 2, english: reveal >= 3 }),
+            active: isCue && !(task && task.answered),
+            label: isCue,
+            dim: i < upto - 1,
+            extras: reveal < 3 ? `<button type="button" onclick="event.stopPropagation(); revealConvoLine(${i})" class="text-sky-300/90 hover:text-sky-200 cursor-pointer">👁 ${nextLabels[reveal + 1]}</button>` : ''
+          }));
+        } else {
+          const chosen = task.answered && !task.isCorrect ? task.options.find(o => o.id === task.chosenOptId) : null;
+          items.push(renderConvoBubble(step, line, i, {
+            body: renderConvoText(line, i, { big: i === upto, roman: true, english: true }),
+            active: i === upto,
+            anchor: i === upto,
+            dim: i < upto - 1,
+            extras: task.isCorrect
+              ? `<span class="text-emerald-300 font-semibold">✓ Right reply</span>`
+              : `<span class="text-rose-300">✗ You picked <span  class="font-thai">${chosen ? chosen.script : ''}</span></span>`
+          }));
+        }
       }
 
-      stopFullConversationPlayback();
-      isFullConvoPlaying = true;
-      const playBtnLabel = document.getElementById('convo-master-play-label');
-      if (playBtnLabel) playBtnLabel.textContent = 'Stop';
+      const remainingEx = qs.length - step.rpIdx - 1;
+      return `
+        <div class="flex items-center justify-between gap-2 text-[11px]">
+          <span class="text-slate-400">You are <span class="text-emerald-300 font-semibold">${getConvoSpeakerMeta(step.cast?.speakerB || lines[1]?.speakerName).label}</span> · reply ${Math.min(step.rpIdx + 1, qs.length)} of ${qs.length}</span>
+          <div class="flex items-center gap-1">
+            ${qs.map((qq, i) => `<span class="w-2 h-2 rounded-full ${qq.answered ? (qq.isCorrect ? 'bg-emerald-400' : 'bg-rose-400') : (i === step.rpIdx ? 'bg-emerald-400/50 animate-pulse' : 'bg-white/10')}"></span>`).join('')}
+          </div>
+        </div>
+        <div class="space-y-3" id="live-convo-thread">${items.join('')}</div>
+        ${remainingEx > 0 ? `<div class="text-center text-[11px] text-slate-600">· · · ${remainingEx} more exchange${remainingEx > 1 ? 's' : ''}</div>` : ''}
+        <div class="flex items-center gap-1.5 pt-3 border-t border-white/5">
+          <button type="button" onclick="replayCurrentConvoPartnerAudio()" title="Replay (Space)"
+                  class="h-8 px-3 rounded-xl bg-[#171b26] hover:bg-[#222738] border border-[#262c3e] text-slate-200 text-xs font-medium cursor-pointer">⟲ Replay</button>
+          <button type="button" onclick="toggleConvoSlow()" title="Slow audio (0.72x)"
+                  class="h-8 px-2.5 rounded-xl border text-xs cursor-pointer ${step.slow ? 'bg-sky-500/15 border-sky-400/40 text-sky-200' : 'bg-[#171b26] hover:bg-[#222738] border-[#262c3e] text-slate-400'}">🐢${step.slow ? ' Slow' : ''}</button>
+        </div>`;
+    }
 
-      const rate = slowOverride ? 0.72 : getConvoRate(step);
+    // ---------- 🧠 RECALL view ----------
+    function renderConvoRecall(step) {
       const lines = step.dialogueLines || [];
-      let lIdx = 0;
+      const yours = lines.filter(l => l.speaker === 'B');
+      const knew = yours.filter(l => step.recall[l.lineIdx] === 'knew').length;
+      const hintWords = isHardConvo(step) ? 0 : 1;
 
-      const playNextLine = () => {
-        document.querySelectorAll('.convo-playing-ring').forEach(el => {
-          el.classList.remove('ring-2', 'ring-amber-400', 'convo-playing-ring');
+      const bubbles = lines.map((line, i) => {
+        if (line.speaker !== 'B') {
+          return renderConvoBubble(step, line, i, {
+            body: renderConvoText(line, i, { roman: step.showRoman, english: false })
+          });
+        }
+        const state = step.recall[i];
+        if (state === 'shown' || state === 'knew') {
+          return renderConvoBubble(step, line, i, {
+            body: renderConvoText(line, i, { big: state === 'shown', roman: true, english: true }),
+            active: state === 'shown',
+            extras: state === 'knew'
+              ? `<span class="text-emerald-300 font-semibold">✓ Knew it</span>`
+              : `<span class="text-slate-400">Did you get it?</span>
+                 <button type="button" onclick="convoRecallGrade(${i}, true)" class="px-2.5 py-1 rounded-lg bg-emerald-500/15 border border-emerald-400/40 text-emerald-200 font-semibold cursor-pointer hover:bg-emerald-500/25">✓ Knew it</button>
+                 <button type="button" onclick="convoRecallGrade(${i}, false)" class="px-2.5 py-1 rounded-lg bg-amber-500/10 border border-amber-400/40 text-amber-200 font-semibold cursor-pointer hover:bg-amber-500/20">↻ Not yet</button>`
+          });
+        }
+        const again = state === 'again';
+        return renderConvoBubble(step, line, i, {
+          tone: `rounded-br-md border-dashed ${again ? 'border-amber-400/60 bg-amber-500/[0.06]' : 'border-emerald-400/50 bg-emerald-500/[0.04]'} text-emerald-300`,
+          onclick: `convoRecallReveal(${i})`,
+          body: `
+            <div class="space-y-1.5 min-w-[9rem]">
+              <div class="font-mono text-xs leading-6">${renderConvoHint(line, again ? hintWords + 1 : hintWords)}</div>
+              <div class="text-[10px] ${again ? 'text-amber-300/80' : 'text-emerald-300/70'}">${again ? '↻ Try again · ' : ''}Say it out loud, then tap</div>
+            </div>`
         });
-        if (!isFullConvoPlaying || lIdx >= lines.length) {
-          stopFullConversationPlayback();
-          return;
+      }).join('');
+
+      return `
+        <div class="rounded-2xl bg-[#151a26] border border-[#242b3d] p-3 flex items-center justify-between gap-3">
+          <div class="min-w-0">
+            <div class="text-xs font-bold text-white">Your lines vanished 🫥</div>
+            <div class="text-[11px] text-slate-400">Say each one out loud from memory, then tap it to check. Tap their lines to hear them again.</div>
+          </div>
+          <div class="text-right shrink-0">
+            <div class="text-sm font-extrabold ${knew === yours.length ? 'text-emerald-300' : 'text-slate-200'}">${knew}/${yours.length}</div>
+            ${Object.keys(step.recall).length ? `<button type="button" onclick="convoRecallResetAll()" class="text-[10px] text-slate-500 hover:text-slate-300 cursor-pointer">reset</button>` : ''}
+          </div>
+        </div>
+        <div class="space-y-2.5" id="live-convo-thread">${bubbles}</div>`;
+    }
+
+    // ---------- 🏁 RECAP view ----------
+    function renderConvoRecap(step) {
+      const lines = step.dialogueLines || [];
+      const total = (step.questions || []).length;
+      const right = (step.questions || []).filter(q => q.isCorrect).length;
+      const yours = lines.filter(l => l.speaker === 'B');
+      const knew = yours.filter(l => step.recall[l.lineIdx] === 'knew').length;
+      const perfect = total > 0 && right === total && knew === yours.length;
+
+      const seen = new Set();
+      const words = [];
+      lines.forEach((l, li) => (l.usedWords || []).forEach((w, wi) => {
+        if (w.script && !seen.has(w.script)) {
+          seen.add(w.script);
+          words.push({ ...w, li, wi });
         }
-        const line = lines[lIdx++];
-        const bubbleEl = document.getElementById(`convo-line-bubble-${line.lineIdx}`);
-        if (bubbleEl) {
-          bubbleEl.classList.add('ring-2', 'ring-amber-400', 'convo-playing-ring');
-          bubbleEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-        }
-        playThaiAudio(line.tts, null, rate);
-        const estDuration = Math.max(1750, Math.round((line.tts.length * 135) / rate));
-        fullConvoPlaybackTimer = setTimeout(playNextLine, estDuration);
+      }));
+
+      return `
+        <div class="rounded-2xl border ${perfect ? 'border-emerald-400/40 bg-emerald-500/[0.07]' : 'border-amber-400/40 bg-amber-500/[0.07]'} p-3 flex items-center justify-between gap-3">
+          <div class="min-w-0">
+            <div class="text-sm font-bold text-white">${perfect ? '🎉 You own this conversation' : '👍 Conversation done'}</div>
+            <div class="text-[11px] text-slate-400">Role-play ${right}/${total} · Recalled ${knew}/${yours.length}</div>
+          </div>
+          <div class="flex items-center gap-1.5 shrink-0">
+            <button type="button" onclick="playFullConversationThread(false)"
+                    class="h-8 px-3 rounded-xl bg-amber-400 hover:bg-amber-300 text-[#0e0f12] text-xs font-bold flex items-center gap-1.5 cursor-pointer active:scale-95 transition-all">
+              <span>${convoPlayer.playing ? '⏸' : '▶'}</span><span>${convoPlayer.playing ? 'Pause' : 'Play all'}</span>
+            </button>
+          </div>
+        </div>
+
+        ${words.length ? `
+          <div class="space-y-1.5">
+            <div class="text-[10px] font-bold uppercase tracking-wider text-slate-500">Words in this conversation</div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
+              ${words.map(w => `
+                <button type="button" onclick="showConvoWordGloss(${w.li}, ${w.wi})"
+                        class="text-left p-2.5 rounded-xl bg-[#0f121b] border border-[#242b3d] hover:border-sky-400/50 transition-all cursor-pointer">
+                  <div class="flex items-center justify-between gap-2">
+                    <span  class="font-thai text-amber-300 font-bold text-sm sm:text-base">${w.script}</span>
+                    <span class="text-[9px] font-bold px-1.5 py-0.5 rounded-full ${w.isSpiral ? 'bg-sky-500/15 text-sky-300' : 'bg-amber-500/15 text-amber-300'}">${w.isSpiral ? 'REVIEW' : 'NEW'}</span>
+                  </div>
+                  <div class="text-[11px] font-mono text-slate-400">${w.spoken || ''}</div>
+                  <div class="text-xs text-slate-300">${w.meaning || ''}</div>
+                </button>`).join('')}
+            </div>
+          </div>` : ''}
+
+        <div class="space-y-2">
+          <div class="text-[10px] font-bold uppercase tracking-wider text-slate-500">Full conversation · tap a line to hear it</div>
+          <div class="space-y-2.5">${lines.map((l, i) => renderConvoBubble(step, l, i, {
+            active: convoPlayer.playing && i === step.listenIdx,
+            anchor: convoPlayer.playing && i === step.listenIdx,
+            onclick: `convoListenJump(${i})`
+          })).join('')}</div>
+        </div>`;
+    }
+
+    function renderLiveConversationStep(step, stage, actionBtn, footerMsg, skipAutoAudio = false) {
+      ensureConvoState(step);
+      const lines = step.dialogueLines || [];
+      const metaA = getConvoSpeakerMeta(step.cast?.speakerA || lines[0]?.speakerName);
+      const metaB = getConvoSpeakerMeta(step.cast?.speakerB || lines[1]?.speakerName);
+      const isAi = (step.sceneTitle || '').startsWith('✨');
+      const title = step.nodeTitle || (step.sceneTitle || '').replace(/^.*•\s*/, '');
+
+      // Start by playing the whole conversation when the module first opens
+      if (!skipAutoAudio && !step._autoPlayedOnce && step.phase === 'listen') {
+        step._autoPlayedOnce = true;
+        setTimeout(() => {
+          if (getActiveConvoStep() === step && step.phase === 'listen' && !convoPlayer.playing) {
+            convoListenPlayLine(step, step.listenIdx || 0, true);
+          }
+        }, 350);
+      }
+
+      let bodyHtml = '';
+      if (step.phase === 'listen') bodyHtml = renderConvoListen(step);
+      else if (step.phase === 'roleplay') bodyHtml = renderConvoRoleplay(step);
+      else if (step.phase === 'recall') bodyHtml = renderConvoRecall(step);
+      else bodyHtml = renderConvoRecap(step);
+
+      stage.innerHTML = `
+        <div class="max-w-xl mx-auto bg-[#12141c] border border-[#232838] rounded-3xl p-4 sm:p-5 space-y-4 shadow-2xl">
+          <div class="flex items-start justify-between gap-3">
+            <div class="min-w-0">
+              <h3 class="text-sm sm:text-base font-extrabold text-white truncate">${isAi ? '✨ ' : '💬 '}${title}</h3>
+              <div class="text-[11px] text-slate-400 mt-0.5 flex items-center gap-1.5 flex-wrap">
+                <span class="text-amber-300/90">${metaA.emoji} ${metaA.label}</span>
+                <span class="text-slate-600">↔</span>
+                <span class="text-emerald-300/90">${metaB.emoji} ${metaB.label}</span>
+              </div>
+            </div>
+            <div class="flex items-center gap-1 shrink-0 opacity-70 hover:opacity-100 transition-opacity">
+              <button type="button" onclick="remixLiveConversation()" title="Remix with different words"
+                      class="w-8 h-8 rounded-xl hover:bg-white/5 text-slate-400 hover:text-white text-xs cursor-pointer">🔄</button>
+              <button type="button" id="btn-ai-live-convo" onclick="generateAiLiveConversation()" title="Generate a new AI conversation"
+                      class="w-8 h-8 rounded-xl hover:bg-white/5 text-sky-300 text-xs cursor-pointer">✨</button>
+            </div>
+          </div>
+
+          ${renderConvoPhaseTabs(step)}
+
+          ${bodyHtml}
+        </div>
+      `;
+
+      const anchor = document.getElementById('convo-current-anchor');
+      if (anchor) requestAnimationFrame(() => anchor.scrollIntoView({ block: 'nearest', behavior: 'smooth' }));
+
+      // Footer: one primary action per phase
+      const primary = 'px-6 py-2.5 rounded-2xl bg-amber-400 hover:bg-amber-300 text-[#0e0f12] text-xs sm:text-sm font-bold transition-all cursor-pointer shrink-0 shadow-md shadow-amber-500/10';
+      const disabledCls = 'px-5 py-2.5 rounded-2xl bg-[#22252e] text-slate-500 text-xs sm:text-sm font-semibold cursor-not-allowed shrink-0';
+      const setBtn = (text, cls, disabled = false) => {
+        actionBtn.textContent = text;
+        actionBtn.className = cls;
+        actionBtn.disabled = disabled;
       };
 
-      playNextLine();
+      if (step.phase === 'listen') {
+        footerMsg.innerHTML = '';
+        setBtn('Practice: Role-play ▶', primary);
+      } else if (step.phase === 'roleplay') {
+        const qs = step.questions || [];
+        const q = qs[step.rpIdx];
+        if (q && !q.answered) {
+          footerMsg.innerHTML = `<span class="text-emerald-300 text-xs font-semibold">Your turn — pick your reply</span>`;
+          setBtn('Next ▶', disabledCls, true);
+        } else {
+          footerMsg.innerHTML = '';
+          setBtn(step.rpIdx >= qs.length - 1 ? 'Recall from memory ▶' : 'Next reply ▶', primary);
+        }
+      } else if (step.phase === 'recall') {
+        const yours = lines.filter(l => l.speaker === 'B');
+        const knew = yours.filter(l => step.recall[l.lineIdx] === 'knew').length;
+        footerMsg.innerHTML = `<span class="text-slate-400 text-xs">${knew}/${yours.length} recalled</span>`;
+        setBtn('See recap ▶', primary);
+      } else {
+        const right = (step.questions || []).filter(q => q.isCorrect).length;
+        const isLastStep = activeSession && activeSession.currentIndex >= activeSession.steps.length - 1;
+        footerMsg.innerHTML = `<span class="text-emerald-400 font-semibold text-xs">✓ ${right}/${(step.questions || []).length} replies right</span>`;
+        setBtn(isLastStep ? 'Finish Lesson →' : 'Continue →', 'px-6 py-2.5 rounded-2xl bg-emerald-400 hover:bg-emerald-300 text-[#0e0f12] text-xs sm:text-sm font-bold transition-all cursor-pointer shrink-0 shadow-md');
+      }
     }
 
     async function generateAiLiveConversation() {
@@ -8093,302 +8670,6 @@ Return ONLY valid JSON array of 3 exchange objects with exact keys:
         console.warn('AI Live Convo fallback:', err);
       }
       remixLiveConversation();
-    }
-
-    function escapeConvoAttr(s) {
-      return String(s || '').replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
-    }
-
-    // Underlines the lesson words inside a line; tapping one plays it + shows its meaning
-    function highlightConvoLineWords(line, idx) {
-      const full = line.script || '';
-      let html = full;
-      (line.usedWords || []).forEach((w, wIdx) => {
-        const s = (w.script || '').trim();
-        if (!s || s.length > full.length * 0.8) return;
-        const pos = html.indexOf(s);
-        if (pos === -1) return;
-        html = html.slice(0, pos)
-          + `<span onclick="event.stopPropagation(); showConvoWordGloss(${idx}, ${wIdx})" class="underline decoration-dotted decoration-sky-400/80 underline-offset-[6px] cursor-help" title="${escapeConvoAttr(w.meaning)}">${s}</span>`
-          + html.slice(pos + s.length);
-      });
-      return html;
-    }
-
-    // Length-proportional pseudo waveform for audio-only bubbles
-    function renderConvoWaveform(line) {
-      const t = line.tts || line.script || '';
-      const n = Math.max(6, Math.min(22, Math.round(t.length / 2)));
-      let bars = '';
-      for (let i = 0; i < n; i++) {
-        const c = t.charCodeAt(i % Math.max(1, t.length)) || 0;
-        const h = 30 + ((c * 37 + i * 53) % 70);
-        bars += `<span class="w-[3px] rounded-full bg-current" style="height:${h}%"></span>`;
-      }
-      return `
-        <div class="flex items-center gap-2.5 py-0.5">
-          <span class="text-sm">🔊</span>
-          <span class="flex items-center gap-[3px] h-5 opacity-80">${bars}</span>
-        </div>`;
-    }
-
-    // mode: 'current' (highlighted) | 'recent' (context, full opacity) | 'past' (dimmed) | 'recap'
-    function renderConvoBubble(step, line, idx, mode) {
-      const isA = line.speaker === 'A';
-      const meta = getConvoSpeakerMeta(line.speakerName);
-      const isCur = mode === 'current';
-      const reveal = mode === 'recap' ? 3 : (line.reveal || 0);
-      const q = getConvoLineTask(step, line);
-      const chosen = q && q.answered && !q.isCorrect ? q.options.find(o => o.id === q.chosenOptId) : null;
-      const nextLabels = { 1: 'Show Thai', 2: 'Show sound', 3: 'Show English' };
-
-      const body = reveal === 0 ? renderConvoWaveform(line) : `
-        <div class="font-thai font-bold text-amber-200 ${isCur ? 'text-base sm:text-lg' : 'text-sm sm:text-base'} leading-snug">${highlightConvoLineWords(line, idx)}</div>
-        ${reveal >= 2 ? `<div class="font-mono text-[11px] sm:text-xs text-slate-300 mt-0.5">${line.spoken}</div>` : ''}
-        ${reveal >= 3 ? `<div class="text-[11px] sm:text-xs text-slate-400 italic mt-1">${line.meaning}</div>` : ''}`;
-
-      const tone = isA
-        ? 'bg-[#181c29] border-[#262d42] rounded-bl-md text-amber-300'
-        : 'bg-[#10201f] border-emerald-500/30 rounded-br-md text-emerald-300';
-      const ring = isCur ? (isA ? 'ring-2 ring-amber-400/60' : 'ring-2 ring-emerald-400/60') : '';
-      const fade = mode === 'past' ? 'opacity-50 hover:opacity-100' : '';
-
-      const extras = [];
-      if (q && q.answered) {
-        extras.push(q.isCorrect
-          ? `<span class="text-emerald-300 font-semibold">✓ your pick</span>`
-          : `<span class="text-rose-300">✗ you picked <span class="font-thai">${chosen ? chosen.script : ''}</span></span>`);
-      }
-      if (mode !== 'recap' && reveal < 3) {
-        extras.push(`<button type="button" onclick="event.stopPropagation(); revealConvoLine(${idx})" class="text-sky-300/90 hover:text-sky-200 cursor-pointer">👁 ${nextLabels[reveal + 1]}</button>`);
-      }
-
-      return `
-        <div class="flex items-end gap-2 ${isA ? '' : 'flex-row-reverse'} ${fade} transition-opacity">
-          <div class="w-8 h-8 shrink-0 rounded-full flex items-center justify-center text-base ${isA ? 'bg-amber-500/10 border border-amber-400/30' : 'bg-emerald-500/10 border border-emerald-400/30'}" title="${escapeConvoAttr(meta.label)}">${meta.emoji}</div>
-          <div class="min-w-0 max-w-[82%] flex flex-col ${isA ? 'items-start' : 'items-end'}">
-            ${isCur ? `<span class="text-[10px] font-semibold mb-1 px-1 ${isA ? 'text-amber-300/80' : 'text-emerald-300/80'}">${meta.label}</span>` : ''}
-            <div id="convo-line-bubble-${idx}" onclick="playConvoLineAudio(${idx}, this)" title="Tap to replay"
-                 class="cursor-pointer select-none rounded-2xl border px-3.5 py-2.5 text-left transition-all hover:brightness-110 ${tone} ${ring}">
-              ${body}
-            </div>
-            ${extras.length ? `<div class="flex items-center gap-3 mt-1 px-1 text-[11px]">${extras.join('')}</div>` : ''}
-          </div>
-        </div>`;
-    }
-
-    // "Your Turn": the learner plays Speaker B and picks the Thai reply
-    function renderConvoTaskCard(step, q, line) {
-      const meta = getConvoSpeakerMeta(line.speakerName);
-      const showRoman = convoShowRomanInOptions(step);
-      const opts = q.options.map((opt, oi) => `
-        <div role="button" tabindex="0" onclick="handleConvoQuestionSelect(${q.qIdx}, '${opt.id}')"
-             class="flex items-center gap-2.5 p-2.5 rounded-xl border border-[#273047] bg-[#0f121b] hover:border-emerald-400/60 hover:bg-[#121a1f] cursor-pointer transition-all active:scale-[0.99]">
-          <span class="w-5 h-5 rounded-md bg-white/5 text-[10px] text-slate-400 font-mono flex items-center justify-center shrink-0">${oi + 1}</span>
-          <div class="min-w-0 flex-1 text-left">
-            <div class="font-thai text-amber-200 font-bold text-sm sm:text-base leading-snug">${opt.script || opt.text}</div>
-            ${showRoman && opt.spoken ? `<div class="text-[11px] font-mono text-slate-400">${opt.spoken}</div>` : ''}
-          </div>
-          <button type="button" onclick="event.stopPropagation(); playConvoOptionAudio(${q.qIdx}, ${oi})"
-                  class="w-8 h-8 rounded-lg bg-white/5 hover:bg-white/10 text-xs flex items-center justify-center shrink-0 cursor-pointer" title="Hear this reply">🔊</button>
-        </div>`).join('');
-
-      return `
-        <div class="flex items-end gap-2 flex-row-reverse">
-          <div class="w-8 h-8 shrink-0 rounded-full flex items-center justify-center text-base bg-emerald-500/10 border border-emerald-400/50 animate-pulse">${meta.emoji}</div>
-          <div class="flex-1 min-w-0 rounded-2xl rounded-br-md border border-emerald-400/40 bg-emerald-500/[0.05] p-3 space-y-2">
-            <div class="flex items-center justify-between gap-2">
-              <span class="text-xs font-bold text-emerald-300">Your turn — reply as ${meta.label}</span>
-              <span class="text-[10px] text-slate-500 hidden sm:inline">keys 1–${q.options.length}</span>
-            </div>
-            <div class="space-y-1.5">${opts}</div>
-          </div>
-        </div>`;
-    }
-
-    // Segmented tracker: one segment per line; tap any reached segment to jump back to it
-    function renderConvoStepper(step) {
-      const lines = step.dialogueLines || [];
-      const inRecap = step.phase === 'recap';
-      const segs = lines.map((line, i) => {
-        const q = getConvoLineTask(step, line);
-        const reached = inRecap || i <= (step.maxReached || 0);
-        const isCur = !inRecap && i === step.cursor;
-        let color = 'bg-white/10';
-        if (reached) color = line.speaker === 'A' ? 'bg-amber-400/70' : 'bg-emerald-400/60';
-        if (q && q.answered) color = q.isCorrect ? 'bg-emerald-400' : 'bg-rose-400';
-        if (isCur && q && !q.answered) color = 'bg-emerald-400/50 animate-pulse';
-        return `<button type="button" ${reached ? `onclick="jumpToConvoLine(${i})"` : 'disabled'} title="Line ${i + 1}${reached ? '' : ' (locked)'}"
-                  class="flex-1 rounded-full transition-all ${isCur ? 'h-2.5 ring-2 ring-white/60' : 'h-1.5'} ${color} ${reached ? 'cursor-pointer hover:brightness-125' : 'cursor-default'}"></button>`;
-      }).join('');
-      const label = inRecap ? 'Recap' : `${step.cursor + 1} / ${lines.length}`;
-      return `
-        <div class="flex items-center gap-3">
-          <div class="flex-1 flex items-center gap-1">${segs}</div>
-          <span class="text-[11px] font-mono text-slate-400 shrink-0">${label}</span>
-        </div>`;
-    }
-
-    function renderConvoRecap(step) {
-      const lines = step.dialogueLines || [];
-      const total = (step.questions || []).length;
-      const right = (step.questions || []).filter(q => q.isCorrect).length;
-      const perfect = total > 0 && right === total;
-
-      const seen = new Set();
-      const words = [];
-      lines.forEach((l, li) => (l.usedWords || []).forEach((w, wi) => {
-        if (w.script && !seen.has(w.script)) {
-          seen.add(w.script);
-          words.push({ ...w, li, wi });
-        }
-      }));
-
-      return `
-        <div class="rounded-2xl border ${perfect ? 'border-emerald-400/40 bg-emerald-500/[0.07]' : 'border-amber-400/40 bg-amber-500/[0.07]'} p-3 flex items-center justify-between gap-3">
-          <div class="min-w-0">
-            <div class="text-sm font-bold text-white">${perfect ? '🎉 Nailed the conversation' : '👍 Conversation done'}</div>
-            <div class="text-[11px] text-slate-400">You picked ${right} of ${total} replies correctly</div>
-          </div>
-          <div class="flex items-center gap-1.5 shrink-0">
-            <button type="button" onclick="playFullConversationThread(false)"
-                    class="h-8 px-3 rounded-xl bg-amber-400 hover:bg-amber-300 text-[#0e0f12] text-xs font-bold flex items-center gap-1.5 cursor-pointer active:scale-95 transition-all">
-              <span>▶</span><span id="convo-master-play-label">Play all</span>
-            </button>
-            <button type="button" onclick="playFullConversationThread(true)" title="Play all slowly (0.72x)"
-                    class="h-8 px-2.5 rounded-xl bg-[#171b26] hover:bg-[#222738] border border-[#262c3e] text-slate-300 text-xs cursor-pointer">🐢</button>
-          </div>
-        </div>
-
-        ${words.length ? `
-          <div class="space-y-1.5">
-            <div class="text-[10px] font-bold uppercase tracking-wider text-slate-500">Words in this conversation</div>
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
-              ${words.map(w => `
-                <button type="button" onclick="showConvoWordGloss(${w.li}, ${w.wi})"
-                        class="text-left p-2.5 rounded-xl bg-[#0f121b] border border-[#242b3d] hover:border-sky-400/50 transition-all cursor-pointer">
-                  <div class="flex items-center justify-between gap-2">
-                    <span class="font-thai text-amber-300 font-bold text-sm sm:text-base">${w.script}</span>
-                    <span class="text-[9px] font-bold px-1.5 py-0.5 rounded-full ${w.isSpiral ? 'bg-sky-500/15 text-sky-300' : 'bg-amber-500/15 text-amber-300'}">${w.isSpiral ? 'REVIEW' : 'NEW'}</span>
-                  </div>
-                  <div class="text-[11px] font-mono text-slate-400">${w.spoken || ''}</div>
-                  <div class="text-xs text-slate-300">${w.meaning || ''}</div>
-                </button>`).join('')}
-            </div>
-          </div>` : ''}
-
-        <div class="space-y-2">
-          <div class="text-[10px] font-bold uppercase tracking-wider text-slate-500">Full conversation · tap a line to hear it</div>
-          <div class="space-y-2.5">${lines.map((l, i) => renderConvoBubble(step, l, i, 'recap')).join('')}</div>
-        </div>`;
-    }
-
-    function renderLiveConversationStep(step, stage, actionBtn, footerMsg, skipAutoAudio = false) {
-      ensureConvoState(step);
-      const lines = step.dialogueLines || [];
-      const inRecap = step.phase === 'recap';
-      const metaA = getConvoSpeakerMeta(step.cast?.speakerA || lines[0]?.speakerName);
-      const metaB = getConvoSpeakerMeta(step.cast?.speakerB || lines[1]?.speakerName);
-      const isAi = (step.sceneTitle || '').startsWith('✨');
-      const title = step.nodeTitle || (step.sceneTitle || '').replace(/^.*•\s*/, '');
-
-      // Play the first line when the module first opens
-      if (!skipAutoAudio && !step._autoPlayedOnce && !inRecap) {
-        step._autoPlayedOnce = true;
-        setTimeout(() => onConvoLineEntered(step), 300);
-      }
-
-      let bodyHtml = '';
-      if (inRecap) {
-        bodyHtml = renderConvoRecap(step);
-      } else {
-        const curLine = lines[step.cursor];
-        const curTask = getConvoLineTask(step, curLine);
-        const items = [];
-        for (let i = 0; i <= step.cursor && i < lines.length; i++) {
-          const line = lines[i];
-          const q = getConvoLineTask(step, line);
-          if (i === step.cursor) {
-            items.push(`<div id="convo-current-anchor" class="scroll-mt-24 scroll-mb-28">${
-              q && !q.answered ? renderConvoTaskCard(step, q, line) : renderConvoBubble(step, line, i, 'current')
-            }</div>`);
-          } else {
-            items.push(renderConvoBubble(step, line, i, i === step.cursor - 1 ? 'recent' : 'past'));
-          }
-        }
-        const remaining = lines.length - step.cursor - 1;
-
-        bodyHtml = `
-          <div class="space-y-3" id="live-convo-thread">${items.join('')}</div>
-          ${remaining > 0 ? `<div class="text-center text-[11px] text-slate-600">· · · ${remaining} more line${remaining > 1 ? 's' : ''}</div>` : ''}
-
-          <div class="flex items-center justify-between gap-2 pt-3 border-t border-white/5">
-            <div class="flex items-center gap-1.5">
-              <button type="button" onclick="convoStepBack()" ${step.cursor === 0 ? 'disabled' : ''} title="Previous line (←)"
-                      class="h-8 w-8 rounded-xl bg-[#171b26] hover:bg-[#222738] border border-[#262c3e] text-slate-300 text-xs cursor-pointer disabled:opacity-30 disabled:cursor-default">◀</button>
-              <button type="button" onclick="replayCurrentConvoPartnerAudio()" title="Replay (Space)"
-                      class="h-8 px-3 rounded-xl bg-[#171b26] hover:bg-[#222738] border border-[#262c3e] text-slate-200 text-xs font-medium cursor-pointer">⟲ Replay</button>
-              <button type="button" onclick="toggleConvoSlow()" title="Slow audio (0.72x)"
-                      class="h-8 px-2.5 rounded-xl border text-xs cursor-pointer ${step.slow ? 'bg-sky-500/15 border-sky-400/40 text-sky-200' : 'bg-[#171b26] hover:bg-[#222738] border-[#262c3e] text-slate-400'}">🐢${step.slow ? ' Slow' : ''}</button>
-            </div>
-            <span class="text-[10px] text-slate-600 hidden sm:inline">${curTask && !curTask.answered ? 'Press 1–' + curTask.options.length + ' to answer' : 'Space replay · ← → move'}</span>
-          </div>`;
-      }
-
-      stage.innerHTML = `
-        <div class="max-w-xl mx-auto bg-[#12141c] border border-[#232838] rounded-3xl p-4 sm:p-5 space-y-4 shadow-2xl">
-          <div class="flex items-start justify-between gap-3">
-            <div class="min-w-0">
-              <h3 class="text-sm sm:text-base font-extrabold text-white truncate">${isAi ? '✨ ' : '🎧 '}${title}</h3>
-              <div class="text-[11px] text-slate-400 mt-0.5 flex items-center gap-1.5 flex-wrap">
-                <span class="text-amber-300/90">${metaA.emoji} ${metaA.label}</span>
-                <span class="text-slate-600">↔</span>
-                <span class="text-emerald-300/90">${metaB.emoji} ${metaB.label} <span class="text-emerald-400/60">(you)</span></span>
-              </div>
-            </div>
-            <div class="flex items-center gap-1 shrink-0 opacity-70 hover:opacity-100 transition-opacity">
-              <button type="button" onclick="remixLiveConversation()" title="Remix with different words"
-                      class="w-8 h-8 rounded-xl hover:bg-white/5 text-slate-400 hover:text-white text-xs cursor-pointer">🔄</button>
-              <button type="button" id="btn-ai-live-convo" onclick="generateAiLiveConversation()" title="Generate a new AI conversation"
-                      class="w-8 h-8 rounded-xl hover:bg-white/5 text-sky-300 text-xs cursor-pointer">✨</button>
-            </div>
-          </div>
-
-          ${renderConvoStepper(step)}
-
-          ${bodyHtml}
-        </div>
-      `;
-
-      if (!inRecap) {
-        requestAnimationFrame(() => {
-          const anchor = document.getElementById('convo-current-anchor');
-          if (anchor) anchor.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
-        });
-      }
-
-      // Footer: single primary action that walks through the conversation
-      const isLastStep = activeSession && activeSession.currentIndex >= activeSession.steps.length - 1;
-      if (inRecap) {
-        const right = (step.questions || []).filter(q => q.isCorrect).length;
-        footerMsg.innerHTML = `<span class="text-emerald-400 font-semibold text-xs">✓ ${right}/${step.questions.length} replies right</span>`;
-        actionBtn.textContent = isLastStep ? 'Finish Lesson →' : 'Continue →';
-        actionBtn.className = 'px-6 py-2.5 rounded-2xl bg-emerald-400 hover:bg-emerald-300 text-[#0e0f12] text-xs sm:text-sm font-bold transition-all cursor-pointer shrink-0 shadow-md';
-        actionBtn.disabled = false;
-      } else {
-        const curTask = getConvoLineTask(step, lines[step.cursor]);
-        if (curTask && !curTask.answered) {
-          footerMsg.innerHTML = `<span class="text-emerald-300 text-xs font-semibold">Your turn — pick the reply</span>`;
-          actionBtn.textContent = 'Next ▶';
-          actionBtn.className = 'px-5 py-2.5 rounded-2xl bg-[#22252e] text-slate-500 text-xs sm:text-sm font-semibold cursor-not-allowed shrink-0';
-          actionBtn.disabled = true;
-        } else {
-          footerMsg.innerHTML = '';
-          actionBtn.textContent = step.cursor >= lines.length - 1 ? 'See recap ▶' : 'Next line ▶';
-          actionBtn.className = 'px-6 py-2.5 rounded-2xl bg-amber-400 hover:bg-amber-300 text-[#0e0f12] text-xs sm:text-sm font-bold transition-all cursor-pointer shrink-0 shadow-md shadow-amber-500/10';
-          actionBtn.disabled = false;
-        }
-      }
     }
 
     // Step Interaction Handlers
