@@ -21,7 +21,7 @@
       "situationPrompt": "The noodle cart vendor looks at you with tongs in hand and asks 'เอาเส้นอะไร?'. You want the standard thin chewy rice noodles. How do you respond in natural everyday Thai?",
       "situationCorrect": "ao lék khâ (เอาเล็กค่ะ)",
       "situationDistractors": [
-        "yâak nám khâ (แยกน้ำค่ะ)",
+        "yâek nám khâ (แยกน้ำค่ะ)",
         "phèt nɔ́ɔi khâ (เผ็ดน้อยค่ะ)",
         "gèp dtang dûai khâ (เก็บตังค์ด้วยค่ะ)"
       ],
@@ -38,8 +38,8 @@
     {
       "id": "ST_yaak_nam",
       "thai": "แยกน้ำ",
-      "spoken": "yâak nám",
-      "roman": "yâak nám",
+      "spoken": "yâek nám",
+      "roman": "yâek nám",
       "meaning": "Broth on the side / separate soup (takeaway essential)",
       "streetShift": "Essential 2-word street phrase when taking food to go. Tells the vendor to bag the broth separately so your noodles stay bouncy and don't soak up all the soup.",
       "unit": 1,
@@ -49,7 +49,7 @@
       "words": [
         {
           "th": "แยก",
-          "ro": "yâak",
+          "ro": "yâek",
           "en": "separate / on the side"
         },
         {
@@ -59,7 +59,7 @@
         }
       ],
       "situationPrompt": "The noodle cart vendor is packing your order to go and asks 'แยกน้ำไหม?'. You want the soup packed separately so noodles stay bouncy. How do you reply in natural everyday Thai?",
-      "situationCorrect": "yâak nám khâ (แยกน้ำค่ะ)",
+      "situationCorrect": "yâek nám khâ (แยกน้ำค่ะ)",
       "situationDistractors": [
         "gèp dtang dûai khâ (เก็บตังค์ด้วยค่ะ)",
         "wǎan nɔ́ɔi khâ (หวานน้อยค่ะ)",
@@ -68,11 +68,11 @@
       "situationDialogue": {
         "speaker": "Noodle Cart Vendor",
         "thai": "แยกน้ำไหม?",
-        "spoken": "yâak nám mǎi?",
+        "spoken": "yâek nám mǎi?",
         "meaning": "Do you want the broth packed separately?",
         "tts": "แยกน้ำไหม"
       },
-      "situationEverydayTip": "Reply 'แยกน้ำค่ะ' (yâak nám khâ) or 'เอาแยกน้ำค่ะ'. The vendor will bag the noodles and broth separately with a rubber band!",
+      "situationEverydayTip": "Reply 'แยกน้ำค่ะ' (yâek nám khâ) or 'เอาแยกน้ำค่ะ'. The vendor will bag the noodles and broth separately with a rubber band!",
       "responseTts": "แยกน้ำค่ะ"
     },
     {
@@ -477,7 +477,7 @@
       "situationCorrect": "ao phí-sèet khâ (เอาพิเศษค่ะ)",
       "situationDistractors": [
         "tham-má-daa khâ (ธรรมดาค่ะ)",
-        "yâak nám khâ (แยกน้ำค่ะ)",
+        "yâek nám khâ (แยกน้ำค่ะ)",
         "phèt nɔ́ɔi khâ (เผ็ดน้อยค่ะ)"
       ],
       "situationDialogue": {
@@ -518,7 +518,7 @@
       "situationDistractors": [
         "wǎan bpòk-gà-dtì khâ (หวานปกติค่ะ)",
         "mâi wǎan khâ (ไม่หวานค่ะ)",
-        "yâak nám khâ (แยกน้ำค่ะ)"
+        "yâek nám khâ (แยกน้ำค่ะ)"
       ],
       "situationDialogue": {
         "speaker": "Customer (Sweetness)",
@@ -883,7 +883,7 @@
       "situationDistractors": [
         "mâi ao thǔng khâ (ไม่เอาถุงค่ะ)",
         "sà-gaaen dâi mǎi khá? (สแกนได้ไหมคะ?)",
-        "yâak nám khâ (แยกน้ำค่ะ)"
+        "yâek nám khâ (แยกน้ำค่ะ)"
       ],
       "situationDialogue": {
         "speaker": "Customer (Microwave)",
@@ -929,7 +929,7 @@
         "speaker": "Customer (Addressing Driver)",
         "thai": "พี่ครับ / พี่คะ",
         "spoken": "phîi kháp / phîi khá",
-        "meaning": "Excuse me, Brother / Elder / Driver",
+        "meaning": "Excuse me / Driver / Elder",
         "tts": "พี่ครับ"
       },
       "situationEverydayTip": "'พี่คะ' (phîi khá) is the warm respectful title for taxi/Grab drivers.",
@@ -2290,7 +2290,7 @@
           "title": "Noodle Kitchen Shorthand",
           "type": "street",
           "icon": "🍜",
-          "description": "Gradual buildup: lék (thin noodles) → yâak nám (broth separate) → mìi hâeng (dry egg noodles) → mâi chín mâi ngôok (no meatballs/sprouts) → full compound order",
+          "description": "Gradual buildup: lék (thin noodles) → yâek nám (broth separate) → mìi hâeng (dry egg noodles) → mâi chín mâi ngôok (no meatballs/sprouts) → full compound order",
           "itemIds": [
             "ST_lek",
             "ST_yaak_nam",
@@ -2382,7 +2382,7 @@
           "title": "Polite Addressing for Drivers & Peers",
           "type": "street",
           "icon": "🚕",
-          "description": "Polite titles: phîi kháp/khá (brother / driver / peer) → nɔ́ɔng kháp/khá (younger server / barista)",
+          "description": "Polite titles: phîi kháp/khá (polite address / driver / peer) → nɔ́ɔng kháp/khá (younger server / barista)",
           "itemIds": [
             "ST_phii_driver",
             "ST_nong_staff"
