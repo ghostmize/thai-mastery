@@ -288,17 +288,17 @@
           </span>
 
           <div class="inline-flex items-center bg-[#14161f] p-0.5 rounded-xl border border-[#25293a] gap-0.5">
-            <button type="button" id="global-lvl-btn-1" onclick="setCourseLevel(1, true)" class="px-2.5 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 text-slate-400 hover:text-white" title="Level 1: Easy • Core Survival Chunks • Slower Audio (0.80x)">
-              <span>Lv 1</span><span class="text-[10px] text-emerald-400 font-semibold hidden sm:inline">Easy</span>
+            <button type="button" id="global-lvl-btn-1" onclick="setCourseLevel(1, true)" class="px-2.5 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center justify-center text-slate-400 hover:text-white" title="Level 1">
+              ⭐
             </button>
-            <button type="button" id="global-lvl-btn-2" onclick="setCourseLevel(2, true)" class="px-2.5 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 bg-amber-400 text-[#0e0f12] shadow-xs" title="Level 2: Normal • Everyday Polite Sentences • Native Speed (1.0x)">
-              <span>Lv 2</span><span class="text-[10px] text-[#0e0f12] font-semibold hidden sm:inline">Normal</span>
+            <button type="button" id="global-lvl-btn-2" onclick="setCourseLevel(2, true)" class="px-2.5 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center justify-center bg-amber-400 text-[#0e0f12] shadow-xs" title="Level 2">
+              ⭐⭐
             </button>
-            <button type="button" id="global-lvl-btn-3" onclick="setCourseLevel(3, true)" class="px-2.5 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 text-slate-400 hover:text-white" title="Level 3: Hard • Longer Sentences + Street Slang + Bonus Theme Words">
-              <span>Lv 3</span><span class="text-[10px] text-rose-400 font-semibold hidden sm:inline">Hard</span>
+            <button type="button" id="global-lvl-btn-3" onclick="setCourseLevel(3, true)" class="px-2.5 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center justify-center text-slate-400 hover:text-white" title="Level 3">
+              ⭐⭐⭐
             </button>
-            <button type="button" id="global-lvl-btn-overdrive" onclick="toggleOverdriveLevel(true)" class="px-2.5 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 text-slate-400 hover:text-white" title="Max: Challenge Overdrive • Rapid Native Flow (1.18x) & 5-Turn Convo">
-              <span>Max</span>
+            <button type="button" id="global-lvl-btn-overdrive" onclick="toggleOverdriveLevel(true)" class="px-2.5 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center justify-center text-slate-400 hover:text-white" title="Max Level">
+              ⭐⭐⭐⭐
             </button>
           </div>
 
@@ -309,7 +309,7 @@
         </div>
 
         <div id="global-level-desc-badge" class="text-[11px] text-slate-400 font-medium truncate max-w-full sm:max-w-md">
-          Lv 2 Normal • Full sentences, 1.0x audio &amp; balanced 6-line convo
+          ⭐⭐ • Full polite sentences, 1.0x audio &amp; balanced 6-line convo
         </div>
       </div>
     </div>
@@ -397,18 +397,18 @@
       <!-- Right: Compact Level Segmented Control + Step Counter + Gemini -->
       <div class="flex items-center gap-1.5 shrink-0">
         <!-- Compact Level Segmented Pill -->
-        <div class="inline-flex items-center bg-[#14161f] p-0.5 rounded-xl border border-[#252a38] gap-0.5" title="Course Difficulty: 1 (Easy) | 2 (Normal) | 3 (Hard) | Max">
-          <button type="button" id="lesson-lvl-btn-1" onclick="setCourseLevel(1, true)" class="px-2.5 py-0.5 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center justify-center text-slate-400 hover:text-white" title="Level 1: Easy (Core Chunks, 0.8x Audio)">
-            1
+        <div class="inline-flex items-center bg-[#14161f] p-0.5 rounded-xl border border-[#252a38] gap-0.5" title="Difficulty: ⭐ | ⭐⭐ | ⭐⭐⭐ | ⭐⭐⭐⭐">
+          <button type="button" id="lesson-lvl-btn-1" onclick="setCourseLevel(1, true)" class="px-2 py-0.5 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center justify-center text-slate-400 hover:text-white" title="Level 1">
+            ⭐
           </button>
-          <button type="button" id="lesson-lvl-btn-2" onclick="setCourseLevel(2, true)" class="px-2.5 py-0.5 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center justify-center bg-amber-400 text-[#0e0f12]" title="Level 2: Normal (Everyday Sentences, 1.0x Audio)">
-            2
+          <button type="button" id="lesson-lvl-btn-2" onclick="setCourseLevel(2, true)" class="px-2 py-0.5 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center justify-center bg-amber-400 text-[#0e0f12]" title="Level 2">
+            ⭐⭐
           </button>
-          <button type="button" id="lesson-lvl-btn-3" onclick="setCourseLevel(3, true)" class="px-2.5 py-0.5 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center justify-center text-slate-400 hover:text-white" title="Level 3: Hard (Longer Sentences, Slang)">
-            3
+          <button type="button" id="lesson-lvl-btn-3" onclick="setCourseLevel(3, true)" class="px-2 py-0.5 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center justify-center text-slate-400 hover:text-white" title="Level 3">
+            ⭐⭐⭐
           </button>
-          <button type="button" id="lesson-lvl-btn-overdrive" onclick="toggleOverdriveLevel(true)" class="px-2.5 py-0.5 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center justify-center text-slate-400 hover:text-white" title="Max: Challenge Overdrive (Rapid Native Flow)">
-            Max
+          <button type="button" id="lesson-lvl-btn-overdrive" onclick="toggleOverdriveLevel(true)" class="px-2 py-0.5 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center justify-center text-slate-400 hover:text-white" title="Max Level">
+            ⭐⭐⭐⭐
           </button>
         </div>
 
@@ -4941,10 +4941,10 @@
 
       if (isManual) {
         const toastMap = {
-          '1': 'Level 1 (Easy) • Short survival chunks, gentle 0.80x audio & 4-line dialogue',
-          '2': 'Level 2 (Normal) • Everyday polite sentences, 1.0x native audio & 6-line dialogue',
-          '3': 'Level 3 (Hard) • Longer sentences, street slang, bonus words & 8-line dialogue',
-          '3+': 'Max (Overdrive) • Rapid native speed (1.15x), multi-clause slang & 10-line dialogue'
+          '1': '⭐ Short survival chunks & 0.80x audio',
+          '2': '⭐⭐ Full polite sentences & 1.0x native audio',
+          '3': '⭐⭐⭐ Longer sentences & street slang',
+          '3+': '⭐⭐⭐⭐ Rapid 1.15x flow & extended dialogue'
         };
         const key = (targetLvl === 3 && appState.levelOverdrive) ? '3+' : String(targetLvl);
         showToast(toastMap[key] || toastMap['2']);
@@ -5273,17 +5273,17 @@
       let lessonText = '';
 
       if (lvl === 1) {
-        globalText = 'Level 1 (Easy) • Short survival chunks, 0.80x audio & simple questions';
-        lessonText = 'Level 1 (Easy) • Short Chunks & 0.80x Audio';
+        globalText = '⭐ • Short survival chunks, 0.80x audio & simple questions';
+        lessonText = '⭐ 0.80x Audio';
       } else if (lvl === 2) {
-        globalText = 'Level 2 (Normal) • Full polite sentences, 1.0x native audio & 6-line convo';
-        lessonText = 'Level 2 (Normal) • Polite Sentences & 1.0x Audio';
+        globalText = '⭐⭐ • Full polite sentences, 1.0x native audio & 6-line convo';
+        lessonText = '⭐⭐ 1.0x Audio';
       } else if (!isOverdrive) {
-        globalText = 'Level 3 (Hard) • Longer sentences, street slang, +1 bonus word & 8-line convo';
-        lessonText = 'Level 3 (Hard) • Longer Sentences + Street Slang';
+        globalText = '⭐⭐⭐ • Longer sentences, street slang, +1 bonus word & 8-line convo';
+        lessonText = '⭐⭐⭐ 1.12x Audio';
       } else {
-        globalText = 'Max (Overdrive) • Rapid 1.15x flow, multi-clause slang & 10-line convo';
-        lessonText = 'Max (Overdrive) • Max Street Slang & 5-Turn Convo';
+        globalText = '⭐⭐⭐⭐ • Rapid 1.15x flow, multi-clause slang & 10-line convo';
+        lessonText = '⭐⭐⭐⭐ 1.18x Audio';
       }
 
       if (gDesc) gDesc.textContent = globalText;
@@ -7704,10 +7704,10 @@
       activeSession.steps[activeSession.currentIndex] = rebuilt;
       renderCurrentLessonStep();
       const labels = {
-        easier: 'Lv 1 Easy Convo • 4 Lines at 0.80x + Visible Script & Phonetics',
-        standard: 'Lv 2 Normal Convo • 6 Lines at 1.0x Ear-First Audio + Old & New Mix',
-        harder: 'Lv 3 Hard Convo • 8 Lines at 1.12x + Compound Mix + Pure Ear Lock',
-        overdrive: 'Max Overdrive Convo • 10 Rapid Lines (1.18x) + 3 Compound Turns + 5-Choice Qs!'
+        easier: '⭐ 4 Lines at 0.80x • Visible Script',
+        standard: '⭐⭐ 6 Lines at 1.0x • Ear-First Audio',
+        harder: '⭐⭐⭐ 8 Lines at 1.12x • Compound Mix',
+        overdrive: '⭐⭐⭐⭐ 10 Rapid Lines (1.18x) • 5-Choice Qs'
       };
       showToast(labels[newDiff] || 'Difficulty updated');
     }
