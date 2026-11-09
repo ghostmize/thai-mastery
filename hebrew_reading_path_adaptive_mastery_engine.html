@@ -299,7 +299,7 @@
         </div>
 
         <div id="global-level-desc-badge" class="text-[11px] text-slate-400 font-medium truncate max-w-full sm:max-w-md">
-          ⚡ Lv.2 Everyday Street • Full sentences, 1.0x audio &amp; balanced 6-line convo
+          Lv 2 Normal • Full sentences, 1.0x audio &amp; balanced 6-line convo
         </div>
       </div>
     </div>
@@ -7999,14 +7999,13 @@
               </div>
             ` : ''}
 
-            <!-- Real-World Background / How Locals Use It -->
-            ${item.streetShift ? `
-              <div class="bg-[#181a24] border border-[#24293a] rounded-2xl p-4 text-xs space-y-1 text-left">
-                <div class="text-amber-300 font-semibold flex items-center gap-1.5 text-[12px]">
-                  <span>💡</span>
-                  <span>Street Context:</span>
-                </div>
-                <p class="text-slate-300 leading-relaxed text-[12px] sm:text-[13px]">${item.streetShift}</p>
+            <!-- Short Setting / Location Hint (Minimal & Clean) -->
+            ${(item.scene || item.theme || item.category) ? `
+              <div class="pt-1 flex justify-center">
+                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-slate-400 text-xs">
+                  <span>📍</span>
+                  <span>Used in: <strong class="text-slate-300 font-medium">${item.scene || item.theme || item.category}</strong></span>
+                </span>
               </div>
             ` : ''}
           </div>
@@ -9234,10 +9233,10 @@
       activeSession.steps[activeSession.currentIndex] = rebuilt;
 
       const labels = {
-        easier: '🌱 Lv.1 Easier Convo • 4 Lines at 0.80x + Visible Script & Phonetics',
-        standard: '⚡ Lv.2 Standard Convo • 6 Lines at 1.0x Ear-First Audio + Old & New Mix',
-        harder: '🔥 Lv.3 Harder Convo • 8 Lines at 1.12x + Compound Mix + Pure Ear Lock',
-        overdrive: '🚀 Lv.3+ Overdrive Convo • 10 Rapid Lines (1.18x) + 3 Compound Turns + 5-Choice Qs!'
+        easier: 'Lv 1 Easy Convo • 4 Lines at 0.80x + Visible Script & Phonetics',
+        standard: 'Lv 2 Normal Convo • 6 Lines at 1.0x Ear-First Audio + Old & New Mix',
+        harder: 'Lv 3 Hard Convo • 8 Lines at 1.12x + Compound Mix + Pure Ear Lock',
+        overdrive: 'Max Overdrive Convo • 10 Rapid Lines (1.18x) + 3 Compound Turns + 5-Choice Qs!'
       };
       showToast(labels[newDiff] || 'Difficulty updated');
       renderCurrentLessonStep();
