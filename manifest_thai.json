@@ -1,6 +1,6 @@
 {
-  "name": "Thai Reading & Street Mastery",
-  "short_name": "Thai Mastery",
+  "name": "iLearn Thai",
+  "short_name": "iLearn Thai",
   "description": "Letters to Everyday Spoken Thai by Theme",
   "start_url": "./thai_reading_path_adaptive_mastery_engine.html",
   "display": "standalone",

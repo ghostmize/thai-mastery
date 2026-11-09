@@ -1,6 +1,6 @@
 {
-  "name": "Hebrew Reading & Street Mastery",
-  "short_name": "Hebrew Mastery",
+  "name": "iLearn Hebrew",
+  "short_name": "iLearn Hebrew",
   "description": "Letters to Everyday Spoken Hebrew by Theme",
   "start_url": "./hebrew_reading_path_adaptive_mastery_engine.html",
   "display": "standalone",
