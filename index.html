@@ -4,13 +4,16 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Thai &amp; Hebrew Mastery</title>
-  <link rel="manifest" href="manifest_thai.json" />
   <meta name="theme-color" content="#0e0f12" />
   <script>
-    window.location.replace('./thai_reading_path_adaptive_mastery_engine.html' + window.location.search + window.location.hash);
+    const isHebrew = /[?&#](hebrew|lang=hebrew|lang=he)/i.test(window.location.href);
+    const target = isHebrew 
+      ? './hebrew_reading_path_adaptive_mastery_engine.html' 
+      : './thai_reading_path_adaptive_mastery_engine.html';
+    window.location.replace(target + window.location.search + window.location.hash);
   </script>
 </head>
 <body style="background:#0e0f12;color:#f1f5f9;font-family:sans-serif;display:flex;align-items:center;justify-content:center;height:100vh;margin:0;">
-  <a href="./thai_reading_path_adaptive_mastery_engine.html" style="color:#38bdf8;">Opening Thai Mastery...</a>
+  <a href="./thai_reading_path_adaptive_mastery_engine.html" style="color:#38bdf8;">Opening Language Mastery...</a>
 </body>
 </html>
