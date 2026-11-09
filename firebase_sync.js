@@ -24,7 +24,8 @@
   class MasteryAuthSync {
     constructor() {
       this.appName = window.location.pathname.includes('hebrew') ? 'hebrew' : 'thai';
-      this.appTitle = this.appName === 'hebrew' ? 'Hebrew Mastery' : 'Thai Mastery';
+      this.languageTitle = this.appName === 'hebrew' ? 'Hebrew' : 'Thai';
+      this.appTitle = `iLearn • ${this.languageTitle}`;
       this.auth = null;
       this.db = null;
       this.currentUser = null;
