@@ -309,7 +309,7 @@
         </div>
 
         <div id="global-level-desc-badge" class="text-[11px] text-slate-400 font-medium truncate max-w-full sm:max-w-md">
-          ⚡ Lv.2 Everyday Street • Full sentences, 1.0x audio &amp; balanced 6-line convo
+          Lv 2 Normal • Full sentences, 1.0x audio &amp; balanced 6-line convo
         </div>
       </div>
     </div>
@@ -6101,21 +6101,15 @@
               </div>
             ` : ''}
 
-            <!-- Real-World Sentence & Communicative Context in Action (SLA Science: Natural Situational Anchor) -->
-            <div class="bg-[#181b24] border border-[#272c3d] rounded-2xl p-4 text-left space-y-2 shadow-inner">
-              <div class="text-[11px] font-bold text-amber-400 uppercase tracking-wider flex items-center gap-1.5">
-                <span>🎭</span>
-                <span>Real Street Situation / Exchange:</span>
+            <!-- Short Setting / Location Hint (Minimal & Clean) -->
+            ${(item.scene || item.theme || item.category) ? `
+              <div class="pt-1 flex justify-center">
+                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-slate-400 text-xs">
+                  <span>📍</span>
+                  <span>Used in: <strong class="text-slate-300 font-medium">${item.scene || item.theme || item.category}</strong></span>
+                </span>
               </div>
-              <p class="text-xs sm:text-sm text-slate-200 leading-relaxed font-medium">
-                ${item.situationPrompt || item.streetShift || 'Used constantly in everyday street conversations.'}
-              </p>
-              ${item.streetShift && item.situationPrompt !== item.streetShift ? `
-                <div class="pt-2 mt-2 border-t border-[#232737] text-[12px] text-amber-200/80 leading-snug">
-                  💡 <span class="text-slate-300 font-normal">${item.streetShift}</span>
-                </div>
-              ` : ''}
-            </div>
+            ` : ''}
           </div>
         `;
 
@@ -7710,10 +7704,10 @@
       activeSession.steps[activeSession.currentIndex] = rebuilt;
       renderCurrentLessonStep();
       const labels = {
-        easier: '🌱 Lv.1 Easier Convo • 4 Lines at 0.80x + Visible Script & Phonetics',
-        standard: '⚡ Lv.2 Standard Convo • 6 Lines at 1.0x Ear-First Audio + Old & New Mix',
-        harder: '🔥 Lv.3 Harder Convo • 8 Lines at 1.12x + Compound Mix + Pure Ear Lock',
-        overdrive: '🚀 Lv.3+ Overdrive Convo • 10 Rapid Lines (1.18x) + 3 Compound Turns + 5-Choice Qs!'
+        easier: 'Lv 1 Easy Convo • 4 Lines at 0.80x + Visible Script & Phonetics',
+        standard: 'Lv 2 Normal Convo • 6 Lines at 1.0x Ear-First Audio + Old & New Mix',
+        harder: 'Lv 3 Hard Convo • 8 Lines at 1.12x + Compound Mix + Pure Ear Lock',
+        overdrive: 'Max Overdrive Convo • 10 Rapid Lines (1.18x) + 3 Compound Turns + 5-Choice Qs!'
       };
       showToast(labels[newDiff] || 'Difficulty updated');
     }
