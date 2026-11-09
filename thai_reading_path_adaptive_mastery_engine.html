@@ -4824,20 +4824,8 @@
         currentAudio = null;
       }
 
-      // 1. If device has a registered Thai speech voice (e.g. iOS / Android mobile), use native speech
-      if ('speechSynthesis' in window && thaiVoice) {
-        try {
-          window.speechSynthesis.cancel();
-          const utter = new SpeechSynthesisUtterance(clean);
-          utter.lang = 'th-TH';
-          utter.voice = thaiVoice;
-          utter.rate = rateToUse;
-          window.speechSynthesis.speak(utter);
-          return;
-        } catch(e) {}
-      }
-
-      // 2. High-fidelity audio stream
+      // PRIMARY: High-fidelity Google Translate Neural Thai TTS stream
+      // Provides authentic native Bangkok pronunciation, natural tones & rhythm on ALL devices (iPhone/iOS, Android & Desktop)
       const url = `https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&tl=th&q=${encodeURIComponent(clean)}`;
       const audio = new Audio();
       audio.referrerPolicy = 'no-referrer';
@@ -4846,40 +4834,27 @@
       currentAudio = audio;
 
       audio.onerror = () => {
-        if ('speechSynthesis' in window) {
-          try {
-            window.speechSynthesis.cancel();
-            const utter = new SpeechSynthesisUtterance(clean);
-            utter.lang = 'th-TH';
-            utter.rate = rateToUse;
-            window.speechSynthesis.speak(utter);
-          } catch(e) {}
-        }
+        speakWithWebSpeech(clean, rateToUse);
       };
 
       const p = audio.play();
       if (p !== undefined) {
         p.catch(() => {
-          if ('speechSynthesis' in window) {
-            try {
-              window.speechSynthesis.cancel();
-              const utter = new SpeechSynthesisUtterance(clean);
-              utter.lang = 'th-TH';
-              utter.rate = rateToUse;
-              window.speechSynthesis.speak(utter);
-            } catch(e) {}
-          }
+          speakWithWebSpeech(clean, rateToUse);
         });
       }
     }
 
-    function speakWithWebSpeech(clean) {
+    function speakWithWebSpeech(clean, rate = 1.0) {
       if ('speechSynthesis' in window) {
-        const utter = new SpeechSynthesisUtterance(clean);
-        if (thaiVoice) utter.voice = thaiVoice;
-        utter.lang = 'th-TH';
-        utter.rate = appState.audioSpeed;
-        window.speechSynthesis.speak(utter);
+        try {
+          window.speechSynthesis.cancel();
+          const utter = new SpeechSynthesisUtterance(clean);
+          if (thaiVoice) utter.voice = thaiVoice;
+          utter.lang = 'th-TH';
+          utter.rate = rate || appState.audioSpeed || 1.0;
+          window.speechSynthesis.speak(utter);
+        } catch(e) {}
       }
     }
 
