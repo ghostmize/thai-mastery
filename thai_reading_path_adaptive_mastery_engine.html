@@ -6578,7 +6578,7 @@
       // UNIT 1: NOODLE STALL
       ST_lek: {
         role: '👨‍🍳 Noodle Cart Cook',
-        partner: { script: 'พี่ครับ วันนี้เอาเส้นอะไรดีครับ?', spoken: 'phîi kháp, wan-níi ao sên à-rai dii kháp?', meaning: 'What noodles would you like today?', tts: 'พี่ครับ วันนี้เอาเส้นอะไรดีครับ' },
+        partner: { script: 'วันนี้เอาเส้นอะไรดีครับ?', spoken: 'wan-níi ao sên à-rai dii kháp?', meaning: 'What noodles would you like today?', tts: 'วันนี้เอาเส้นอะไรดีครับ' },
         user: { script: 'เอาเล็กค่ะ', spoken: 'ao lék khâ', meaning: "I'll take thin rice noodles.", tts: 'เอาเล็กค่ะ' },
         intentCue: '🍜 Order thin chewy rice noodles (เล็ก)',
         earDistractors: ['Do you want your soup packed in a plastic bag?', 'How much chili spice do you want in your salad?', 'Would you like a cup of crushed ice with that?']
@@ -6785,7 +6785,7 @@
       },
       ST_soi_nii: {
         role: '🛵 Motorcycle Taxi Rider',
-        partner: { script: 'ซอยไหนครับพี่ ซอยนี้ใช่ไหม?', spoken: 'sɔɔi nǎi kháp phîi, sɔɔi níi châi mǎi?', meaning: 'Which side-street (soi) — is it this alley right here?', tts: 'ซอยไหนครับพี่ ซอยนี้ใช่ไหม' },
+        partner: { script: 'ซอยไหนครับ ซอยนี้ใช่ไหม?', spoken: 'sɔɔi nǎi kháp, sɔɔi níi châi mǎi?', meaning: 'Which side-street (soi) — is it this alley right here?', tts: 'ซอยไหนครับ ซอยนี้ใช่ไหม' },
         user: { script: 'เข้าซอยนี้ค่ะ', spoken: 'khâo sɔɔi níi khâ', meaning: 'Turn into this alley (soi), please.', tts: 'เข้าซอยนี้ค่ะ' },
         intentCue: '🏘️ Tell the driver to enter this alley / side street (ซอยนี้)',
         earDistractors: ['Ask for the restaurant bill', 'Request mild spice with no MSG', 'Order an iced tea with zero sugar']
@@ -7194,15 +7194,15 @@
           user: { script: 'เอาเล็กค่ะ', spoken: 'ao lék khâ', meaning: "I'll take thin rice noodles.", tts: 'เอาเล็กค่ะ' }
         },
         standard: {
-          partner: { script: 'พี่ครับ วันนี้เอาเส้นอะไรดีครับ?', spoken: 'phîi kháp, wan-níi ao sên à-rai dii kháp?', meaning: 'What noodles would you like today?', tts: 'พี่ครับ วันนี้เอาเส้นอะไรดีครับ' },
+          partner: { script: 'วันนี้เอาเส้นอะไรดีครับ?', spoken: 'wan-níi ao sên à-rai dii kháp?', meaning: 'What noodles would you like today?', tts: 'วันนี้เอาเส้นอะไรดีครับ' },
           user: { script: 'เอาเล็กค่ะ', spoken: 'ao lék khâ', meaning: "I'll take thin rice noodles.", tts: 'เอาเล็กค่ะ' }
         },
         harder: {
-          partner: { script: 'สวัสดีครับพี่ วันนี้รับเส้นอะไรดีครับ มีเส้นเล็ก บะหมี่ เส้นใหญ่ครับ', spoken: 'sà-wàt-dii kháp phîi, wan-níi ráp sên à-rai dii kháp? mii sên lék, bà-mìi, sên yài kháp', meaning: 'Hello! What noodles would you like? We have thin, egg, and wide noodles.', tts: 'สวัสดีครับพี่ วันนี้รับเส้นอะไรดีครับ มีเส้นเล็ก บะหมี่ เส้นใหญ่ครับ' },
+          partner: { script: 'สวัสดีครับ วันนี้รับเส้นอะไรดีครับ มีเส้นเล็ก บะหมี่ เส้นใหญ่ครับ', spoken: 'sà-wàt-dii kháp, wan-níi ráp sên à-rai dii kháp? mii sên lék, bà-mìi, sên yài kháp', meaning: 'Hello! What noodles would you like? We have thin, egg, and wide noodles.', tts: 'สวัสดีครับ วันนี้รับเส้นอะไรดีครับ มีเส้นเล็ก บะหมี่ เส้นใหญ่ครับ' },
           user: { script: 'เอาเส้นเล็กน้ำใส ไม่ใส่ถั่วงอกค่ะ', spoken: 'ao sên lék nám sǎi, mâi sài thùa-ngôok khâ', meaning: "I'll take thin noodles in clear broth, no bean sprouts please.", tts: 'เอาเส้นเล็กน้ำใส ไม่ใส่ถั่วงอกค่ะ' }
         },
         overdrive: {
-          partner: { script: 'คิวต่อไป สั่งได้เลยครับพี่ วันนี้เอาเส้นอะไร ต้มยำหรือน้ำใสดีครับ?', spoken: 'khiu dtɔ̀ɔ-bpai, sàng dâi loei kháp phîi! wan-níi ao sên à-rai, dtôm-yam rǒe nám sǎi dii kháp?', meaning: 'Next customer, order away! What noodles today — tom yum or clear soup?', tts: 'คิวต่อไป สั่งได้เลยครับพี่ วันนี้เอาเส้นอะไร ต้มยำหรือน้ำใสดีครับ' },
+          partner: { script: 'คิวต่อไป สั่งได้เลยครับ วันนี้เอาเส้นอะไร ต้มยำหรือน้ำใสดีครับ?', spoken: 'khiu dtɔ̀ɔ-bpai, sàng dâi loei kháp! wan-níi ao sên à-rai, dtôm-yam rǒe nám sǎi dii kháp?', meaning: 'Next customer, order away! What noodles today — tom yum or clear soup?', tts: 'คิวต่อไป สั่งได้เลยครับ วันนี้เอาเส้นอะไร ต้มยำหรือน้ำใสดีครับ' },
           user: { script: 'เอาเส้นเล็กต้มยำแห้งพิเศษ แยกน้ำซุป แล้วก็ไม่ใส่กระเทียมเจียวด้วยค่ะ', spoken: 'ao sên lék dtôm-yam hâeng phí-sèet, yâek nám-súp, láaeo gɔ̂ɔ mâi sài grà-thiam jiao dûai khâ', meaning: "Dry tom yum thin noodles special, broth on the side, and no fried garlic either please!", tts: 'เอาเส้นเล็กต้มยำแห้งพิเศษ แยกน้ำซุป แล้วก็ไม่ใส่กระเทียมเจียวด้วยค่ะ' }
         }
       },
@@ -7364,7 +7364,7 @@
           user: { script: 'สแกนจ่ายคิวอาร์โค้ดได้ไหมคะ มีพร้อมเพย์ไหมคะ?', spoken: 'sà-gaaen jàai khiu-aa khôot dâi mǎi khá, mii phrɔ́ɔm-phee mǎi khá?', meaning: 'Can I pay via QR scan, do you have PromptPay?', tts: 'สแกนจ่ายคิวอาร์โค้ดได้ไหมคะ มีพร้อมเพย์ไหมคะ' }
         },
         overdrive: {
-          partner: { script: 'ทั้งหมดร้อยยี่สิบบาทครับพี่ เงินสดหรือสแกนจ่ายสะดวกกว่ากันครับ?', spoken: 'tháng-mòt rɔ́ɔi yîi-sìp bàat kháp phîi, ngən sòt rǒe sà-gaaen jàai sà-dùak gwàa gan kháp?', meaning: '120 baht total! Is cash or QR scan more convenient for you?', tts: 'ทั้งหมดร้อยยี่สิบบาทครับพี่ เงินสดหรือสแกนจ่ายสะดวกกว่ากันครับ' },
+          partner: { script: 'ทั้งหมดร้อยยี่สิบบาทครับ เงินสดหรือสแกนจ่ายสะดวกกว่ากันครับ?', spoken: 'tháng-mòt rɔ́ɔi yîi-sìp bàat kháp, ngən sòt rǒe sà-gaaen jàai sà-dùak gwàa gan kháp?', meaning: '120 baht total! Is cash or QR scan more convenient for you?', tts: 'ทั้งหมดร้อยยี่สิบบาทครับ เงินสดหรือสแกนจ่ายสะดวกกว่ากันครับ' },
           user: { script: 'ขอสแกนพร้อมเพย์เลยค่ะ รบกวนเปิดคิวอาร์โค้ดให้หน่อยนะคะ', spoken: 'khɔ̌ɔ sà-gaaen phrɔ́ɔm-phee loei khâ, róp-guan bpə̀ət khiu-aa khôot hâi nɔ̀ɔi ná khá', meaning: 'PromptPay QR scan please, could you show me your QR code?', tts: 'ขอสแกนพร้อมเพย์เลยค่ะ รบกวนเปิดคิวอาร์โค้ดให้หน่อยนะคะ' }
         }
       },
@@ -7378,7 +7378,7 @@
           user: { script: 'พี่คะ ไปสุขุมวิทค่ะ', spoken: 'phîi khá, bpai sù-khǔm-wít khâ', meaning: 'Excuse me driver, to Sukhumvit please.', tts: 'พี่คะ ไปสุขุมวิทค่ะ' }
         },
         harder: {
-          partner: { script: 'สวัสดีครับพี่ วันนี้จะไปส่งแถวไหนดีครับ?', spoken: 'sà-wàt-dii kháp phîi, wan-níi jà bpai sòng thǎaeo nǎi dii kháp?', meaning: 'Hello! Where should I drive you today?', tts: 'สวัสดีครับพี่ วันนี้จะไปส่งแถวไหนดีครับ' },
+          partner: { script: 'สวัสดีครับ วันนี้จะไปส่งแถวไหนดีครับ?', spoken: 'sà-wàt-dii kháp, wan-níi jà bpai sòng thǎaeo nǎi dii kháp?', meaning: 'Hello! Where should I drive you today?', tts: 'สวัสดีครับ วันนี้จะไปส่งแถวไหนดีครับ' },
           user: { script: 'พี่คะ ไปสุขุมวิทซอยสิบเอ็ด เข้าไปส่งหน้าโรงแรมได้เลยค่ะ', spoken: 'phîi khá, bpai sù-khǔm-wít sɔɔi sìp-èt, khâo bpai sòng nâa roong-raaem dâi loei khâ', meaning: 'Driver, Sukhumvit Soi 11 please — you can drop me right in front of the hotel.', tts: 'พี่คะ ไปสุขุมวิทซอยสิบเอ็ด เข้าไปส่งหน้าโรงแรมได้เลยค่ะ' }
         },
         overdrive: {
@@ -7401,7 +7401,7 @@
         },
         overdrive: {
           partner: { script: 'ข้างหน้ามีป้ายรถเมล์กับหน้าคอนโด จอดตรงไหนสะดวกสุดครับ?', spoken: 'khâang-nâa mii bpâai rót-mee gàp nâa khɔn-doo, jɔ̀ɔt dtrong nǎi sà-dùak sùt kháp?', meaning: 'Ahead is a bus stop and condo front — where is most convenient to stop?', tts: 'ข้างหน้ามีป้ายรถเมล์กับหน้าคอนโด จอดตรงไหนสะดวกสุดครับ' },
-          user: { script: 'จอดตรงนี้เลยค่ะพี่ เลยป้ายรถเมล์ไปนิดนึง ชิดซ้ายหน้าตึกได้เลยค่ะ', spoken: 'jɔ̀ɔt dtrong níi loei khâ phîi, ləəi bpâai rót-mee bpai nít-nɯng, chít sáai nâa dtɯ̀k dâi loei khâ', meaning: 'Stop right here driver, just past the bus stop, pull left in front of the building!', tts: 'จอดตรงนี้เลยค่ะพี่ เลยป้ายรถเมล์ไปนิดนึง ชิดซ้ายหน้าตึกได้เลยค่ะ' }
+          user: { script: 'จอดตรงนี้เลยค่ะ เลยป้ายรถเมล์ไปนิดนึง ชิดซ้ายหน้าตึกได้เลยค่ะ', spoken: 'jɔ̀ɔt dtrong níi loei khâ, ləəi bpâai rót-mee bpai nít-nɯng, chít sáai nâa dtɯ̀k dâi loei khâ', meaning: 'Stop right here driver, just past the bus stop, pull left in front of the building!', tts: 'จอดตรงนี้เลยค่ะ เลยป้ายรถเมล์ไปนิดนึง ชิดซ้ายหน้าตึกได้เลยค่ะ' }
         }
       }
     };
@@ -7456,10 +7456,10 @@
           const cleanSpoken = u.spoken.replace(/\s*(khâ|kháp|khá|!|\?)+$/gi, '').trim();
           return {
             partner: {
-              script: `คิวต่อไป สั่งได้เลยครับพี่! ${p.script}`,
-              spoken: `khiu dtɔ̀ɔ-bpai sàng dâi loei kháp phîi! ${p.spoken}`,
+              script: `คิวต่อไป สั่งได้เลยครับ! ${p.script}`,
+              spoken: `khiu dtɔ̀ɔ-bpai sàng dâi loei kháp! ${p.spoken}`,
               meaning: `Next in line, order away! ${p.meaning}`,
-              tts: `คิวต่อไป สั่งได้เลยครับพี่ ${p.tts}`
+              tts: `คิวต่อไป สั่งได้เลยครับ ${p.tts}`
             },
             user: {
               script: `ขอ${cleanUser} แล้วก็ใส่ถุงกลับบ้านด้วยนะคะ`,
@@ -7495,10 +7495,10 @@
       } else if (diff === 'harder') {
         return {
           partner: {
-            script: `พี่ครับ ปกติคำว่า ${scriptTxt} ใช้ในประโยคยังไงครับ?`,
-            spoken: `phîi kháp, bpòk-gà-dtì kham wâa ${spokenTxt} chái nai bprà-yòok yang-ngai kháp?`,
+            script: `ปกติคำว่า ${scriptTxt} ใช้ในประโยคยังไงครับ?`,
+            spoken: `bpòk-gà-dtì kham wâa ${spokenTxt} chái nai bprà-yòok yang-ngai kháp?`,
             meaning: `How do people normally use "${meanTxt}" in everyday speech?`,
-            tts: `พี่ครับ คำว่า ${scriptTxt} ใช้ยังไงครับ`
+            tts: `คำว่า ${scriptTxt} ใช้ยังไงครับ`
           },
           user: {
             script: `ใช้คำว่า ${scriptTxt} ในชีวิตประจำวันได้เลยค่ะ`,
@@ -7510,8 +7510,8 @@
       } else if (diff === 'overdrive') {
         return {
           partner: {
-            script: `สวัสดีครับพี่ วันนี้รับ ${scriptTxt} เพิ่มด้วยไหมครับ หรือรับเป็นพิเศษดี?`,
-            spoken: `sà-wàt-dii kháp phîi, wan-níi ráp ${spokenTxt} phôem dûai mǎi kháp, rǒe ráp pen phí-sèet dii?`,
+            script: `สวัสดีครับ วันนี้รับ ${scriptTxt} เพิ่มด้วยไหมครับ หรือรับเป็นพิเศษดี?`,
+            spoken: `sà-wàt-dii kháp, wan-níi ráp ${spokenTxt} phôem dûai mǎi kháp, rǒe ráp pen phí-sèet dii?`,
             meaning: `Hello! Would you like extra "${meanTxt}" today, or get it special size?`,
             tts: `สวัสดีครับ วันนี้รับ ${scriptTxt} เพิ่มด้วยไหมครับ`
           },

@@ -187,7 +187,7 @@
         "speakerB": "🙋 אַתָּה (You)",
         "lineHebrewB": "כֵּן אָחִי, שִׂים הַרְבֵּה חָרִיף!",
         "lineSpokenB": "Ken achi, sim har-bé cha-ríf!",
-        "lineEnglishB": "Yes bro, put plenty of spicy!",
+        "lineEnglishB": "Yes, put plenty of spicy!",
         "ttsB": "כֵּן אָחִי, שִׂים הַרְבֵּה חָרִיף"
       },
       "exampleSentence": {
@@ -440,7 +440,7 @@
         "speakerB": "🙋 אַתָּה (You)",
         "lineHebrewB": "תּוֹדָה רַבָּה אָחִי, אֵיזֶה כֵּיף!",
         "lineSpokenB": "Toda raba achi, eize kef!",
-        "lineEnglishB": "Thanks so much bro, awesome!",
+        "lineEnglishB": "Thanks so much, awesome!",
         "ttsB": "תּוֹדָה רַבָּה אָחִי"
       },
       "exampleSentence": {
@@ -500,7 +500,7 @@
       "exampleSentence": {
         "hebrew": "עוֹד מַשֶּׁהוּ אָחִי, אוֹ שֶׁנִּסְגֹּר חֶשְׁבּוֹן?",
         "spoken": "Od mashehu achi, o shenisgor cheshbon?",
-        "english": "Anything else bro, or shall we close the check?",
+        "english": "Anything else, or shall we close the check?",
         "tts": "עוֹד מַשֶּׁהוּ אָחִי, אוֹ שֶׁנִּסְגֹּר חֶשְׁבּוֹן?"
       },
       "situationPrompt": "The cashier has rung up your borekas and asks: 'עוֹד מַשֶּׁהוּ?'. What is she inquiring about?",
@@ -915,7 +915,7 @@
         "speakerA": "🙋 אַתָּה (You)",
         "lineHebrewA": "אָחִי, תִּסְגֹּר לִי שָׁם בַּבָּר!",
         "lineSpokenA": "Achi, tis-gór li sham ba-bar!",
-        "lineEnglishA": "Bro, close my tab over at the bar!",
+        "lineEnglishA": "Close my tab over at the bar!",
         "ttsA": "אָחִי, תִּסְגֹּר לִי שָׁם בַּבָּר",
         "speakerB": "👨‍💼 בַּרְמֶן (Bartender)",
         "lineHebrewB": "סָגוּר גֶּבֶר, שְׁמוֹנִים שֶׁקֶל!",
@@ -1503,7 +1503,7 @@
         "speakerA": "👨‍💼 נַהָג (Driver)",
         "lineHebrewA": "אֵיפֹה לִפְנוֹת אָחִי?",
         "lineSpokenA": "Eifo lifnot achi?",
-        "lineEnglishA": "Where should I turn bro?",
+        "lineEnglishA": "Where should I turn?",
         "ttsA": "אֵיפֹה לִפְנוֹת אָחִי?",
         "speakerB": "🙋 אַתָּה (You)",
         "lineHebrewB": "קַח יְמִינָה בָּרַמְזוֹר הַבָּא!",
@@ -1718,7 +1718,7 @@
         "speakerB": "🙋 אַתָּה (You)",
         "lineHebrewB": "אָחִי, אֲנִי יוֹרֵד בַּתַּחֲנָה הַבָּאָה, תֵּן לַעֲבֹר!",
         "lineSpokenB": "Achi, ani yored batachana haba'a, ten la'avor!",
-        "lineEnglishB": "Bro, I'm getting off at the next stop, let me pass!",
+        "lineEnglishB": "I'm getting off at the next stop, let me pass!",
         "ttsB": "אֲנִי יוֹרֵד בַּתַּחֲנָה הַבָּאָה"
       },
       "exampleSentence": {
@@ -1814,7 +1814,7 @@
         "speakerA": "🙋 חָבֵר (Friend)",
         "lineHebrewA": "אָחִי, מָה אוֹכְלִים הַיּוֹם לִצָהֳרַיִם?",
         "lineSpokenA": "Achi, ma ochlim hayom letsohorayim?",
-        "lineEnglishA": "Bro, what are we eating today for lunch?",
+        "lineEnglishA": "What are we eating today for lunch?",
         "ttsA": "מָה אוֹכְלִים הַיּוֹם לִצָהֳרַיִם?",
         "speakerB": "🙋 אַתָּה (You)",
         "lineHebrewB": "מַמָּשׁ בָּא לִי שַׁוַארְמָה עִם הַרְבֵּה טְחִינָה!",
@@ -2024,7 +2024,7 @@
         "speakerA": "🙋 אַתָּה (You)",
         "lineHebrewA": "תַּגִּיד אָחִי, מָה הַשָּׁעָה?",
         "lineSpokenA": "Ta-gíd achi, ma hasha'a?",
-        "lineEnglishA": "Say bro, what time is it?",
+        "lineEnglishA": "Excuse me, what time is it?",
         "ttsA": "תַּגִּיד אָחִי, מָה הַשָּׁעָה?",
         "speakerB": "👨‍💼 בָּחוּר (Guy)",
         "lineHebrewB": "שְׁלוֹשׁ וָחֵצִי, גֶּבֶר!",
@@ -2665,7 +2665,7 @@
         "speakerB": "🙋 אַתָּה (You)",
         "lineHebrewB": "וַאלְלָה?! כָּל הַכָּבוֹד אָחִי, בְּהַצְלָחָה!",
         "lineSpokenB": "Wál-la?! Kol hakavod achi, behatzlacha!",
-        "lineEnglishB": "Really?! Respect bro, best of luck!",
+        "lineEnglishB": "Really?! Respect, best of luck!",
         "ttsB": "וַאלְלָה?! כָּל הַכָּבוֹד"
       },
       "exampleSentence": {
@@ -2791,7 +2791,7 @@
       "thai": "אָחִי",
       "spoken": "a-chí",
       "roman": "achi",
-      "meaning": "'Bro / My brother' (Universal informal address)",
+      "meaning": "'My friend' (Universal informal address)",
       "unit": 6,
       "theme": "Social Dynamics",
       "category": "Informal Address",
@@ -2810,18 +2810,18 @@
         "speakerA": "🙋 אַתָּה (You)",
         "lineHebrewA": "אָחִי, מָה נִשְׁמַע, יֵשׁ מַיִם קָרִים?",
         "lineSpokenA": "A-chí, ma nishma, yesh mayim karim?",
-        "lineEnglishA": "Bro, how's it going, do you have cold water?",
+        "lineEnglishA": "Hey, how's it going, do you have cold water?",
         "ttsA": "אָחִי, יֵשׁ מַיִם קָרִים?",
         "speakerB": "👨‍💼 מוֹכֵר (Vendor)",
         "lineHebrewB": "בֶּטַח אָחִי, בַּמְּקָרֵר מֵאָחוֹר!",
         "lineSpokenB": "Bétach achi, bamekarer me'achor!",
-        "lineEnglishB": "Sure bro, in the fridge in the back!",
+        "lineEnglishB": "Sure, in the fridge in the back!",
         "ttsB": "בֶּטַח אָחִי, קַח"
       },
       "exampleSentence": {
         "hebrew": "תּוֹדָה רַבָּה אָחִי, עָזַרְתָּ לִי מְאוֹד!",
         "spoken": "Toda raba achi, azarta li me'od!",
-        "english": "Thanks a lot bro, you helped me so much!",
+        "english": "Thanks a lot, you helped me so much!",
         "tts": "תּוֹדָה רַבָּה אָחִי"
       },
       "situationPrompt": "You walk up to a street kiosk to buy water. What universal friendly address word instantly builds warm rapport with the guy behind the counter?",
@@ -3008,7 +3008,7 @@
         "speakerA": "🙋 חָבֵר (Friend)",
         "lineHebrewA": "אָחִי, מָה נִשְׁ?",
         "lineSpokenA": "Achi, ma nish?",
-        "lineEnglishA": "Bro, what's up?",
+        "lineEnglishA": "Hey, what's up?",
         "ttsA": "אָחִי, מָה נִשְׁמַע?",
         "speakerB": "🙋 אַתָּה (You)",
         "lineHebrewB": "הַכֹּל טוֹב, מָה קוֹרֶה אִתְּךָ!",
@@ -3062,7 +3062,7 @@
         "speakerA": "🙋 חָבֵר (Friend)",
         "lineHebrewA": "הַי אָחִי, מָה קוֹרֶה?",
         "lineSpokenA": "Hai achi, ma ko-ré?",
-        "lineEnglishA": "Hey bro, what's happening?",
+        "lineEnglishA": "Hey, what's happening?",
         "ttsA": "הַי אָחִי, מָה קוֹרֶה?",
         "speakerB": "🙋 אַתָּה (You)",
         "lineHebrewB": "בַּדֶּרֶךְ אֵלֶיךָ, עוֹד חָמֵשׁ דַּקּוֹת אֲנִי שָׁם!",
@@ -3073,7 +3073,7 @@
       "exampleSentence": {
         "hebrew": "מָה קוֹרֶה אָחִי, אֵיפֹה אַתֶּם יוֹשְׁבִים עַכְשָׁו?",
         "spoken": "Ma kore achi, eifo atem yoshvim achshav?",
-        "english": "What's up bro, where are you guys sitting right now?",
+        "english": "What's up, where are you guys sitting right now?",
         "tts": "מָה קוֹרֶה אָחִי?"
       },
       "situationPrompt": "You answer a phone call from a buddy. He says: 'שָׁלוֹם, מָה קוֹרֶה?'. What is he asking?",
@@ -3278,7 +3278,7 @@
         "speakerA": "🙋 חָבֵר (Friend)",
         "lineHebrewA": "טוֹב אָחִי, הָאוֹטוֹבּוּס שֶׁלִּי הִגִּיעַ, אֲנִי עַף!",
         "lineSpokenA": "Tov achi, ha'otobus sheli higia, ani af!",
-        "lineEnglishA": "Alright bro, my bus arrived, I gotta fly!",
+        "lineEnglishA": "Alright, my bus arrived, I gotta fly!",
         "ttsA": "טוֹב אָחִי, אֲנִי עַף!",
         "speakerB": "🙋 אַתָּה (You)",
         "lineHebrewB": "סַבָּבָה, יַאלְלָה בַּיי, נְדַבֵּר בָּעֶרֶב!",
@@ -3543,7 +3543,7 @@
           "title": "Informal Addressing & Nicknames",
           "type": "street",
           "icon": "🤝",
-          "description": "Addressing anyone: achi (bro) → gever (man/buddy) → motek (sweetie) → chavibi (my pal)",
+          "description": "Addressing anyone: achi (my friend) → gever (man/buddy) → motek (sweetie) → chavibi (my pal)",
           "itemIds": [
             "ST_achi",
             "ST_gever",
