@@ -63,6 +63,11 @@
 
     async init() {
       this.mountGatekeeperUI();
+      // Re-assert cloud modal handler after inline page scripts parse
+      window.openCloudSyncModal = () => {
+        if (this.currentUser) this.openUserModal();
+        else this.lockApp();
+      };
       await this.loadFirebaseSDK();
 
       try {

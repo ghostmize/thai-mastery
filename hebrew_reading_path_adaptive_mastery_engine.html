@@ -6055,7 +6055,7 @@
     // =========================================================================
     const STORAGE_KEY = 'hebrew_reading_path_v1';
 
-    let appState = {
+    var appState = {
       xp: 0,
       currentTrack: 'reading', // 'reading' | 'street'
       streak: 1,
@@ -6069,9 +6069,10 @@
       convoDifficulty: 'standard', // 'easier' | 'standard' | 'harder' | 'overdrive'
       audioSpeed: 1.0,
       completedNodes: [],
-      itemStats: {}, // { [id]: { exposures, correct, wrong, avgMs, masteryScore, status } }
+      itemStats: {}, // { [id]: { exposures, correct, wrong, avgMs, masteryScore, status, intervalDays, nextReviewAt } }
       customWords: []
     };
+    window.appState = appState;
 
     function loadState() {
       try {
@@ -6093,6 +6094,7 @@
             completedNodes: parsed.completedNodes || [],
             customWords: parsed.customWords || []
           };
+          window.appState = appState;
         }
       } catch (e) {
         console.warn('Could not load saved state:', e);
@@ -6165,8 +6167,6 @@
       const isStreet = appState.currentTrack === 'street';
       const readBtn = document.getElementById('track-btn-reading');
       const streetBtn = document.getElementById('track-btn-street');
-      const unitsBadge = document.getElementById('track-units-badge');
-      const summaryText = document.getElementById('adaptive-summary-text');
 
       if (readBtn && streetBtn) {
         if (isStreet) {
@@ -6183,38 +6183,38 @@
     function skipAndMarkKnown(targetItemId = null) {
       if (!activeSession) return;
       const step = activeSession.steps[activeSession.currentIndex];
+      if (!step || step.type === 'live_conversation' || step.type === 'video_context') return;
       const itemId = targetItemId || step?.itemId;
+      if (!itemId) return;
 
-      if (itemId) {
-        ensureAllItemStatsInitialized();
-        if (!appState.itemStats[itemId]) {
-          appState.itemStats[itemId] = {
-            exposures: 0,
-            correct: 0,
-            wrong: 0,
-            avgMs: 0,
-            masteryScore: 0,
-            status: 'new'
-          };
-        }
-        const st = appState.itemStats[itemId];
-        if (st) {
-          st.status = 'mastered';
-          st.masteryScore = 100;
-          st.correct = Math.max(st.correct, 2) + 1;
-          st.exposures += 1;
-        }
-        // grasp recorded
-        saveState();
-        showToast('Marked as Known • Shifted to Mastered');
+      ensureAllItemStatsInitialized();
+      if (!appState.itemStats[itemId]) {
+        appState.itemStats[itemId] = {
+          exposures: 0,
+          correct: 0,
+          wrong: 0,
+          avgMs: 0,
+          masteryScore: 0,
+          status: 'new'
+        };
       }
+      const st = appState.itemStats[itemId];
+      if (st) {
+        st.status = 'mastered';
+        st.masteryScore = 100;
+        st.correct = Math.max(st.correct, 2) + 1;
+        st.exposures = Math.max(st.exposures + 1, 3);
+        st.intervalDays = 7;
+        st.nextReviewAt = Date.now() + 7 * 24 * 60 * 60 * 1000;
+      }
+      step.skippedKnown = true;
+      saveState();
+      showToast('Marked as Known • Shifted to Mastered');
 
       // Automatically filter out future steps for this item so it is not redundantly drilled
-      if (itemId) {
-        activeSession.steps = activeSession.steps.filter((s, idx) => {
-          return idx <= activeSession.currentIndex || s.itemId !== itemId;
-        });
-      }
+      activeSession.steps = activeSession.steps.filter((s, idx) => {
+        return idx <= activeSession.currentIndex || s.itemId !== itemId;
+      });
       activeSession.currentIndex += 1;
 
       renderCurrentLessonStep();
@@ -6256,10 +6256,16 @@
     // Robust answer handler for Street Hebrew listening drills
     function handleStreetDrillSelect(chosenId, correctId) {
       if (!activeSession || activeSession.stepAnswered) return;
+      const step = activeSession.steps ? activeSession.steps[activeSession.currentIndex] : null;
+      if (step && step.answered) return;
       activeSession.stepAnswered = true;
 
       const isCorrect = (chosenId === correctId);
-      const step = activeSession.steps ? activeSession.steps[activeSession.currentIndex] : null;
+      if (step) {
+        step.answered = true;
+        step.wasCorrect = isCorrect;
+        step.chosenId = chosenId;
+      }
       const targetItem = step?.target || (typeof STREET_DB !== 'undefined' ? STREET_DB.find(s => s.id === correctId) : null) || {};
 
       const elapsed = activeSession.stepStartTime ? (Date.now() - activeSession.stepStartTime) : 1200;
@@ -6498,7 +6504,7 @@
       }
     }
 
-    // Adaptive Scoring Algorithm: factors accuracy, response speed, and streak
+    // Adaptive Scoring Algorithm: factors accuracy, response speed, and spaced-repetition interval
     function recordItemAttempt(itemId, isCorrect, responseTimeMs) {
       if (!itemId) return;
       ensureAllItemStatsInitialized();
@@ -6509,25 +6515,37 @@
           wrong: 0,
           avgMs: 0,
           masteryScore: 0,
-          status: 'new'
+          status: 'new',
+          intervalDays: 0,
+          nextReviewAt: 0,
+          lastAttemptAt: 0
         };
       }
       const st = appState.itemStats[itemId];
+      const now = Date.now();
+      const prevAttemptAt = st.lastAttemptAt || 0;
+      const hoursSinceLast = prevAttemptAt > 0 ? (now - prevAttemptAt) / (1000 * 60 * 60) : 0;
       st.exposures += 1;
+      st.lastAttemptAt = now;
 
       if (isCorrect) {
         st.correct += 1;
-        // Fast recognition (< 4.5s) earns a bigger mastery jump
-        const speedBonus = responseTimeMs < 4500 ? 12 : responseTimeMs < 8000 ? 6 : 0;
-        st.masteryScore = Math.min(100, st.masteryScore + 28 + speedBonus);
+        const speedBonus = responseTimeMs < 4500 ? 10 : responseTimeMs < 8000 ? 5 : 0;
+        const spacingBonus = hoursSinceLast >= 4 ? 12 : 0;
+        st.masteryScore = Math.min(100, st.masteryScore + 24 + speedBonus + spacingBonus);
         st.avgMs = st.avgMs === 0 ? responseTimeMs : Math.round((st.avgMs * 0.7) + (responseTimeMs * 0.3));
+        const prevInterval = st.intervalDays || 0;
+        st.intervalDays = prevInterval === 0 ? 1 : Math.min(30, Math.round(prevInterval * 2.2));
+        st.nextReviewAt = now + st.intervalDays * 24 * 60 * 60 * 1000;
       } else {
         st.wrong += 1;
         st.masteryScore = Math.max(0, st.masteryScore - 22);
+        st.intervalDays = 0;
+        st.nextReviewAt = now + 4 * 60 * 60 * 1000;
       }
 
-      // Determine adaptive status
-      if (st.masteryScore >= 80 && st.correct >= 2) {
+      // Require >= 3 successful retrievals (or >= 2 with multi-hour spacing) before locking in 'mastered'
+      if (st.masteryScore >= 80 && (st.correct >= 3 || (st.correct >= 2 && hoursSinceLast >= 4))) {
         st.status = 'mastered';
       } else if (st.wrong > 0 && st.masteryScore < 55) {
         st.status = 'weak';
@@ -6546,22 +6564,23 @@
     function getWeakItems() {
       ensureAllItemStatsInitialized();
       const weak = [];
+      const isItemWeak = (st) => st && st.status === 'weak';
       LETTERS_DB.forEach(l => {
         const st = appState.itemStats[l.id];
-        if (st && (st.status === 'weak' || (st.wrong > st.correct))) {
+        if (isItemWeak(st)) {
           weak.push({ kind: 'letter', data: l, stat: st });
         }
       });
       getAllWords().forEach(w => {
         const st = appState.itemStats[w.id];
-        if (st && (st.status === 'weak' || (st.wrong > st.correct))) {
+        if (isItemWeak(st)) {
           weak.push({ kind: 'word', data: w, stat: st });
         }
       });
       if (typeof STREET_DB !== 'undefined' && Array.isArray(STREET_DB)) {
         STREET_DB.forEach(s => {
           const st = appState.itemStats[s.id];
-          if (st && (st.status === 'weak' || (st.wrong > st.correct))) {
+          if (isItemWeak(st)) {
             weak.push({ kind: 'street', data: s, stat: st });
           }
         });
@@ -6651,12 +6670,15 @@
 
     function speakWithWebSpeech(clean, customRate = null) {
       if ('speechSynthesis' in window) {
-        const utter = new SpeechSynthesisUtterance(clean);
-        if (hebrewVoice) utter.voice = hebrewVoice;
-        else if (thaiVoice) utter.voice = thaiVoice;
-        utter.lang = 'he-IL';
-        utter.rate = customRate !== null ? customRate : (appState.audioSpeed || 1.0);
-        window.speechSynthesis.speak(utter);
+        try {
+          window.speechSynthesis.cancel();
+          const utter = new SpeechSynthesisUtterance(clean);
+          if (hebrewVoice) utter.voice = hebrewVoice;
+          else if (thaiVoice) utter.voice = thaiVoice;
+          utter.lang = 'he-IL';
+          utter.rate = customRate !== null ? customRate : (appState.audioSpeed || 1.0);
+          window.speechSynthesis.speak(utter);
+        } catch (e) {}
       }
     }
 
@@ -6862,14 +6884,12 @@
         }
       }
 
-      // If user raised to Lv.3 or Overdrive mid-lesson, ensure bonus theme word & drill are present before the finale!
+      // If user raised to Lv.3 or Overdrive mid-lesson, separate bonus spotlight and drill so they are never back-to-back
       if (node && (node.type === 'street' || node.itemIds) && getEffectiveCourseLevel() >= 3) {
         const bonusItems = getBonusThemeItemsForNode(node);
         bonusItems.forEach(bItem => {
           const alreadyHas = activeSession.steps.some(st => st.itemId === bItem.id);
           if (!alreadyHas) {
-            const convoIdx = activeSession.steps.findIndex(st => st.type === 'live_conversation');
-            const insertAt = convoIdx >= 0 ? convoIdx : activeSession.steps.length;
             const bonusSpotlight = {
               type: 'street_listen_spotlight',
               itemId: bItem.id,
@@ -6878,7 +6898,17 @@
             };
             const bonusDrill = createStreetListeningDrillStep(bItem, pastLearned);
             bonusDrill.isBonusThemeWord = true;
-            activeSession.steps.splice(insertAt, 0, bonusSpotlight, bonusDrill);
+
+            let lastSpotIdx = -1;
+            activeSession.steps.forEach((st, idx) => {
+              if (idx > curIdx && st.type === 'street_listen_spotlight') lastSpotIdx = idx;
+            });
+            const spotInsertAt = lastSpotIdx >= 0 ? lastSpotIdx + 1 : curIdx + 1;
+            activeSession.steps.splice(spotInsertAt, 0, bonusSpotlight);
+
+            const convoIdx = activeSession.steps.findIndex(st => st.type === 'live_conversation');
+            const drillInsertAt = convoIdx >= 0 ? convoIdx : activeSession.steps.length;
+            activeSession.steps.splice(drillInsertAt, 0, bonusDrill);
           }
         });
       }
@@ -7166,13 +7196,14 @@
         return `
           <section class="relative">
             <!-- Sleek Minimalist Theme Header -->
-            <div class="text-center py-4 space-y-1">
+            <div class="text-center py-4 space-y-2">
               <span class="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-amber-400/10 border border-amber-400/20 text-amber-300 text-[11px] font-bold uppercase tracking-wider">
                 <span>⚡</span>
                 <span>${isStreet ? `THEME ${unit.unit}` : `UNIT ${unit.unit}`} • ${unitCompletedCount}/${unit.nodes.length} Completed</span>
               </span>
               <h2 class="text-lg sm:text-xl font-extrabold text-white tracking-tight">${unit.title}</h2>
               <p class="text-xs text-slate-400 max-w-sm mx-auto leading-relaxed">${unit.subtitle}</p>
+              ${quickPills ? `<div class="pt-1 flex justify-center">${quickPills}</div>` : ''}
             </div>
 
             <!-- Path Nodes Sequence -->
@@ -7294,7 +7325,7 @@
         : LETTERS_DB.slice(0, 4).map(l => ({ kind: 'letter', data: l }));
 
       const steps = [];
-      pool.slice(0, 6).forEach(entry => {
+      pool.slice(0, 4).forEach(entry => {
         if (entry.kind === 'letter') {
           steps.push(createSoundToLetterStep(entry.data));
         } else if (entry.kind === 'street') {
@@ -7305,7 +7336,7 @@
         }
       });
 
-      const finalSteps = steps.slice(0, 7);
+      const finalSteps = steps;
       const fallbackConvoNode = appState.currentTrack === 'street' ? STREET_CURRICULUM[0].nodes[0] : UNITS_CURRICULUM[0].nodes[2];
       finalSteps.push(createLiveConversationStep(fallbackConvoNode));
 
@@ -7325,9 +7356,10 @@
       renderCurrentLessonStep();
     }
 
-    // Cumulative Spiral Retrieval: Fetch past learned phrases to interleave into future lessons
+    // Cumulative Spiral Retrieval: Fetch past learned phrases to interleave into future lessons (Street track only)
     function getPastLearnedStreetItems(currentNode) {
       if (typeof STREET_CURRICULUM === 'undefined' || typeof STREET_DB === 'undefined') return [];
+      if (!currentNode || (currentNode.type !== 'street' && !Array.isArray(currentNode.itemIds))) return [];
       const pastItems = [];
       const currentItemIds = new Set(currentNode.itemIds || []);
 
@@ -7374,6 +7406,51 @@
       return pastItems;
     }
 
+    // Cumulative Spiral Retrieval: Fetch past learned letters preceding currentNode
+    function getPastLearnedLetters(currentNodeId, currentLetterIds = []) {
+      if (typeof UNITS_CURRICULUM === 'undefined' || typeof LETTERS_DB === 'undefined') return [];
+      const currentSet = new Set(currentLetterIds || []);
+      const past = [];
+      let reached = false;
+      for (const unit of UNITS_CURRICULUM) {
+        for (const n of (unit.nodes || [])) {
+          if (n.id === currentNodeId) {
+            reached = true;
+            break;
+          }
+          (n.letterIds || []).forEach(id => {
+            const l = LETTERS_DB.find(x => x.id === id);
+            if (l && !currentSet.has(l.id) && !past.some(p => p.id === l.id)) {
+              past.push(l);
+            }
+          });
+        }
+        if (reached) break;
+      }
+      past.sort((a, b) => {
+        const stA = (appState?.itemStats && appState.itemStats[a.id]) || { masteryScore: 0 };
+        const stB = (appState?.itemStats && appState.itemStats[b.id]) || { masteryScore: 0 };
+        return (stA.masteryScore || 0) - (stB.masteryScore || 0);
+      });
+      return past;
+    }
+
+    // Shuffle drills so retrieval is spaced away from the immediately preceding spotlight/drill
+    function spaceDrillsAfterSpotlights(drills, forbiddenFirstId = null) {
+      if (!Array.isArray(drills) || drills.length <= 1) return drills || [];
+      const remaining = [...drills].sort(() => Math.random() - 0.5);
+      const spaced = [];
+      let prevId = forbiddenFirstId;
+      while (remaining.length > 0) {
+        let idx = remaining.findIndex(d => d.itemId !== prevId);
+        if (idx === -1) idx = 0;
+        const [picked] = remaining.splice(idx, 1);
+        spaced.push(picked);
+        prevId = picked.itemId;
+      }
+      return spaced;
+    }
+
     function buildStepsForNode(node) {
       const steps = [];
       const lvl = getEffectiveCourseLevel();
@@ -7383,36 +7460,26 @@
         const streetItems = (node.itemIds || []).map(id => STREET_DB.find(s => s.id === id)).filter(Boolean);
         const bonusThemeItems = getBonusThemeItemsForNode(node);
         const pastLearned = getPastLearnedStreetItems(node);
-        
-        // Phase 1: Progressive Sentence & Dialogue Buildup
-        // Teach all conversational chunks and assemble the full real-world sentences first!
-        streetItems.forEach(item => {
+
+        // Phase 1: Batch all Spotlights first before retrieval drills
+        const allLessonItems = [...streetItems, ...bonusThemeItems];
+        allLessonItems.forEach((item, idx) => {
           steps.push({
             type: 'street_listen_spotlight',
             itemId: item.id,
             item,
-            isBonusThemeWord: false
-          });
-        });
-
-        // At Level 3 / Overdrive: Add 1-2 Bonus Theme Words from the SAME Scenario/Unit!
-        bonusThemeItems.forEach(bItem => {
-          steps.push({
-            type: 'street_listen_spotlight',
-            itemId: bItem.id,
-            item: bItem,
-            isBonusThemeWord: true
+            isBonusThemeWord: idx >= streetItems.length
           });
         });
 
         // Phase 2: Spaced Situational & Communicative Challenges with Cumulative Spiral Review
-        // Generate drills for current node items (+ bonus theme items at Lv.3), blending past learned phrases into distractors
-        const allLessonItems = [...streetItems, ...bonusThemeItems];
-        const currentDrills = allLessonItems.map((item, idx) => {
+        const lastSpotlightId = allLessonItems.length > 0 ? allLessonItems[allLessonItems.length - 1].id : null;
+        const rawCurrentDrills = allLessonItems.map((item, idx) => {
           const d = createStreetListeningDrillStep(item, pastLearned);
           if (idx >= streetItems.length) d.isBonusThemeWord = true;
           return d;
         });
+        const currentDrills = spaceDrillsAfterSpotlights(rawCurrentDrills, lastSpotlightId);
 
         // Interleave 1-3 Spiral Review challenges from past learned phrases (scaled by Course Level)
         if (pastLearned.length > 0) {
@@ -7426,9 +7493,12 @@
             return rDrill;
           });
 
-          // Interleave: [current[0], current[1], review[0], current[2], review[1], ...]
           const interleaved = [];
           let rIdx = 0;
+          // If only 1 current drill equals the just-shown spotlight, lead with a spiral review for spacing
+          if (currentDrills.length === 1 && currentDrills[0].itemId === lastSpotlightId && rIdx < reviewDrills.length) {
+            interleaved.push(reviewDrills[rIdx++]);
+          }
           currentDrills.forEach((cDrill, cIdx) => {
             interleaved.push(cDrill);
             if ((cIdx === 1 || cIdx === 3 || cIdx === 4) && rIdx < reviewDrills.length) {
@@ -7460,28 +7530,66 @@
         words = [...words, ...bonusWords];
       }
 
-      // 1. Letter-focused node: Spotlight each new letter -> Sound-to-Letter drills
-      if (node.type === 'letters') {
+      // 1. Letter-focused node: Batch all letter spotlights first, then spaced & interleaved retrieval rounds
+      if (node.type === 'letters' && letters.length > 0) {
         letters.forEach(letter => {
           steps.push({
             type: 'letter_spotlight',
             itemId: letter.id,
             letter
           });
-          steps.push(createSoundToLetterStep(letter));
         });
-        // Extra mixed recall round
-        letters.forEach(letter => {
-          steps.push(createSoundToLetterStep(letter));
+
+        const lastSpotlightLetterId = letters[letters.length - 1].id;
+        const pastLetters = getPastLearnedLetters(node.id, letters.map(l => l.id));
+        const maxPast = lvl === 1 ? 1 : (lvl >= 3 ? 2 : 1);
+        const pastDrills = pastLetters.slice(0, maxPast).map(pLetter => {
+          const s = createSoundToLetterStep(pLetter, node.id);
+          s.isSpiralReview = true;
+          s.reviewBadge = '🔄 Spiral Review • Past Letter';
+          return s;
         });
+
+        const round1 = spaceDrillsAfterSpotlights(
+          letters.map(l => createSoundToLetterStep(l, node.id)),
+          lastSpotlightLetterId
+        );
+        if (round1.length <= 1 && round1[0]?.itemId === lastSpotlightLetterId && pastDrills.length > 0) {
+          steps.push(pastDrills.shift());
+        }
+        round1.forEach(d => steps.push(d));
+
+        // Insert a past-letter spiral check between Round 1 and Round 2 for spacing
+        if (pastDrills.length > 0) {
+          steps.push(pastDrills.shift());
+        }
+
+        const lastBeforeRound2 = steps.length > 0 ? steps[steps.length - 1].itemId : null;
+        const round2 = spaceDrillsAfterSpotlights(
+          letters.map(l => createSoundToLetterStep(l, node.id)),
+          lastBeforeRound2
+        );
+        round2.forEach(d => steps.push(d));
+
+        while (pastDrills.length > 0) {
+          steps.push(pastDrills.shift());
+        }
       }
 
-      // 2. Word-focused node: Letter-to-Word Decoding -> Build Word from Letters -> Video Context
-      if (node.type === 'words') {
-        words.forEach((word, index) => {
-          steps.push(createWordDecodeStep(word));
+      // 2. Word-focused node: Separate Word Decoding batch from rotated Word Building batch (spaced retrieval)
+      if (node.type === 'words' && words.length > 0) {
+        words.forEach(word => {
+          steps.push(createWordDecodeStep(word, node.id));
+        });
+
+        const buildOrder = words.length > 1 ? [...words.slice(1), words[0]] : words;
+        buildOrder.forEach(word => {
           steps.push(createBuildWordStep(word));
-          if (index === 0 || index === words.length - 1) {
+        });
+
+        const contextWords = words.length > 1 ? [words[0], words[words.length - 1]] : [words[0]];
+        contextWords.forEach(word => {
+          if (word && word.videoContext) {
             steps.push({
               type: 'video_context',
               itemId: word.id,
@@ -7491,15 +7599,9 @@
         });
       }
 
-      // Pace adjustment: Intensive trims spotlight hand-holding, Chill keeps full guidance
-      let finalReadingSteps = steps;
-      if (appState.pace === 'intensive' && steps.length > 4) {
-        finalReadingSteps = steps.filter((s, idx) => s.type !== 'letter_spotlight' || idx === 0);
-      }
-
       // Culminate every Reading Path lesson with a Live Real-Life Conversation using unit words + known words
-      finalReadingSteps.push(createLiveConversationStep(node));
-      return finalReadingSteps;
+      steps.push(createLiveConversationStep(node));
+      return steps;
     }
 
 
@@ -7680,13 +7782,76 @@
       };
     }
 
-    function createSoundToLetterStep(targetLetter) {
+    const HEBREW_SOUND_GROUP = {
+      L_alef: 'carrier',
+      L_ayin: 'carrier',
+      L_mem: 'm',
+      L_mem_sofit: 'm',
+      L_kuf: 'k',
+      L_kaf: 'k',
+      L_chet: 'kh',
+      L_khaf: 'kh',
+      L_khaf_sofit: 'kh',
+      L_tav: 't',
+      L_tet: 't',
+      L_nun: 'n',
+      L_nun_sofit: 'n',
+      L_samech: 's',
+      L_sin: 's',
+      L_tsadi: 'ts',
+      L_tsadi_sofit: 'ts',
+      L_vet: 'v',
+      L_vav: 'v'
+    };
+
+    function getHebrewLetterBaseSound(letter) {
+      if (!letter) return '';
+      if (HEBREW_SOUND_GROUP[letter.id]) return HEBREW_SOUND_GROUP[letter.id];
+      return String(letter.sound || '').split('(')[0].split('/')[0].trim().toLowerCase();
+    }
+
+    function getLearnedLetterPoolUpTo(nodeId, targetLetter) {
+      if (nodeId && typeof UNITS_CURRICULUM !== 'undefined') {
+        const upTo = [];
+        let found = false;
+        for (const u of UNITS_CURRICULUM) {
+          for (const n of (u.nodes || [])) {
+            (n.letterIds || []).forEach(id => {
+              const l = LETTERS_DB.find(x => x.id === id);
+              if (l && !upTo.some(p => p.id === l.id)) upTo.push(l);
+            });
+            if (n.id === nodeId) { found = true; break; }
+          }
+          if (found) break;
+        }
+        if (found && upTo.length > 0) return upTo;
+      }
+      const targetUnit = targetLetter?.unit || 1;
+      const byUnit = LETTERS_DB.filter(l => (l.unit || 1) <= targetUnit);
+      return byUnit.length > 0 ? byUnit : LETTERS_DB;
+    }
+
+    function createSoundToLetterStep(targetLetter, nodeId = null) {
       const lvl = getEffectiveCourseLevel();
       const distCount = lvl === 1 ? 2 : (appState.levelOverdrive ? 4 : 3);
-      const distractors = LETTERS_DB
+      const targetBase = getHebrewLetterBaseSound(targetLetter);
+      const usedBases = new Set([targetBase]);
+
+      const learnedPool = getLearnedLetterPoolUpTo(nodeId, targetLetter)
         .filter(l => l.id !== targetLetter.id)
-        .sort(() => Math.random() - 0.5)
-        .slice(0, distCount);
+        .sort(() => Math.random() - 0.5);
+      // Fallback only in chronological curriculum order if Unit 1 Node 1 has < distCount unique-sound letters
+      const chronologicalFallback = LETTERS_DB.filter(l => l.id !== targetLetter.id && !learnedPool.some(p => p.id === l.id));
+
+      const distractors = [];
+      for (const cand of [...learnedPool, ...chronologicalFallback]) {
+        const base = getHebrewLetterBaseSound(cand);
+        if (usedBases.has(base)) continue;
+        usedBases.add(base);
+        distractors.push(cand);
+        if (distractors.length >= distCount) break;
+      }
+
       const options = [targetLetter, ...distractors].sort(() => Math.random() - 0.5);
       return {
         type: 'sound_to_letter',
@@ -7696,14 +7861,35 @@
       };
     }
 
-    function createWordDecodeStep(targetWord) {
+    function createWordDecodeStep(targetWord, nodeId = null) {
       const lvl = getEffectiveCourseLevel();
       const distCount = lvl === 1 ? 2 : (appState.levelOverdrive ? 4 : 3);
       const allW = getAllWords();
-      const distractors = allW
+      let scopedPool = allW;
+      if (nodeId && typeof UNITS_CURRICULUM !== 'undefined') {
+        const upToIds = [];
+        let found = false;
+        for (const u of UNITS_CURRICULUM) {
+          for (const n of (u.nodes || [])) {
+            (n.wordIds || []).forEach(id => { if (!upToIds.includes(id)) upToIds.push(id); });
+            if (n.id === nodeId) { found = true; break; }
+          }
+          if (found) break;
+        }
+        if (found && upToIds.length > distCount) {
+          scopedPool = upToIds.map(id => allW.find(w => w.id === id)).filter(Boolean);
+        }
+      } else if (targetWord?.unit) {
+        const byUnit = allW.filter(w => (w.unit || 1) <= targetWord.unit);
+        if (byUnit.length > distCount) scopedPool = byUnit;
+      }
+
+      const primary = scopedPool
         .filter(w => w.id !== targetWord.id)
-        .sort(() => Math.random() - 0.5)
-        .slice(0, distCount);
+        .sort(() => Math.random() - 0.5);
+      const fallback = allW
+        .filter(w => w.id !== targetWord.id && !primary.some(p => p.id === w.id));
+      const distractors = [...primary, ...fallback].slice(0, distCount);
       const options = [targetWord, ...distractors].sort(() => Math.random() - 0.5);
       return {
         type: 'word_decode',
@@ -7811,9 +7997,14 @@
       }
 
       const step = activeSession.steps[activeSession.currentIndex];
-      activeSession.stepAnswered = false;
+      activeSession.stepAnswered = !!step.answered;
       activeSession.stepStartTime = Date.now();
-      activeSession.selectedTiles = [];
+      activeSession.selectedTiles = Array.isArray(step.selectedTiles) ? [...step.selectedTiles] : [];
+
+      const knowAlreadyBtn = document.getElementById('lesson-know-already-btn');
+      if (knowAlreadyBtn) {
+        knowAlreadyBtn.classList.toggle('hidden', ['live_conversation', 'video_context', 'word_reading_finale'].includes(step.type));
+      }
 
       // Update top progress bar
       const pct = Math.round(((activeSession.currentIndex) / activeSession.steps.length) * 100);
@@ -8013,13 +8204,13 @@
         const lvl = getEffectiveCourseLevel();
         const promptRaw = step.prompt || 'Listen carefully: What does the speaker mean?';
         const diag = item.dialogue;
-        const isSelf = diag && diag.speakerB && diag.speakerB.includes('You');
+        const isSelf = !!(diag && diag.speakerA && diag.speakerA.includes('You'));
         const hasHebrewInPrompt = /[\u0590-\u05ff]/.test(promptRaw);
         const hasIncomingDialogue = !!(diag && (diag.lineHebrewA || diag.hebrew) && hasHebrewInPrompt && !isSelf);
         const incomingAudio = (diag && (diag.ttsA || diag.lineHebrewA)) ? (diag.ttsA || diag.lineHebrewA) : (item.situationAudio || item.tts || item.hebrew);
 
         // Auto-play audio if there is an incoming dialogue from vendor/other speaker
-        if (hasIncomingDialogue && incomingAudio) {
+        if (!step.answered && hasIncomingDialogue && incomingAudio) {
           setTimeout(() => playStreetItemAudio(item.id, 'drill_prompt'), 250);
         }
 
@@ -8116,7 +8307,7 @@
               ` : `
                 <!-- Standalone Listen Button if not an incoming vendor dialogue -->
                 <div class="pt-1 text-center">
-                  <button type="button" onclick="typeof playStreetItemAudio === 'function' ? playStreetItemAudio('${item.id}', 'drill_prompt', this) : playHebrewAudio('${item.tts || item.hebrew}', this)" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-amber-400 hover:bg-amber-300 text-[#0e0f12] text-xs sm:text-sm font-bold shadow-md shadow-amber-400/20 active:scale-95 transition-all cursor-pointer">
+                  <button type="button" onclick="typeof playStreetItemAudio === 'function' ? playStreetItemAudio('${item.id}', 'drill_prompt', this) : playHebrewAudio('${(item.tts || item.hebrew || '').replace(/'/g, "\\'")}', this)" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-amber-400 hover:bg-amber-300 text-[#0e0f12] text-xs sm:text-sm font-bold shadow-md shadow-amber-400/20 active:scale-95 transition-all cursor-pointer">
                     <span>🔊</span>
                     <span>Listen to Spoken Clue</span>
                   </button>
@@ -8155,16 +8346,33 @@
             <div id="street-drill-review" class="hidden"></div>
           </div>
         `;
-        actionBtn.textContent = 'Select an Answer';
-        actionBtn.className = 'px-5 py-2.5 rounded-2xl bg-[#22252e] text-slate-500 text-xs sm:text-sm font-semibold cursor-not-allowed shrink-0';
-        actionBtn.disabled = true;
-        setTimeout(() => {
-          if (typeof playStreetItemAudio === 'function') {
-            playStreetItemAudio(item.id, 'drill_prompt');
-          } else {
-            playHebrewAudio(item.tts);
+        if (step.answered) {
+          document.querySelectorAll('.street-drill-option').forEach(b => {
+            b.disabled = true;
+            b.classList.remove('hover:bg-[#222736]', 'cursor-pointer');
+            b.classList.add('cursor-default');
+          });
+          const chosenBtn = step.chosenId ? document.getElementById(`sopt-btn-${step.chosenId}`) : null;
+          const correctBtn = document.getElementById(`sopt-btn-${item.id}`);
+          if (correctBtn) {
+            correctBtn.style.backgroundColor = 'rgba(16, 185, 129, 0.25)';
+            correctBtn.style.borderColor = '#10b981';
+            correctBtn.style.color = '#6ee7b7';
           }
-        }, 200);
+          if (!step.wasCorrect && chosenBtn && step.chosenId !== item.id) {
+            chosenBtn.style.backgroundColor = 'rgba(244, 63, 94, 0.25)';
+            chosenBtn.style.borderColor = '#f43f5e';
+            chosenBtn.style.color = '#fda4af';
+          }
+          finalizeStepFeedback(!!step.wasCorrect, `${item.spoken || item.roman || ''} = ${item.meaning || ''}`);
+          actionBtn.textContent = 'Continue →';
+          actionBtn.className = 'px-6 py-3 rounded-2xl bg-emerald-400 hover:bg-emerald-300 text-[#0e0f12] text-sm font-semibold transition-all cursor-pointer shrink-0';
+          actionBtn.disabled = false;
+        } else {
+          actionBtn.textContent = 'Select an Answer';
+          actionBtn.className = 'px-5 py-2.5 rounded-2xl bg-[#22252e] text-slate-500 text-xs sm:text-sm font-semibold cursor-not-allowed shrink-0';
+          actionBtn.disabled = true;
+        }
       }
 
       // ---------------------------------------------------------------------
@@ -8211,11 +8419,14 @@
         stage.innerHTML = `
           <div class="bg-[#16181d] border border-[#252934] rounded-3xl p-6 sm:p-8 space-y-6 shadow-xl">
             <div class="text-center space-y-3">
-              <span class="text-xs font-semibold uppercase tracking-wider text-sky-400">Ear &amp; Letter Recognition</span>
+              <div class="flex flex-wrap items-center justify-center gap-2">
+                <span class="text-xs font-semibold uppercase tracking-wider text-sky-400">Ear &amp; Letter Recognition</span>
+                ${step.isSpiralReview ? `<span class="px-2.5 py-0.5 rounded-full bg-cyan-500/15 border border-cyan-500/30 text-cyan-300 text-[11px] font-semibold">🔄 Spiral Review</span>` : ''}
+              </div>
               <h3 class="text-lg font-semibold text-white">Tap the Hebrew letter you hear</h3>
 
               <div class="pt-1 flex justify-center gap-2.5">
-                <button onclick="playHebrewAudio('${t.tts}', this)" class="w-14 h-14 rounded-2xl bg-sky-500 hover:bg-sky-400 text-[#0e0f12] text-xl flex items-center justify-center shadow-lg shadow-sky-500/20 transition-all cursor-pointer" title="Play Sound">
+                <button onclick="playHebrewAudio('${(t.tts || '').replace(/'/g, "\\'")}', this)" class="w-14 h-14 rounded-2xl bg-sky-500 hover:bg-sky-400 text-[#0e0f12] text-xl flex items-center justify-center shadow-lg shadow-sky-500/20 transition-all cursor-pointer" title="Play Sound">
                   🔊
                 </button>
               </div>
@@ -8235,10 +8446,30 @@
             </div>
           </div>
         `;
-        actionBtn.textContent = 'Pick a Letter';
-        actionBtn.className = 'px-6 py-3 rounded-2xl bg-[#22252e] text-slate-500 text-sm font-semibold cursor-not-allowed shrink-0';
-        actionBtn.disabled = true;
-        setTimeout(() => playHebrewAudio(t.tts), 250);
+        if (step.answered) {
+          document.querySelectorAll('[id^="opt-btn-"]').forEach(b => { b.disabled = true; b.classList.add('cursor-default'); });
+          const rightBtn = document.getElementById(`opt-btn-${t.id}`);
+          if (rightBtn) {
+            rightBtn.classList.remove('bg-[#0e0f12]', 'border-[#252934]');
+            rightBtn.classList.add('bg-emerald-500/20', 'border-emerald-400');
+          }
+          if (!step.wasCorrect && step.chosenId && step.chosenId !== t.id) {
+            const chosenBtn = document.getElementById(`opt-btn-${step.chosenId}`);
+            if (chosenBtn) {
+              chosenBtn.classList.remove('bg-[#0e0f12]', 'border-[#252934]');
+              chosenBtn.classList.add('bg-rose-500/20', 'border-rose-400');
+            }
+          }
+          finalizeStepFeedback(!!step.wasCorrect, `${t.display} = ${t.sound}`);
+          actionBtn.textContent = 'Continue →';
+          actionBtn.className = 'px-6 py-3 rounded-2xl bg-emerald-400 hover:bg-emerald-300 text-[#0e0f12] text-sm font-semibold transition-all cursor-pointer shrink-0';
+          actionBtn.disabled = false;
+        } else {
+          actionBtn.textContent = 'Pick a Letter';
+          actionBtn.className = 'px-6 py-3 rounded-2xl bg-[#22252e] text-slate-500 text-sm font-semibold cursor-not-allowed shrink-0';
+          actionBtn.disabled = true;
+          setTimeout(() => playHebrewAudio(t.tts), 250);
+        }
       }
 
       // ---------------------------------------------------------------------
@@ -8246,7 +8477,8 @@
       // ---------------------------------------------------------------------
       else if (step.type === 'word_decode') {
         const w = step.target;
-        const showRoman = true;
+        const showRoman = (appState.pace === 'chill');
+        const safeWordTts = (w.thai || w.hebrew || '').replace(/'/g, "\\'");
 
         stage.innerHTML = `
           <div class="bg-[#16181d] border border-[#252934] rounded-3xl p-6 sm:p-8 space-y-6 shadow-xl">
@@ -8321,26 +8553,47 @@
             </div>
           </div>
         `;
-        actionBtn.textContent = 'Select Meaning';
-        actionBtn.className = 'px-6 py-3 rounded-2xl bg-[#22252e] text-slate-500 text-sm font-semibold cursor-not-allowed shrink-0';
-        actionBtn.disabled = true;
-        if (appState.pace === 'chill') {
-          setTimeout(() => playHebrewAudio(w.thai), 250);
+        if (step.answered) {
+          document.querySelectorAll('[id^="wopt-btn-"]').forEach(b => { b.disabled = true; b.classList.add('cursor-default'); });
+          const rightBtn = document.getElementById(`wopt-btn-${w.id}`);
+          if (rightBtn) {
+            rightBtn.classList.remove('bg-[#0e0f12]', 'border-[#252934]');
+            rightBtn.classList.add('bg-emerald-500/20', 'border-emerald-400', 'text-emerald-200');
+          }
+          if (!step.wasCorrect && step.chosenId && step.chosenId !== w.id) {
+            const chosenBtn = document.getElementById(`wopt-btn-${step.chosenId}`);
+            if (chosenBtn) {
+              chosenBtn.classList.remove('bg-[#0e0f12]', 'border-[#252934]');
+              chosenBtn.classList.add('bg-rose-500/20', 'border-rose-400', 'text-rose-200');
+            }
+          }
+          finalizeStepFeedback(!!step.wasCorrect, `${w.thai || w.hebrew} (${w.roman}) = ${w.meaning}`);
+          actionBtn.textContent = 'Continue →';
+          actionBtn.className = 'px-6 py-3 rounded-2xl bg-emerald-400 hover:bg-emerald-300 text-[#0e0f12] text-sm font-semibold transition-all cursor-pointer shrink-0';
+          actionBtn.disabled = false;
+        } else {
+          actionBtn.textContent = 'Select Meaning';
+          actionBtn.className = 'px-6 py-3 rounded-2xl bg-[#22252e] text-slate-500 text-sm font-semibold cursor-not-allowed shrink-0';
+          actionBtn.disabled = true;
+          if (appState.pace === 'chill') {
+            setTimeout(() => playHebrewAudio(w.thai), 250);
+          }
         }
       }
 
       // ---------------------------------------------------------------------
-      // STEP D: BUILD THE WORD FROM SHUFFLED THAI LETTERS
+      // STEP D: BUILD THE WORD FROM SHUFFLED HEBREW LETTERS
       // ---------------------------------------------------------------------
       else if (step.type === 'build_word') {
         const w = step.target;
+        const safeWordTts = (w.thai || w.hebrew || '').replace(/'/g, "\\'");
         stage.innerHTML = `
           <div class="bg-[#16181d] border border-[#252934] rounded-3xl p-6 sm:p-8 space-y-6 shadow-xl">
             <div class="text-center space-y-2">
               <span class="text-xs font-semibold uppercase tracking-wider text-amber-400">Construct the Word</span>
               <h3 class="text-lg font-semibold text-white">Build "${w.meaning}" in Hebrew letters</h3>
               <div class="pt-1 flex justify-center">
-                <button onclick="playHebrewAudio('${w.thai}', this)" class="px-4 py-2 rounded-full bg-[#0e0f12] hover:bg-[#1e222b] border border-[#2a2f3d] text-xs text-sky-300 font-medium flex items-center gap-1.5 cursor-pointer">
+                <button onclick="playHebrewAudio('${safeWordTts}', this)" class="px-4 py-2 rounded-full bg-[#0e0f12] hover:bg-[#1e222b] border border-[#2a2f3d] text-xs text-sky-300 font-medium flex items-center gap-1.5 cursor-pointer">
                   <span>🔊</span>
                   <span>Hear Target Word</span>
                 </button>
@@ -8365,24 +8618,37 @@
             </div>
           </div>
         `;
-        actionBtn.textContent = 'Check Word';
-        actionBtn.className = 'px-6 py-3 rounded-2xl bg-[#22252e] text-slate-500 text-sm font-semibold cursor-not-allowed shrink-0';
-        actionBtn.disabled = true;
-        setTimeout(() => playHebrewAudio(w.thai), 250);
+        if (step.answered) {
+          const tray = document.getElementById('build-tray');
+          if (tray && Array.isArray(step.selectedTiles) && step.selectedTiles.length > 0) {
+            tray.innerHTML = step.selectedTiles.map(t => `<span class="px-3.5 py-2 rounded-xl ${step.wasCorrect ? 'bg-emerald-500/20 border-emerald-400/50' : 'bg-rose-500/20 border-rose-400/50'} border font-hebrew text-2xl font-bold text-white">${t.char}</span>`).join('');
+          }
+          document.querySelectorAll('#build-bank button').forEach(b => { b.disabled = true; b.classList.add('opacity-50', 'cursor-default'); });
+          finalizeStepFeedback(!!step.wasCorrect, `Correct spelling: ${w.thai || w.hebrew} (${w.roman})`);
+          actionBtn.textContent = 'Continue →';
+          actionBtn.className = 'px-6 py-3 rounded-2xl bg-emerald-400 hover:bg-emerald-300 text-[#0e0f12] text-sm font-semibold transition-all cursor-pointer shrink-0';
+          actionBtn.disabled = false;
+        } else {
+          actionBtn.textContent = 'Check Word';
+          actionBtn.className = 'px-6 py-3 rounded-2xl bg-[#22252e] text-slate-500 text-sm font-semibold cursor-not-allowed shrink-0';
+          actionBtn.disabled = true;
+          setTimeout(() => playHebrewAudio(w.thai), 250);
+        }
       }
 
       // ---------------------------------------------------------------------
-      // STEP E: VIDEO CONNECTION CARD (Kru Ying & Kru Fah Timestamp Link)
+      // STEP E: WORD CONTEXT CARD (Everyday Usage Immersion)
       // ---------------------------------------------------------------------
       else if (step.type === 'video_context') {
         const w = step.word;
+        const safeWordTts = (w.thai || w.hebrew || '').replace(/'/g, "\\'");
         stage.innerHTML = `
           <div class="bg-[#16181d] border border-[#252934] rounded-3xl p-6 sm:p-8 space-y-5 shadow-xl">
             <div class="flex items-center justify-between">
               <span class="px-3 py-1 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 text-xs font-semibold">
-                Real Video Immersion
+                Real Street Context
               </span>
-              <span class="text-xs text-slate-400">Kru Ying &amp; Kru Fah</span>
+              <span class="text-xs text-slate-400">Everyday Israeli Usage</span>
             </div>
 
             <div class="bg-[#0e0f12] border border-[#232732] rounded-2xl p-5 flex items-center justify-between gap-4">
@@ -8390,7 +8656,7 @@
                 <div class="font-hebrew text-3xl font-bold text-white" dir="rtl">${w.thai || w.hebrew}</div>
                 <div class="text-xs text-sky-400 mt-0.5">${w.roman} • ${w.meaning}</div>
               </div>
-              <button onclick="playHebrewAudio('${w.thai}', this)" class="w-12 h-12 rounded-full bg-sky-500 hover:bg-sky-400 text-[#0e0f12] text-lg flex items-center justify-center shrink-0 cursor-pointer">
+              <button onclick="playHebrewAudio('${safeWordTts}', this)" class="w-12 h-12 rounded-full bg-sky-500 hover:bg-sky-400 text-[#0e0f12] text-lg flex items-center justify-center shrink-0 cursor-pointer">
                 🔊
               </button>
             </div>
@@ -8399,13 +8665,15 @@
               ${w.videoContext}
             </p>
 
-            <a href="https://www.youtube.com/watch?v=anq_42sCdP0&t=${w.seconds}s"
-               target="_blank"
-               rel="noopener noreferrer"
-               class="w-full py-3.5 px-4 rounded-2xl bg-rose-500/15 hover:bg-rose-500/25 border border-rose-500/35 text-rose-200 text-xs font-semibold flex items-center justify-center gap-2 transition-colors">
-              <span>▶ Watch Native Speakers Say This at ${w.timestamp}</span>
-              <span>↗</span>
-            </a>
+            ${w.videoUrl ? `
+              <a href="${w.videoUrl}"
+                 target="_blank"
+                 rel="noopener noreferrer"
+                 class="w-full py-3.5 px-4 rounded-2xl bg-rose-500/15 hover:bg-rose-500/25 border border-rose-500/35 text-rose-200 text-xs font-semibold flex items-center justify-center gap-2 transition-colors">
+                <span>▶ Watch Native Speakers${w.timestamp ? ` at ${w.timestamp}` : ''}</span>
+                <span>↗</span>
+              </a>
+            ` : ''}
           </div>
         `;
         actionBtn.textContent = 'Continue →';
@@ -8923,11 +9191,19 @@
         };
       }
 
-      // Street Natural Variation (Simple, non-identical surprise)
+      // Street Natural Variation (Simple, non-identical surprise for orderable food/drink items only)
       if (!isSpiral && siblingId && siblingId !== itemId) {
         const sibSt = (typeof STREET_DB !== 'undefined' && STREET_DB.find(s => s.id === siblingId)) || null;
         const sibW = (!sibSt && typeof getAllWords === 'function' ? getAllWords().find(w => w.id === siblingId) : null);
         const sibRaw = sibSt || sibW || {};
+        const ORDERABLE_FOOD_WORD_IDS = new Set(['W_kafe', 'W_lechem', 'W_karich', 'W_dag', 'W_mitz']);
+        const NON_ORDERABLE_STREET_FOOD_IDS = new Set(['ST_lashevet', 'ST_lakachat', 'ST_kar']);
+        const isOrderableFood = (st, id) => {
+          if (st) return (st.theme === 'Street Food' || ['ST_hafuch_gadol', 'ST_chalav_shibolet', 'ST_bli_sukar', 'ST_hafuch_chalash'].includes(id)) && !NON_ORDERABLE_STREET_FOOD_IDS.has(id);
+          return ORDERABLE_FOOD_WORD_IDS.has(id);
+        };
+        const canFoodCurveball = isOrderableFood(stItem || null, itemId);
+        const canSiblingChoice = canFoodCurveball && isOrderableFood(sibSt, siblingId);
         const sibHeb = sibRaw.hebrew || sibRaw.thai || '';
         const sibSpoken = sibRaw.spoken || sibRaw.roman || '';
         const sibMean = (sibRaw.meaning || '').split('(')[0].trim();
@@ -8937,8 +9213,8 @@
 
         const v = Math.abs((remixSeed + exchangeIdx * 7 + (itemId ? itemId.length : 0)) % 3);
 
-        if (exchangeIdx === 0 && sibHeb && sibHeb !== itemHeb) {
-          if (v === 1) {
+        if (canFoodCurveball && exchangeIdx === 0 && sibHeb && sibHeb !== itemHeb) {
+          if (v === 1 && canSiblingChoice) {
             // Curveball A: Choice between item and sibling
             baseTurn.partner = {
               script: `לָשִׂים לְךָ ${itemHeb} אוֹ ${sibHeb}?`,
@@ -8972,7 +9248,7 @@
               tts: `${itemHeb} לְכָאן, תּוֹדָה`
             };
           }
-        } else if (exchangeIdx === 1 && sibHeb && sibHeb !== itemHeb) {
+        } else if (canFoodCurveball && exchangeIdx === 1 && sibHeb && sibHeb !== itemHeb) {
           if (v === 1) {
             // Curveball C: Follow-up check
             baseTurn.partner = {
@@ -10477,10 +10753,14 @@ Return ONLY valid JSON array of 3 exchange objects with keys:
     function submitSoundToLetter(chosenId) {
       if (!activeSession || activeSession.stepAnswered) return;
       const step = activeSession.steps[activeSession.currentIndex];
+      if (!step || step.answered) return;
       activeSession.stepAnswered = true;
 
       const elapsed = Date.now() - activeSession.stepStartTime;
       const isRight = chosenId === step.target.id;
+      step.answered = true;
+      step.wasCorrect = isRight;
+      step.chosenId = chosenId;
       recordItemAttempt(step.target.id, isRight, elapsed);
 
       const chosenBtn = document.getElementById(`opt-btn-${chosenId}`);
@@ -10507,10 +10787,14 @@ Return ONLY valid JSON array of 3 exchange objects with keys:
     function submitWordDecode(chosenId) {
       if (!activeSession || activeSession.stepAnswered) return;
       const step = activeSession.steps[activeSession.currentIndex];
+      if (!step || step.answered) return;
       activeSession.stepAnswered = true;
 
       const elapsed = Date.now() - activeSession.stepStartTime;
       const isRight = chosenId === step.target.id;
+      step.answered = true;
+      step.wasCorrect = isRight;
+      step.chosenId = chosenId;
       recordItemAttempt(step.target.id, isRight, elapsed);
 
       const chosenBtn = document.getElementById(`wopt-btn-${chosenId}`);
@@ -10583,11 +10867,15 @@ Return ONLY valid JSON array of 3 exchange objects with keys:
     function checkBuiltWord() {
       if (!activeSession || activeSession.stepAnswered) return;
       const step = activeSession.steps[activeSession.currentIndex];
+      if (!step || step.answered) return;
       activeSession.stepAnswered = true;
 
       const userChars = activeSession.selectedTiles.map(t => t.char).join('');
       const expectedChars = step.expectedSequence.join('');
       const isRight = userChars === expectedChars;
+      step.answered = true;
+      step.wasCorrect = isRight;
+      step.selectedTiles = [...activeSession.selectedTiles];
 
       const elapsed = Date.now() - activeSession.stepStartTime;
       recordItemAttempt(step.target.id, isRight, elapsed);
@@ -10663,12 +10951,15 @@ Return ONLY valid JSON array of 3 exchange objects with keys:
       }
       saveState();
 
-      const sessionDrills = (activeSession.steps || []).filter(s => s.type === 'street_listening_drill' || s.type === 'sound_to_letter' || s.type === 'word_decode');
+      const sessionDrills = (activeSession.steps || []).filter(s =>
+        (s.type === 'street_listening_drill' || s.type === 'sound_to_letter' || s.type === 'word_decode' || s.type === 'build_word') && !s.skippedKnown
+      );
       const convoTurnsTotal = (activeSession.steps || [])
         .filter(s => s.type === 'live_conversation')
         .reduce((acc, s) => acc + (s.turns ? s.turns.length : 0), 0);
       const totalDrills = Math.max(1, sessionDrills.length + convoTurnsTotal);
-      const sessionAccuracy = Math.min(100, Math.round((activeSession.correctCount / totalDrills) * 100));
+      const clampedCorrect = Math.min(activeSession.correctCount || 0, totalDrills);
+      const sessionAccuracy = Math.min(100, Math.round((clampedCorrect / totalDrills) * 100));
       const overallMetrics = calculateLearningCurveMetrics();
 
       stage.innerHTML = `
@@ -10689,7 +10980,7 @@ Return ONLY valid JSON array of 3 exchange objects with keys:
               <div class="text-2xl font-extrabold ${sessionAccuracy >= 80 ? 'text-emerald-400' : sessionAccuracy >= 60 ? 'text-amber-400' : 'text-rose-400'}">
                 ${sessionAccuracy}%
               </div>
-              <div class="text-[11px] text-slate-400">${activeSession.correctCount} of ${totalDrills} correct on 1st retrieval</div>
+              <div class="text-[11px] text-slate-400">${clampedCorrect} of ${totalDrills} correct on 1st retrieval</div>
             </div>
 
             <div class="bg-[#181a24] border border-[#272b3b] rounded-2xl p-4 space-y-1">
@@ -10760,14 +11051,41 @@ Return ONLY valid JSON array of 3 exchange objects with keys:
       renderBank();
     }
 
+    function toggleItemMasteredFromBank(itemId) {
+      ensureAllItemStatsInitialized();
+      const st = appState.itemStats[itemId];
+      if (!st) return;
+      if (st.status === 'mastered') {
+        st.status = 'learning';
+        st.masteryScore = 50;
+        st.intervalDays = 0;
+        st.nextReviewAt = 0;
+      } else {
+        st.status = 'mastered';
+        st.masteryScore = 100;
+        st.exposures = Math.max(3, st.exposures || 0);
+        st.correct = Math.max(3, st.correct || 0);
+        st.intervalDays = Math.max(7, st.intervalDays || 0);
+        st.nextReviewAt = Date.now() + st.intervalDays * 86400000;
+      }
+      saveState();
+      renderBank();
+      renderSkillTree();
+    }
+
     function renderBank() {
       ensureAllItemStatsInitialized();
       const grid = document.getElementById('bank-grid');
       if (!grid) return;
 
       const allWords = getAllWords();
-      document.getElementById('count-letters-total').textContent = LETTERS_DB.length;
-      document.getElementById('count-words-total').textContent = allWords.length;
+      const streetList = typeof STREET_DB !== 'undefined' ? STREET_DB : [];
+      const countLettersEl = document.getElementById('count-letters-total');
+      if (countLettersEl) countLettersEl.textContent = LETTERS_DB.length;
+      const countWordsEl = document.getElementById('count-words-total');
+      if (countWordsEl) countWordsEl.textContent = allWords.length;
+      const countStreetEl = document.getElementById('count-street-total');
+      if (countStreetEl) countStreetEl.textContent = streetList.length;
 
       const combined = [
         ...LETTERS_DB.map(l => ({
@@ -10778,19 +11096,32 @@ Return ONLY valid JSON array of 3 exchange objects with keys:
           sub: `${l.sound} • ${l.name}`,
           detail: l.clue,
           unit: l.unit,
+          unitLabel: `Unit ${l.unit}`,
           stat: appState.itemStats[l.id]
         })),
         ...allWords.map(w => ({
           kind: 'word',
           id: w.id,
-          thai: w.thai,
-          tts: w.thai,
+          thai: w.thai || w.hebrew,
+          tts: w.thai || w.hebrew,
           sub: `${w.roman} — ${w.meaning}`,
           detail: w.videoContext || '',
           unit: w.unit || 6,
-          seconds: w.seconds,
+          unitLabel: `Unit ${w.unit || 6}`,
+          videoUrl: w.videoUrl || '',
           timestamp: w.timestamp,
           stat: appState.itemStats[w.id]
+        })),
+        ...streetList.map(s => ({
+          kind: 'street',
+          id: s.id,
+          thai: s.hebrew || s.thai || '',
+          tts: s.tts || s.hebrew || s.thai || '',
+          sub: `${s.spoken || s.roman || ''} — ${s.meaning || ''}`,
+          detail: s.streetShift || s.scene || '',
+          unit: s.theme || 'Street',
+          unitLabel: s.theme || 'Everyday Hebrew',
+          stat: appState.itemStats[s.id]
         }))
       ];
 
@@ -10810,7 +11141,8 @@ Return ONLY valid JSON array of 3 exchange objects with keys:
       }
 
       grid.innerHTML = filtered.map(item => {
-        const st = item.stat;
+        const st = item.stat || { status: 'new', masteryScore: 0 };
+        const ttsEsc = (item.tts || item.thai || '').replace(/'/g, "\\'");
         const badgeStyles = {
           mastered: 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30',
           weak: 'bg-amber-500/15 text-amber-300 border-amber-500/30',
@@ -10828,36 +11160,41 @@ Return ONLY valid JSON array of 3 exchange objects with keys:
           <article class="bg-[#16181d] border border-[#242731] rounded-3xl p-5 flex flex-col justify-between gap-3">
             <div class="flex items-start justify-between gap-3">
               <div>
-                <div class="flex items-center gap-2">
-                  <span class="font-hebrew text-3xl font-bold text-white">${item.thai}</span>
-                  <span class="text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-full border ${badgeStyles[st.status]}">
+                <div class="flex items-center gap-2 flex-wrap">
+                  <span class="font-hebrew text-3xl font-bold text-white" dir="rtl">${item.thai}</span>
+                  <span class="text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-full border ${badgeStyles[st.status] || badgeStyles.new}">
                     ${st.status}
                   </span>
                 </div>
                 <div class="text-xs font-medium text-slate-300 mt-1">${item.sub}</div>
               </div>
 
-              <button onclick="playHebrewAudio('${item.tts.replace(/'/g, "\\'")}', this)" class="w-10 h-10 rounded-full bg-[#222631] hover:bg-sky-500/25 border border-[#2e3342] text-white flex items-center justify-center shrink-0 transition-all cursor-pointer" title="Listen">
+              <button onclick="playHebrewAudio('${ttsEsc}', this)" class="w-10 h-10 rounded-full bg-[#222631] hover:bg-sky-500/25 border border-[#2e3342] text-white flex items-center justify-center shrink-0 transition-all cursor-pointer" title="Listen">
                 🔊
               </button>
             </div>
 
             <p class="text-[11px] text-slate-400 leading-relaxed">${item.detail}</p>
 
-            <!-- Mastery Progress Bar & Video Timestamp -->
-            <div class="pt-2 border-t border-[#20232c] flex items-center justify-between gap-3 text-[11px]">
+            <!-- Mastery Progress Bar & Controls -->
+            <div class="pt-2 border-t border-[#20232c] flex items-center justify-between gap-2 text-[11px]">
               <div class="flex items-center gap-2 flex-1">
-                <div class="w-24 h-1.5 bg-[#0e0f12] rounded-full overflow-hidden">
-                  <div class="h-full ${barColors[st.status]} rounded-full" style="width: ${st.masteryScore}%"></div>
+                <div class="w-20 h-1.5 bg-[#0e0f12] rounded-full overflow-hidden">
+                  <div class="h-full ${barColors[st.status] || barColors.new} rounded-full" style="width: ${st.masteryScore || 0}%"></div>
                 </div>
-                <span class="text-slate-400">${st.masteryScore}%</span>
+                <span class="text-slate-400">${st.masteryScore || 0}%</span>
               </div>
 
-              ${item.timestamp ? `
-                <a href="https://www.youtube.com/watch?v=anq_42sCdP0&t=${item.seconds}s" target="_blank" rel="noopener noreferrer" class="text-sky-400 hover:underline">
-                  Video ${item.timestamp} ↗
-                </a>
-              ` : `<span class="text-slate-500">Unit ${item.unit}</span>`}
+              <div class="flex items-center gap-2 shrink-0">
+                <button type="button" onclick="toggleItemMasteredFromBank('${item.id}')" class="px-2 py-1 rounded-lg border text-[10px] font-semibold transition-all cursor-pointer ${st.status === 'mastered' ? 'bg-emerald-500/20 border-emerald-500/40 text-emerald-300 hover:bg-emerald-500/30' : 'bg-[#0e0f12] border-[#2b303f] text-slate-300 hover:border-amber-400/50 hover:text-amber-300'}">
+                  ${st.status === 'mastered' ? '✓ Solid' : 'Mark Solid'}
+                </button>
+                ${item.videoUrl ? `
+                  <a href="${item.videoUrl}" target="_blank" rel="noopener noreferrer" class="text-sky-400 hover:underline">
+                    Video ${item.timestamp || ''} ↗
+                  </a>
+                ` : `<span class="text-slate-500">${item.unitLabel}</span>`}
+              </div>
             </div>
           </article>
         `;
@@ -10933,6 +11270,7 @@ Return ONLY valid JSON array of 3 exchange objects with keys:
         try {
           const parsed = JSON.parse(e.target.result);
           appState = { ...appState, ...parsed };
+          window.appState = appState;
           saveState();
           updateTrackUI();
       renderSkillTree();
@@ -11346,8 +11684,8 @@ Examples:
 
     function getGeminiModel() {
       const m = localStorage.getItem(GEMINI_MODEL_STORAGE);
-      if (!m || m === 'gemini-2.5-flash' || m === 'gemini-1.5-flash' || m === 'gemini-2.0-flash') {
-        return 'gemini-3.8-flash';
+      if (!m) {
+        return 'gemini-2.5-flash';
       }
       return m;
     }
@@ -11556,17 +11894,27 @@ Examples:
         let situationCorrect = '';
         let notes = '';
 
-        if (step && step.target) {
-          const t = step.target;
-          targetHebrew = t.hebrew || t.spoken || t.display || t.char || '';
-          targetMeaning = t.meaning || t.english || '';
-          targetTranslit = t.translit || t.phonetic || t.roman || '';
-          situationPrompt = t.situationPrompt || '';
+        const t = step ? (step.target || step.letter || step.word || step.item || null) : null;
+        if (t) {
+          targetHebrew = t.hebrew || t.thai || t.spoken || t.display || t.char || '';
+          targetMeaning = t.meaning || t.english || t.sound || '';
+          targetTranslit = t.translit || t.phonetic || t.roman || t.name || '';
+          situationPrompt = step.prompt || t.situationPrompt || t.videoContext || '';
           situationCorrect = t.situationCorrect || '';
-          notes = t.notes || t.root || '';
+          notes = t.notes || t.root || t.streetShift || t.clue || '';
           if (t.words && Array.isArray(t.words)) {
             notes += (notes ? ' | ' : '') + 'Breakdown: ' + t.words.map(w => `${w.he || w.th}: ${w.en}`).join(', ');
           }
+        } else if (step && Array.isArray(step.dialogueLines)) {
+          targetHebrew = step.dialogueLines.map(dl => dl.hebrew || dl.thai || dl.script || '').filter(Boolean).join(' / ');
+          targetMeaning = step.dialogueLines.map(dl => dl.english || dl.meaning || '').filter(Boolean).join(' / ');
+          notes = 'Live conversation practice';
+        } else if (step && Array.isArray(step.turns) && step.turns.length > 0) {
+          const turn = step.turns[step.currentTurnIdx || 0] || step.turns[0];
+          targetHebrew = turn.targetPhrase || turn.partner?.script || '';
+          targetTranslit = turn.targetSpoken || turn.partner?.spoken || '';
+          targetMeaning = turn.targetMeaning || turn.partner?.meaning || '';
+          notes = 'Live adaptive street conversation';
         }
 
         const displayTitle = targetHebrew ? `${targetHebrew} • ${targetTranslit || targetMeaning}` : (activeSession.title || 'Lesson Card');
@@ -11661,19 +12009,37 @@ Examples:
       await saveAndTestGeminiKey();
     }
 
+    function sanitizeGeminiHtml(rawHtml) {
+      if (!rawHtml) return '';
+      return String(rawHtml)
+        .replace(/<\s*(script|iframe|object|embed|style)\b[^>]*>[\s\S]*?<\/\s*\1\s*>/gi, '')
+        .replace(/<\s*(script|iframe|object|embed)\b[^>]*\/?>/gi, '')
+        .replace(/\son[a-z]+\s*=\s*(?:"[^"]*"|'[^']*'|[^\s>]+)/gi, '')
+        .replace(/(href|src)\s*=\s*(['"]?)\s*javascript:[^'"\s>]*/gi, '$1=$2#');
+    }
+
     function safeRenderMarkdown(mdText, lang = 'he') {
       if (!mdText) return '';
+
+      // 0. Extract [audio: Script | Phonetic | Meaning] before markdown/escaping to avoid double-escaping quotes
+      const audioCards = [];
+      const preClipRegex = /\[audio:\s*([^|\]]+)\s*\|\s*([^|\]]+)(?:\s*\|\s*([^\]]+))?\]/gi;
+      const tokenizedMd = String(mdText).replace(preClipRegex, (match, script, phonetic, meaning) => {
+        const idx = audioCards.length;
+        audioCards.push({ script, phonetic, meaning });
+        return `%%GEMINI_AUDIO_CARD_${idx}%%`;
+      });
 
       // 1. Parse standard markdown first (handles lists, bold, headings, paragraphs)
       let html = '';
       if (window.marked && typeof window.marked.parse === 'function') {
         try {
-          html = window.marked.parse(mdText);
+          html = sanitizeGeminiHtml(window.marked.parse(tokenizedMd));
         } catch (e) {
-          html = escapeHtml(mdText).replace(/\n\n/g, '<br><br>');
+          html = escapeHtml(tokenizedMd).replace(/\n\n/g, '<br><br>');
         }
       } else {
-        html = escapeHtml(mdText)
+        html = escapeHtml(tokenizedMd)
           .replace(/```([\s\S]*?)```/g, '<pre class="bg-[#181c28] p-3 rounded-xl overflow-x-auto my-2 text-xs text-amber-200"><code>$1</code></pre>')
           .replace(/`([^`]+)`/g, '<code class="bg-[#1e2333] text-amber-300 px-1.5 py-0.5 rounded text-xs">$1</code>')
           .replace(/\*\*([^*]+)\*\*/g, '<strong class="text-sky-300 font-semibold">$1</strong>')
@@ -11686,35 +12052,22 @@ Examples:
           }).join('');
       }
 
-      // 2. Helper to construct clean HTML audio card widget with zero indentation
+      // 2. Helper to construct clean HTML audio card widget with zero indentation and safe escaping
       function createAudioCardHtml(script, phonetic, meaning) {
         const cleanScript = (script || '').trim();
         const cleanPhonetic = (phonetic || '').trim();
         const cleanMeaning = (meaning || '').trim();
         const uid = 'clip_' + Math.random().toString(36).substr(2, 9);
-        const scriptEsc = cleanScript.replace(/'/g, "\\'");
+        const scriptAttrEsc = escapeHtml(cleanScript.replace(/\\/g, '\\\\').replace(/'/g, "\\'"));
         const fontClass = lang === 'th' ? 'font-thai' : 'font-hebrew';
 
-        return `<div class="gemini-audio-card my-2 p-2.5 rounded-xl bg-[#151926] hover:bg-[#1c2234] border border-[#263148] hover:border-sky-400/50 flex items-center justify-between gap-3 transition-all cursor-pointer shadow-sm group select-none" onclick="playGeminiAudioClip('${scriptEsc}', '${uid}', '${lang}')"><button type="button" id="btn_${uid}" class="w-8 h-8 rounded-lg bg-gradient-to-tr from-sky-500/20 to-emerald-400/20 group-hover:from-sky-500 group-hover:to-emerald-400 border border-sky-400/40 group-hover:border-transparent text-sky-300 group-hover:text-[#0e0f12] flex items-center justify-center font-bold text-xs transition-all shrink-0">▶</button><div class="min-w-0 flex-1"><div class="flex items-center gap-2 flex-wrap"><span class="font-bold text-sm text-white ${fontClass} tracking-wide">${cleanScript}</span>${cleanPhonetic ? `<span class="text-xs text-amber-300 font-medium">${cleanPhonetic}</span>` : ''}</div>${cleanMeaning ? `<div class="text-[11px] text-slate-400 truncate mt-0.5">${cleanMeaning}</div>` : ''}</div><div class="text-[10px] text-sky-400/90 font-mono bg-sky-500/10 px-2 py-0.5 rounded-full border border-sky-500/20 flex items-center gap-1 shrink-0"><span id="anim_${uid}" class="clip-wave hidden text-emerald-400 font-bold">ılı</span><span>🔊 Listen</span></div></div>`;
+        return `<div class="gemini-audio-card my-2 p-2.5 rounded-xl bg-[#151926] hover:bg-[#1c2234] border border-[#263148] hover:border-sky-400/50 flex items-center justify-between gap-3 transition-all cursor-pointer shadow-sm group select-none" onclick="playGeminiAudioClip('${scriptAttrEsc}', '${uid}', '${lang}')"><button type="button" id="btn_${uid}" class="w-8 h-8 rounded-lg bg-gradient-to-tr from-sky-500/20 to-emerald-400/20 group-hover:from-sky-500 group-hover:to-emerald-400 border border-sky-400/40 group-hover:border-transparent text-sky-300 group-hover:text-[#0e0f12] flex items-center justify-center font-bold text-xs transition-all shrink-0">▶</button><div class="min-w-0 flex-1"><div class="flex items-center gap-2 flex-wrap"><span class="font-bold text-sm text-white ${fontClass} tracking-wide">${escapeHtml(cleanScript)}</span>${cleanPhonetic ? `<span class="text-xs text-amber-300 font-medium">${escapeHtml(cleanPhonetic)}</span>` : ''}</div>${cleanMeaning ? `<div class="text-[11px] text-slate-400 truncate mt-0.5">${escapeHtml(cleanMeaning)}</div>` : ''}</div><div class="text-[10px] text-sky-400/90 font-mono bg-sky-500/10 px-2 py-0.5 rounded-full border border-sky-500/20 flex items-center gap-1 shrink-0"><span id="anim_${uid}" class="clip-wave hidden text-emerald-400 font-bold">ılı</span><span>🔊 Listen</span></div></div>`;
       }
 
-      // 3. Transform [audio: Script | Phonetic | Meaning] tags (handles <p>[audio: ...]</p> and inline)
-      const clipRegex = /(?:<p>\s*)?\[audio:\s*([^|\]]+)\s*\|\s*([^|\]]+)(?:\s*\|\s*([^\]]+))?\](?:\s*<\/p>)?/gi;
-      html = html.replace(clipRegex, (match, script, phonetic, meaning) => {
-        return createAudioCardHtml(script, phonetic, meaning);
-      });
-
-      // 4. Auto-heal: If marked or code block wrapped raw audio card HTML in <pre><code>, unwrap it into a live widget
-      html = html.replace(/<pre><code[^>]*>([\s\S]*?)<\/code><\/pre>/gi, (match, inner) => {
-        if (inner.includes('gemini-audio-card')) {
-          return inner.replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&').replace(/&quot;/g, '"');
-        }
-        return match;
-      });
-
-      // 5. Unescape any raw escaped gemini-audio-card tags in text
-      html = html.replace(/&lt;div class="gemini-audio-card[\s\S]*?&lt;\/div&gt;/gi, (m) => {
-        return m.replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&');
+      // 3. Rehydrate audio cards cleanly
+      html = html.replace(/(?:<p>\s*)?%%GEMINI_AUDIO_CARD_(\d+)%%(?:\s*<\/p>)?/g, (m, idxStr) => {
+        const card = audioCards[Number(idxStr)];
+        return card ? createAudioCardHtml(card.script, card.phonetic, card.meaning) : '';
       });
 
       return html;
@@ -12604,12 +12957,12 @@ Examples:
           },
           generationConfig: {
             temperature: 0.7,
-            maxOutputTokens: 450,
-            thinkingConfig: {
-              thinkingLevel: 'low'
-            }
+            maxOutputTokens: 450
           }
         };
+        if (String(model).startsWith('gemini-3')) {
+          body.generationConfig.thinkingConfig = { thinkingLevel: 'low' };
+        }
 
         const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${key}`, {
           method: 'POST',

@@ -4266,7 +4266,7 @@
     // =========================================================================
     const STORAGE_KEY = 'thai_reading_path_v1';
 
-    let appState = {
+    var appState = {
       xp: 0,
       currentTrack: 'reading', // 'reading' | 'street'
       streak: 1,
@@ -4280,9 +4280,10 @@
       convoDifficulty: 'standard', // 'easier' | 'standard' | 'harder' | 'overdrive'
       audioSpeed: 1.0,
       completedNodes: [],
-      itemStats: {}, // { [id]: { exposures, correct, wrong, avgMs, masteryScore, status } }
+      itemStats: {}, // { [id]: { exposures, correct, wrong, avgMs, masteryScore, status, nextReviewAt, intervalDays } }
       customWords: []
     };
+    window.appState = appState;
 
     function loadState() {
       try {
@@ -4304,6 +4305,7 @@
             completedNodes: parsed.completedNodes || [],
             customWords: parsed.customWords || []
           };
+          window.appState = appState;
         }
       } catch (e) {
         console.warn('Could not load saved state:', e);
@@ -4343,8 +4345,6 @@
       const isStreet = appState.currentTrack === 'street';
       const readBtn = document.getElementById('track-btn-reading');
       const streetBtn = document.getElementById('track-btn-street');
-      const unitsBadge = document.getElementById('track-units-badge');
-      const summaryText = document.getElementById('adaptive-summary-text');
 
       if (readBtn && streetBtn) {
         if (isStreet) {
@@ -4361,38 +4361,38 @@
     function skipAndMarkKnown(targetItemId = null) {
       if (!activeSession) return;
       const step = activeSession.steps[activeSession.currentIndex];
+      if (!step || step.type === 'live_conversation' || step.type === 'video_context') return;
       const itemId = targetItemId || step?.itemId;
+      if (!itemId) return;
 
-      if (itemId) {
-        ensureAllItemStatsInitialized();
-        if (!appState.itemStats[itemId]) {
-          appState.itemStats[itemId] = {
-            exposures: 0,
-            correct: 0,
-            wrong: 0,
-            avgMs: 0,
-            masteryScore: 0,
-            status: 'new'
-          };
-        }
-        const st = appState.itemStats[itemId];
-        if (st) {
-          st.status = 'mastered';
-          st.masteryScore = 100;
-          st.correct = Math.max(st.correct, 2) + 1;
-          st.exposures += 1;
-        }
-        // grasp recorded
-        saveState();
-        showToast('Marked as Known • Shifted to Mastered');
+      ensureAllItemStatsInitialized();
+      if (!appState.itemStats[itemId]) {
+        appState.itemStats[itemId] = {
+          exposures: 0,
+          correct: 0,
+          wrong: 0,
+          avgMs: 0,
+          masteryScore: 0,
+          status: 'new'
+        };
       }
+      const st = appState.itemStats[itemId];
+      if (st) {
+        st.status = 'mastered';
+        st.masteryScore = 100;
+        st.correct = Math.max(st.correct, 2) + 1;
+        st.exposures = Math.max(st.exposures + 1, 3);
+        st.intervalDays = 7;
+        st.nextReviewAt = Date.now() + 7 * 24 * 60 * 60 * 1000;
+      }
+      step.skippedKnown = true;
+      saveState();
+      showToast('Marked as Known • Shifted to Mastered');
 
       // Automatically filter out future steps for this item so it is not redundantly drilled
-      if (itemId) {
-        activeSession.steps = activeSession.steps.filter((s, idx) => {
-          return idx <= activeSession.currentIndex || s.itemId !== itemId;
-        });
-      }
+      activeSession.steps = activeSession.steps.filter((s, idx) => {
+        return idx <= activeSession.currentIndex || s.itemId !== itemId;
+      });
       activeSession.currentIndex += 1;
 
       renderCurrentLessonStep();
@@ -4467,13 +4467,19 @@
     // Robust answer handler for Street Thai listening drills
     function handleStreetDrillSelect(chosenId, correctId) {
       if (!activeSession || activeSession.stepAnswered) return;
+      const step = activeSession.steps ? activeSession.steps[activeSession.currentIndex] : null;
+      if (step && step.answered) return;
       activeSession.stepAnswered = true;
 
-      const step = activeSession.steps ? activeSession.steps[activeSession.currentIndex] : null;
       const chosenOpt = step?.options?.find(o => o.id === chosenId) || null;
       const isCorrect = (chosenId === correctId) || !!chosenOpt?.isCorrect;
       const isAltChosen = isCorrect && (chosenId !== correctId);
       const targetItem = step?.target || (typeof STREET_DB !== 'undefined' ? STREET_DB.find(s => s.id === correctId) : null) || {};
+      if (step) {
+        step.answered = true;
+        step.wasCorrect = isCorrect;
+        step.chosenId = chosenId;
+      }
 
       const elapsed = activeSession.stepStartTime ? (Date.now() - activeSession.stepStartTime) : 1200;
       try {
@@ -4608,6 +4614,18 @@
         // 2-Person Convo: player keys (Space play/pause, arrows, Enter, 1-5 replies)
         const typingTarget = e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA');
         if (!typingTarget && typeof handleConvoKeydown === 'function' && handleConvoKeydown(e)) return;
+        const curStepForKey = activeSession?.steps?.[activeSession.currentIndex];
+        if (!typingTarget && curStepForKey && curStepForKey.type === 'word_reading_finale') {
+          const curQ = curStepForKey.questions?.[curStepForKey.cursor || 0];
+          if (/^[1-4]$/.test(e.key) && curQ && !curQ.answered) {
+            const opt = curQ.options?.[Number(e.key) - 1];
+            if (opt) {
+              e.preventDefault();
+              submitWordReadingFinaleOption(opt.id);
+              return;
+            }
+          }
+        }
         if (e.key === 'ArrowLeft') {
           handleLessonPrev();
         } else if (e.key === 'ArrowRight') {
@@ -4623,6 +4641,13 @@
               } else if (curStep.allTurnsCompleted) {
                 handleLessonNext();
               }
+            } else if (curStep && curStep.type === 'word_reading_finale') {
+              const curQ = curStep.questions?.[curStep.cursor || 0];
+              if (curQ && curQ.answered && !curStep.allWordsCompleted) {
+                advanceWordReadingFinale();
+              } else if (curStep.allWordsCompleted) {
+                handleLessonNext();
+              }
             } else if (activeSession.stepAnswered) {
               handleLessonNext();
             }
@@ -4633,6 +4658,9 @@
             const step = activeSession.steps[activeSession.currentIndex];
             if (step.type === 'live_conversation') {
               replayCurrentConvoPartnerAudio();
+            } else if (step.type === 'word_reading_finale') {
+              const curQ = step.questions?.[step.cursor || 0];
+              if (curQ?.word?.thai) playThaiAudio(curQ.word.thai);
             } else if (step.type === 'street_listen_spotlight' && step.item) {
               playThaiAudio(step.item.tts);
             } else if (step.type === 'street_listening_drill' && step.target) {
@@ -4708,7 +4736,7 @@
       }
     }
 
-    // Adaptive Scoring Algorithm: factors accuracy, response speed, and streak
+    // Adaptive Scoring Algorithm: factors accuracy, response speed, and spaced-repetition interval
     function recordItemAttempt(itemId, isCorrect, responseTimeMs) {
       if (!itemId) return;
       ensureAllItemStatsInitialized();
@@ -4719,25 +4747,38 @@
           wrong: 0,
           avgMs: 0,
           masteryScore: 0,
-          status: 'new'
+          status: 'new',
+          intervalDays: 0,
+          nextReviewAt: 0,
+          lastAttemptAt: 0
         };
       }
       const st = appState.itemStats[itemId];
+      const now = Date.now();
+      const prevAttemptAt = st.lastAttemptAt || 0;
+      const hoursSinceLast = prevAttemptAt > 0 ? (now - prevAttemptAt) / (1000 * 60 * 60) : 0;
       st.exposures += 1;
+      st.lastAttemptAt = now;
 
       if (isCorrect) {
         st.correct += 1;
-        // Fast recognition (< 4.5s) earns a bigger mastery jump
-        const speedBonus = responseTimeMs < 4500 ? 12 : responseTimeMs < 8000 ? 6 : 0;
-        st.masteryScore = Math.min(100, st.masteryScore + 28 + speedBonus);
+        // Fast recognition (< 4.5s) earns a mastery bonus; spaced retrieval across sessions earns an extra consolidation boost
+        const speedBonus = responseTimeMs < 4500 ? 10 : responseTimeMs < 8000 ? 5 : 0;
+        const spacingBonus = hoursSinceLast >= 4 ? 12 : 0;
+        st.masteryScore = Math.min(100, st.masteryScore + 24 + speedBonus + spacingBonus);
         st.avgMs = st.avgMs === 0 ? responseTimeMs : Math.round((st.avgMs * 0.7) + (responseTimeMs * 0.3));
+        const prevInterval = st.intervalDays || 0;
+        st.intervalDays = prevInterval === 0 ? 1 : Math.min(30, Math.round(prevInterval * 2.2));
+        st.nextReviewAt = now + st.intervalDays * 24 * 60 * 60 * 1000;
       } else {
         st.wrong += 1;
         st.masteryScore = Math.max(0, st.masteryScore - 22);
+        st.intervalDays = 0;
+        st.nextReviewAt = now + 4 * 60 * 60 * 1000; // Review soon after a miss
       }
 
-      // Determine adaptive status
-      if (st.masteryScore >= 80 && st.correct >= 2) {
+      // Require >= 3 successful retrievals (or >= 2 with multi-hour spacing) before locking in 'mastered'
+      if (st.masteryScore >= 80 && (st.correct >= 3 || (st.correct >= 2 && hoursSinceLast >= 4))) {
         st.status = 'mastered';
       } else if (st.wrong > 0 && st.masteryScore < 55) {
         st.status = 'weak';
@@ -4756,22 +4797,23 @@
     function getWeakItems() {
       ensureAllItemStatsInitialized();
       const weak = [];
+      const isItemWeak = (st) => st && st.status === 'weak';
       LETTERS_DB.forEach(l => {
         const st = appState.itemStats[l.id];
-        if (st && (st.status === 'weak' || (st.wrong > st.correct))) {
+        if (isItemWeak(st)) {
           weak.push({ kind: 'letter', data: l, stat: st });
         }
       });
       getAllWords().forEach(w => {
         const st = appState.itemStats[w.id];
-        if (st && (st.status === 'weak' || (st.wrong > st.correct))) {
+        if (isItemWeak(st)) {
           weak.push({ kind: 'word', data: w, stat: st });
         }
       });
       if (typeof STREET_DB !== 'undefined' && Array.isArray(STREET_DB)) {
         STREET_DB.forEach(s => {
           const st = appState.itemStats[s.id];
-          if (st && (st.status === 'weak' || (st.wrong > st.correct))) {
+          if (isItemWeak(st)) {
             weak.push({ kind: 'street', data: s, stat: st });
           }
         });
@@ -5021,6 +5063,13 @@
         return;
       }
 
+      if (curStep.type === 'word_reading_finale') {
+        const targetNode = node || UNITS_CURRICULUM.flatMap(u => u.nodes).find(n => n.id === curStep.nodeId) || UNITS_CURRICULUM[0].nodes[0];
+        activeSession.steps[curIdx] = createWordReadingFinaleStep(targetNode);
+        renderCurrentLessonStep();
+        return;
+      }
+
       // Update any upcoming (and current if unanswered) steps to reflect the new Course Level
       const pastLearned = node ? getPastLearnedStreetItems(node) : [];
       for (let i = curIdx; i < activeSession.steps.length; i++) {
@@ -5035,17 +5084,18 @@
         } else if (s.type === 'live_conversation') {
           const targetNode = node || allCurricula.flatMap(u => u.nodes).find(n => n.id === s.nodeId) || allCurricula[0].nodes[0];
           activeSession.steps[i] = createLiveConversationStep(targetNode, appState.convoDifficulty, s.remixSeed || 0);
+        } else if (s.type === 'word_reading_finale') {
+          const targetNode = node || UNITS_CURRICULUM.flatMap(u => u.nodes).find(n => n.id === s.nodeId) || UNITS_CURRICULUM[0].nodes[0];
+          activeSession.steps[i] = createWordReadingFinaleStep(targetNode);
         }
       }
 
-      // If user raised to Lv.3 or Overdrive mid-lesson, ensure bonus theme word & drill are present before the finale!
+      // If user raised to Lv.3 or Overdrive mid-lesson, insert bonus spotlight with spacing before its drill (never back-to-back)
       if (node && (node.type === 'street' || node.itemIds) && getEffectiveCourseLevel() >= 3) {
         const bonusItems = getBonusThemeItemsForNode(node);
         bonusItems.forEach(bItem => {
           const alreadyHas = activeSession.steps.some(st => st.itemId === bItem.id);
           if (!alreadyHas) {
-            const convoIdx = activeSession.steps.findIndex(st => st.type === 'live_conversation');
-            const insertAt = convoIdx >= 0 ? convoIdx : activeSession.steps.length;
             const bonusSpotlight = {
               type: 'street_listen_spotlight',
               itemId: bItem.id,
@@ -5054,7 +5104,22 @@
             };
             const bonusDrill = createStreetListeningDrillStep(bItem, pastLearned);
             bonusDrill.isBonusThemeWord = true;
-            activeSession.steps.splice(insertAt, 0, bonusSpotlight, bonusDrill);
+
+            // Place spotlight right after existing spotlights (or at next slot), and place its drill before live_conversation
+            let lastSpotIdx = -1;
+            activeSession.steps.forEach((st, idx) => {
+              if (idx > curIdx && st.type === 'street_listen_spotlight') lastSpotIdx = idx;
+            });
+            const spotInsertAt = lastSpotIdx >= 0 ? lastSpotIdx + 1 : curIdx + 1;
+            activeSession.steps.splice(spotInsertAt, 0, bonusSpotlight);
+
+            const convoIdx = activeSession.steps.findIndex(st => st.type === 'live_conversation');
+            const drillInsertAt = convoIdx >= 0 ? convoIdx : activeSession.steps.length;
+            if (drillInsertAt <= spotInsertAt + 1 && activeSession.steps.length > spotInsertAt + 1) {
+              activeSession.steps.splice(drillInsertAt, 0, bonusDrill);
+            } else {
+              activeSession.steps.splice(drillInsertAt, 0, bonusDrill);
+            }
           }
         });
       }
@@ -5342,13 +5407,14 @@
         return `
           <section class="relative">
             <!-- Sleek Minimalist Theme Header -->
-            <div class="text-center py-4 space-y-1">
+            <div class="text-center py-4 space-y-2">
               <span class="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-amber-400/10 border border-amber-400/20 text-amber-300 text-[11px] font-bold uppercase tracking-wider">
                 <span>⚡</span>
                 <span>${isStreet ? `THEME ${unit.unit}` : `UNIT ${unit.unit}`} • ${unitCompletedCount}/${unit.nodes.length} Completed</span>
               </span>
               <h2 class="text-lg sm:text-xl font-extrabold text-white tracking-tight">${unit.title}</h2>
               <p class="text-xs text-slate-400 max-w-sm mx-auto leading-relaxed">${unit.subtitle}</p>
+              ${quickPills ? `<div class="pt-1 flex justify-center">${quickPills}</div>` : ''}
             </div>
 
             <!-- Path Nodes Sequence -->
@@ -5385,14 +5451,25 @@
                         ${node.title}
                       </div>
                       <p class="text-[10px] text-slate-500 mt-0.5 line-clamp-2 leading-tight">${node.description}</p>
-                      <button
-                        type="button"
-                        onclick="event.stopPropagation(); startNodeConversationOnly('${node.id}')"
-                        class="mt-1 inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-amber-500/15 hover:bg-amber-500/30 border border-amber-400/35 text-amber-300 hover:text-white text-[10px] font-bold transition-all cursor-pointer active:scale-95 shadow-xs"
-                        title="Launch 2-Person Quick Conversation & Comprehension Module (overhear two locals using New + Old known words)">
-                        <span>🎧</span>
-                        <span>2-Person Convo</span>
-                      </button>
+                      ${isStreet ? `
+                        <button
+                          type="button"
+                          onclick="event.stopPropagation(); startNodeConversationOnly('${node.id}')"
+                          class="mt-1 inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-amber-500/15 hover:bg-amber-500/30 border border-amber-400/35 text-amber-300 hover:text-white text-[10px] font-bold transition-all cursor-pointer active:scale-95 shadow-xs"
+                          title="Launch 2-Person Quick Conversation & Comprehension Module (overhear two locals using New + Old known words)">
+                          <span>🎧</span>
+                          <span>2-Person Convo</span>
+                        </button>
+                      ` : `
+                        <button
+                          type="button"
+                          onclick="event.stopPropagation(); startNodeWordReadingOnly('${node.id}')"
+                          class="mt-1 inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-sky-500/15 hover:bg-sky-500/30 border border-sky-400/35 text-sky-300 hover:text-white text-[10px] font-bold transition-all cursor-pointer active:scale-95 shadow-xs"
+                          title="Practice reading single Thai words using the letters learned up to this lesson">
+                          <span>📖</span>
+                          <span>Read Words</span>
+                        </button>
+                      `}
                     </div>
                   </div>
                 `;
@@ -5414,6 +5491,28 @@
         title: `${node.title} • Live Conversation`,
         isWeakReview: false,
         steps: [convoStep],
+        currentIndex: 0,
+        correctCount: 0,
+        stepAnswered: false,
+        stepStartTime: Date.now(),
+        selectedTiles: []
+      };
+
+      openLessonOverlay();
+      renderCurrentLessonStep();
+      if (typeof updateGeminiContextUI === 'function') updateGeminiContextUI();
+    }
+
+    function startNodeWordReadingOnly(nodeId) {
+      const node = UNITS_CURRICULUM.flatMap(u => u.nodes).find(n => n.id === nodeId);
+      if (!node) return;
+
+      const wordStep = createWordReadingFinaleStep(node);
+      activeSession = {
+        nodeId: node.id,
+        title: `${node.title} • Read Single Words`,
+        isWeakReview: false,
+        steps: [wordStep],
         currentIndex: 0,
         correctCount: 0,
         stepAnswered: false,
@@ -5465,25 +5564,45 @@
       const weak = getWeakItems();
       const pool = weak.length > 0
         ? weak
-        : LETTERS_DB.slice(0, 4).map(l => ({ kind: 'letter', data: l }));
+        : LETTERS_DB.slice(0, 3).map(l => ({ kind: 'letter', data: l }));
+
+      const practicedLetterIds = new Set(
+        LETTERS_DB
+          .filter(l => l.unit === 1 || appState?.itemStats?.[l.id]?.exposures > 0 || appState?.itemStats?.[l.id]?.status === 'mastered')
+          .map(l => l.id)
+      );
+      const practicedChars = new Set(
+        LETTERS_DB.filter(l => practicedLetterIds.has(l.id)).map(l => l.char)
+      );
 
       const steps = [];
-      pool.slice(0, 6).forEach(entry => {
+      for (const entry of pool) {
+        if (steps.length >= 6) break;
         if (entry.kind === 'letter') {
-          steps.push(createSoundToLetterStep(entry.data));
+          const allowedForTarget = new Set(practicedLetterIds);
+          allowedForTarget.add(entry.data.id);
+          steps.push(createSoundToLetterStep(entry.data, false, allowedForTarget));
         } else if (entry.kind === 'street') {
           steps.push(createStreetListeningDrillStep(entry.data));
         } else {
           steps.push(createWordDecodeStep(entry.data));
-          steps.push(createBuildWordStep(entry.data));
+          steps.push(createBuildWordStep(entry.data, practicedChars));
         }
-      });
+      }
 
-      const finalSteps = steps.slice(0, 7);
-      const allCurricula = [...STREET_CURRICULUM, ...UNITS_CURRICULUM];
-      const fallbackNode = allCurricula[0]?.nodes?.[0];
-      if (fallbackNode) {
-        finalSteps.push(createLiveConversationStep(fallbackNode));
+      const finalSteps = steps;
+      if (appState.currentTrack === 'street') {
+        const fallbackNode = STREET_CURRICULUM[0]?.nodes?.[0];
+        if (fallbackNode) {
+          finalSteps.push(createLiveConversationStep(fallbackNode));
+        }
+      } else {
+        const readingNodes = UNITS_CURRICULUM.flatMap(u => u.nodes);
+        const latestCompleted = [...readingNodes].reverse().find(n => appState.completedNodes.includes(n.id));
+        const fallbackReadingNode = latestCompleted || readingNodes[0];
+        if (fallbackReadingNode) {
+          finalSteps.push(createWordReadingFinaleStep(fallbackReadingNode));
+        }
       }
 
       activeSession = {
@@ -5507,29 +5626,32 @@
     function getPastLearnedStreetItems(currentNode) {
       if (typeof STREET_CURRICULUM === 'undefined' || typeof STREET_DB === 'undefined') return [];
       const pastItems = [];
-      const currentItemIds = new Set(currentNode.itemIds || []);
+      const currentItemIds = new Set(currentNode?.itemIds || []);
+      const isStreetNode = !!(currentNode && (currentNode.type === 'street' || currentNode.itemIds));
 
-      // 1. Collect all items from nodes that precede currentNode in the curriculum
-      let reachedCurrent = false;
-      for (const unit of STREET_CURRICULUM) {
-        for (const n of (unit.nodes || [])) {
-          if (n.id === currentNode.id) {
-            reachedCurrent = true;
-            break;
+      // 1. Collect items from preceding Street nodes ONLY when currentNode belongs to STREET_CURRICULUM
+      if (isStreetNode) {
+        let reachedCurrent = false;
+        for (const unit of STREET_CURRICULUM) {
+          for (const n of (unit.nodes || [])) {
+            if (n.id === currentNode.id) {
+              reachedCurrent = true;
+              break;
+            }
+            if (Array.isArray(n.itemIds)) {
+              n.itemIds.forEach(id => {
+                const it = STREET_DB.find(s => s.id === id);
+                if (it && !currentItemIds.has(it.id) && !pastItems.some(p => p.id === it.id)) {
+                  pastItems.push(it);
+                }
+              });
+            }
           }
-          if (Array.isArray(n.itemIds)) {
-            n.itemIds.forEach(id => {
-              const it = STREET_DB.find(s => s.id === id);
-              if (it && !currentItemIds.has(it.id) && !pastItems.some(p => p.id === it.id)) {
-                pastItems.push(it);
-              }
-            });
-          }
+          if (reachedCurrent) break;
         }
-        if (reachedCurrent) break;
       }
 
-      // 2. Also include any items from appState that have exposures > 0 (practiced previously)
+      // 2. Include any Street items from appState that were actually practiced (exposures > 0)
       if (typeof appState !== 'undefined' && appState.itemStats) {
         Object.keys(appState.itemStats).forEach(id => {
           if (!currentItemIds.has(id) && !pastItems.some(p => p.id === id)) {
@@ -5542,14 +5664,54 @@
         });
       }
 
-      // 3. Sort by priority: lowest mastery score / lowest exposures first to consolidate memory
+      // 3. Sort by priority: due for SRS review or lowest mastery score first
+      const now = Date.now();
       pastItems.sort((a, b) => {
-        const statA = (appState?.itemStats && appState.itemStats[a.id]) || { masteryScore: 0 };
-        const statB = (appState?.itemStats && appState.itemStats[b.id]) || { masteryScore: 0 };
+        const statA = (appState?.itemStats && appState.itemStats[a.id]) || { masteryScore: 0, nextReviewAt: 0 };
+        const statB = (appState?.itemStats && appState.itemStats[b.id]) || { masteryScore: 0, nextReviewAt: 0 };
+        const dueA = statA.nextReviewAt && statA.nextReviewAt <= now ? -1 : 0;
+        const dueB = statB.nextReviewAt && statB.nextReviewAt <= now ? -1 : 0;
+        if (dueA !== dueB) return dueA - dueB;
         return (statA.masteryScore || 0) - (statB.masteryScore || 0);
       });
 
       return pastItems;
+    }
+
+    function getPastLearnedLetters(currentNode) {
+      const past = [];
+      const currentIds = new Set(currentNode?.letterIds || []);
+      let reachedCurrent = false;
+      for (const unit of UNITS_CURRICULUM) {
+        for (const n of (unit.nodes || [])) {
+          if (n.id === currentNode.id) {
+            reachedCurrent = true;
+            break;
+          }
+          if (n.type === 'letters' && Array.isArray(n.letterIds)) {
+            n.letterIds.forEach(lid => {
+              const l = LETTERS_DB.find(x => x.id === lid);
+              if (l && !currentIds.has(l.id) && !past.some(p => p.id === l.id)) {
+                past.push(l);
+              }
+            });
+          }
+        }
+        if (reachedCurrent) break;
+      }
+      return past;
+    }
+
+    function spaceDrillsAfterSpotlights(drills, lastTaughtId) {
+      if (!Array.isArray(drills) || drills.length <= 1) return drills || [];
+      const copy = [...drills].sort(() => Math.random() - 0.5);
+      if (lastTaughtId && copy[0]?.itemId === lastTaughtId) {
+        const swapIdx = copy.findIndex(d => d.itemId !== lastTaughtId);
+        if (swapIdx > 0) {
+          [copy[0], copy[swapIdx]] = [copy[swapIdx], copy[0]];
+        }
+      }
+      return copy;
     }
 
     function buildStepsForNode(node) {
@@ -5584,13 +5746,15 @@
         });
 
         // Phase 2: Spaced Situational & Communicative Challenges with Cumulative Spiral Review
-        // Generate drills for current node items (+ bonus theme items at Lv.3), blending past learned phrases into distractors
+        // Shuffle drills so the first drill never immediately repeats the final spotlight
         const allLessonItems = [...streetItems, ...bonusThemeItems];
-        const currentDrills = allLessonItems.map((item, idx) => {
+        const rawDrills = allLessonItems.map((item, idx) => {
           const d = createStreetListeningDrillStep(item, pastLearned);
           if (idx >= streetItems.length) d.isBonusThemeWord = true;
           return d;
         });
+        const lastSpotlightId = allLessonItems[allLessonItems.length - 1]?.id;
+        const currentDrills = spaceDrillsAfterSpotlights(rawDrills, lastSpotlightId);
 
         // Interleave 1-3 Spiral Review challenges from past learned phrases (scaled by Course Level)
         if (pastLearned.length > 0) {
@@ -5604,10 +5768,12 @@
             return rDrill;
           });
 
-          // Interleave: [current[0], current[1], review[0], current[2], review[1], ...]
           const interleaved = [];
           let rIdx = 0;
           currentDrills.forEach((cDrill, cIdx) => {
+            if (currentDrills.length <= 2 && cIdx === 0 && rIdx < reviewDrills.length) {
+              interleaved.push(reviewDrills[rIdx++]);
+            }
             interleaved.push(cDrill);
             if ((cIdx === 1 || cIdx === 3 || cIdx === 4) && rIdx < reviewDrills.length) {
               interleaved.push(reviewDrills[rIdx++]);
@@ -5629,6 +5795,8 @@
       }
       const letters = node.letterIds.map(id => LETTERS_DB.find(l => l.id === id)).filter(Boolean);
       let words = node.wordIds.map(id => getAllWords().find(w => w.id === id)).filter(Boolean);
+      const allowedLetterIds = getAllowedLetterIdsForNode(node.id);
+      const knownChars = getKnownThaiCharsForNode(node.id);
 
       // At Level 3 / Overdrive on Word Nodes: Add 1 bonus word from the same Unit/Theme
       if (node.type === 'words' && lvl >= 3) {
@@ -5638,7 +5806,7 @@
         words = [...words, ...bonusWords];
       }
 
-      // 1. Letter-focused node: Spotlight each new letter -> Sound-to-Letter drills
+      // 1. Letter-focused node: Teach ALL new letters first, then spaced Standard-Looped recall drills
       if (node.type === 'letters') {
         letters.forEach(letter => {
           steps.push({
@@ -5646,41 +5814,78 @@
             itemId: letter.id,
             letter
           });
-          // Primary drill: standard traditional looped font
-          steps.push(createSoundToLetterStep(letter, false));
         });
-        // Extra mixed recall round: introduces modern loopless typography (more frequent at Lv.2/Lv.3)
+
+        const pastLetters = getPastLearnedLetters(node);
+        const lastTaughtLetterId = letters[letters.length - 1]?.id;
+        const round1 = spaceDrillsAfterSpotlights(
+          letters.map(letter => createSoundToLetterStep(letter, false, allowedLetterIds)),
+          lastTaughtLetterId
+        );
+
+        // On 2-letter nodes, lead with a spiral review letter so retrieval is never immediate
+        if (pastLetters.length > 0 && letters.length <= 2) {
+          const spiralLetter = pastLetters[Math.floor(Math.random() * Math.min(3, pastLetters.length))];
+          const spiralAllowed = new Set(allowedLetterIds);
+          spiralAllowed.add(spiralLetter.id);
+          const spiralStep = createSoundToLetterStep(spiralLetter, false, spiralAllowed);
+          spiralStep.isSpiralReview = true;
+          steps.push(spiralStep);
+        }
+
+        round1.forEach(d => steps.push(d));
+
+        // Second spaced recall round (Lv.2+): Standard Looped font only, shuffled with spacing
         if (lvl >= 2) {
-          letters.forEach(letter => {
-            steps.push(createSoundToLetterStep(letter, true));
+          const lastRound1Id = steps[steps.length - 1]?.itemId;
+          const round2 = spaceDrillsAfterSpotlights(
+            letters.map(letter => createSoundToLetterStep(letter, false, allowedLetterIds)),
+            lastRound1Id
+          );
+          if (pastLetters.length > 0 && letters.length > 2) {
+            const spiralLetter = pastLetters[Math.floor(Math.random() * Math.min(4, pastLetters.length))];
+            const spiralAllowed = new Set(allowedLetterIds);
+            spiralAllowed.add(spiralLetter.id);
+            const spiralStep = createSoundToLetterStep(spiralLetter, false, spiralAllowed);
+            spiralStep.isSpiralReview = true;
+            steps.push(spiralStep);
+          }
+          round2.forEach(d => steps.push(d));
+        }
+      }
+
+      // 2. Word-focused node: Video immersion -> Decode all words -> Build words in spaced order
+      if (node.type === 'words') {
+        if (words.length > 0) {
+          steps.push({
+            type: 'video_context',
+            itemId: words[0].id,
+            word: words[0]
+          });
+        }
+        const decodeSteps = words.map(word => createWordDecodeStep(word, node));
+        decodeSteps.forEach(s => steps.push(s));
+
+        const lastDecodeId = decodeSteps[decodeSteps.length - 1]?.itemId;
+        const buildSteps = spaceDrillsAfterSpotlights(
+          words.map(word => createBuildWordStep(word, knownChars)),
+          lastDecodeId
+        );
+        buildSteps.forEach(s => steps.push(s));
+
+        if (words.length > 1) {
+          const lastWord = words[words.length - 1];
+          steps.push({
+            type: 'video_context',
+            itemId: lastWord.id,
+            word: lastWord
           });
         }
       }
 
-      // 2. Word-focused node: Letter-to-Word Decoding -> Build Word from Letters -> Video Context
-      if (node.type === 'words') {
-        words.forEach((word, index) => {
-          steps.push(createWordDecodeStep(word));
-          steps.push(createBuildWordStep(word));
-          if (index === 0 || index === words.length - 1) {
-            steps.push({
-              type: 'video_context',
-              itemId: word.id,
-              word
-            });
-          }
-        });
-      }
-
-      // Pace adjustment: Intensive trims spotlight hand-holding, Chill keeps full guidance
-      let finalReadingSteps = steps;
-      if (appState.pace === 'intensive' && steps.length > 4) {
-        finalReadingSteps = steps.filter((s, idx) => s.type !== 'letter_spotlight' || idx === 0);
-      }
-
-      // Phase 3 Finale for Reading Path: Adaptive Real-Life Conversation Step!
-      finalReadingSteps.push(createLiveConversationStep(node));
-      return finalReadingSteps;
+      // Phase 3 Finale for Reading Path / Alphabet Module: Read Single Words (using known letters + new-letter hints!)
+      steps.push(createWordReadingFinaleStep(node));
+      return steps;
     }
 
 
@@ -5894,29 +6099,65 @@
       };
     }
 
-    function createSoundToLetterStep(targetLetter, isModern = false) {
+    function getThaiLetterBaseSound(letter) {
+      return String(letter?.sound || '').split('(')[0].split('/')[0].trim().toLowerCase();
+    }
+
+    function createSoundToLetterStep(targetLetter, isModern = false, allowedLetterIds = null) {
       const lvl = getEffectiveCourseLevel();
       const distCount = lvl === 1 ? 2 : (appState.levelOverdrive ? 4 : 3);
-      const distractors = LETTERS_DB
-        .filter(l => l.id !== targetLetter.id)
-        .sort(() => Math.random() - 0.5)
-        .slice(0, distCount);
+      const targetSound = getThaiLetterBaseSound(targetLetter);
+      // Exclude target AND any homophone letters sharing the same base sound (e.g. ไ- vs ใ-)
+      let pool = LETTERS_DB.filter(l => l.id !== targetLetter.id && getThaiLetterBaseSound(l) !== targetSound);
+      if (allowedLetterIds && allowedLetterIds.size > 0) {
+        const scoped = pool.filter(l => allowedLetterIds.has(l.id));
+        if (scoped.length > 0) pool = scoped;
+      } else {
+        const knownIds = new Set(
+          LETTERS_DB
+            .filter(l => l.unit === 1 || appState?.itemStats?.[l.id]?.status === 'mastered' || appState?.itemStats?.[l.id]?.exposures > 0)
+            .map(l => l.id)
+        );
+        const filtered = pool.filter(l => knownIds.has(l.id));
+        if (filtered.length > 0) pool = filtered;
+      }
+      const usedBases = new Set([targetSound]);
+      const fallbackPool = LETTERS_DB.filter(l => l.id !== targetLetter.id && !pool.some(p => p.id === l.id));
+      const distractors = [];
+      for (const cand of [...pool.sort(() => Math.random() - 0.5), ...fallbackPool]) {
+        const base = getThaiLetterBaseSound(cand);
+        if (usedBases.has(base)) continue;
+        usedBases.add(base);
+        distractors.push(cand);
+        if (distractors.length >= distCount) break;
+      }
       const options = [targetLetter, ...distractors].sort(() => Math.random() - 0.5);
       return {
         type: 'sound_to_letter',
         itemId: targetLetter.id,
         target: targetLetter,
         options,
-        isModernFont: !!isModern
+        isModernFont: false // Standard looped Thai script for all drills
       };
     }
 
-    function createWordDecodeStep(targetWord) {
+    function createWordDecodeStep(targetWord, node = null) {
       const lvl = getEffectiveCourseLevel();
       const distCount = lvl === 1 ? 2 : (appState.levelOverdrive ? 4 : 3);
+      const nodeUnitObj = node ? UNITS_CURRICULUM.find(u => u.nodes.some(n => n.id === node.id)) : null;
+      const maxUnit = nodeUnitObj ? nodeUnitObj.unit : (targetWord.unit || 1);
+
       const allW = getAllWords();
-      const distractors = allW
-        .filter(w => w.id !== targetWord.id)
+      let pool = allW.filter(w => w.id !== targetWord.id && (w.unit || 1) <= maxUnit);
+      if (pool.length < distCount) {
+        const extra = READING_PRACTICE_WORDS.filter(w =>
+          w.thai !== targetWord.thai &&
+          (w.unit || 1) <= maxUnit &&
+          !pool.some(p => p.meaning === w.meaning)
+        );
+        pool = [...pool, ...extra];
+      }
+      const distractors = pool
         .sort(() => Math.random() - 0.5)
         .slice(0, distCount);
       const options = [targetWord, ...distractors].sort(() => Math.random() - 0.5);
@@ -5924,18 +6165,30 @@
         type: 'word_decode',
         itemId: targetWord.id,
         target: targetWord,
+        nodeId: node?.id || null,
         options
       };
     }
 
-    function createBuildWordStep(targetWord) {
-      // Unique character tiles from target word + 2 extra distractor letters
-      const wordChars = targetWord.letters.map((l, i) => ({
-        uid: `t_${i}_${l.char}`,
-        char: l.char,
-        role: l.role
-      }));
-      const extraChars = ['ก', 'น', 'ม', 'า', 'ส', 'ล', 'ี', 'ไ', 'ง', 'บ']
+    function createBuildWordStep(targetWord, knownChars = null) {
+      // Group combining Thai vowel/tone marks onto their base consonant into readable grapheme tiles
+      let graphemeParts = [];
+      if (typeof Intl !== 'undefined' && typeof Intl.Segmenter === 'function' && targetWord.thai) {
+        const seg = new Intl.Segmenter('th', { granularity: 'grapheme' });
+        graphemeParts = [...seg.segment(targetWord.thai)].map(s => s.segment).filter(s => s.trim());
+      }
+      // If a single-grapheme word (e.g. น้ำ) would have only 1 tile, fall back to its letter breakdown
+      const wordChars = (graphemeParts.length >= 2)
+        ? graphemeParts.map((g, i) => ({ uid: `t_${i}_${g}`, char: g, role: 'Word part' }))
+        : targetWord.letters.map((l, i) => ({
+            uid: `t_${i}_${l.char}`,
+            char: l.char,
+            role: l.role
+          }));
+      const allowedPool = knownChars && knownChars.size > 0
+        ? Array.from(knownChars)
+        : LETTERS_DB.filter(l => (l.unit || 1) <= (targetWord.unit || 1)).map(l => l.char);
+      const extraChars = allowedPool
         .filter(c => !wordChars.some(wc => wc.char === c))
         .sort(() => Math.random() - 0.5)
         .slice(0, 2)
@@ -5950,6 +6203,590 @@
         expectedSequence: wordChars.map(w => w.char),
         bankTiles
       };
+    }
+
+    // =========================================================================
+    // SINGLE-WORD READING FINALE (Alphabet / Reading Path Lessons)
+    // =========================================================================
+    const THAI_CHAR_HINTS = {
+      'า': { display: '-า', label: 'long "aa" vowel (sits after the consonant)' },
+      'ะ': { display: '-ะ', label: 'short "a" vowel (sits after the consonant)' },
+      'ิ': { display: '-ิ', label: 'short "i" vowel (sits above the consonant)' },
+      'ี': { display: '-ี', label: 'long "ii / ee" vowel (sits above the consonant)' },
+      'ุ': { display: '-ุ', label: 'short "u" vowel (sits below the consonant)' },
+      'ู': { display: '-ู', label: 'long "uu" vowel (sits below the consonant)' },
+      'ั': { display: '-ั', label: 'short "a" marker (sits above the consonant)' },
+      '็': { display: '-็', label: 'shortener mark (makes the vowel short)' },
+      '่': { display: '◌่', label: 'tone mark (mai ek — shifts tone low/falling)' },
+      '้': { display: '◌้', label: 'tone mark (mai tho — shifts tone falling/high)' },
+      '๋': { display: '◌๋', label: 'rising tone mark (mai chattawa)' },
+      'เ': { display: 'เ-', label: 'front "ee / ay" vowel (written left, read after)' },
+      'แ': { display: 'แ-', label: 'front "ae" vowel (written left, read after)' },
+      'ไ': { display: 'ไ-', label: 'front "ai" vowel (written left, read after)' },
+      'ใ': { display: 'ใ-', label: 'front "ai" vowel (written left, read after)' },
+      'ำ': { display: '-ำ', label: '"am" vowel (built-in "-m" ending)' },
+      'ต': { display: 'ต', label: 't (unaspirated "dt", like "star")' },
+      'ร': { display: 'ร', label: 'r (at start) / n (at syllable end)' },
+      'ญ': { display: 'ญ', label: 'y (yo ying — sounds like "y")' }
+    };
+
+    const READING_PRACTICE_WORDS = [
+      // Unit 1
+      { id: 'RW_nom', thai: 'นม', roman: 'nom', meaning: 'Milk', unit: 1, nodeIds: ['u1_n1'], readingHint: 'Two consonants with no written vowel → hidden short "o" between them: น + (o) + ม' },
+      { id: 'RW_geem', thai: 'เกม', roman: 'geem', meaning: 'Game', unit: 1, nodeIds: ['u1_n2', 'u1_n3'], readingHint: 'Front vowel เ- sits on the left, so read ก + เ + ม = geem' },
+
+      // Unit 2
+      { id: 'RW_maak', thai: 'มาก', roman: 'mâak', meaning: 'Very / a lot', unit: 2, nodeIds: ['u2_n1', 'u2_n3'] },
+      { id: 'RW_naan', thai: 'นาน', roman: 'naan', meaning: 'Long time', unit: 2, nodeIds: ['u2_n1'] },
+      { id: 'RW_laa', thai: 'ลา', roman: 'laa', meaning: 'Leave / goodbye', unit: 2, nodeIds: ['u2_n1'] },
+      { id: 'RW_seeg', thai: 'เสก', roman: 'sèek', meaning: 'Conjure / cast a spell', unit: 2, nodeIds: ['u2_n1'], readingHint: 'Front vowel เ- sits before ส: ส + เ + ก = sèek' },
+      { id: 'RW_khon', thai: 'คน', roman: 'khon', meaning: 'Person', unit: 2, nodeIds: ['u2_n1'], readingHint: 'Hidden short "o" vowel between consonants: ค + (o) + น = khon' },
+      { id: 'RW_glai', thai: 'ไกล', roman: 'glai', meaning: 'Far', unit: 2, nodeIds: ['u2_n2'], readingHint: 'Initial cluster ก + ล ("gl") with front vowel ไ- ("ai")' },
+
+      // Unit 3
+      { id: 'RW_yaa', thai: 'ยา', roman: 'yaa', meaning: 'Medicine', unit: 3, nodeIds: ['u3_n1'] },
+      { id: 'RW_maa_dog', thai: 'หมา', roman: 'mǎa', meaning: 'Dog', unit: 3, nodeIds: ['u3_n1', 'u3_n3'], readingHint: 'Silent ห in front of ม raises the tone → mǎa' },
+      { id: 'RW_mii_bear', thai: 'หมี', roman: 'mǐi', meaning: 'Bear', unit: 3, nodeIds: ['u3_n1'], readingHint: 'Silent ห in front of ม raises the tone → mǐi' },
+      { id: 'RW_nii_flee', thai: 'หนี', roman: 'nǐi', meaning: 'Run away / flee', unit: 3, nodeIds: ['u3_n1'], readingHint: 'Silent ห in front of น raises the tone → nǐi' },
+      { id: 'RW_yaao', thai: 'ยาว', roman: 'yaao', meaning: 'Long (length)', unit: 3, nodeIds: ['u3_n1'] },
+      { id: 'RW_suai', thai: 'สวย', roman: 'sǔai', meaning: 'Pretty / beautiful', unit: 3, nodeIds: ['u3_n1'], readingHint: 'ว in the middle acts as the "ua" vowel: ส + ua + ย = sǔai' },
+      { id: 'RW_nai', thai: 'ใน', roman: 'nai', meaning: 'In / inside', unit: 3, nodeIds: ['u3_n2', 'u3_n3'] },
+      { id: 'RW_kham', thai: 'คำ', roman: 'kham', meaning: 'Word', unit: 3, nodeIds: ['u3_n2'] },
+      { id: 'RW_yam', thai: 'ยำ', roman: 'yam', meaning: 'Spicy Thai salad', unit: 3, nodeIds: ['u3_n2'] },
+
+      // Unit 4
+      { id: 'RW_dii', thai: 'ดี', roman: 'dii', meaning: 'Good', unit: 4, nodeIds: ['u4_n1', 'u4_n3'] },
+      { id: 'RW_dam', thai: 'ดำ', roman: 'dam', meaning: 'Black', unit: 4, nodeIds: ['u4_n1'] },
+      { id: 'RW_bai', thai: 'ใบ', roman: 'bai', meaning: 'Leaf / ticket', unit: 4, nodeIds: ['u4_n1'] },
+      { id: 'RW_ngaan', thai: 'งาน', roman: 'ngaan', meaning: 'Work / job', unit: 4, nodeIds: ['u4_n1'] },
+      { id: 'RW_daao', thai: 'ดาว', roman: 'daao', meaning: 'Star', unit: 4, nodeIds: ['u4_n1'] },
+      { id: 'RW_bao', thai: 'เบา', roman: 'bao', meaning: 'Light / gentle', unit: 4, nodeIds: ['u4_n1'], readingHint: 'เ- and -า wrap around บ together to make the "ao" sound' },
+      { id: 'RW_daeng', thai: 'แดง', roman: 'daeng', meaning: 'Red', unit: 4, nodeIds: ['u4_n2', 'u4_n3'] },
+      { id: 'RW_maeo', thai: 'แมว', roman: 'maeo', meaning: 'Cat', unit: 4, nodeIds: ['u4_n2'] },
+      { id: 'RW_yaek', thai: 'แยก', roman: 'yâek', meaning: 'Separate', unit: 4, nodeIds: ['u4_n2'] },
+      { id: 'RW_lung', thai: 'ลุง', roman: 'lung', meaning: 'Uncle', unit: 4, nodeIds: ['u4_n2'] },
+      { id: 'RW_yung', thai: 'ยุง', roman: 'yung', meaning: 'Mosquito', unit: 4, nodeIds: ['u4_n2'] },
+
+      // Unit 5
+      { id: 'RW_chaa', thai: 'ชา', roman: 'chaa', meaning: 'Tea', unit: 5, nodeIds: ['u5_n1'] },
+      { id: 'RW_chaam', thai: 'ชาม', roman: 'chaam', meaning: 'Bowl', unit: 5, nodeIds: ['u5_n1'] },
+      { id: 'RW_thaam', thai: 'ถาม', roman: 'thǎam', meaning: 'Ask', unit: 5, nodeIds: ['u5_n1'] },
+      { id: 'RW_thung', thai: 'ถุง', roman: 'thǔng', meaning: 'Bag', unit: 5, nodeIds: ['u5_n1'] },
+      { id: 'RW_phii', thai: 'ผี', roman: 'phǐi', meaning: 'Ghost', unit: 5, nodeIds: ['u5_n1'] },
+      { id: 'RW_phom', thai: 'ผม', roman: 'phǒm', meaning: 'I (male) / hair', unit: 5, nodeIds: ['u5_n1'], readingHint: 'Hidden short "o" vowel between consonants: ผ + (o) + ม = phǒm' },
+      { id: 'RW_bplaa', thai: 'ปลา', roman: 'bplaa', meaning: 'Fish', unit: 5, nodeIds: ['u5_n2'] },
+      { id: 'RW_bpai', thai: 'ไป', roman: 'bpai', meaning: 'Go', unit: 5, nodeIds: ['u5_n2'] },
+      { id: 'RW_ao', thai: 'เอา', roman: 'ao', meaning: 'Want / take', unit: 5, nodeIds: ['u5_n2', 'u6_n1'], readingHint: 'Silent อ holds the "ao" vowel (เ-า)' },
+      { id: 'RW_noon', thai: 'นอน', roman: 'nɔɔn', meaning: 'Sleep', unit: 5, nodeIds: ['u5_n2'], readingHint: 'อ in the middle acts as the long "aw/ɔɔ" vowel' },
+      { id: 'RW_choop', thai: 'ชอบ', roman: 'chɔ̂ɔp', meaning: 'Like', unit: 5, nodeIds: ['u5_n2'], readingHint: 'อ acts as "aw/ɔɔ" vowel; final บ sounds like "-p"' },
+      { id: 'RW_book', thai: 'บอก', roman: 'bɔ̀ɔk', meaning: 'Tell', unit: 5, nodeIds: ['u5_n2'], readingHint: 'อ acts as "aw/ɔɔ" vowel; final ก sounds like "-k"' },
+
+      // Unit 6 shorthand single words
+      { id: 'RW_lek', thai: 'เล็ก', roman: 'lék', meaning: 'Thin noodles (short)', unit: 6, nodeIds: ['u6_n1', 'u6_n2'] },
+      { id: 'RW_chin', thai: 'ชิ้น', roman: 'chín', meaning: 'Meatballs (shorthand)', unit: 6, nodeIds: ['u6_n2'] },
+      { id: 'RW_ngok', thai: 'งอก', roman: 'ngôok', meaning: 'Bean sprouts (shorthand)', unit: 6, nodeIds: ['u6_n2'] }
+    ];
+
+    function getAllowedLetterIdsForNode(nodeId) {
+      const allowed = new Set();
+      for (const unit of UNITS_CURRICULUM) {
+        for (const n of (unit.nodes || [])) {
+          (n.letterIds || []).forEach(lid => allowed.add(lid));
+          if (n.id === nodeId) {
+            LETTERS_DB.forEach(l => {
+              if (appState?.itemStats?.[l.id]?.status === 'mastered') allowed.add(l.id);
+            });
+            return allowed;
+          }
+        }
+      }
+      LETTERS_DB.forEach(l => allowed.add(l.id));
+      return allowed;
+    }
+
+    function getKnownThaiCharsForNode(nodeId) {
+      const known = new Set();
+      for (const unit of UNITS_CURRICULUM) {
+        for (const n of (unit.nodes || [])) {
+          (n.letterIds || []).forEach(lid => {
+            const l = LETTERS_DB.find(x => x.id === lid);
+            if (l && l.char) known.add(l.char);
+          });
+          if (n.id === nodeId) {
+            // Also include any letters the learner already mastered individually
+            LETTERS_DB.forEach(l => {
+              if (appState?.itemStats?.[l.id]?.status === 'mastered') known.add(l.char);
+            });
+            return known;
+          }
+        }
+      }
+      LETTERS_DB.forEach(l => known.add(l.char));
+      return known;
+    }
+
+    function getThaiCharHintInfo(ch) {
+      if (THAI_CHAR_HINTS[ch]) return THAI_CHAR_HINTS[ch];
+      const letterObj = LETTERS_DB.find(l => l.char === ch);
+      if (letterObj) {
+        return {
+          display: letterObj.display || ch,
+          label: `${letterObj.sound} (${letterObj.name})`
+        };
+      }
+      return { display: ch, label: 'Thai letter / mark' };
+    }
+
+    function getWordCharBreakdown(thaiText, knownChars) {
+      const chars = [];
+      const unseenMap = new Map();
+      Array.from(thaiText || '').forEach(ch => {
+        if (!ch.trim()) return;
+        const known = knownChars.has(ch);
+        const info = getThaiCharHintInfo(ch);
+        chars.push({ char: ch, known, display: info.display, label: info.label });
+        if (!known && !unseenMap.has(ch)) {
+          unseenMap.set(ch, { char: ch, display: info.display, label: info.label });
+        }
+      });
+      return { chars, unseenHints: Array.from(unseenMap.values()) };
+    }
+
+    function getWordsLearnedPriorToNode(nodeId) {
+      const priorIds = new Set();
+      for (const unit of UNITS_CURRICULUM) {
+        for (const n of (unit.nodes || [])) {
+          if (n.id === nodeId) return priorIds;
+          (n.wordIds || []).forEach(wid => priorIds.add(wid));
+        }
+      }
+      return priorIds;
+    }
+
+    function createWordReadingFinaleStep(node) {
+      const lvl = getEffectiveCourseLevel();
+      const targetCount = lvl === 1 ? 2 : (lvl === 3 && appState.levelOverdrive ? 4 : 3);
+      const optCount = lvl === 1 ? 3 : 4;
+
+      const knownChars = getKnownThaiCharsForNode(node.id);
+      const priorWordIds = getWordsLearnedPriorToNode(node.id);
+      const allWords = getAllWords();
+      const combinedPool = [...READING_PRACTICE_WORDS, ...allWords];
+
+      // 1. Primary words matched to this exact node
+      const nodeMatchedExtra = READING_PRACTICE_WORDS.filter(w => Array.isArray(w.nodeIds) && w.nodeIds.includes(node.id));
+      const nodeDbWords = (node.wordIds || []).map(id => allWords.find(w => w.id === id)).filter(Boolean);
+
+      let candidates = [];
+      if (node.type === 'words') {
+        candidates = [...nodeDbWords, ...nodeMatchedExtra];
+      } else {
+        candidates = [...nodeMatchedExtra];
+        // Add 1 already-learned word from an earlier unit for spiral meaning recall if available
+        const priorWords = Array.from(priorWordIds)
+          .map(id => allWords.find(w => w.id === id))
+          .filter(Boolean)
+          .sort((a, b) => {
+            const aUnseen = getWordCharBreakdown(a.thai, knownChars).unseenHints.length;
+            const bUnseen = getWordCharBreakdown(b.thai, knownChars).unseenHints.length;
+            return aUnseen - bUnseen;
+          });
+        if (priorWords.length > 0 && candidates.length >= 2) {
+          const spiral = priorWords[0];
+          if (!candidates.some(c => c.id === spiral.id)) {
+            candidates.splice(Math.min(2, candidates.length), 0, spiral);
+          }
+        }
+        // Include unit words as fallback (preferring words that use letters taught in this node)
+        const nodeChars = new Set((node.letterIds || []).map(lid => LETTERS_DB.find(l => l.id === lid)?.char).filter(Boolean));
+        const unitObj = UNITS_CURRICULUM.find(u => u.nodes.some(n => n.id === node.id));
+        const unitWords = (unitObj ? unitObj.nodes.flatMap(n => n.wordIds || []).map(id => allWords.find(w => w.id === id)).filter(Boolean) : [])
+          .sort((a, b) => {
+            const aMatch = Array.from(a.thai).some(ch => nodeChars.has(ch)) ? 1 : 0;
+            const bMatch = Array.from(b.thai).some(ch => nodeChars.has(ch)) ? 1 : 0;
+            return bMatch - aMatch;
+          });
+        unitWords.forEach(uw => {
+          if (!candidates.some(c => c.thai === uw.thai)) candidates.push(uw);
+        });
+      }
+
+      // Deduplicate by thai script
+      const uniqueCandidates = [];
+      const seenThai = new Set();
+      candidates.forEach(w => {
+        if (w && w.thai && !seenThai.has(w.thai)) {
+          seenThai.add(w.thai);
+          uniqueCandidates.push(w);
+        }
+      });
+
+      const selectedWords = uniqueCandidates.slice(0, targetCount);
+
+      const questions = selectedWords.map((word, qIdx) => {
+        const isCurrentWordNode = node.type === 'words' && (node.wordIds || []).includes(word.id);
+        const isPriorKnownWord = priorWordIds.has(word.id);
+        const canTestMeaningPure = isCurrentWordNode || isPriorKnownWord;
+
+        // Mix 'pick_thai' on the middle word of a 'words' node (when >= 3 words) for variety
+        let mode = canTestMeaningPure ? 'meaning' : 'read_new';
+        if (canTestMeaningPure && node.type === 'words' && qIdx === 1 && selectedWords.length >= 3) {
+          mode = 'pick_thai';
+        }
+
+        const breakdown = getWordCharBreakdown(word.thai, knownChars);
+
+        // Build distractor pool strictly from words at or before this node's unit
+        const nodeUnitObj = UNITS_CURRICULUM.find(u => u.nodes.some(n => n.id === node.id));
+        const maxUnit = nodeUnitObj ? nodeUnitObj.unit : (word.unit || 1);
+        const sameOrPriorPool = [...uniqueCandidates, ...combinedPool]
+          .filter(d => d && d.thai !== word.thai && d.roman !== word.roman && d.meaning !== word.meaning && (d.unit || 1) <= maxUnit);
+        const fallbackFuturePool = [...uniqueCandidates, ...combinedPool]
+          .filter(d => d && d.thai !== word.thai && d.roman !== word.roman && d.meaning !== word.meaning);
+        const distractorPool = (sameOrPriorPool.length >= optCount - 1 ? sameOrPriorPool : fallbackFuturePool)
+          .sort((a, b) => {
+            const aDiff = Math.abs((a.unit || 1) - (word.unit || 1));
+            const bDiff = Math.abs((b.unit || 1) - (word.unit || 1));
+            if (aDiff !== bDiff) return aDiff - bDiff;
+            return Math.random() - 0.5;
+          });
+
+        const distractors = [];
+        const usedThai = new Set([word.thai]);
+        const usedRoman = new Set([word.roman]);
+        const usedMeaning = new Set([word.meaning]);
+
+        for (const d of distractorPool) {
+          if (distractors.length >= optCount - 1) break;
+          if (usedThai.has(d.thai) || usedRoman.has(d.roman) || usedMeaning.has(d.meaning)) continue;
+          usedThai.add(d.thai);
+          usedRoman.add(d.roman);
+          usedMeaning.add(d.meaning);
+          distractors.push(d);
+        }
+
+        const options = [
+          {
+            id: `wr_${qIdx}_ok`,
+            thai: word.thai,
+            roman: word.roman,
+            meaning: word.meaning,
+            isCorrect: true
+          },
+          ...distractors.map((d, dIdx) => ({
+            id: `wr_${qIdx}_d_${dIdx}`,
+            thai: d.thai,
+            roman: d.roman,
+            meaning: d.meaning,
+            isCorrect: false
+          }))
+        ].sort(() => Math.random() - 0.5);
+
+        return {
+          qIdx,
+          mode,
+          word,
+          breakdown,
+          options,
+          answered: false,
+          isCorrect: null,
+          chosenOptId: null
+        };
+      });
+
+      return {
+        type: 'word_reading_finale',
+        nodeId: node.id,
+        nodeTitle: node.title,
+        target: questions[0]?.word || null,
+        questions,
+        cursor: 0,
+        allWordsCompleted: questions.length === 0
+      };
+    }
+
+    function renderWordReadingFinaleStep(step, stage, actionBtn, footerMsg) {
+      const qs = step.questions || [];
+      if (qs.length === 0) {
+        step.allWordsCompleted = true;
+        stage.innerHTML = `<div class="bg-[#16181d] border border-[#252934] rounded-3xl p-6 text-center text-slate-300">No words available for this node.</div>`;
+        actionBtn.textContent = 'Finish Lesson →';
+        actionBtn.disabled = false;
+        return;
+      }
+
+      const idx = Math.max(0, Math.min(step.cursor || 0, qs.length - 1));
+      step.cursor = idx;
+      const q = qs[idx];
+      step.target = q.word;
+      const w = q.word;
+      const { chars, unseenHints } = q.breakdown;
+      const isPickThai = q.mode === 'pick_thai';
+      const isMeaning = q.mode === 'meaning';
+
+      const promptTitle = isPickThai
+        ? `Which Thai word means "${w.meaning}"?`
+        : isMeaning
+          ? 'What does this word mean?'
+          : 'Read this Thai word';
+
+      const promptSub = isPickThai
+        ? 'Read the Thai choices using the letters you know'
+        : isMeaning
+          ? 'Decode the Thai letters below — no pronunciation spoiler!'
+          : 'Sound out the letters you know (plus any hint below)';
+
+      stage.innerHTML = `
+        <div class="bg-[#16181d] border border-[#252934] rounded-3xl p-5 sm:p-7 space-y-5 shadow-xl">
+          <!-- Header + Mini Word Progress -->
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-sky-500/15 border border-sky-400/35 text-sky-300 text-xs font-bold">
+              <span>📖</span>
+              <span>Final Step • Read Single Words</span>
+            </div>
+            <div class="flex items-center gap-1.5">
+              ${qs.map((item, i) => `
+                <span class="h-2 rounded-full transition-all ${
+                  i === idx
+                    ? 'w-6 bg-amber-400'
+                    : item.answered
+                      ? (item.isCorrect ? 'w-2.5 bg-emerald-400' : 'w-2.5 bg-rose-400')
+                      : 'w-2.5 bg-[#2a2f3d]'
+                }"></span>
+              `).join('')}
+              <span class="text-[11px] font-bold text-slate-400 ml-1">${idx + 1} / ${qs.length}</span>
+            </div>
+          </div>
+
+          <!-- Question Prompt -->
+          <div class="text-center space-y-1">
+            <h3 class="text-lg sm:text-xl font-bold text-white">${promptTitle}</h3>
+            <p class="text-xs text-slate-400">${promptSub}</p>
+          </div>
+
+          ${!isPickThai ? `
+            <!-- Single Thai Word Card (Standard + Modern) -->
+            <div class="bg-[#0e0f12] border border-[#232732] rounded-2xl p-5 text-center space-y-4">
+              <div class="flex items-center justify-center gap-4">
+                <div class="flex flex-col items-center">
+                  <span class="font-thai-standard text-5xl sm:text-6xl font-bold text-white tracking-wide leading-tight">${w.thai}</span>
+                  <span class="font-thai-modern text-xl text-slate-400 mt-1" title="Modern loopless font">${w.thai}</span>
+                </div>
+                <button
+                  type="button"
+                  onclick="playThaiAudio('${w.thai}', this)"
+                  class="w-11 h-11 rounded-full bg-sky-500/15 hover:bg-sky-500/30 border border-sky-400/40 text-sky-300 flex items-center justify-center transition-all cursor-pointer shrink-0"
+                  title="Listen to pronunciation">
+                  🔊
+                </button>
+              </div>
+
+              <!-- Letter Breakdown Chips (Known vs New Hint) -->
+              <div class="pt-3 border-t border-[#1c1f28] space-y-2">
+                <div class="flex flex-wrap items-center justify-center gap-1.5">
+                  ${chars.map((c, cIdx) => `
+                    <button
+                      type="button"
+                      onclick="peekWordReadingLetter(${cIdx})"
+                      class="relative px-3 py-1.5 rounded-xl border text-base font-thai font-semibold transition-all cursor-pointer ${
+                        c.known
+                          ? 'bg-[#171a23] hover:bg-[#1f2431] border-[#2c3344] text-slate-100'
+                          : 'bg-amber-500/15 hover:bg-amber-500/25 border-amber-400/50 text-amber-200'
+                      }"
+                      title="${c.known ? 'Known letter — tap if you need a clue' : 'New letter/mark hint: ' + c.label}">
+                      <span>${c.display}</span>
+                      ${!c.known ? `<span class="ml-1 text-[9px] font-sans font-extrabold uppercase text-amber-300">NEW</span>` : ''}
+                    </button>
+                  `).join('')}
+                </div>
+                <div id="wr-letter-peek" class="text-[11px] text-sky-300 min-h-[1rem]">
+                  Tap any letter if you need a clue
+                </div>
+              </div>
+
+              <!-- Automatic New-Letter / Reading Rule Hint Box -->
+              ${(unseenHints.length > 0 || w.readingHint) ? `
+                <div class="bg-amber-500/10 border border-amber-400/30 rounded-xl px-3.5 py-2.5 text-left space-y-1.5">
+                  <div class="text-[10px] font-extrabold uppercase tracking-wider text-amber-300 flex items-center gap-1.5">
+                    <span>💡</span>
+                    <span>${unseenHints.length > 0 ? 'New Letter / Mark Hint' : 'Reading Tip'}</span>
+                  </div>
+                  ${unseenHints.map(h => `
+                    <div class="text-xs text-slate-200 flex items-center gap-2">
+                      <span class="px-2 py-0.5 rounded-lg bg-[#12141b] border border-amber-400/40 font-thai font-bold text-amber-300 text-sm">${h.display}</span>
+                      <span>${h.label}</span>
+                    </div>
+                  `).join('')}
+                  ${w.readingHint ? `
+                    <div class="text-xs text-amber-100/90">${w.readingHint}</div>
+                  ` : ''}
+                </div>
+              ` : `
+                <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/25 text-emerald-300 text-[11px] font-semibold">
+                  <span>✓</span>
+                  <span>100% letters you already know</span>
+                </div>
+              `}
+            </div>
+          ` : `
+            <!-- Pick-Thai Word Prompt Card -->
+            <div class="bg-[#0e0f12] border border-[#232732] rounded-2xl p-5 text-center space-y-2">
+              <div class="text-xs font-semibold uppercase tracking-wider text-emerald-400">English Meaning</div>
+              <div class="text-2xl sm:text-3xl font-bold text-white">${w.meaning}</div>
+              ${unseenHints.length > 0 ? `
+                <div class="pt-2 flex flex-wrap items-center justify-center gap-1.5 text-[11px] text-amber-300">
+                  <span>💡 Hint:</span>
+                  ${unseenHints.map(h => `<span class="px-2 py-0.5 rounded-lg bg-amber-500/10 border border-amber-400/30"><strong class="font-thai">${h.display}</strong> = ${h.label.split('(')[0].trim()}</span>`).join('')}
+                </div>
+              ` : ''}
+            </div>
+          `}
+
+          <!-- Answer Choices -->
+          <div class="${isPickThai ? 'grid grid-cols-1 sm:grid-cols-2 gap-2.5' : 'space-y-2.5'}">
+            ${q.options.map((opt, optIdx) => {
+              let btnStyle = 'bg-[#0e0f12] hover:bg-[#1d2028] border-[#252934] text-slate-200';
+              if (q.answered) {
+                if (opt.isCorrect) {
+                  btnStyle = 'bg-emerald-500/20 border-emerald-400 text-emerald-100';
+                } else if (opt.id === q.chosenOptId) {
+                  btnStyle = 'bg-rose-500/20 border-rose-400 text-rose-100';
+                } else {
+                  btnStyle = 'bg-[#0e0f12] border-[#1c1f28] text-slate-500 opacity-60';
+                }
+              }
+
+              return `
+                <button
+                  type="button"
+                  id="wr-opt-${opt.id}"
+                  ${q.answered ? 'disabled' : ''}
+                  onclick="submitWordReadingFinaleOption('${opt.id}')"
+                  class="w-full p-3.5 sm:p-4 rounded-2xl border-2 text-left transition-all flex items-center justify-between gap-3 ${q.answered ? 'cursor-default' : 'cursor-pointer active:scale-[0.99]'} ${btnStyle}">
+                  <div class="flex items-center gap-3 min-w-0">
+                    <span class="w-6 h-6 rounded-lg bg-[#181b24] border border-[#2c3140] text-[11px] font-bold text-slate-400 flex items-center justify-center shrink-0">${optIdx + 1}</span>
+                    ${isPickThai ? `
+                      <div class="flex items-baseline gap-2.5">
+                        <span class="font-thai-standard text-2xl font-bold text-white">${opt.thai}</span>
+                        <span class="font-thai-modern text-sm text-slate-400">${opt.thai}</span>
+                      </div>
+                    ` : isMeaning ? `
+                      <span class="text-sm sm:text-base font-semibold">${opt.meaning}</span>
+                    ` : `
+                      <div class="flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
+                        <span class="text-base font-bold text-white">${opt.roman}</span>
+                        <span class="text-xs text-slate-400">— ${opt.meaning}</span>
+                      </div>
+                    `}
+                  </div>
+                  ${q.answered && opt.isCorrect ? `<span class="text-emerald-400 text-sm font-bold shrink-0">✓</span>` : ''}
+                  ${q.answered && !opt.isCorrect && opt.id === q.chosenOptId ? `<span class="text-rose-400 text-sm font-bold shrink-0">✕</span>` : ''}
+                </button>
+              `;
+            }).join('')}
+          </div>
+        </div>
+      `;
+
+      // Update footer & action button
+      if (q.answered) {
+        const footer = document.getElementById('lesson-footer');
+        const detail = `<span class="font-thai font-bold text-white">${w.thai}</span> <span class="text-sky-300">(${w.roman})</span> = ${w.meaning}`;
+        if (q.isCorrect) {
+          footer.className = 'border-t border-emerald-500/30 bg-emerald-950/40 px-4 py-4 transition-colors';
+          footerMsg.innerHTML = `<span class="text-emerald-300 font-semibold">✓ Spot on!</span> <span class="text-slate-200 ml-1">${detail}</span>`;
+        } else {
+          footer.className = 'border-t border-amber-500/30 bg-amber-950/40 px-4 py-4 transition-colors';
+          footerMsg.innerHTML = `<span class="text-amber-300 font-semibold">Keep reading:</span> <span class="text-slate-200 ml-1">${detail}</span>`;
+        }
+        const isLast = idx >= qs.length - 1;
+        actionBtn.textContent = isLast ? 'Finish Lesson →' : 'Next Word →';
+        actionBtn.className = 'px-6 py-3 rounded-2xl bg-emerald-400 hover:bg-emerald-300 text-[#0e0f12] text-sm font-bold transition-all cursor-pointer shrink-0';
+        actionBtn.disabled = false;
+      } else {
+        actionBtn.textContent = 'Pick an Answer';
+        actionBtn.className = 'px-6 py-3 rounded-2xl bg-[#22252e] text-slate-500 text-sm font-semibold cursor-not-allowed shrink-0';
+        actionBtn.disabled = true;
+      }
+    }
+
+    function peekWordReadingLetter(charIdx) {
+      if (!activeSession) return;
+      const step = activeSession.steps?.[activeSession.currentIndex];
+      if (!step || step.type !== 'word_reading_finale') return;
+      const q = step.questions?.[step.cursor || 0];
+      const c = q?.breakdown?.chars?.[charIdx];
+      if (!c) return;
+      const peekEl = document.getElementById('wr-letter-peek');
+      if (peekEl) {
+        peekEl.innerHTML = `<span class="font-thai font-bold text-white">${c.display}</span> → <span class="text-amber-300">${c.label}</span>`;
+      }
+      playThaiAudio(getThaiAudioTextForChar(c.char));
+    }
+
+    function submitWordReadingFinaleOption(chosenId) {
+      if (!activeSession) return;
+      const step = activeSession.steps?.[activeSession.currentIndex];
+      if (!step || step.type !== 'word_reading_finale') return;
+      const q = step.questions?.[step.cursor || 0];
+      if (!q || q.answered) return;
+
+      const opt = q.options.find(o => o.id === chosenId);
+      if (!opt) return;
+
+      q.answered = true;
+      q.chosenOptId = chosenId;
+      q.isCorrect = !!opt.isCorrect;
+
+      const elapsed = Date.now() - activeSession.stepStartTime;
+      if (q.word?.id && q.word.id.startsWith('W_')) {
+        recordItemAttempt(q.word.id, q.isCorrect, elapsed);
+      }
+
+      if (q.isCorrect) {
+        activeSession.correctCount += 1;
+        appState.xp = (appState.xp || 0) + 10;
+        saveState();
+      }
+
+      if (step.questions.every(item => item.answered)) {
+        step.allWordsCompleted = true;
+      }
+
+      playThaiAudio(q.word.thai);
+      renderWordReadingFinaleStep(
+        step,
+        document.getElementById('lesson-stage'),
+        document.getElementById('lesson-action-btn'),
+        document.getElementById('lesson-feedback-msg')
+      );
+    }
+
+    function advanceWordReadingFinale() {
+      if (!activeSession) return;
+      const step = activeSession.steps?.[activeSession.currentIndex];
+      if (!step || step.type !== 'word_reading_finale') return;
+      const qs = step.questions || [];
+      const curQ = qs[step.cursor || 0];
+      if (!curQ || !curQ.answered) return;
+
+      if ((step.cursor || 0) < qs.length - 1) {
+        step.cursor = (step.cursor || 0) + 1;
+        activeSession.stepStartTime = Date.now();
+        document.getElementById('lesson-footer').className = 'border-t border-[#1e2028] bg-[#13151a] px-4 py-4 transition-colors';
+        document.getElementById('lesson-feedback-msg').innerHTML = '';
+        renderWordReadingFinaleStep(
+          step,
+          document.getElementById('lesson-stage'),
+          document.getElementById('lesson-action-btn'),
+          document.getElementById('lesson-feedback-msg')
+        );
+        if (typeof updateGeminiContextUI === 'function') updateGeminiContextUI();
+      } else {
+        step.allWordsCompleted = true;
+        activeSession.currentIndex += 1;
+        renderCurrentLessonStep();
+      }
     }
 
     function openLessonOverlay() {
@@ -5982,12 +6819,14 @@
 
       return `
         <div class="flex flex-wrap items-center justify-center gap-2 pt-1">
-          ${item.words.map(w => `
+          ${item.words.map(w => {
+            const safeTh = (w.th || '').replace(/'/g, "\\'");
+            return `
             <div class="group relative inline-block">
               <button type="button"
-                      onmouseenter="playHoverAudio('${w.th}')"
+                      onmouseenter="playHoverAudio('${safeTh}')"
                       onmouseleave="cancelHoverAudio()"
-                      onclick="event.stopPropagation(); playThaiAudio('${w.th}', this)"
+                      onclick="event.stopPropagation(); playThaiAudio('${safeTh}', this)"
                       class="word-token inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#1b1e27] hover:bg-amber-400/20 active:scale-95 border border-[#2d3243] hover:border-amber-400/80 transition-all cursor-pointer shadow-md text-xs group-hover:scale-105">
                 <span class="text-amber-400 text-xs">🔊</span>
                 <span class="font-bold text-sm text-amber-300">${w.ro}</span>
@@ -6002,7 +6841,8 @@
                 <div class="w-2 h-2 bg-[#0b0d13] border-r border-b border-amber-400/50 rotate-45 mx-auto -mt-1"></div>
               </div>
             </div>
-          `).join('')}
+          `;
+          }).join('')}
         </div>
       `;
     }
@@ -6021,9 +6861,16 @@
       }
 
       const step = activeSession.steps[activeSession.currentIndex];
-      activeSession.stepAnswered = false;
+      activeSession.stepAnswered = !!step.answered;
       activeSession.stepStartTime = Date.now();
       activeSession.selectedTiles = [];
+
+      // Only show "I Know Already" on steps with a drillable itemId (not finales/video)
+      const knowBtn = document.getElementById('lesson-know-already-btn');
+      if (knowBtn) {
+        const canSkip = !!(step.itemId && step.type !== 'live_conversation' && step.type !== 'video_context' && step.type !== 'word_reading_finale');
+        knowBtn.classList.toggle('hidden', !canSkip);
+      }
 
       // Update top progress bar
       const pct = Math.round(((activeSession.currentIndex) / activeSession.steps.length) * 100);
@@ -6031,13 +6878,9 @@
       document.getElementById('lesson-step-counter').textContent = `${activeSession.currentIndex + 1} / ${activeSession.steps.length}`;
       if (typeof updateGeminiContextUI === 'function') updateGeminiContextUI();
 
-      // Update Navigation Arrows & Back Button States
-      const prevArrow = document.getElementById('lesson-prev-arrow');
-      const nextArrow = document.getElementById('lesson-next-arrow');
+      // Update Back Button state
       const backBtn = document.getElementById('lesson-back-btn');
-      if (prevArrow) prevArrow.disabled = (activeSession.currentIndex === 0);
       if (backBtn) backBtn.disabled = (activeSession.currentIndex === 0);
-      if (nextArrow) nextArrow.disabled = (activeSession.currentIndex >= activeSession.steps.length - 1);
 
       // Reset footer
       document.getElementById('lesson-footer').className = 'border-t border-[#1e2028] bg-[#13151a] px-4 py-4 transition-colors';
@@ -6319,9 +7162,23 @@
             <div id="street-drill-review" class="hidden"></div>
           </div>
         `;
-        actionBtn.textContent = 'Select an Answer';
-        actionBtn.className = 'px-5 py-2.5 rounded-2xl bg-[#22252e] text-slate-500 text-xs sm:text-sm font-semibold cursor-not-allowed shrink-0';
-        actionBtn.disabled = true;
+        if (step.answered) {
+          const allBtns = document.querySelectorAll('.street-drill-option');
+          allBtns.forEach(b => { b.disabled = true; b.classList.remove('hover:bg-[#222736]', 'hover:border-amber-400/60', 'cursor-pointer'); b.classList.add('cursor-default'); });
+          const rBtn = document.getElementById(`sopt-btn-${item.id}`);
+          if (rBtn) { rBtn.style.backgroundColor = 'rgba(16, 185, 129, 0.25)'; rBtn.style.borderColor = '#10b981'; rBtn.style.color = '#6ee7b7'; }
+          if (!step.wasCorrect && step.chosenId) {
+            const cBtn = document.getElementById(`sopt-btn-${step.chosenId}`);
+            if (cBtn) { cBtn.style.backgroundColor = 'rgba(244, 63, 94, 0.25)'; cBtn.style.borderColor = '#f43f5e'; cBtn.style.color = '#fda4af'; }
+          }
+          actionBtn.textContent = 'Next →';
+          actionBtn.className = 'px-6 py-2.5 rounded-2xl bg-amber-400 hover:bg-amber-300 text-[#0e0f12] text-xs sm:text-sm font-bold transition-all cursor-pointer shrink-0 shadow-md shadow-amber-500/10';
+          actionBtn.disabled = false;
+        } else {
+          actionBtn.textContent = 'Select an Answer';
+          actionBtn.className = 'px-5 py-2.5 rounded-2xl bg-[#22252e] text-slate-500 text-xs sm:text-sm font-semibold cursor-not-allowed shrink-0';
+          actionBtn.disabled = true;
+        }
       }
 
       // ---------------------------------------------------------------------
@@ -6382,26 +7239,24 @@
       }
 
       // ---------------------------------------------------------------------
-      // STEP B: SOUND-TO-LETTER MATCH
+      // STEP B: SOUND-TO-LETTER MATCH (Always Standard Looped Thai Font)
       // ---------------------------------------------------------------------
       else if (step.type === 'sound_to_letter') {
         const t = step.target;
-        const isModern = !!step.isModernFont;
         stage.innerHTML = `
           <div class="bg-[#16181d] border border-[#252934] rounded-3xl p-6 sm:p-8 space-y-6 shadow-xl">
             <div class="text-center space-y-3">
               <div class="flex items-center justify-center gap-2">
+                ${step.isSpiralReview ? `
+                  <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-cyan-500/15 border border-cyan-500/30 text-cyan-300 text-[10px] font-semibold uppercase tracking-wider">
+                    <span>🔄</span>
+                    <span>Spiral Review</span>
+                  </span>
+                ` : ''}
                 <span class="text-xs font-semibold uppercase tracking-wider text-sky-400">Ear &amp; Letter Recognition</span>
-                ${isModern ? `
-                  <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-violet-500/15 border border-violet-500/30 text-violet-300 text-[10px] font-semibold uppercase tracking-wider" title="Testing loopless real-world street & modern signage font">
-                    <span>🏙️</span>
-                    <span>Modern Loopless Font</span>
-                  </span>
-                ` : `
-                  <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-sky-500/10 border border-sky-500/20 text-sky-300 text-[10px] font-semibold uppercase tracking-wider">
-                    <span>Standard Font</span>
-                  </span>
-                `}
+                <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-sky-500/10 border border-sky-500/20 text-sky-300 text-[10px] font-semibold uppercase tracking-wider">
+                  <span>Standard Font</span>
+                </span>
               </div>
               <h3 class="text-lg font-semibold text-white">Tap the Thai letter you hear</h3>
 
@@ -6419,17 +7274,27 @@
                   id="opt-btn-${opt.id}"
                   onclick="submitSoundToLetter('${opt.id}')"
                   class="p-5 rounded-2xl bg-[#0e0f12] hover:bg-[#1d2028] border-2 border-[#252934] flex flex-col items-center justify-center gap-1.5 transition-all cursor-pointer">
-                  <span class="${isModern ? 'font-thai-modern text-violet-100' : 'font-thai-standard text-white'} text-4xl font-bold">${opt.display}</span>
+                  <span class="font-thai-standard text-white text-4xl font-bold">${opt.display}</span>
                   ${appState.pace === 'chill' ? `<span class="text-[11px] text-slate-400">${opt.sound.split(' ')[0]}</span>` : ''}
                 </button>
               `).join('')}
             </div>
           </div>
         `;
-        actionBtn.textContent = 'Pick a Letter';
-        actionBtn.className = 'px-6 py-3 rounded-2xl bg-[#22252e] text-slate-500 text-sm font-semibold cursor-not-allowed shrink-0';
-        actionBtn.disabled = true;
-        setTimeout(() => playThaiAudio(t.tts), 250);
+        if (step.answered) {
+          const rightBtn = document.getElementById(`opt-btn-${t.id}`);
+          if (rightBtn) { rightBtn.classList.remove('bg-[#0e0f12]', 'border-[#252934]'); rightBtn.classList.add('bg-emerald-500/20', 'border-emerald-400'); }
+          if (!step.wasCorrect && step.chosenId) {
+            const cBtn = document.getElementById(`opt-btn-${step.chosenId}`);
+            if (cBtn) { cBtn.classList.remove('bg-[#0e0f12]', 'border-[#252934]'); cBtn.classList.add('bg-rose-500/20', 'border-rose-400'); }
+          }
+          finalizeStepFeedback(!!step.wasCorrect, step.feedbackDetail || `${t.display} = ${t.sound}`);
+        } else {
+          actionBtn.textContent = 'Pick a Letter';
+          actionBtn.className = 'px-6 py-3 rounded-2xl bg-[#22252e] text-slate-500 text-sm font-semibold cursor-not-allowed shrink-0';
+          actionBtn.disabled = true;
+          setTimeout(() => playThaiAudio(t.tts), 250);
+        }
       }
 
       // ---------------------------------------------------------------------
@@ -6437,8 +7302,9 @@
       // ---------------------------------------------------------------------
       else if (step.type === 'word_decode') {
         const w = step.target;
-        const lvl = getEffectiveCourseLevel();
-        const showRoman = true;
+        const showRoman = appState.pace === 'chill';
+        const knownChars = getKnownThaiCharsForNode(step.nodeId || activeSession?.nodeId);
+        const { unseenHints } = getWordCharBreakdown(w.thai, knownChars);
 
         stage.innerHTML = `
           <div class="bg-[#16181d] border border-[#252934] rounded-3xl p-6 sm:p-8 space-y-6 shadow-xl">
@@ -6461,44 +7327,50 @@
               <div class="pt-2 border-t border-[#1c1f28]">
                 <p class="text-[11px] text-slate-400 mb-2">Hover or tap any letter tile to hear &amp; inspect:</p>
                 <div class="flex flex-wrap items-center justify-center gap-1.5">
-                  ${w.letters.map((lt, idx) => `
+                  ${w.letters.map((lt, idx) => {
+                    const isKnownChar = knownChars.has(lt.char);
+                    const dispChar = /[\u0E31\u0E34-\u0E3A\u0E47-\u0E4E]/.test(lt.char) ? getThaiCharHintInfo(lt.char).display : lt.char;
+                    return `
                     <div class="group relative inline-block">
                       <button
                         onmouseenter="playHoverAudio('${lt.char}'); inspectWordTile(${idx}, false);"
                         onmouseleave="cancelHoverAudio()"
                         onclick="inspectWordTile(${idx}, true)"
-                        class="px-3.5 py-2 rounded-xl bg-[#16181d] hover:bg-sky-500/20 active:scale-95 border border-[#2b303d] hover:border-sky-400/60 font-thai text-xl font-semibold text-slate-100 transition-all cursor-pointer">
-                        ${lt.char}
+                        class="px-3.5 py-2 rounded-xl border font-thai text-xl font-semibold transition-all cursor-pointer active:scale-95 ${
+                          isKnownChar
+                            ? 'bg-[#16181d] hover:bg-sky-500/20 border-[#2b303d] hover:border-sky-400/60 text-slate-100'
+                            : 'bg-amber-500/15 hover:bg-amber-500/25 border-amber-400/50 text-amber-200'
+                        }">
+                        ${dispChar}
                       </button>
                       <div class="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-max max-w-[200px] opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 translate-y-1 group-hover:translate-y-0 transition-all duration-200 z-30">
                         <div class="bg-[#0b0d13] border border-sky-400/50 rounded-xl px-2.5 py-1.5 shadow-2xl text-center space-y-0.5">
                           <div class="text-xs font-bold text-sky-300 font-sans flex items-center justify-center gap-1.5">
-                            <span class="font-thai-standard text-white">${lt.char}</span>
-                            <span class="text-[10px] text-slate-400 font-thai-modern">(${lt.char})</span>
+                            <span class="font-thai-standard text-white">${dispChar}</span>
+                            <span class="text-[10px] text-slate-400 font-thai-modern">(${dispChar})</span>
                           </div>
                           <div class="text-[11px] text-slate-300 font-sans">${lt.role}</div>
                         </div>
                         <div class="w-2 h-2 bg-[#0b0d13] border-r border-b border-sky-400/50 rotate-45 mx-auto -mt-1"></div>
                       </div>
                     </div>
-                  `).join('')}
+                  `}).join('')}
                 </div>
                 <div id="tile-inspector-hint" class="text-xs text-sky-300 mt-2 min-h-[1.25rem]"></div>
               </div>
 
-              ${lvl >= 3 ? `
-                <!-- Level 3 Sentence Context Expansion for Reading Words -->
-                <div class="pt-3 border-t border-[#1c1f28] text-left">
-                  <div class="flex items-center justify-between gap-2 bg-rose-500/10 border border-rose-400/30 rounded-xl px-3.5 py-2.5">
-                    <div class="text-xs space-y-0.5">
-                      <span class="text-[10px] font-extrabold uppercase tracking-wider text-rose-300 block">Level 3 Real-Life Sentence Context:</span>
-                      <span class="font-thai text-amber-300 font-bold text-sm">พี่คะ เอา${w.thai}อันนี้ด้วยนะคะ</span>
-                      <span class="text-slate-300 font-mono text-[11px] block">phîi khá, ao ${w.roman} an níi dûai ná khá</span>
-                    </div>
-                    <button type="button" onclick="playThaiAudio('พี่คะ เอา${w.thai}อันนี้ด้วยนะคะ', this)" class="px-2.5 py-1.5 rounded-xl bg-rose-500/25 hover:bg-rose-500/40 border border-rose-400/40 text-rose-200 text-xs font-bold cursor-pointer shrink-0">
-                      🔊 Sentence
-                    </button>
+              ${unseenHints.length > 0 ? `
+                <div class="bg-amber-500/10 border border-amber-400/30 rounded-xl px-3.5 py-2.5 text-left space-y-1">
+                  <div class="text-[10px] font-extrabold uppercase tracking-wider text-amber-300 flex items-center gap-1.5">
+                    <span>💡</span>
+                    <span>New Letter / Mark Hint</span>
                   </div>
+                  ${unseenHints.map(h => `
+                    <div class="text-xs text-slate-200 flex items-center gap-2">
+                      <span class="px-2 py-0.5 rounded-lg bg-[#12141b] border border-amber-400/40 font-thai font-bold text-amber-300 text-sm">${h.display}</span>
+                      <span>${h.label}</span>
+                    </div>
+                  `).join('')}
                 </div>
               ` : ''}
             </div>
@@ -6516,11 +7388,21 @@
             </div>
           </div>
         `;
-        actionBtn.textContent = 'Select Meaning';
-        actionBtn.className = 'px-6 py-3 rounded-2xl bg-[#22252e] text-slate-500 text-sm font-semibold cursor-not-allowed shrink-0';
-        actionBtn.disabled = true;
-        if (appState.pace === 'chill') {
-          setTimeout(() => playThaiAudio(w.thai), 250);
+        if (step.answered) {
+          const rightBtn = document.getElementById(`wopt-btn-${w.id}`);
+          if (rightBtn) { rightBtn.classList.remove('bg-[#0e0f12]', 'border-[#252934]'); rightBtn.classList.add('bg-emerald-500/20', 'border-emerald-400', 'text-emerald-200'); }
+          if (!step.wasCorrect && step.chosenId) {
+            const cBtn = document.getElementById(`wopt-btn-${step.chosenId}`);
+            if (cBtn) { cBtn.classList.remove('bg-[#0e0f12]', 'border-[#252934]'); cBtn.classList.add('bg-rose-500/20', 'border-rose-400', 'text-rose-200'); }
+          }
+          finalizeStepFeedback(!!step.wasCorrect, step.feedbackDetail || `${w.thai} (${w.roman}) = ${w.meaning}`);
+        } else {
+          actionBtn.textContent = 'Select Meaning';
+          actionBtn.className = 'px-6 py-3 rounded-2xl bg-[#22252e] text-slate-500 text-sm font-semibold cursor-not-allowed shrink-0';
+          actionBtn.disabled = true;
+          if (appState.pace === 'chill') {
+            setTimeout(() => playThaiAudio(w.thai), 250);
+          }
         }
       }
 
@@ -6529,6 +7411,8 @@
       // ---------------------------------------------------------------------
       else if (step.type === 'build_word') {
         const w = step.target;
+        const knownChars = getKnownThaiCharsForNode(activeSession?.nodeId);
+        const { unseenHints } = getWordCharBreakdown(w.thai, knownChars);
         stage.innerHTML = `
           <div class="bg-[#16181d] border border-[#252934] rounded-3xl p-6 sm:p-8 space-y-6 shadow-xl">
             <div class="text-center space-y-2">
@@ -6542,6 +7426,21 @@
               </div>
             </div>
 
+            ${unseenHints.length > 0 ? `
+              <div class="bg-amber-500/10 border border-amber-400/30 rounded-xl px-3.5 py-2 text-left space-y-1">
+                <div class="text-[10px] font-extrabold uppercase tracking-wider text-amber-300 flex items-center gap-1.5">
+                  <span>💡</span>
+                  <span>New Letter / Mark Hint</span>
+                </div>
+                ${unseenHints.map(h => `
+                  <div class="text-xs text-slate-200 flex items-center gap-2">
+                    <span class="px-2 py-0.5 rounded-lg bg-[#12141b] border border-amber-400/40 font-thai font-bold text-amber-300 text-sm">${h.display}</span>
+                    <span>${h.label}</span>
+                  </div>
+                `).join('')}
+              </div>
+            ` : ''}
+
             <!-- Assembly Tray -->
             <div id="build-tray" class="min-h-[4.5rem] bg-[#0e0f12] border-2 border-dashed border-[#2b303e] rounded-2xl p-3 flex flex-wrap items-center justify-center gap-2">
               <span class="text-xs text-slate-500">Tap letter tiles below in order...</span>
@@ -6549,21 +7448,27 @@
 
             <!-- Shuffled Letter Tiles Bank -->
             <div id="build-bank" class="flex flex-wrap items-center justify-center gap-2.5 pt-1">
-              ${step.bankTiles.map(tile => `
+              ${step.bankTiles.map(tile => {
+                const dispTile = /[\u0E31\u0E34-\u0E3A\u0E47-\u0E4E]/.test(tile.char) ? getThaiCharHintInfo(tile.char).display : tile.char;
+                return `
                 <button
                   id="btile-${tile.uid}"
                   onclick="toggleBuildTile('${tile.uid}')"
                   class="px-4 py-3 rounded-2xl bg-[#1e2129] hover:bg-[#282d38] border-2 border-[#303646] font-thai text-2xl font-bold text-white transition-all cursor-pointer">
-                  ${tile.char}
+                  ${dispTile}
                 </button>
-              `).join('')}
+              `}).join('')}
             </div>
           </div>
         `;
-        actionBtn.textContent = 'Check Word';
-        actionBtn.className = 'px-6 py-3 rounded-2xl bg-[#22252e] text-slate-500 text-sm font-semibold cursor-not-allowed shrink-0';
-        actionBtn.disabled = true;
-        setTimeout(() => playThaiAudio(w.thai), 250);
+        if (step.answered) {
+          finalizeStepFeedback(!!step.wasCorrect, step.feedbackDetail || `Correct spelling: ${w.thai} (${w.roman})`);
+        } else {
+          actionBtn.textContent = 'Check Word';
+          actionBtn.className = 'px-6 py-3 rounded-2xl bg-[#22252e] text-slate-500 text-sm font-semibold cursor-not-allowed shrink-0';
+          actionBtn.disabled = true;
+          setTimeout(() => playThaiAudio(w.thai), 250);
+        }
       }
 
       // ---------------------------------------------------------------------
@@ -6616,6 +7521,9 @@
       // ---------------------------------------------------------------------
       else if (step.type === 'live_conversation') {
         renderLiveConversationStep(step, stage, actionBtn, footerMsg);
+      }
+      else if (step.type === 'word_reading_finale') {
+        renderWordReadingFinaleStep(step, stage, actionBtn, footerMsg);
       }
     }
 
@@ -9208,24 +10116,31 @@ Return ONLY valid JSON array of 3 exchange objects with exact keys:
     }
 
     // Step Interaction Handlers
+    function getThaiAudioTextForChar(ch) {
+      const letterObj = LETTERS_DB.find(l => l.char === ch);
+      return letterObj?.tts || ch;
+    }
+
     function inspectWordTile(idx, shouldPlayAudio = true) {
       if (!activeSession) return;
       const step = activeSession.steps[activeSession.currentIndex];
       if (!step || step.type !== 'word_decode') return;
       const lt = step.target.letters[idx];
       if (!lt) return;
+      const dispChar = /[\u0E31\u0E34-\u0E3A\u0E47-\u0E4E]/.test(lt.char) ? getThaiCharHintInfo(lt.char).display : lt.char;
       const hintEl = document.getElementById('tile-inspector-hint');
       if (hintEl) {
-        hintEl.innerHTML = `<span class="font-thai-standard font-bold text-white">${lt.char}</span> <span class="text-slate-400 text-[11px]">(Std)</span> • <span class="font-thai-modern font-bold text-slate-300">${lt.char}</span> <span class="text-slate-400 text-[11px]">(Mod)</span> → <span class="text-sky-300">${lt.role}</span>`;
+        hintEl.innerHTML = `<span class="font-thai-standard font-bold text-white">${dispChar}</span> <span class="text-slate-400 text-[11px]">(Std)</span> • <span class="font-thai-modern font-bold text-slate-300">${dispChar}</span> <span class="text-slate-400 text-[11px]">(Mod)</span> → <span class="text-sky-300">${lt.role}</span>`;
       }
       if (shouldPlayAudio) {
-        playThaiAudio(lt.char);
+        playThaiAudio(getThaiAudioTextForChar(lt.char));
       }
     }
 
     function submitSoundToLetter(chosenId) {
       if (!activeSession || activeSession.stepAnswered) return;
       const step = activeSession.steps[activeSession.currentIndex];
+      if (step?.answered) return;
       activeSession.stepAnswered = true;
 
       const elapsed = Date.now() - activeSession.stepStartTime;
@@ -9246,16 +10161,21 @@ Return ONLY valid JSON array of 3 exchange objects with exact keys:
 
       if (isRight) {
         activeSession.correctCount += 1;
-        // grasp recorded
         saveState();
       }
 
-      finalizeStepFeedback(isRight, `<span class="inline-flex items-center gap-1.5 font-sans"><span class="font-thai-standard text-base font-bold text-white">${step.target.display}</span> <span class="text-[10px] text-sky-400 uppercase font-semibold">Std</span> <span class="text-slate-500">•</span> <span class="font-thai-modern text-sm font-bold text-slate-300">${step.target.display}</span> <span class="text-[10px] text-slate-400 uppercase font-medium">Mod</span> <span class="text-slate-300 ml-1">= ${step.target.sound}</span></span>`);
+      const detailHtml = `<span class="inline-flex items-center gap-1.5 font-sans"><span class="font-thai-standard text-base font-bold text-white">${step.target.display}</span> <span class="text-[10px] text-sky-400 uppercase font-semibold">Std</span> <span class="text-slate-500">•</span> <span class="font-thai-modern text-sm font-bold text-slate-300">${step.target.display}</span> <span class="text-[10px] text-slate-400 uppercase font-medium">Mod</span> <span class="text-slate-300 ml-1">= ${step.target.sound}</span></span>`;
+      step.answered = true;
+      step.wasCorrect = isRight;
+      step.chosenId = chosenId;
+      step.feedbackDetail = detailHtml;
+      finalizeStepFeedback(isRight, detailHtml);
     }
 
     function submitWordDecode(chosenId) {
       if (!activeSession || activeSession.stepAnswered) return;
       const step = activeSession.steps[activeSession.currentIndex];
+      if (step?.answered) return;
       activeSession.stepAnswered = true;
 
       const elapsed = Date.now() - activeSession.stepStartTime;
@@ -9276,12 +10196,16 @@ Return ONLY valid JSON array of 3 exchange objects with exact keys:
 
       if (isRight) {
         activeSession.correctCount += 1;
-        // grasp recorded
         saveState();
       }
 
+      const detail = `${step.target.thai} (${step.target.roman}) = ${step.target.meaning}`;
+      step.answered = true;
+      step.wasCorrect = isRight;
+      step.chosenId = chosenId;
+      step.feedbackDetail = detail;
       playThaiAudio(step.target.thai);
-      finalizeStepFeedback(isRight, `${step.target.thai} (${step.target.roman}) = ${step.target.meaning}`);
+      finalizeStepFeedback(isRight, detail);
     }
 
     function toggleBuildTile(uid) {
@@ -9296,7 +10220,7 @@ Return ONLY valid JSON array of 3 exchange objects with exact keys:
         const tileObj = step.bankTiles.find(t => t.uid === uid);
         if (tileObj) {
           activeSession.selectedTiles.push(tileObj);
-          playThaiAudio(tileObj.char);
+          playThaiAudio(getThaiAudioTextForChar(tileObj.char));
         }
       }
 
@@ -9305,11 +10229,13 @@ Return ONLY valid JSON array of 3 exchange objects with exact keys:
       if (activeSession.selectedTiles.length === 0) {
         tray.innerHTML = `<span class="text-xs text-slate-500">Tap letter tiles below in order...</span>`;
       } else {
-        tray.innerHTML = activeSession.selectedTiles.map(t => `
+        tray.innerHTML = activeSession.selectedTiles.map(t => {
+          const disp = /[\u0E31\u0E34-\u0E3A\u0E47-\u0E4E]/.test(t.char) ? getThaiCharHintInfo(t.char).display : t.char;
+          return `
           <button onclick="toggleBuildTile('${t.uid}')" class="px-3.5 py-2 rounded-xl bg-sky-500/20 border border-sky-400/50 font-thai text-2xl font-bold text-white cursor-pointer">
-            ${t.char}
+            ${disp}
           </button>
-        `).join('');
+        `}).join('');
       }
 
       step.bankTiles.forEach(t => {
@@ -9332,6 +10258,7 @@ Return ONLY valid JSON array of 3 exchange objects with exact keys:
     function checkBuiltWord() {
       if (!activeSession || activeSession.stepAnswered) return;
       const step = activeSession.steps[activeSession.currentIndex];
+      if (step?.answered) return;
       activeSession.stepAnswered = true;
 
       const userChars = activeSession.selectedTiles.map(t => t.char).join('');
@@ -9343,12 +10270,15 @@ Return ONLY valid JSON array of 3 exchange objects with exact keys:
 
       if (isRight) {
         activeSession.correctCount += 1;
-        // grasp recorded
         saveState();
       }
 
+      const detail = `Correct spelling: ${step.target.thai} (${step.target.roman})`;
+      step.answered = true;
+      step.wasCorrect = isRight;
+      step.feedbackDetail = detail;
       playThaiAudio(step.target.thai);
-      finalizeStepFeedback(isRight, `Correct spelling: ${step.target.thai} (${step.target.roman})`);
+      finalizeStepFeedback(isRight, detail);
     }
 
     function finalizeStepFeedback(isRight, detailText) {
@@ -9386,6 +10316,10 @@ Return ONLY valid JSON array of 3 exchange objects with exact keys:
         advanceLiveConvoTurn();
         return;
       }
+      if (step.type === 'word_reading_finale' && !step.allWordsCompleted) {
+        advanceWordReadingFinale();
+        return;
+      }
 
       activeSession.currentIndex += 1;
       renderCurrentLessonStep();
@@ -9403,12 +10337,19 @@ Return ONLY valid JSON array of 3 exchange objects with exact keys:
       }
       saveState();
 
-      const sessionDrills = (activeSession.steps || []).filter(s => s.type === 'street_listening_drill' || s.type === 'sound_to_letter' || s.type === 'word_decode');
+      const sessionDrills = (activeSession.steps || []).filter(s =>
+        !s.skippedKnown &&
+        (s.type === 'street_listening_drill' || s.type === 'sound_to_letter' || s.type === 'word_decode' || s.type === 'build_word')
+      );
       const convoTurnsTotal = (activeSession.steps || [])
         .filter(s => s.type === 'live_conversation')
         .reduce((acc, s) => acc + (s.turns ? s.turns.length : 0), 0);
-      const totalDrills = Math.max(1, sessionDrills.length + convoTurnsTotal);
-      const sessionAccuracy = Math.min(100, Math.round((activeSession.correctCount / totalDrills) * 100));
+      const wordReadingTotal = (activeSession.steps || [])
+        .filter(s => s.type === 'word_reading_finale')
+        .reduce((acc, s) => acc + (s.questions ? s.questions.length : 0), 0);
+      const totalDrills = Math.max(1, sessionDrills.length + convoTurnsTotal + wordReadingTotal);
+      const clampedCorrect = Math.min(activeSession.correctCount, totalDrills);
+      const sessionAccuracy = Math.min(100, Math.round((clampedCorrect / totalDrills) * 100));
       const overallMetrics = calculateLearningCurveMetrics();
 
       stage.innerHTML = `
@@ -9429,7 +10370,7 @@ Return ONLY valid JSON array of 3 exchange objects with exact keys:
               <div class="text-2xl font-extrabold ${sessionAccuracy >= 80 ? 'text-emerald-400' : sessionAccuracy >= 60 ? 'text-amber-400' : 'text-rose-400'}">
                 ${sessionAccuracy}%
               </div>
-              <div class="text-[11px] text-slate-400">${activeSession.correctCount} of ${totalDrills} correct on 1st retrieval</div>
+              <div class="text-[11px] text-slate-400">${clampedCorrect} of ${totalDrills} correct on 1st retrieval</div>
             </div>
 
             <div class="bg-[#181a24] border border-[#272b3b] rounded-2xl p-4 space-y-1">
@@ -9506,8 +10447,11 @@ Return ONLY valid JSON array of 3 exchange objects with exact keys:
       if (!grid) return;
 
       const allWords = getAllWords();
+      const streetList = (typeof STREET_DB !== 'undefined' && Array.isArray(STREET_DB)) ? STREET_DB : [];
       document.getElementById('count-letters-total').textContent = LETTERS_DB.length;
       document.getElementById('count-words-total').textContent = allWords.length;
+      const countStreetEl = document.getElementById('count-street-total');
+      if (countStreetEl) countStreetEl.textContent = streetList.length;
 
       const combined = [
         ...LETTERS_DB.map(l => ({
@@ -9531,6 +10475,16 @@ Return ONLY valid JSON array of 3 exchange objects with exact keys:
           seconds: w.seconds,
           timestamp: w.timestamp,
           stat: appState.itemStats[w.id]
+        })),
+        ...streetList.map(s => ({
+          kind: 'street',
+          id: s.id,
+          thai: s.thai || s.spoken,
+          tts: s.tts || s.thai || '',
+          sub: `${s.spoken || s.roman || ''} — ${s.meaning || ''}`,
+          detail: s.streetShift || s.scene || s.theme || '',
+          unit: s.unit || 1,
+          stat: appState.itemStats[s.id]
         }))
       ];
 
@@ -9607,11 +10561,16 @@ Return ONLY valid JSON array of 3 exchange objects with exact keys:
                 <span class="text-slate-400">${st.masteryScore}%</span>
               </div>
 
-              ${item.timestamp ? `
-                <a href="https://www.youtube.com/watch?v=anq_42sCdP0&t=${item.seconds}s" target="_blank" rel="noopener noreferrer" class="text-sky-400 hover:underline">
-                  Video ${item.timestamp} ↗
-                </a>
-              ` : `<span class="text-slate-500">Unit ${item.unit}</span>`}
+              <div class="flex items-center gap-2.5">
+                <button type="button" onclick="toggleItemMasteredFromBank('${item.id}')" class="text-[10px] px-2 py-0.5 rounded-lg border transition-colors cursor-pointer ${st.status === 'mastered' ? 'bg-emerald-500/15 border-emerald-500/30 text-emerald-300 hover:bg-emerald-500/25' : 'bg-[#1e2128] border-[#2d3240] text-slate-300 hover:text-white'}" title="Toggle Solid Mastery">
+                  ${st.status === 'mastered' ? '✓ Solid' : 'Mark Solid'}
+                </button>
+                ${item.timestamp ? `
+                  <a href="https://www.youtube.com/watch?v=anq_42sCdP0&t=${item.seconds}s" target="_blank" rel="noopener noreferrer" class="text-sky-400 hover:underline">
+                    Video ${item.timestamp} ↗
+                  </a>
+                ` : `<span class="text-slate-500">${item.kind === 'street' ? 'Street' : 'Unit'} ${item.unit}</span>`}
+              </div>
             </div>
           </article>
         `;
@@ -9686,6 +10645,7 @@ Return ONLY valid JSON array of 3 exchange objects with exact keys:
         try {
           const parsed = JSON.parse(e.target.result);
           appState = { ...appState, ...parsed };
+          window.appState = appState;
           saveState();
           updateTrackUI();
       renderSkillTree();
@@ -10092,7 +11052,7 @@ Examples:
 
     function getGeminiModel() {
       const m = localStorage.getItem(GEMINI_MODEL_STORAGE);
-      if (!m || m === 'gemini-2.5-flash' || m === 'gemini-1.5-flash' || m === 'gemini-2.0-flash') {
+      if (!m || m === 'gemini-1.5-flash' || m === 'gemini-2.0-flash') {
         return 'gemini-3.8-flash';
       }
       return m;
@@ -10308,18 +11268,24 @@ Examples:
         let situationCorrect = '';
         let notes = '';
 
-        if (step && step.target) {
-          const t = step.target;
-          targetThai = t.spoken || t.thai || t.char || '';
-          targetMeaning = t.meaning || t.english || '';
-          targetRoman = t.roman || t.ro || '';
-          targetTones = t.tones || t.tone || '';
-          situationPrompt = t.situationPrompt || '';
-          situationCorrect = t.situationCorrect || '';
-          notes = t.notes || t.readingNote || '';
-          if (t.words && Array.isArray(t.words)) {
-            notes += (notes ? ' | ' : '') + 'Breakdown: ' + t.words.map(w => `${w.th} (${w.ro}): ${w.en}`).join(', ');
+        const focusObj = step?.target || step?.letter || step?.word || step?.item || null;
+        if (focusObj) {
+          targetThai = focusObj.spoken || focusObj.thai || focusObj.display || focusObj.char || '';
+          targetMeaning = focusObj.meaning || focusObj.english || focusObj.name || focusObj.sound || '';
+          targetRoman = focusObj.roman || focusObj.ro || focusObj.sound || '';
+          targetTones = focusObj.tones || focusObj.tone || focusObj.category || '';
+          situationPrompt = focusObj.situationPrompt || focusObj.videoContext || focusObj.clue || '';
+          situationCorrect = focusObj.situationCorrect || '';
+          notes = focusObj.notes || focusObj.readingNote || focusObj.position || '';
+          if (focusObj.words && Array.isArray(focusObj.words)) {
+            notes += (notes ? ' | ' : '') + 'Breakdown: ' + focusObj.words.map(w => `${w.th} (${w.ro}): ${w.en}`).join(', ');
           }
+        } else if (step && step.type === 'live_conversation' && Array.isArray(step.dialogueLines)) {
+          const previewLines = step.dialogueLines.slice(0, 4).map(l => `${l.script} (${l.spoken}) = ${l.meaning}`);
+          targetThai = step.dialogueLines[0]?.script || '';
+          targetRoman = step.dialogueLines[0]?.spoken || '';
+          targetMeaning = step.nodeTitle || 'Live Street Conversation';
+          notes = 'Dialogue: ' + previewLines.join(' | ');
         }
 
         const displayTitle = targetThai ? `${targetThai} • ${targetRoman || targetMeaning}` : (activeSession.title || 'Lesson Card');
@@ -10425,19 +11391,54 @@ Examples:
         .replace(/'/g, '&#039;');
     }
 
+    function sanitizeGeminiHtml(rawHtml) {
+      if (!rawHtml) return '';
+      if (typeof DOMParser !== 'undefined') {
+        try {
+          const doc = new DOMParser().parseFromString(rawHtml, 'text/html');
+          doc.querySelectorAll('script, iframe, object, embed, style, link, meta').forEach(el => el.remove());
+          doc.querySelectorAll('*').forEach(el => {
+            Array.from(el.attributes).forEach(attr => {
+              const name = attr.name.toLowerCase();
+              if (name.startsWith('on') && !el.classList.contains('gemini-audio-card')) {
+                el.removeAttribute(attr.name);
+              } else if ((name === 'href' || name === 'src') && /^\s*javascript:/i.test(attr.value)) {
+                el.removeAttribute(attr.name);
+              }
+            });
+          });
+          return doc.body.innerHTML;
+        } catch (e) {}
+      }
+      return String(rawHtml)
+        .replace(/<\s*(script|iframe|object|embed|style|link|meta)\b[^>]*>[\s\S]*?<\/\s*\1\s*>/gi, '')
+        .replace(/<\s*(script|iframe|object|embed|link|meta)\b[^>]*\/?>/gi, '')
+        .replace(/\son[a-z]+\s*=\s*(?:"[^"]*"|'[^']*'|[^\s>]+)/gi, '')
+        .replace(/(href|src)\s*=\s*(['"]?)\s*javascript:[^'"\s>]*/gi, '$1=$2#');
+    }
+
     function safeRenderMarkdown(mdText, lang = 'th') {
       if (!mdText) return '';
+
+      // 0. Extract [audio: Script | Phonetic | Meaning] before markdown/escaping to avoid double-escaping quotes
+      const audioCards = [];
+      const preClipRegex = /\[audio:\s*([^|\]]+)\s*\|\s*([^|\]]+)(?:\s*\|\s*([^\]]+))?\]/gi;
+      const tokenizedMd = String(mdText).replace(preClipRegex, (match, script, phonetic, meaning) => {
+        const idx = audioCards.length;
+        audioCards.push({ script, phonetic, meaning });
+        return `%%GEMINI_AUDIO_CARD_${idx}%%`;
+      });
 
       // 1. Parse standard markdown first (handles lists, bold, headings, paragraphs)
       let html = '';
       if (window.marked && typeof window.marked.parse === 'function') {
         try {
-          html = window.marked.parse(mdText);
+          html = window.marked.parse(tokenizedMd);
         } catch (e) {
-          html = escapeHtml(mdText).replace(/\n\n/g, '<br><br>');
+          html = escapeHtml(tokenizedMd).replace(/\n\n/g, '<br><br>');
         }
       } else {
-        html = escapeHtml(mdText)
+        html = escapeHtml(tokenizedMd)
           .replace(/```([\s\S]*?)```/g, '<pre class="bg-[#181c28] p-3 rounded-xl overflow-x-auto my-2 text-xs text-amber-200"><code>$1</code></pre>')
           .replace(/`([^`]+)`/g, '<code class="bg-[#1e2333] text-amber-300 px-1.5 py-0.5 rounded text-xs">$1</code>')
           .replace(/\*\*([^*]+)\*\*/g, '<strong class="text-sky-300 font-semibold">$1</strong>')
@@ -10450,35 +11451,24 @@ Examples:
           }).join('');
       }
 
-      // 2. Helper to construct clean HTML audio card widget with zero indentation
+      html = sanitizeGeminiHtml(html);
+
+      // 2. Helper to construct clean HTML audio card widget with escaped content
       function createAudioCardHtml(script, phonetic, meaning) {
         const cleanScript = (script || '').trim();
         const cleanPhonetic = (phonetic || '').trim();
         const cleanMeaning = (meaning || '').trim();
         const uid = 'clip_' + Math.random().toString(36).substr(2, 9);
-        const scriptEsc = cleanScript.replace(/'/g, "\\'");
+        const scriptAttr = escapeHtml(cleanScript.replace(/\\/g, '\\\\').replace(/'/g, "\\'"));
         const fontClass = lang === 'th' ? 'font-thai' : 'font-hebrew';
 
-        return `<div class="gemini-audio-card my-2 p-2.5 rounded-xl bg-[#151926] hover:bg-[#1c2234] border border-[#263148] hover:border-sky-400/50 flex items-center justify-between gap-3 transition-all cursor-pointer shadow-sm group select-none" onclick="playGeminiAudioClip('${scriptEsc}', '${uid}', '${lang}')"><button type="button" id="btn_${uid}" class="w-8 h-8 rounded-lg bg-gradient-to-tr from-sky-500/20 to-emerald-400/20 group-hover:from-sky-500 group-hover:to-emerald-400 border border-sky-400/40 group-hover:border-transparent text-sky-300 group-hover:text-[#0e0f12] flex items-center justify-center font-bold text-xs transition-all shrink-0">▶</button><div class="min-w-0 flex-1"><div class="flex items-center gap-2 flex-wrap"><span class="font-bold text-sm text-white ${fontClass} tracking-wide">${cleanScript}</span>${cleanPhonetic ? `<span class="text-xs text-amber-300 font-medium">${cleanPhonetic}</span>` : ''}</div>${cleanMeaning ? `<div class="text-[11px] text-slate-400 truncate mt-0.5">${cleanMeaning}</div>` : ''}</div><div class="text-[10px] text-sky-400/90 font-mono bg-sky-500/10 px-2 py-0.5 rounded-full border border-sky-500/20 flex items-center gap-1 shrink-0"><span id="anim_${uid}" class="clip-wave hidden text-emerald-400 font-bold">ılı</span><span>🔊 Listen</span></div></div>`;
+        return `<div class="gemini-audio-card my-2 p-2.5 rounded-xl bg-[#151926] hover:bg-[#1c2234] border border-[#263148] hover:border-sky-400/50 flex items-center justify-between gap-3 transition-all cursor-pointer shadow-sm group select-none" onclick="playGeminiAudioClip('${scriptAttr}', '${uid}', '${lang}')"><button type="button" id="btn_${uid}" class="w-8 h-8 rounded-lg bg-gradient-to-tr from-sky-500/20 to-emerald-400/20 group-hover:from-sky-500 group-hover:to-emerald-400 border border-sky-400/40 group-hover:border-transparent text-sky-300 group-hover:text-[#0e0f12] flex items-center justify-center font-bold text-xs transition-all shrink-0">▶</button><div class="min-w-0 flex-1"><div class="flex items-center gap-2 flex-wrap"><span class="font-bold text-sm text-white ${fontClass} tracking-wide">${escapeHtml(cleanScript)}</span>${cleanPhonetic ? `<span class="text-xs text-amber-300 font-medium">${escapeHtml(cleanPhonetic)}</span>` : ''}</div>${cleanMeaning ? `<div class="text-[11px] text-slate-400 truncate mt-0.5">${escapeHtml(cleanMeaning)}</div>` : ''}</div><div class="text-[10px] text-sky-400/90 font-mono bg-sky-500/10 px-2 py-0.5 rounded-full border border-sky-500/20 flex items-center gap-1 shrink-0"><span id="anim_${uid}" class="clip-wave hidden text-emerald-400 font-bold">ılı</span><span>🔊 Listen</span></div></div>`;
       }
 
-      // 3. Transform [audio: Script | Phonetic | Meaning] tags (handles <p>[audio: ...]</p> and inline)
-      const clipRegex = /(?:<p>\s*)?\[audio:\s*([^|\]]+)\s*\|\s*([^|\]]+)(?:\s*\|\s*([^\]]+))?\](?:\s*<\/p>)?/gi;
-      html = html.replace(clipRegex, (match, script, phonetic, meaning) => {
-        return createAudioCardHtml(script, phonetic, meaning);
-      });
-
-      // 4. Auto-heal: If marked or a code block wrapped raw audio card HTML in <pre><code>, unwrap it into a live widget
-      html = html.replace(/<pre><code[^>]*>([\s\S]*?)<\/code><\/pre>/gi, (match, inner) => {
-        if (inner.includes('gemini-audio-card')) {
-          return inner.replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&').replace(/&quot;/g, '"');
-        }
-        return match;
-      });
-
-      // 5. Unescape any raw escaped gemini-audio-card tags in text
-      html = html.replace(/&lt;div class="gemini-audio-card[\s\S]*?&lt;\/div&gt;/gi, (m) => {
-        return m.replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&');
+      // 3. Rehydrate audio cards cleanly
+      html = html.replace(/(?:<p>\s*)?%%GEMINI_AUDIO_CARD_(\d+)%%(?:\s*<\/p>)?/g, (m, idxStr) => {
+        const card = audioCards[Number(idxStr)];
+        return card ? createAudioCardHtml(card.script, card.phonetic, card.meaning) : '';
       });
 
       return html;
@@ -10700,6 +11690,19 @@ Examples:
         saveGeminiState();
         renderGeminiChat();
         showToast('Message deleted');
+      }
+    }
+
+    function clearGeminiChatHistory() {
+      if (geminiChatHistory.length === 0) {
+        showToast('Chat is already empty');
+        return;
+      }
+      if (confirm('Clear messages in this chat? Saved notes and past threads will stay safe.')) {
+        geminiChatHistory = [];
+        saveGeminiState();
+        renderGeminiChat();
+        showToast('🧹 Current chat cleared');
       }
     }
 
@@ -11338,18 +12341,20 @@ Examples:
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), 28000);
 
+        const genConfig = {
+          temperature: 0.7,
+          maxOutputTokens: 450
+        };
+        if (model.startsWith('gemini-3')) {
+          genConfig.thinkingConfig = { thinkingLevel: 'low' };
+        }
+
         const body = {
           contents: apiContents,
           systemInstruction: {
             parts: [{ text: GEMINI_SYSTEM_PROMPT }]
           },
-          generationConfig: {
-            temperature: 0.7,
-            maxOutputTokens: 450,
-            thinkingConfig: {
-              thinkingLevel: 'low'
-            }
-          }
+          generationConfig: genConfig
         };
 
         const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${key}`, {
