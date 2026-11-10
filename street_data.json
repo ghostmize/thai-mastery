@@ -18,7 +18,7 @@
           "en": "thin rice noodles"
         }
       ],
-      "situationPrompt": "The noodle cart vendor looks at you with tongs in hand and asks 'เอาเส้นอะไร?'. You want the standard thin chewy rice noodles. How do you respond in natural everyday Thai?",
+      "situationPrompt": "The noodle cart vendor looks at you with tongs in hand and asks 'เอาเส้นอะไร?' (ao sên à-rai? — 'What noodles do you want?'). You want the standard thin chewy rice noodles. How do you respond in natural everyday Thai?",
       "situationCorrect": "ao lék khâ (เอาเล็กค่ะ)",
       "situationDistractors": [
         "yâek nám khâ (แยกน้ำค่ะ)",
@@ -58,7 +58,7 @@
           "en": "soup / broth"
         }
       ],
-      "situationPrompt": "The noodle cart vendor is packing your order to go and asks 'แยกน้ำไหม?'. You want the soup packed separately so noodles stay bouncy. How do you reply in natural everyday Thai?",
+      "situationPrompt": "The noodle cart vendor is packing your order to go and asks 'แยกน้ำไหม?' (yâek nám mǎi? — 'Broth separate?'). You want the soup packed separately so noodles stay bouncy. How do you reply in natural everyday Thai?",
       "situationCorrect": "yâek nám khâ (แยกน้ำค่ะ)",
       "situationDistractors": [
         "gèp dtang dûai khâ (เก็บตังค์ด้วยค่ะ)",
@@ -193,12 +193,12 @@
           "en": "no bean sprouts"
         }
       ],
-      "situationPrompt": "You hear a local customer shout 'เล็กน้ำไม่ชิ้นไม่งอก!'. What are they ordering?",
-      "situationCorrect": "lék nám mâi chín mâi ngôok (เล็กน้ำไม่ชิ้นไม่งอก)",
+      "situationPrompt": "You hear a local customer shout 'เล็กน้ำไม่ชิ้นไม่งอก!' (lék nám mâi chín mâi ngôok!). What are they ordering?",
+      "situationCorrect": "Thin soup noodles, no meatballs, no sprouts (เล็กน้ำไม่ชิ้นไม่งอก)",
       "situationDistractors": [
-        "yài hâeng chín lûan (ใหญ่แห้งชิ้นล้วน)",
-        "mìi náam sǎi gài (หมี่น้ำใสไก่)",
-        "bà-mìi hâeng sài hɔ̀ɔ (บะหมี่แห้งใส่ห่อ)"
+        "Wide dry noodles, meatballs only (ใหญ่แห้งชิ้นล้วน)",
+        "Thin rice noodles in clear broth with chicken (หมี่น้ำใสไก่)",
+        "Dry egg noodles wrapped to go (บะหมี่แห้งใส่ห่อ)"
       ],
       "situationDialogue": {
         "speaker": "Local Customer",
@@ -1381,11 +1381,11 @@
         }
       ],
       "situationPrompt": "A friend asks 'Chob bpao?' (ชอบเปล่า). What does the ending 'bpao' mean here?",
-      "situationCorrect": "Short for 'หรือเปล่า' (rǔue bplào) — '...or not?' tag question",
+      "situationCorrect": "'Do you like it or not?' — tag question (ชอบเปล่า)",
       "situationDistractors": [
-        "It means 'Please hurry up'",
-        "It means 'Only 20 Baht'",
-        "It is an angry exclamation"
+        "'Do you want to eat?' (อยากกินไหม)",
+        "'How is it going?' (เป็นยังไง)",
+        "'Do you like it a lot?' (ชอบมาก)"
       ],
       "situationDialogue": {
         "speaker": "Friend",
@@ -1700,11 +1700,11 @@
         }
       ],
       "situationPrompt": "Your friend suggests going to the night market and you enthusiastically agree: 'Pai loei!'. What does 'เลย' mean here?",
-      "situationCorrect": "bpai loei! (ไปเลย!)",
+      "situationCorrect": "'Right now! / Let's go right away!' (ไปเลย!)",
       "situationDistractors": [
-        "mâi bpai (ไม่ไป)",
-        "rɔɔ gɔ̀ɔn (รอก่อน)",
-        "cháa-cháa (ช้าๆ)"
+        "'Not going' (ไม่ไป)",
+        "'Wait first' (รอก่อน)",
+        "'Slow down' (ช้าๆ)"
       ],
       "situationDialogue": {
         "speaker": "Friend",
@@ -1735,11 +1735,11 @@
         }
       ],
       "situationPrompt": "A friend tells you an incredible piece of gossip. You react with surprise: 'Jing rǒe?!' (จริงเหรอ). What are you asking?",
-      "situationCorrect": "jing rǒe?! (จริงเหรอ?!)",
+      "situationCorrect": "'Really?! / For real?!' (จริงเหรอ?!)",
       "situationDistractors": [
-        "khɔ̀ɔp-khun (ขอบคุณ)",
-        "sà-wàt-dii (สวัสดี)",
-        "mâi rûu (ไม่รู้)"
+        "'Thank you' (ขอบคุณ)",
+        "'Hello / Goodbye' (สวัสดี)",
+        "'I don't know' (ไม่รู้)"
       ],
       "situationDialogue": {
         "speaker": "Friend",
@@ -1770,11 +1770,11 @@
         }
       ],
       "situationPrompt": "You are hesitating to try a spicy street snack. A friend smiles and says 'Kin sì!'. What are they saying?",
-      "situationCorrect": "kin sì! (กินสิ!)",
+      "situationCorrect": "'Go ahead and eat! / Just eat it!' (กินสิ!)",
       "situationDistractors": [
-        "yàa kin (อย่ากิน)",
-        "jìap (เจี๊ยบ)",
-        "mâi ao (ไม่เอา)"
+        "'Don't eat it' (อย่ากิน)",
+        "'Freezing cold' (เจี๊ยบ)",
+        "'I don't want it' (ไม่เอา)"
       ],
       "situationDialogue": {
         "speaker": "Friend",
@@ -1839,11 +1839,11 @@
         }
       ],
       "situationPrompt": "You tell someone your food order, then turn to them and ask: 'Láew thoe lâ?'. What does 'ล่ะ' mean here?",
-      "situationCorrect": "láaeo thoe lâ? (แล้วเธอล่ะ?)",
+      "situationCorrect": "'And what about you?' (แล้วเธอล่ะ?)",
       "situationDistractors": [
-        "bpai nǎi (ไปไหน)",
-        "thâo-lài (เท่าไหร่)",
-        "tham-mai (ทำไม)"
+        "'Where are you going?' (ไปไหน)",
+        "'How much is it?' (เท่าไหร่)",
+        "'Why?' (ทำไม)"
       ],
       "situationDialogue": {
         "speaker": "Friend",
@@ -2216,11 +2216,11 @@
         }
       ],
       "situationPrompt": "A friend asks if your schedule today is stressful. You reply 'Chil-chil!'. What does that communicate?",
-      "situationCorrect": "chil-chil (ชิลชิล)",
+      "situationCorrect": "'Super relaxed / easy-peasy / no stress' (ชิลชิล)",
       "situationDistractors": [
-        "ngaan yə́ (งานเยอะ)",
-        "nào mâak (หนาวมาก)",
-        "bpai roong-pha-yaa-baan (ไปโรงพยาบาล)"
+        "'A ton of work' (งานเยอะ)",
+        "'Freezing cold' (หนาวมาก)",
+        "'Go to the hospital' (ไปโรงพยาบาล)"
       ],
       "situationDialogue": {
         "speaker": "Friend",
@@ -2260,12 +2260,12 @@
           "en": "good"
         }
       ],
-      "situationPrompt": "Sudden tropical rain hits while you and your Thai friend are walking outdoors. Your friend looks at you and asks 'เอาไงดี?'. What are they asking?",
-      "situationCorrect": "ao ngai dii? (เอาไงดี?)",
+      "situationPrompt": "Sudden tropical rain hits while you and your Thai friend are walking outdoors. Your friend looks at you and asks 'เอาไงดี?' (ao ngai dii?). What are they asking?",
+      "situationCorrect": "'What should we do now? / What's the plan?' (เอาไงดี?)",
       "situationDistractors": [
-        "khɔ̌ɔ yɯɯm ngoen (ขอยืมเงิน)",
-        "sɯ́ɯ rôm thîi-nǎi (ซื้อร่มที่ไหน)",
-        "kin gǔai-dtǐao mǎi (กินก๋วยเตี๋ยวไหม)"
+        "'Can I borrow some money?' (ขอยืมเงิน)",
+        "'Where can we buy umbrellas?' (ซื้อร่มที่ไหน)",
+        "'Do you want to eat noodles?' (กินก๋วยเตี๋ยวไหม)"
       ],
       "situationDialogue": {
         "speaker": "Friend",

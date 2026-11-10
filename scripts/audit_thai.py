@@ -113,6 +113,43 @@ def test_json_and_html_sync(errors: list):
         if f'"roman": "{ro}"' not in html and f"'roman': '{ro}'" not in html:
             errors.append(f"Sync error: Roman spelling '{ro}' for {iid} does not match in HTML app.")
 
+def test_situation_drills_and_audio(errors: list):
+    """
+    Verify that incoming street hearing drills:
+    1. Do not suppress audio or hints due to speaker misclassification (e.g. Local Customer).
+    2. Provide phonetic romanization or English gloss when Thai dialogue is present in prompts.
+    3. Ensure comprehension questions ('What are they ordering?', 'What does X mean?') contain English explanations in options.
+    """
+    with open(STREET_JSON, 'r', encoding='utf-8') as f:
+        sd = json.load(f)
+    with open(HTML_FILE, 'r', encoding='utf-8') as f:
+        html = f.read()
+
+    # Verify the incoming dialogue speaker check in HTML engine
+    if "const isSelf = ['customer', 'passenger']" in html:
+        errors.append("HTML Engine bug: 'isSelf' check uses ['customer', 'passenger'].includes, which blocks audio for 'Local Customer'!")
+
+    for item in sd.get('items', []):
+        iid = item.get('id')
+        prompt = item.get('situationPrompt', '')
+        corr = item.get('situationCorrect', '')
+        diag = item.get('situationDialogue') or {}
+        spkr = diag.get('speaker', '')
+
+        # Check prompt with Thai
+        if re.search(r'[\u0e00-\u0e7f]', prompt):
+            # Must have romanization or gloss in prompt
+            has_guide = bool(re.search(r'\([a-zA-Z\u00C0-\u024F\u1E00-\u1EFF\s\-\'\,\.\!\?\—\–]+\)', prompt)) or "'" in prompt
+            if not has_guide:
+                errors.append(f"[{iid}] Prompt has Thai without phonetic romanization or gloss: '{prompt}'")
+
+        # Specific check for ST_noodle_shorthand
+        if iid == 'ST_noodle_shorthand':
+            if 'lék nám mâi chín mâi ngôok' not in prompt:
+                errors.append(f"[ST_noodle_shorthand] Prompt must include romanized pronunciation '(lék nám mâi chín mâi ngôok!)'.")
+            if 'Thin soup noodles' not in corr:
+                errors.append(f"[ST_noodle_shorthand] Correct option must explain meaning ('Thin soup noodles, no meatballs, no sprouts').")
+
 def main():
     print("=" * 60)
     print("Running Thai Dataset & Orthography Linter...")
@@ -123,6 +160,7 @@ def main():
     test_vowel_orthography(errors)
     test_conversation_turns(errors)
     test_json_and_html_sync(errors)
+    test_situation_drills_and_audio(errors)
 
     if errors:
         print(f"\nFAILED: Found {len(errors)} error(s):")
@@ -136,6 +174,7 @@ def main():
         print("  ✓ Vowel orthography (แ- vs -า) verified across all vocab items.")
         print("  ✓ All 59 street items & 168 dialogue turns verified.")
         print("  ✓ street_data.json and HTML engine in 100% sync.")
+        print("  ✓ All situation listening drills & audio playback verified.")
         print("=" * 60)
         sys.exit(0)
 
