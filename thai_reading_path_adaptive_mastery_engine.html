@@ -302,7 +302,7 @@
             </button>
           </div>
 
-          <button type="button" id="global-auto-lvl-btn" onclick="toggleAutoLevel()" class="px-2.5 py-1 rounded-xl border text-[11px] font-bold transition-all cursor-pointer flex items-center gap-1 bg-emerald-500/15 border-emerald-500/40 text-emerald-300" title="Auto-Adapt: Automatically raises level on fast streaks or lowers on misses while keeping the same lesson theme">
+          <button type="button" id="global-auto-lvl-btn" onclick="toggleAutoLevel()" class="px-2.5 py-1 rounded-xl border text-[11px] font-bold transition-all cursor-pointer flex items-center gap-1 bg-emerald-500/15 border-emerald-500/40 text-emerald-300" title="Auto-Adapt: Automatically raises level on fast streaks (never lowers)">
             <span>🔄</span>
             <span>Auto: ON</span>
           </button>
@@ -756,11 +756,11 @@
         char: 'ก',
         display: 'ก',
         tts: 'กอ ไก่',
-        sound: 'k / g (unaspirated)',
+        sound: 'g (unaspirated "k/g")',
         name: 'ko kai (chicken)',
         category: 'Mid-Class Consonant',
         position: 'Base consonant (no top loop, pointed beak)',
-        clue: 'Looks like a chicken beak pointing left. Makes a crisp "k/g" sound like "scar".',
+        clue: 'Looks like a chicken beak pointing left. Makes a crisp, unaspirated "g/k" sound like "scar" (written "g" in romanization).',
         unit: 1
       },
       {
@@ -1080,7 +1080,7 @@
       {
         id: 'W_kaa',
         thai: 'กา',
-        roman: 'kaa',
+        roman: 'gaa',
         meaning: 'Kettle / crow',
         unit: 1,
         seconds: 45,
@@ -1108,12 +1108,12 @@
       {
         id: 'W_kee',
         thai: 'เก',
-        roman: 'kee',
+        roman: 'gee',
         meaning: 'Crooked / off-center',
         unit: 1,
         seconds: 45,
         timestamp: '0:45',
-        videoContext: 'Notice how front vowel เ sits BEFORE ก, even though you read ก first: k + ee!',
+        videoContext: 'Notice how front vowel เ sits BEFORE ก, even though you read ก first: g + ee!',
         letters: [
           { char: 'เ', role: 'Front vowel "ee" (written first, read second)' },
           { char: 'ก', role: 'Initial "k/g" (Mid Class)' }
@@ -1167,7 +1167,7 @@
       {
         id: 'W_kai',
         thai: 'ไก่',
-        roman: 'kài',
+        roman: 'gài',
         meaning: 'Chicken',
         unit: 2,
         seconds: 275,
@@ -1275,7 +1275,7 @@
       {
         id: 'W_kin',
         thai: 'กิน',
-        roman: 'kin',
+        roman: 'gin',
         meaning: 'To eat',
         unit: 4,
         seconds: 120,
@@ -1400,7 +1400,7 @@
       {
         id: 'W_kuay_tiao',
         thai: 'ก๋วยเตี๋ยว',
-        roman: 'kǔay-tǐaw',
+        roman: 'gǔai-dtǐao',
         meaning: 'Noodle soup',
         unit: 5,
         seconds: 45,
@@ -1523,7 +1523,7 @@
         "en": "thin rice noodles"
       }
     ],
-    "situationPrompt": "The noodle cart vendor looks at you with tongs in hand and asks 'เอาเส้นอะไร?' (ao sên à-rai? — 'What noodles do you want?'). You want the standard thin chewy rice noodles. How do you respond in natural everyday Thai?",
+    "situationPrompt": "The noodle cart vendor looks at you with tongs in hand and asks 'เอาเส้นอะไร?' (ao sên à-rai?). You want the standard thin chewy rice noodles. How do you respond in natural everyday Thai?",
     "situationCorrect": "ao lék khâ (เอาเล็กค่ะ)",
     "situationDistractors": [
       "yâek nám khâ (แยกน้ำค่ะ)",
@@ -1563,7 +1563,7 @@
         "en": "soup / broth"
       }
     ],
-    "situationPrompt": "The noodle cart vendor is packing your order to go and asks 'แยกน้ำไหม?' (yâek nám mǎi? — 'Broth separate?'). You want the soup packed separately so noodles stay bouncy. How do you reply in natural everyday Thai?",
+    "situationPrompt": "The noodle cart vendor is packing your order to go and asks 'แยกน้ำไหม?' (yâek nám mǎi?). You want the soup packed separately so noodles stay bouncy. How do you reply in natural everyday Thai?",
     "situationCorrect": "yâek nám khâ (แยกน้ำค่ะ)",
     "situationDistractors": [
       "gèp dtang dûai khâ (เก็บตังค์ด้วยค่ะ)",
@@ -1653,7 +1653,7 @@
     "situationDistractors": [
       "sài hɔ̀ɔ khâ (ใส่ห่อค่ะ)",
       "phèt nɔ́ɔi khâ (เผ็ดน้อยค่ะ)",
-      "kin nîi khâ (กินนี่ค่ะ)"
+      "gin nîi khâ (กินนี่ค่ะ)"
     ],
     "situationDialogue": {
       "speaker": "Customer (Exclusion)",
@@ -1878,8 +1878,8 @@
   {
     "id": "ST_kin_nii_hor",
     "thai": "กินนี่หรือใส่ห่อ",
-    "spoken": "kin nîi rěu sài hɔ̀ɔ",
-    "roman": "kin nîi rǒe sài hɔ̀ɔ",
+    "spoken": "gin nîi rěu sài hɔ̀ɔ",
+    "roman": "gin nîi rǒe sài hɔ̀ɔ",
     "meaning": "'Eat here or wrap to-go?' (Vendor question)",
     "streetShift": "The universal question asked at every food court and street stall across Thailand before they prepare your bowl or container.",
     "unit": 1,
@@ -1889,7 +1889,7 @@
     "words": [
       {
         "th": "กินนี่",
-        "ro": "kin nîi",
+        "ro": "gin nîi",
         "en": "eat here"
       },
       {
@@ -1903,8 +1903,8 @@
         "en": "wrap to-go"
       }
     ],
-    "situationPrompt": "The food stall cook asks 'กินนี่หรือใส่ห่อ?' (Eat here or wrap to go?). You want to eat right at the food stall. How do you respond in natural everyday Thai?",
-    "situationCorrect": "kin nîi khâ (กินนี่ค่ะ)",
+    "situationPrompt": "The food stall cook asks 'กินนี่หรือใส่ห่อ?' (gin nîi rǔue sài hɔ̀ɔ?). You want to eat right at the food stall. How do you respond in natural everyday Thai?",
+    "situationCorrect": "gin nîi khâ (กินนี่ค่ะ)",
     "situationDistractors": [
       "sài hɔ̀ɔ khâ (ใส่ห่อค่ะ)",
       "mâi ao khâ (ไม่เอาค่ะ)",
@@ -1913,7 +1913,7 @@
     "situationDialogue": {
       "speaker": "Food Stall Cook",
       "thai": "กินนี่หรือใส่ห่อ?",
-      "spoken": "kin nîi rǔue sài hɔ̀ɔ?",
+      "spoken": "gin nîi rǔue sài hɔ̀ɔ?",
       "meaning": "Eat here or wrap to go?",
       "tts": "กินนี่หรือใส่ห่อ"
     },
@@ -1943,17 +1943,17 @@
         "en": "wrapper / parcel"
       }
     ],
-    "situationPrompt": "The food stall cook asks 'กินนี่หรือใส่ห่อ?' (Eat here or wrap to go?). You want to take your street meal back to your hotel or condo. How do you answer naturally in everyday Thai?",
+    "situationPrompt": "The food stall cook asks 'กินนี่หรือใส่ห่อ?' (gin nîi rǔue sài hɔ̀ɔ?). You want to take your street meal back to your hotel or condo. How do you answer naturally in everyday Thai?",
     "situationCorrect": "sài hɔ̀ɔ khâ (ใส่ห่อค่ะ)",
     "situationDistractors": [
-      "kin nîi khâ (กินนี่ค่ะ)",
+      "gin nîi khâ (กินนี่ค่ะ)",
       "mâi ao khâ (ไม่เอาค่ะ)",
       "thâo-lài khá? (เท่าไหร่คะ?)"
     ],
     "situationDialogue": {
       "speaker": "Food Stall Cook",
       "thai": "กินนี่หรือใส่ห่อ?",
-      "spoken": "kin nîi rǔue sài hɔ̀ɔ?",
+      "spoken": "gin nîi rǔue sài hɔ̀ɔ?",
       "meaning": "Eat here or wrap to go?",
       "tts": "กินนี่หรือใส่ห่อ"
     },
@@ -2138,7 +2138,7 @@
         "en": "normal / regular"
       }
     ],
-    "situationPrompt": "The barista asks 'หวานระดับไหนดีคะ?' (What sweetness level?). You want the drink made standard according to the house recipe. How do you reply politely?",
+    "situationPrompt": "The barista asks 'หวานระดับไหนดีคะ?' (wǎan rá-dàp nǎi dii khá?). You want the drink made standard according to the house recipe. How do you reply politely?",
     "situationCorrect": "wǎan bpòk-gà-dtì khâ (หวานปกติค่ะ)",
     "situationDistractors": [
       "wǎan nɔ́ɔi khâ (หวานน้อยค่ะ)",
@@ -2298,7 +2298,7 @@
         "en": "bag"
       }
     ],
-    "situationPrompt": "You're at 7-Eleven buying a water bottle and already have a backpack. The cashier asks 'รับถุงไหมคะ?' (Do you want a plastic bag?). How do you reply naturally in everyday Thai?",
+    "situationPrompt": "You're at 7-Eleven buying a water bottle and already have a backpack. The cashier asks 'รับถุงไหมคะ?' (ráp thǔng mǎi khá?). How do you reply naturally in everyday Thai?",
     "situationCorrect": "mâi ao thǔng khâ (ไม่เอาถุงค่ะ)",
     "situationDistractors": [
       "wéep dâi mǎi khá? (เวฟได้ไหมคะ?)",
@@ -2923,7 +2923,7 @@
     "situationCorrect": "อย่างนี้ (yàang níi) — 'Like this / in this manner'",
     "situationDistractors": [
       "อย่าทำ (yàa tham) — 'Do not do that'",
-      "อยากกิน (yàak kin) — 'Want to eat'",
+      "อยากกิน (yàak gin) — 'Want to eat'",
       "ยังไง (yang-ngai) — 'How come?'"
     ],
     "situationDialogue": {
@@ -2953,7 +2953,7 @@
         "en": "in that case / like that"
       }
     ],
-    "situationPrompt": "Someone says 'Khao mai ma... ngan rao pai kan loei' (He's not coming... ngán let's go). What does 'ngan' signify?",
+    "situationPrompt": "Someone says 'เขาไม่มา... งั้นเราไปกันเลย' (khǎo mâi maa... ngán rao bpai gan loei). What does 'ngan' signify?",
     "situationCorrect": "อย่างนั้น (yàang nán) -> 'In that case / then'",
     "situationDistractors": [
       "เงิน (ngoen) — 'Money'",
@@ -3274,7 +3274,7 @@
         "en": "go ahead / do it!"
       }
     ],
-    "situationPrompt": "You are hesitating to try a spicy street snack. A friend smiles and says 'Kin sì!'. What are they saying?",
+    "situationPrompt": "You are hesitating to try a spicy street snack. A friend smiles and says 'Gin sì!'. What are they saying?",
     "situationCorrect": "'Go ahead and eat! / Just eat it!' (กินสิ!)",
     "situationDistractors": [
       "'Don't eat it' (อย่ากิน)",
@@ -3284,7 +3284,7 @@
     "situationDialogue": {
       "speaker": "Friend",
       "thai": "กินสิ!",
-      "spoken": "kin sì!",
+      "spoken": "gin sì!",
       "meaning": "Go ahead and eat it!",
       "tts": "กินสิ"
     },
@@ -3378,7 +3378,7 @@
         "en": "I / me (or friendly we)"
       }
     ],
-    "situationPrompt": "A Thai peer says 'เราอยากกินส้มตำ' (Rao yàak kin sôm-dtam). Who is 'เรา' referring to here?",
+    "situationPrompt": "A Thai peer says 'เราอยากกินส้มตำ' (Rao yàak gin sôm-dtam). Who is 'เรา' referring to here?",
     "situationCorrect": "'I / me' — casual friendly first-person pronoun",
     "situationDistractors": [
       "The king or royalty",
@@ -3388,7 +3388,7 @@
     "situationDialogue": {
       "speaker": "Thai Peer",
       "thai": "เราอยากกินส้มตำ",
-      "spoken": "rao yàak kin sôm-dtam",
+      "spoken": "rao yàak gin sôm-dtam",
       "meaning": "I want to eat papaya salad",
       "tts": "เราอยากกินส้มตำ"
     },
@@ -3461,7 +3461,7 @@
     "situationDialogue": {
       "speaker": "Thai Partner",
       "thai": "ตัวเองอยากกินอะไร?",
-      "spoken": "dtua-eeng yàak kin à-rai?",
+      "spoken": "dtua-eeng yàak gin à-rai?",
       "meaning": "Babe / Honey, what do you want to eat?",
       "tts": "ตัวเองอยากกินอะไร"
     },
@@ -3823,7 +3823,7 @@
                         "title": "Vendor Exchanges & Takeaway",
                         "type": "street",
                         "icon": "🥡",
-                        "description": "Vendor questions & takeout: kin nîi rǒe sài hɔ̀ɔ (eat here or wrap to-go?) → sài hɔ̀ɔ (takeaway) → phí-sèet (extra portion)",
+                        "description": "Vendor questions & takeout: gin nîi rǒe sài hɔ̀ɔ (eat here or wrap to-go?) → sài hɔ̀ɔ (takeaway) → phí-sèet (extra portion)",
                         "itemIds": [
                               "ST_kin_nii_hor",
                               "ST_sai_hor",
@@ -4469,8 +4469,10 @@
       if (!activeSession || activeSession.stepAnswered) return;
       activeSession.stepAnswered = true;
 
-      const isCorrect = (chosenId === correctId);
       const step = activeSession.steps ? activeSession.steps[activeSession.currentIndex] : null;
+      const chosenOpt = step?.options?.find(o => o.id === chosenId) || null;
+      const isCorrect = (chosenId === correctId) || !!chosenOpt?.isCorrect;
+      const isAltChosen = isCorrect && (chosenId !== correctId);
       const targetItem = step?.target || (typeof STREET_DB !== 'undefined' ? STREET_DB.find(s => s.id === correctId) : null) || {};
 
       const elapsed = activeSession.stepStartTime ? (Date.now() - activeSession.stepStartTime) : 1200;
@@ -4480,104 +4482,100 @@
         console.warn('Error recording street item attempt:', err);
       }
 
-      // Disable all option buttons immediately to prevent duplicate clicks
+      // Disable non-answer option buttons immediately to prevent duplicate clicks
       const allBtns = document.querySelectorAll('.street-drill-option');
       allBtns.forEach(b => {
         b.disabled = true;
-        b.classList.remove('hover:bg-[#222736]', 'cursor-pointer');
+        b.classList.remove('hover:bg-[#222736]', 'hover:border-amber-400/60', 'cursor-pointer');
         b.classList.add('cursor-default');
       });
 
       const chosenBtn = document.getElementById(`sopt-btn-${chosenId}`);
-      const correctBtn = document.getElementById(`sopt-btn-${correctId}`);
+      const audioToSpeak = targetItem.responseTts || targetItem.tts || targetItem.thai;
+      const chosenAudio = (isAltChosen && chosenOpt?.tts) ? chosenOpt.tts : audioToSpeak;
 
       if (isCorrect) {
-        if (chosenBtn) {
-          chosenBtn.style.backgroundColor = 'rgba(16, 185, 129, 0.25)';
-          chosenBtn.style.borderColor = '#10b981';
-          chosenBtn.style.color = '#6ee7b7';
-          const indicator = chosenBtn.querySelector('.drill-indicator');
-          if (indicator) {
-            indicator.classList.remove('hidden');
-            indicator.textContent = '✓';
-            indicator.className = 'drill-indicator text-emerald-400 text-base font-bold shrink-0 ml-2';
-          }
-        }
         activeSession.correctCount += 1;
         // grasp recorded
         saveState();
-      } else {
-        if (chosenBtn) {
-          chosenBtn.style.backgroundColor = 'rgba(244, 63, 94, 0.25)';
-          chosenBtn.style.borderColor = '#f43f5e';
-          chosenBtn.style.color = '#fda4af';
-          const indicator = chosenBtn.querySelector('.drill-indicator');
-          if (indicator) {
-            indicator.classList.remove('hidden');
-            indicator.textContent = '✗';
-            indicator.className = 'drill-indicator text-rose-400 text-base font-bold shrink-0 ml-2';
-          }
-        }
-        if (correctBtn) {
-          correctBtn.style.backgroundColor = 'rgba(16, 185, 129, 0.25)';
-          correctBtn.style.borderColor = '#10b981';
-          correctBtn.style.color = '#6ee7b7';
-          const indicator = correctBtn.querySelector('.drill-indicator');
-          if (indicator) {
-            indicator.classList.remove('hidden');
-            indicator.textContent = '✓';
-            indicator.className = 'drill-indicator text-emerald-400 text-base font-bold shrink-0 ml-2';
-          }
+      } else if (chosenBtn) {
+        chosenBtn.style.backgroundColor = 'rgba(244, 63, 94, 0.25)';
+        chosenBtn.style.borderColor = '#f43f5e';
+        chosenBtn.style.color = '#fda4af';
+        const indicator = chosenBtn.querySelector('.drill-indicator');
+        if (indicator) {
+          indicator.classList.remove('hidden');
+          indicator.textContent = '✗';
+          indicator.className = 'drill-indicator text-rose-400 text-base font-bold shrink-0 ml-2';
         }
       }
 
-      // Reinforce hearing by speaking the full response (with ค่ะ to match text!)
-      const audioToSpeak = targetItem.responseTts || targetItem.tts || targetItem.thai;
-      if (audioToSpeak) {
-        playThaiAudio(audioToSpeak);
+      // Highlight primary correct option and any compatible alternative option (max 2)
+      const validOpts = (step?.options || []).filter(o => o.id === correctId || o.isCorrect);
+      if (validOpts.length === 0) validOpts.push({ id: correctId, isCorrect: true });
+
+      validOpts.forEach(vOpt => {
+        const btn = document.getElementById(`sopt-btn-${vOpt.id}`);
+        if (!btn) return;
+        const isPrimary = (vOpt.id === correctId);
+        const btnAudio = isPrimary ? audioToSpeak : (vOpt.tts || audioToSpeak);
+        const btnMeaning = isPrimary ? targetItem.meaning : (vOpt.meaning || 'Also fits this situation!');
+
+        btn.style.backgroundColor = 'rgba(16, 185, 129, 0.25)';
+        btn.style.borderColor = '#10b981';
+        btn.style.color = '#6ee7b7';
+
+        const meaningEl = btn.querySelector('.drill-meaning');
+        if (meaningEl && btnMeaning && !btn.innerText.includes(btnMeaning)) {
+          meaningEl.textContent = isPrimary ? btnMeaning : `Also works: ${btnMeaning}`;
+          meaningEl.classList.remove('hidden');
+        }
+
+        const indicator = btn.querySelector('.drill-indicator');
+        if (indicator) {
+          indicator.classList.remove('hidden');
+          indicator.innerHTML = btnAudio
+            ? '<span class="inline-flex items-center gap-1.5"><span class="text-xs opacity-80" aria-hidden="true">🔊</span><span>✓</span></span>'
+            : '✓';
+          indicator.className = 'drill-indicator text-emerald-400 text-base font-bold shrink-0 ml-2';
+        }
+
+        // Keep valid answer rows clickable so tapping replays the spoken phrase
+        if (btnAudio) {
+          btn.disabled = false;
+          btn.classList.remove('cursor-default');
+          btn.classList.add('cursor-pointer', 'hover:brightness-110');
+          btn.title = 'Click to hear again';
+          btn.onclick = () => playThaiAudio(btnAudio, btn);
+        }
+      });
+
+      // Reinforce hearing by speaking the chosen valid phrase (or primary target if wrong)
+      if (chosenAudio) {
+        playThaiAudio(chosenAudio);
       }
 
-      // Show immediate feedback directly inside the card
+      // Show a compact everyday tip at the bottom without repeating the answer data
       const reviewBox = document.getElementById('street-drill-review');
       if (reviewBox) {
-        reviewBox.classList.remove('hidden');
-        const audioToSpeak = targetItem.responseTts || targetItem.tts || targetItem.thai;
         const everydayTip = targetItem.situationEverydayTip || 'In everyday Thai, adding ค่ะ (khâ) softens your tone and makes street interactions warm and polite!';
-        const parsed = parseDrillOption(targetItem.situationCorrect || targetItem.spoken);
-        reviewBox.innerHTML = `
-          <div class="p-4 rounded-2xl ${isCorrect ? 'bg-emerald-500/15 border border-emerald-500/35' : 'bg-rose-500/15 border border-rose-500/35'} text-left space-y-2.5 mt-3 shadow-lg">
-            <div class="flex items-center justify-between">
-              <span class="text-xs font-bold ${isCorrect ? 'text-emerald-300' : 'text-rose-300'} flex items-center gap-1.5">
-                <span>${isCorrect ? '✓ Spot on!' : '✗ Correct Everyday Thai Response:'}</span>
-              </span>
-              <button type="button" onclick="playThaiAudio('${audioToSpeak}', this)" class="px-2.5 py-1 rounded-xl bg-amber-400 hover:bg-amber-300 text-[#0e0f12] text-xs font-bold flex items-center gap-1 shadow cursor-pointer active:scale-95 transition-all">
-                <span>🔊</span>
-                <span>Hear Response</span>
-              </button>
-            </div>
-
-            <div class="space-y-1">
-              <div class="flex items-center gap-3">
-                <span class="text-white text-base sm:text-lg font-bold font-mono tracking-wide">${parsed.primary}</span>
-                ${parsed.secondary ? `<span class="text-amber-400 font-bold font-thai text-base sm:text-lg">${parsed.secondary}</span>` : ''}
-              </div>
-              <div class="text-xs sm:text-sm text-emerald-300 font-semibold">
-                ${targetItem.meaning}
-              </div>
-            </div>
-
-            <!-- Everyday Street Thai Tip -->
-            <div class="pt-2 border-t border-[#2a3044] text-xs text-amber-200/90 leading-snug space-y-1">
-              <div class="font-bold text-amber-300 flex items-center gap-1">
-                <span>💬</span>
-                <span>Everyday Thai Tip:</span>
-              </div>
-              <p class="text-slate-200 font-normal leading-relaxed">
-                ${everydayTip}
-              </p>
-            </div>
-          </div>
-        `;
+        reviewBox.classList.remove('hidden');
+        reviewBox.innerHTML = '';
+        const tipCard = document.createElement('div');
+        tipCard.className = 'px-3.5 py-2.5 rounded-xl bg-[#181b26] border border-[#262b3d] text-left flex items-start gap-2 mt-2';
+        const iconSpan = document.createElement('span');
+        iconSpan.className = 'text-xs shrink-0 mt-0.5';
+        iconSpan.textContent = '💬';
+        const textP = document.createElement('p');
+        textP.className = 'text-xs text-slate-300 leading-relaxed';
+        const labelSpan = document.createElement('span');
+        labelSpan.className = 'font-semibold text-amber-300/90 mr-1';
+        labelSpan.textContent = 'Everyday Tip:';
+        textP.appendChild(labelSpan);
+        textP.appendChild(document.createTextNode(everydayTip));
+        tipCard.appendChild(iconSpan);
+        tipCard.appendChild(textP);
+        reviewBox.appendChild(tipCard);
       }
 
       // Update footer message & activate Next button
@@ -4589,7 +4587,9 @@
         const elapsedSec = (elapsed / 1000).toFixed(1);
         const speedTag = elapsed < 3500 ? 'Instant grasp!' : elapsed < 6500 ? 'Good grasp' : 'Hesitation detected';
         feedbackMsg.innerHTML = isCorrect
-          ? `<span class="text-emerald-400 font-semibold">✓ Grasped accurately (${elapsedSec}s • ${speedTag})</span>`
+          ? (isAltChosen
+              ? `<span class="text-emerald-400 font-semibold">✓ Also fits! (${elapsedSec}s • Target: ${spokenTxt})</span>`
+              : `<span class="text-emerald-400 font-semibold">✓ Grasped accurately (${elapsedSec}s • ${speedTag})</span>`)
           : `<span class="text-amber-300 font-semibold">Reinforcing: ${spokenTxt} = ${meanTxt}</span>`;
       }
       if (actionBtn) {
@@ -4963,7 +4963,7 @@
       saveState();
       updatePaceUI();
       showToast(appState.autoLevel
-        ? '🔄 Auto-Adapt Level ON • Raises on fast streaks, lowers on misses (same theme!)'
+        ? '🔄 Auto-Adapt Level ON • Raises on fast streaks (never lowers)'
         : '🔒 Auto-Adapt Level OFF • Level locked to your manual choice');
     }
 
@@ -4987,25 +4987,10 @@
           setCourseLevel(3, false, true);
           showToast('Auto-Adapt: Max Level Activated • Fast street slang & 5-turn dialogue');
         }
-      } else if (!isCorrect) {
-        appState.levelStruggle = (appState.levelStruggle || 0) + 1;
-        appState.levelStreak = 0;
-
-        // Auto-lower after 2 consecutive misses
-        if (appState.levelStruggle >= 2) {
-          appState.levelStruggle = 0;
-          if (cur === 3 && isOverdrive) {
-            setCourseLevel(3, false, false);
-            showToast('Auto-Adapted → Level 3 (Stepped down from Max to consolidate this theme)');
-          } else if (cur > 1) {
-            const prevLvl = cur - 1;
-            setCourseLevel(prevLvl, false, false);
-            showToast(`Auto-Adapted → Level ${prevLvl} • Shorter sentences & clearer audio`);
-          }
-        }
       } else {
-        // Correct but slow hesitation (> 6.5s) resets fast streak without penalizing struggle
+        // Misses or slow hesitation (> 6.5s) reset fast streak; never auto-reduce level
         appState.levelStreak = 0;
+        appState.levelStruggle = 0;
       }
     }
 
@@ -5024,7 +5009,14 @@
       if (curStep.type === 'live_conversation') {
         stopFullConversationPlayback();
         const targetNode = node || allCurricula.flatMap(u => u.nodes).find(n => n.id === curStep.nodeId) || allCurricula[0].nodes[0];
-        activeSession.steps[curIdx] = createLiveConversationStep(targetNode, appState.convoDifficulty, curStep.remixSeed || 0);
+        const rebuilt = createLiveConversationStep(targetNode, appState.convoDifficulty, curStep.remixSeed || 0);
+        if (typeof curStep.showText === 'boolean') rebuilt.showText = curStep.showText;
+        if (typeof curStep.showRoman === 'boolean') rebuilt.showRoman = curStep.showRoman;
+        if (typeof curStep.showEnglish === 'boolean') rebuilt.showEnglish = curStep.showEnglish;
+        if (typeof curStep.slow === 'boolean') rebuilt.slow = curStep.slow;
+        if (curStep.phase && CONVO_PHASES.some(p => p.id === curStep.phase)) rebuilt.phase = curStep.phase;
+        if (Array.isArray(curStep.phasesReached)) rebuilt.phasesReached = [...curStep.phasesReached];
+        activeSession.steps[curIdx] = rebuilt;
         renderCurrentLessonStep();
         return;
       }
@@ -5281,7 +5273,7 @@
         const labels = {
           chill: 'Chill Pace • Hints & Romanization On • 0.8x',
           standard: 'Standard Pace • Balanced Decoding • 1.0x',
-          intensive: 'Intensive Pace • Pure Thai Script (No Romanization) • 1.1x'
+          intensive: 'Advanced Convo Level • Compound & Rapid Street Talk • 1.1x'
         };
         badge.textContent = labels[appState.pace] || labels.standard;
       }
@@ -5734,6 +5726,35 @@
       return { primary: raw.trim(), secondary: '' };
     }
 
+    // Compatible STREET_DB responses for Real Street Scenarios (capped at max 2 valid options per card)
+    const STREET_DRILL_COMPATIBLE_IDS = {
+      ST_yut_trong_nii: ['ST_song_thii_nii', 'ST_khaang_naa'],
+      ST_song_thii_nii: ['ST_yut_trong_nii'],
+      ST_khoot_dii: ['ST_sut_yoot'],
+      ST_sut_yoot: ['ST_khoot_dii'],
+      ST_jing_roe: ['ST_roe'],
+      ST_ao_di: ['ST_loei']
+    };
+
+    function matchCompatibleStreetDrillItem(targetId, textOrItem) {
+      const compatIds = STREET_DRILL_COMPATIBLE_IDS[targetId];
+      if (!compatIds || compatIds.length === 0 || typeof STREET_DB === 'undefined') return null;
+      if (textOrItem && typeof textOrItem === 'object') {
+        return compatIds.includes(textOrItem.id) ? textOrItem : null;
+      }
+      const raw = String(textOrItem || '');
+      for (const cid of compatIds) {
+        const cItem = STREET_DB.find(s => s.id === cid);
+        if (!cItem) continue;
+        const th = (cItem.thai || '').trim();
+        const rTts = (cItem.responseTts || '').trim();
+        if ((th && raw.includes(th)) || (rTts && raw.includes(rTts))) {
+          return cItem;
+        }
+      }
+      return null;
+    }
+
     // Situational & Communicative Drill generator with Intelligent Distractor Blending + Course Level Scaling
     function createStreetListeningDrillStep(targetItem, pastItems = []) {
       const lvl = getEffectiveCourseLevel();
@@ -5755,49 +5776,70 @@
           text: correctText,
           isCorrect: true
         };
-        
-        let distractorTexts = [...(targetItem.situationDistractors || [])];
+
+        let validCount = 1; // Cap at max 2 correct answers total per scenario card
+        const distractorEntries = [];
+        const addDistractorEntry = (rawText, itemObj = null) => {
+          if (distractorEntries.length >= distractorCount) return;
+          if (!rawText || distractorEntries.some(e => e.rawText === rawText)) return;
+          const compatItem = matchCompatibleStreetDrillItem(targetItem.id, itemObj || rawText);
+          if (compatItem && validCount >= 2) return; // Max 2 can fit on the same card
+          if (compatItem) validCount += 1;
+          distractorEntries.push({ rawText, compatItem });
+        };
+
+        (targetItem.situationDistractors || []).forEach(dt => addDistractorEntry(dt, null));
+
         // If extra distractors are needed for higher course levels (e.g. Overdrive 5 options total),
         // pull candidates from past items without overwriting tailored lesson distractors
-        if (distractorTexts.length < distractorCount && pastItems && pastItems.length > 0) {
+        if (distractorEntries.length < distractorCount && pastItems && pastItems.length > 0) {
           const pastCandidates = pastItems.filter(p => p.id !== targetItem.id && p.meaning !== targetItem.meaning);
           if (pastCandidates.length > 0) {
             const pastToUse = [...pastCandidates].sort(() => Math.random() - 0.5);
             pastToUse.forEach(pItem => {
-              if (distractorTexts.length < distractorCount) {
+              if (distractorEntries.length < distractorCount) {
                 const candText = pItem.situationCorrect ? pItem.situationCorrect : `${pItem.spoken || pItem.roman} (${pItem.thai || ''})`;
-                if (!distractorTexts.includes(candText)) {
-                  distractorTexts.push(candText);
-                }
+                addDistractorEntry(candText, pItem);
               }
             });
           }
         }
 
-        // If Overdrive (5 options total = 4 distractors), pull 1 extra close distractor from STREET_DB
-        if (distractorTexts.length < distractorCount && typeof STREET_DB !== 'undefined') {
-          const extraCand = STREET_DB.find(s => s.id !== targetItem.id && !distractorTexts.some(dt => dt.includes(s.spoken || '')));
-          if (extraCand) {
-            distractorTexts.push(extraCand.situationCorrect || `${extraCand.spoken || extraCand.roman} (${extraCand.thai || ''})`);
+        // If Overdrive (5 options total = 4 distractors), pull extra close distractor(s) from STREET_DB
+        if (distractorEntries.length < distractorCount && typeof STREET_DB !== 'undefined') {
+          for (const extraCand of STREET_DB) {
+            if (distractorEntries.length >= distractorCount) break;
+            if (extraCand.id === targetItem.id) continue;
+            if (distractorEntries.some(e => e.rawText.includes(extraCand.spoken || ''))) continue;
+            const candText = extraCand.situationCorrect || `${extraCand.spoken || extraCand.roman} (${extraCand.thai || ''})`;
+            addDistractorEntry(candText, extraCand);
           }
         }
 
-        distractorTexts = distractorTexts.slice(0, distractorCount);
-        if (lvl >= 3 && exp && exp.drillCompoundSuffix) {
-          distractorTexts = distractorTexts.map(dt => {
-            const p = parseDrillOption(dt);
+        const distractorOpts = distractorEntries.slice(0, distractorCount).map((entry, idx) => {
+          let dText = entry.rawText;
+          if (lvl >= 3 && exp && exp.drillCompoundSuffix) {
+            const p = parseDrillOption(dText);
             if (p.primary && p.secondary) {
-              return `${p.primary}, ${exp.drillCompoundSuffix.spoken} (${p.secondary} ${exp.drillCompoundSuffix.thai})`;
+              dText = `${p.primary}, ${exp.drillCompoundSuffix.spoken} (${p.secondary} ${exp.drillCompoundSuffix.thai})`;
             }
-            return dt;
-          });
-        }
-
-        const distractorOpts = distractorTexts.map((dText, idx) => ({
-          id: `dist_${targetItem.id}_${idx}`,
-          text: dText,
-          isCorrect: false
-        }));
+          }
+          if (entry.compatItem) {
+            return {
+              id: `alt_${entry.compatItem.id}_${idx}`,
+              text: dText,
+              isCorrect: true,
+              isAltCorrect: true,
+              tts: entry.compatItem.responseTts || entry.compatItem.tts || entry.compatItem.thai,
+              meaning: entry.compatItem.meaning || ''
+            };
+          }
+          return {
+            id: `dist_${targetItem.id}_${idx}`,
+            text: dText,
+            isCorrect: false
+          };
+        });
         const options = [correctOpt, ...distractorOpts].sort(() => Math.random() - 0.5);
 
         return {
@@ -5819,10 +5861,26 @@
         const otherDb = STREET_DB.filter(s => s.id !== targetItem.id && s.meaning !== targetItem.meaning && !distractorCandidates.some(d => d.id === s.id));
         distractorCandidates = [...distractorCandidates, ...otherDb];
       }
-      const distractors = distractorCandidates
-        .sort(() => Math.random() - 0.5)
-        .slice(0, distractorCount)
-        .map(s => ({ id: s.id, text: `${s.spoken || s.roman} — ${s.meaning}`, isCorrect: false }));
+      let fallbackValidCount = 1;
+      const distractors = [];
+      for (const s of distractorCandidates.sort(() => Math.random() - 0.5)) {
+        if (distractors.length >= distractorCount) break;
+        const compatItem = matchCompatibleStreetDrillItem(targetItem.id, s);
+        if (compatItem && fallbackValidCount >= 2) continue;
+        if (compatItem) fallbackValidCount += 1;
+        distractors.push(compatItem ? {
+          id: s.id,
+          text: `${s.spoken || s.roman} — ${s.meaning}`,
+          isCorrect: true,
+          isAltCorrect: true,
+          tts: s.responseTts || s.tts || s.thai,
+          meaning: s.meaning || ''
+        } : {
+          id: s.id,
+          text: `${s.spoken || s.roman} — ${s.meaning}`,
+          isCorrect: false
+        });
+      }
       const correctOpt = { id: targetItem.id, text: `${targetItem.spoken || targetItem.roman} — ${targetItem.meaning}`, isCorrect: true };
       const options = [correctOpt, ...distractors].sort(() => Math.random() - 0.5);
 
@@ -6238,15 +6296,18 @@
                     id="sopt-btn-${opt.id}"
                     onclick="handleStreetDrillSelect('${opt.id}', '${item.id}')"
                     class="street-drill-option w-full p-3.5 sm:p-4 rounded-2xl bg-[#181a24] hover:bg-[#222736] border border-[#282d3d] hover:border-amber-400/60 text-left transition-all cursor-pointer flex items-center justify-between group shadow-sm active:scale-[0.99]">
-                    <div class="flex items-center justify-between w-full gap-3 pr-1">
-                      <span class="text-sm sm:text-base font-bold text-white group-hover:text-amber-200 transition-colors font-mono tracking-wide">
-                        ${parsed.primary}
-                      </span>
-                      ${parsed.secondary ? `
-                        <span class="text-sm sm:text-base font-bold text-amber-400/90 group-hover:text-amber-300 transition-colors shrink-0 font-thai">
-                          ${parsed.secondary}
+                    <div class="flex-1 min-w-0 pr-1">
+                      <div class="flex items-center justify-between w-full gap-3">
+                        <span class="text-sm sm:text-base font-bold text-white group-hover:text-amber-200 transition-colors font-mono tracking-wide">
+                          ${parsed.primary}
                         </span>
-                      ` : ''}
+                        ${parsed.secondary ? `
+                          <span class="text-sm sm:text-base font-bold text-amber-400/90 group-hover:text-amber-300 transition-colors shrink-0 font-thai">
+                            ${parsed.secondary}
+                          </span>
+                        ` : ''}
+                      </div>
+                      <div class="drill-meaning hidden mt-1 text-xs sm:text-sm font-medium text-emerald-300/95 leading-snug"></div>
                     </div>
                     <div class="drill-indicator hidden text-sm font-bold shrink-0 ml-2"></div>
                   </button>
@@ -6377,7 +6438,7 @@
       else if (step.type === 'word_decode') {
         const w = step.target;
         const lvl = getEffectiveCourseLevel();
-        const showRoman = appState.pace !== 'intensive';
+        const showRoman = true;
 
         stage.innerHTML = `
           <div class="bg-[#16181d] border border-[#252934] rounded-3xl p-6 sm:p-8 space-y-6 shadow-xl">
@@ -6628,14 +6689,14 @@
       },
       ST_kin_nii_hor: {
         role: '👨‍🍳 Food Stall Cook',
-        partner: { script: 'กินนี่หรือใส่ห่อครับ?', spoken: 'kin nîi rǒe sài hɔ̀ɔ kháp?', meaning: 'Eating here or wrapping it to go?', tts: 'กินนี่หรือใส่ห่อครับ' },
-        user: { script: 'กินนี่ค่ะ', spoken: 'kin nîi khâ', meaning: 'Eating right here.', tts: 'กินนี่ค่ะ' },
+        partner: { script: 'กินนี่หรือใส่ห่อครับ?', spoken: 'gin nîi rǒe sài hɔ̀ɔ kháp?', meaning: 'Eating here or wrapping it to go?', tts: 'กินนี่หรือใส่ห่อครับ' },
+        user: { script: 'กินนี่ค่ะ', spoken: 'gin nîi khâ', meaning: 'Eating right here.', tts: 'กินนี่ค่ะ' },
         intentCue: '🍽️ Tell the vendor you are eating here at the stall',
         earDistractors: ['What level of sweetness do you want in your tea?', 'Did you bring a plastic bag from home?', 'Which alley should I turn into?']
       },
       ST_sai_hor: {
         role: '👨‍🍳 Food Stall Cook',
-        partner: { script: 'รับขนมจีบเพิ่มไหมคะ กินนี่หรือใส่ห่อคะ?', spoken: 'ráp khà-nǒm-jìip phôem mǎi khá, kin nîi rǒe sài hɔ̀ɔ khá?', meaning: 'Want dumplings too? Eating here or takeaway?', tts: 'กินนี่หรือใส่ห่อคะ' },
+        partner: { script: 'รับขนมจีบเพิ่มไหมคะ กินนี่หรือใส่ห่อคะ?', spoken: 'ráp khà-nǒm-jìip phôem mǎi khá, gin nîi rǒe sài hɔ̀ɔ khá?', meaning: 'Want dumplings too? Eating here or takeaway?', tts: 'รับขนมจีบเพิ่มไหมคะ กินนี่หรือใส่ห่อคะ' },
         user: { script: 'ใส่ห่อค่ะ', spoken: 'sài hɔ̀ɔ khâ', meaning: 'Wrap it to go / takeaway, please.', tts: 'ใส่ห่อค่ะ' },
         intentCue: '🥡 Tell the vendor to pack/wrap it for takeaway',
         earDistractors: ['Ask how much the fresh coconut costs', 'Tell the driver to stop right here', 'Say that you want zero sugar in your coffee']
@@ -6651,7 +6712,7 @@
       // UNIT 2: CAFES, 7-ELEVEN & PAYING
       ST_waan_noi: {
         role: '🧋 Cafe Barista',
-        partner: { script: 'ชาไทยเย็นแก้วนึงนะคะ เอาหวานปกติไหมคะ?', spoken: 'chaa thai yen gâaeo nɯng ná khá, ao wǎan bpòk-gà-dtì mǎi khá?', meaning: 'One iced Thai tea — do you want normal sweetness?', tts: 'ชาไทยเย็น เอาหวานปกติไหมคะ' },
+        partner: { script: 'ชาไทยเย็นแก้วนึงนะคะ เอาหวานปกติไหมคะ?', spoken: 'chaa thai yen gâaeo nɯng ná khá, ao wǎan bpòk-gà-dtì mǎi khá?', meaning: 'One iced Thai tea — do you want normal sweetness?', tts: 'ชาไทยเย็นแก้วนึงนะคะ เอาหวานปกติไหมคะ' },
         user: { script: 'เอาหวานน้อยค่ะ', spoken: 'ao wǎan nɔ́ɔi khâ', meaning: 'Less sweet (50% sugar), please.', tts: 'เอาหวานน้อยค่ะ' },
         intentCue: '🧋 Ask for less sweet / half sugar (หวานน้อย)',
         earDistractors: ['Do you want meatballs and bean sprouts in your soup?', 'Should I turn right at the intersection?', 'Are you eating here at the table?']
@@ -6730,7 +6791,7 @@
       },
       ST_nong_staff: {
         role: '🧑‍🍳 Young Cafe Server',
-        partner: { script: 'สวัสดีค่ะ นั่งโต๊ะไหนดีคะ เรียกได้เลยนะคะ!', spoken: 'sà-wàt-dii khâ, nâng dtó nǎi dii khá, rîak dâi loei ná khá!', meaning: 'Hello! Pick any table, just call me when you are ready!', tts: 'สวัสดีค่ะ เรียกได้เลยนะคะ' },
+        partner: { script: 'สวัสดีค่ะ นั่งโต๊ะไหนดีคะ เรียกได้เลยนะคะ!', spoken: 'sà-wàt-dii khâ, nâng dtó nǎi dii khá, rîak dâi loei ná khá!', meaning: 'Hello! Pick any table, just call me when you are ready!', tts: 'สวัสดีค่ะ นั่งโต๊ะไหนดีคะ เรียกได้เลยนะคะ' },
         user: { script: 'น้องคะ สั่งอาหารหน่อยค่ะ', spoken: 'nɔ́ɔng khá, sàng aa-hǎan nɔ̀ɔi khâ', meaning: 'Younger sibling/server, could I order please.', tts: 'น้องคะ สั่งอาหารหน่อยค่ะ' },
         intentCue: '🙋 Call over the younger server politely using น้อง (nɔ́ɔng)',
         earDistractors: ['Tell the driver to pull over right here', 'Ask for no MSG in the papaya salad', 'Say that the movie was insanely good']
@@ -6789,7 +6850,7 @@
       ST_arai: {
         role: '🙋 Thai Friend',
         partner: { script: 'เมื่อกี้เสียงดังมาก เธอพูดว่าอะไรนะ?', spoken: 'mɯ̂a-gíi sǐang dang mâak, thoe phûut wâa à-lai ná?', meaning: 'It was so loud just now — what did you say?', tts: 'เมื่อกี้เสียงดังมาก เธอพูดว่าอะไรนะ' },
-        user: { script: 'กินอะไรดี?', spoken: 'kin à-lai dii?', meaning: 'What should we eat? (natural ร→ล shift)', tts: 'กินอะไรดี' },
+        user: { script: 'กินอะไรดี?', spoken: 'gin à-lai dii?', meaning: 'What should we eat? (natural ร→ล shift)', tts: 'กินอะไรดี' },
         intentCue: '🗣️ Ask "What should we eat?" using natural spoken à-lai (อะไร)',
         earDistractors: ['Where did you park the car?', 'How much is the bill for the coffee?', 'Should we turn left at the corner?']
       },
@@ -6810,7 +6871,7 @@
       ST_reu_plao: {
         role: '🙋 Thai Friend',
         partner: { script: 'ร้านนี้คนเยอะมาก เธอหิวเปล่า?', spoken: 'ráan níi khon yóe mâak, thoe hǐu bpào?', meaning: 'This shop is packed — are you hungry or not (หิวเปล่า)?', tts: 'ร้านนี้คนเยอะมาก เธอหิวเปล่า' },
-        user: { script: 'ว่างเปล่า? ไปกินกัน!', spoken: 'wâang bpào? bpai kin gan!', meaning: 'Are you free or not? Let’s go eat!', tts: 'ว่างเปล่า ไปกินกัน' },
+        user: { script: 'ว่างเปล่า? ไปกินกัน!', spoken: 'wâang bpào? bpai gin gan!', meaning: 'Are you free or not? Let’s go eat!', tts: 'ว่างเปล่า ไปกินกัน' },
         intentCue: '⚡ Use the rapid street contraction เปล่า (bpào — "...or not?")',
         earDistractors: ['Ask the cashier to heat up your toastie', 'Order thin rice noodles with extra pork', 'Tell the driver to enter this alley']
       },
@@ -6837,7 +6898,7 @@
       },
       ST_tham_mai: {
         role: '🙋 Thai Friend',
-        partner: { script: 'วันนี้เราไม่กินก๋วยเตี๋ยวร้านนั้นนะ!', spoken: 'wan-níi rao mâi kin gǔai-dtǐao ráan nán ná!', meaning: 'Today we are not eating noodles at that shop!', tts: 'วันนี้เราไม่กินก๋วยเตี๋ยวร้านนั้นนะ' },
+        partner: { script: 'วันนี้เราไม่กินก๋วยเตี๋ยวร้านนั้นนะ!', spoken: 'wan-níi rao mâi gin gǔai-dtǐao ráan nán ná!', meaning: 'Today we are not eating noodles at that shop!', tts: 'วันนี้เราไม่กินก๋วยเตี๋ยวร้านนั้นนะ' },
         user: { script: 'ทำไมอ่ะ?', spoken: 'tham-mai à?', meaning: 'Why is that? (casual street inflection)', tts: 'ทำไมอ่ะ' },
         intentCue: '❓ Ask casually: "Why?" (ทำไมอ่ะ?)',
         earDistractors: ['Tell the cook no meatballs and no sprouts', 'Ask the cashier for a straw', 'Tell the driver to go straight']
@@ -6881,21 +6942,21 @@
       },
       ST_roe: {
         role: '🙋 Thai Friend',
-        partner: { script: 'รู้ยัง ร้านก๋วยเตี๋ยวเจ้าดังเขาแจกฟรีวันนี้วันเดียว!', spoken: 'rúu yang, ráan gǔai-dtǐao jâo dang khǎo jàaek frii wan-níi wan diao!', meaning: 'Did you hear? The famous noodle shop is giving free bowls today only!', tts: 'รู้ยัง ร้านก๋วยเตี๋ยวเจ้าดังแจกฟรีวันนี้' },
+        partner: { script: 'รู้ยัง ร้านก๋วยเตี๋ยวเจ้าดังเขาแจกฟรีวันนี้วันเดียว!', spoken: 'rúu yang, ráan gǔai-dtǐao jâo dang khǎo jàaek frii wan-níi wan diao!', meaning: 'Did you hear? The famous noodle shop is giving free bowls today only!', tts: 'รู้ยัง ร้านก๋วยเตี๋ยวเจ้าดังเขาแจกฟรีวันนี้วันเดียว' },
         user: { script: 'จริงเหรอ?!', spoken: 'jing rǒe?!', meaning: 'Really?! Is that so?! (เหรอ)', tts: 'จริงเหรอ' },
         intentCue: '😲 Express genuine surprise: "Really?!" (จริงเหรอ?!)',
         earDistractors: ['Tell the driver to turn left', 'Order a cup of plain crushed ice', 'Decline the plastic bag']
       },
       ST_si: {
         role: '🙋 Thai Friend',
-        partner: { script: 'หมูปิ้งร้อนๆ หอมมากเลย ลองชิมไม้หนึ่งไหม?', spoken: 'mǔu-bpîng rɔ́ɔn-rɔ́ɔn hɔ̌ɔm mâak loei, lɔɔng chim mái nɯ̀ng mǎi?', meaning: 'These hot grilled pork skewers smell amazing — want to try one?', tts: 'หมูปิ้งร้อนๆ หอมมากเลย ลองชิมไหม' },
-        user: { script: 'กินสิ! เอาไม้หนึ่ง', spoken: 'kin sì! ao mái nɯ̀ng', meaning: 'Of course I’ll eat it (กินสิ)! Give me one skewer.', tts: 'กินสิ เอาไม้หนึ่ง' },
+        partner: { script: 'หมูปิ้งร้อนๆ หอมมากเลย ลองชิมไม้หนึ่งไหม?', spoken: 'mǔu-bpîng rɔ́ɔn-rɔ́ɔn hɔ̌ɔm mâak loei, lɔɔng chim mái nɯ̀ng mǎi?', meaning: 'These hot grilled pork skewers smell amazing — want to try one?', tts: 'หมูปิ้งร้อนๆ หอมมากเลย ลองชิมไม้หนึ่งไหม' },
+        user: { script: 'กินสิ! เอาไม้หนึ่ง', spoken: 'gin sì! ao mái nɯ̀ng', meaning: 'Of course I’ll eat it (กินสิ)! Give me one skewer.', tts: 'กินสิ เอาไม้หนึ่ง' },
         intentCue: '🔥 Respond enthusiastically using สิ (sì — "Of course / do it!")',
         earDistractors: ['Ask the vendor to pack the soup separately', 'Tell the taxi to drop you off here', 'Ask how much the bill is']
       },
       ST_na: {
         role: '🙋 Thai Friend',
-        partner: { script: 'เดี๋ยวเราไปซื้อน้ำที่เซเว่น รอตรงนี้นะ!', spoken: 'dǐao rao bpai sɯ́ɯ nám thîi see-wêen, rɔɔ dtrong níi ná!', meaning: 'I’ll go buy water at 7-Eleven — wait right here, okay (นะ)?', tts: 'เดี๋ยวเราไปซื้อน้ำ รอตรงนี้นะ' },
+        partner: { script: 'เดี๋ยวเราไปซื้อน้ำที่เซเว่น รอตรงนี้นะ!', spoken: 'dǐao rao bpai sɯ́ɯ nám thîi see-wêen, rɔɔ dtrong níi ná!', meaning: 'I’ll go buy water at 7-Eleven — wait right here, okay (นะ)?', tts: 'เดี๋ยวเราไปซื้อน้ำที่เซเว่น รอตรงนี้นะ' },
         user: { script: 'โอเคนะ รอตรงนี้นะ!', spoken: 'oo-khee ná, rɔɔ dtrong níi ná!', meaning: 'Okay! I’ll wait right here (warm softener นะ)!', tts: 'โอเคนะ รอตรงนี้นะ' },
         intentCue: '🌸 Reassure your friend warmly using นะ (ná)',
         earDistractors: ['Order special extra-large dry noodles', 'Tell the cook no chilies at all', 'Ask to scan the PromptPay QR']
@@ -6911,42 +6972,42 @@
       // UNIT 6: CASUAL PRONOUNS, SLANG & REACTIONS
       ST_rao: {
         role: '🙋 Thai Friend',
-        partner: { script: 'เที่ยงนี้ใครอยากกินส้มตำไก่ย่างบ้าง?', spoken: 'thîang níi khrai yàak kin sôm-dtam gài yâang bâang?', meaning: 'Who wants to eat papaya salad and grilled chicken this noon?', tts: 'เที่ยงนี้ใครอยากกินส้มตำบ้าง' },
-        user: { script: 'เราอยากกินส้มตำ!', spoken: 'rao yàak kin sôm-dtam!', meaning: 'I (เรา) want to eat papaya salad!', tts: 'เราอยากกินส้มตำ' },
+        partner: { script: 'เที่ยงนี้ใครอยากกินส้มตำไก่ย่างบ้าง?', spoken: 'thîang níi khrai yàak gin sôm-dtam gài yâang bâang?', meaning: 'Who wants to eat papaya salad and grilled chicken this noon?', tts: 'เที่ยงนี้ใครอยากกินส้มตำไก่ย่างบ้าง' },
+        user: { script: 'เราอยากกินส้มตำ!', spoken: 'rao yàak gin sôm-dtam!', meaning: 'I (เรา) want to eat papaya salad!', tts: 'เราอยากกินส้มตำ' },
         intentCue: '👥 Use casual friendly "I / me" (เรา — rao) with peers',
         earDistractors: ['Ask the cashier for a plastic bag', 'Tell the driver to turn into this alley', 'Ask how much the coffee costs']
       },
       ST_khao: {
         role: '🙋 Thai Friend',
-        partner: { script: 'คืนนี้เพื่อนชวนไปดาดฟ้า ตัวเองไปไหม?', spoken: 'khɯɯn níi phɯ̂an chuan bpai dàat-fáa, dtua-eeng bpai mǎi?', meaning: 'Friends invited us to the rooftop tonight — are you going?', tts: 'คืนนี้เพื่อนชวนไปดาดฟ้า ไปไหม' },
+        partner: { script: 'คืนนี้เพื่อนชวนไปดาดฟ้า ตัวเองไปไหม?', spoken: 'khɯɯn níi phɯ̂an chuan bpai dàat-fáa, dtua-eeng bpai mǎi?', meaning: 'Friends invited us to the rooftop tonight — are you going?', tts: 'คืนนี้เพื่อนชวนไปดาดฟ้า ตัวเองไปไหม' },
         user: { script: 'เค้าไม่ไปนะ วันนี้ง่วงมาก', spoken: 'kháo mâi bpai ná, wan-níi ngûang mâak', meaning: "I'm (เค้า) not going, super sleepy today.", tts: 'เค้าไม่ไปนะ วันนี้ง่วงมาก' },
         intentCue: '💬 Use close-friend pronoun เค้า (kháo)',
         earDistractors: ['Order thin rice noodles with broth separate', 'Ask the cashier to microwave your sandwich', 'Tell the cook no cilantro']
       },
       ST_dtua_eeng: {
         role: '❤️ Thai Partner / Close Friend',
-        partner: { script: 'ถึงร้านแล้ว ตัวเองอยากกินอะไรสั่งเลยนะ!', spoken: 'thǔeng ráan láaeo, dtua-eeng yàak kin à-rai sàng loei ná!', meaning: 'We arrived at the restaurant — babe (ตัวเอง), order whatever you want to eat!', tts: 'ถึงร้านแล้ว ตัวเองอยากกินอะไรสั่งเลยนะ' },
+        partner: { script: 'ถึงร้านแล้ว ตัวเองอยากกินอะไรสั่งเลยนะ!', spoken: 'thǔeng ráan láaeo, dtua-eeng yàak gin à-rai sàng loei ná!', meaning: 'We arrived at the restaurant — babe (ตัวเอง), order whatever you want to eat!', tts: 'ถึงร้านแล้ว ตัวเองอยากกินอะไรสั่งเลยนะ' },
         user: { script: 'ตัวเองเอาอะไร เค้าเอาด้วย!', spoken: 'dtua-eeng ao à-rai, kháo ao dûai!', meaning: 'Whatever you (ตัวเอง) get, I’ll get too!', tts: 'ตัวเองเอาอะไร เค้าเอาด้วย' },
         intentCue: '❤️ Reply affectionately using ตัวเอง (dtua-eeng — you/babe)',
         earDistractors: ['Ask the taxi driver to stop up ahead', 'Tell the vendor you want zero chilies', 'Ask for the check please']
       },
       ST_jing_roe: {
         role: '🙋 Thai Friend',
-        partner: { script: 'แก! เราถูกหวยรางวัลเลขท้ายสองตัวด้วยแหละ!', spoken: 'gaae! rao thùuk hǔai raang-wan lêek tháai sɔ̌ɔng dtua dûai làe!', meaning: 'Dude! I just won the two-digit lottery prize!', tts: 'เราถูกหวยรางวัลเลขท้ายสองตัวด้วยแหละ' },
+        partner: { script: 'แก! เราถูกหวยรางวัลเลขท้ายสองตัวด้วยแหละ!', spoken: 'gaae! rao thùuk hǔai raang-wan lêek tháai sɔ̌ɔng dtua dûai làe!', meaning: 'Dude! I just won the two-digit lottery prize!', tts: 'แก! เราถูกหวยรางวัลเลขท้ายสองตัวด้วยแหละ' },
         user: { script: 'จริงดิ?! เลี้ยงข้าวเลย!', spoken: 'jing dì?! líang khâao loei!', meaning: 'For real (จริงดิ)?! Treat me to a meal right now!', tts: 'จริงดิ เลี้ยงข้าวเลย' },
         intentCue: '🤩 Exclaim "For real?! No way!" (จริงดิ / จริงเหรอ)',
         earDistractors: ['Tell the barista you want 50% sugar', 'Ask for no meatballs in your soup', 'Tell the driver to turn left']
       },
       ST_mai_pen_rai: {
         role: '🙋 Passerby at Market',
-        partner: { script: 'อุ๊ย ขอโทษทีค่ะ เดินชนนิดนึง เจ็บไหมคะ?', spoken: 'úi khɔ̌ɔ-thôot thii khâ, doen chon nít-nɯng, jèp mǎi khá?', meaning: 'Oops, so sorry I bumped into you a bit — are you hurt?', tts: 'ขอโทษทีค่ะ เดินชนนิดนึง' },
+        partner: { script: 'อุ๊ย ขอโทษทีค่ะ เดินชนนิดนึง เจ็บไหมคะ?', spoken: 'úi khɔ̌ɔ-thôot thii khâ, doen chon nít-nɯng, jèp mǎi khá?', meaning: 'Oops, so sorry I bumped into you a bit — are you hurt?', tts: 'อุ๊ย ขอโทษทีค่ะ เดินชนนิดนึง เจ็บไหมคะ' },
         user: { script: 'ไม่เป็นไรค่ะ สบายมาก!', spoken: 'mâi bpen rai khâ, sà-baai mâak!', meaning: 'No worries at all! Totally fine!', tts: 'ไม่เป็นไรค่ะ สบายมาก' },
         intentCue: '🙏 Smile and say "No worries / It’s all good!" (ไม่เป็นไรค่ะ)',
         earDistractors: ['Ask the vendor to wrap the food to go', 'Ask if you can scan PromptPay QR', 'Order dry egg noodles']
       },
       ST_ao_di: {
         role: '🙋 Thai Friend',
-        partner: { script: 'กินข้าวเสร็จ ไปกินไอติมกะทิเจ้าเด็ดต่อไหม?', spoken: 'kin khâao sèt, bpai kin ai-dtim gà-thí jâo dèt dtɔ̀ɔ mǎi?', meaning: 'After dinner, wanna go get that legendary coconut ice cream?', tts: 'กินข้าวเสร็จ ไปกินไอติมกะทิต่อไหม' },
+        partner: { script: 'กินข้าวเสร็จ ไปกินไอติมกะทิเจ้าเด็ดต่อไหม?', spoken: 'gin khâao sèt, bpai gin ai-dtim gà-thí jâo dèt dtɔ̀ɔ mǎi?', meaning: 'After dinner, wanna go get that legendary coconut ice cream?', tts: 'กินข้าวเสร็จ ไปกินไอติมกะทิเจ้าเด็ดต่อไหม' },
         user: { script: 'เอาดิ! ไปเลย', spoken: 'ao dì! bpai loei', meaning: "I'm down (เอาดิ)! Let's go!", tts: 'เอาดิ ไปเลย' },
         intentCue: '🙌 Say "I’m down! Let’s do it!" (เอาดิ!)',
         earDistractors: ['Tell the cook no MSG and no chilies', 'Ask the cashier for a straw', 'Tell the driver to stop at the corner']
@@ -6960,7 +7021,7 @@
       },
       ST_khoot_dii: {
         role: '🙋 Thai Friend',
-        partner: { script: 'บรรยากาศริมแม่น้ำเจ้าพระยาคืนนี้เป็นไงบ้าง?', spoken: 'ban-yaa-gàat rim mâae-nám jâo-phrá-yaa khɯɯn níi bpen ngai bâang?', meaning: 'How is the vibe by the Chao Phraya river tonight?', tts: 'บรรยากาศริมแม่น้ำคืนนี้เป็นไงบ้าง' },
+        partner: { script: 'บรรยากาศริมแม่น้ำเจ้าพระยาคืนนี้เป็นไงบ้าง?', spoken: 'ban-yaa-gàat rim mâae-nám jâo-phrá-yaa khɯɯn níi bpen ngai bâang?', meaning: 'How is the vibe by the Chao Phraya river tonight?', tts: 'บรรยากาศริมแม่น้ำเจ้าพระยาคืนนี้เป็นไงบ้าง' },
         user: { script: 'โคตรดี! ลมเย็นสุดๆ', spoken: 'khôot dii! lom yen sùt-sùt', meaning: 'Insanely good (โคตรดี)! The breeze is amazing.', tts: 'โคตรดี ลมเย็นสุดๆ' },
         intentCue: '🔥 Hype it up: "Insanely good / crazy good!" (โคตรดี!)',
         earDistractors: ['Ask the vendor to pack broth separately', 'Decline the plastic bag at checkout', 'Ask how much the coconut is']
@@ -6982,7 +7043,7 @@
       ST_ao_ngai_dii: {
         role: '🙋 Thai Friend',
         partner: { script: 'อ้าว ร้านปิดปรับปรุงเฉยเลย! พวกเราเอาไงดี?', spoken: 'âao, ráan bpìt bpràp-bprung chǒei loei! phûak rao ao ngai dii?', meaning: 'Whoa, the shop is closed for renovation! What should we do now (เอาไงดี)?', tts: 'อ้าว ร้านปิดปรับปรุงเฉยเลย พวกเราเอาไงดี' },
-        user: { script: 'เอาไงดี? ไปกินหมี่แห้งไหม?', spoken: 'ao ngai dii? bpai kin mìi hâeng mǎi?', meaning: 'What’s the move (เอาไงดี)? Wanna go eat dry egg noodles?', tts: 'เอาไงดี ไปกินหมี่แห้งไหม' },
+        user: { script: 'เอาไงดี? ไปกินหมี่แห้งไหม?', spoken: 'ao ngai dii? bpai gin mìi hâeng mǎi?', meaning: 'What’s the move (เอาไงดี)? Wanna go eat dry egg noodles?', tts: 'เอาไงดี ไปกินหมี่แห้งไหม' },
         intentCue: '🤔 Ask "What should we do now? / What’s the plan?" (เอาไงดี?)',
         earDistractors: ['Tell the cashier you do not need a bag', 'Tell the driver to drop you off right here', 'Ask for less ice in your drink']
       },
@@ -6997,9 +7058,9 @@
       },
       W_kaa: {
         role: '☕ Tea Stall Vendor',
-        partner: { script: 'น้ำร้อนอยู่ในกานะคะ รับชาไหมคะ?', spoken: 'nám rɔ́ɔn yùu nai kaa ná khá, ráp chaa mǎi khá?', meaning: 'Hot water is in the kettle (กา) — would you like tea?', tts: 'น้ำร้อนอยู่ในกานะคะ รับชาไหมคะ' },
-        user: { script: 'ขอน้ำในกาค่ะ', spoken: 'khɔ̌ɔ nám nai kaa khâ', meaning: 'May I have water from the kettle (กา).', tts: 'ขอน้ำในกาค่ะ' },
-        intentCue: '🫖 Spot and use กา (kaa — kettle)',
+        partner: { script: 'น้ำร้อนอยู่ในกานะคะ รับชาไหมคะ?', spoken: 'nám rɔ́ɔn yùu nai gaa ná khá, ráp chaa mǎi khá?', meaning: 'Hot water is in the kettle (กา) — would you like tea?', tts: 'น้ำร้อนอยู่ในกานะคะ รับชาไหมคะ' },
+        user: { script: 'ขอน้ำในกาค่ะ', spoken: 'khɔ̌ɔ nám nai gaa khâ', meaning: 'May I have water from the kettle (กา).', tts: 'ขอน้ำในกาค่ะ' },
+        intentCue: '🫖 Spot and use กา (gaa — kettle)',
         earDistractors: ['Turn left at the corner', 'Wrap the noodles to go', 'No chilies please']
       },
       W_naa: {
@@ -7011,15 +7072,15 @@
       },
       W_kee: {
         role: '🙋 Thai Friend',
-        partner: { script: 'ดูป้ายร้านนั้นสิ ติดเกไปข้างนึงไหม?', spoken: 'duu bpâai ráan nán sì, dtìt kee bpai khâang nɯng mǎi?', meaning: 'Look at that shop sign — is it hung crooked (เก) to one side?', tts: 'ดูป้ายร้านนั้นสิ ติดเกไปข้างนึงไหม' },
-        user: { script: 'ใช่ มันเกนิดนึง', spoken: 'châi, man kee nít-nɯng', meaning: 'Yes, it is a bit crooked (เก).', tts: 'ใช่ มันเกนิดนึง' },
-        intentCue: '📐 Decode and use เก (kee — crooked/off-center)',
+        partner: { script: 'ดูป้ายร้านนั้นสิ ติดเกไปข้างนึงไหม?', spoken: 'duu bpâai ráan nán sì, dtìt gee bpai khâang nɯng mǎi?', meaning: 'Look at that shop sign — is it hung crooked (เก) to one side?', tts: 'ดูป้ายร้านนั้นสิ ติดเกไปข้างนึงไหม' },
+        user: { script: 'ใช่ มันเกนิดนึง', spoken: 'châi, man gee nít-nɯng', meaning: 'Yes, it is a bit crooked (เก).', tts: 'ใช่ มันเกนิดนึง' },
+        intentCue: '📐 Decode and use เก (gee — crooked/off-center)',
         earDistractors: ['Order chicken noodle soup', 'Ask to scan PromptPay', 'Tell the driver to stop here']
       },
       W_mii: {
         role: '👨‍🍳 Noodle Vendor',
         partner: { script: 'สวัสดีค่ะ วันนี้มีเส้นเล็กกับบะหมี่ค่ะ!', spoken: 'sà-wàt-dii khâ, wan-níi mii sên lék gàp bà-mìi khâ!', meaning: 'Hello! Today we have (มี) thin noodles and egg noodles!', tts: 'สวัสดีค่ะ วันนี้มีเส้นเล็กกับบะหมี่ค่ะ' },
-        user: { script: 'มีไก่ไหมคะ?', spoken: 'mii kài mǎi khá?', meaning: 'Do you have (มี) chicken?', tts: 'มีไก่ไหมคะ' },
+        user: { script: 'มีไก่ไหมคะ?', spoken: 'mii gài mǎi khá?', meaning: 'Do you have (มี) chicken?', tts: 'มีไก่ไหมคะ' },
         intentCue: '🍲 Ask "Do you have...?" using มี (mii)',
         earDistractors: ['Tell the driver to go straight', 'Decline the plastic bag', 'Ask why traffic is jammed']
       },
@@ -7039,15 +7100,15 @@
       },
       W_kai: {
         role: '👩‍🍳 Soup Stall Cook',
-        partner: { script: 'วันนี้รับก๋วยเตี๋ยวหมู หรือก๋วยเตี๋ยวไก่ดีคะ?', spoken: 'wan-níi ráp gǔai-dtǐao mǔu rǒe gǔai-dtǐao kài dii khá?', meaning: 'Today would you like pork noodles or chicken (ไก่) noodles?', tts: 'วันนี้รับก๋วยเตี๋ยวหมู หรือก๋วยเตี๋ยวไก่ดีคะ' },
-        user: { script: 'เอาไก่ค่ะ', spoken: 'ao kài khâ', meaning: "I'll have chicken (ไก่), please.", tts: 'เอาไก่ค่ะ' },
-        intentCue: '🍗 Order chicken using ไก่ (kài)',
+        partner: { script: 'วันนี้รับก๋วยเตี๋ยวหมู หรือก๋วยเตี๋ยวไก่ดีคะ?', spoken: 'wan-níi ráp gǔai-dtǐao mǔu rǒe gǔai-dtǐao gài dii khá?', meaning: 'Today would you like pork noodles or chicken (ไก่) noodles?', tts: 'วันนี้รับก๋วยเตี๋ยวหมู หรือก๋วยเตี๋ยวไก่ดีคะ' },
+        user: { script: 'เอาไก่ค่ะ', spoken: 'ao gài khâ', meaning: "I'll have chicken (ไก่), please.", tts: 'เอาไก่ค่ะ' },
+        intentCue: '🍗 Order chicken using ไก่ (gài)',
         earDistractors: ['Ask for a plastic straw', 'Tell the driver to turn left', 'Say you are staying home chilling']
       },
       W_kha: {
         role: '👩‍🍳 Waitress',
         partner: { script: 'สวัสดีค่ะ รับอะไรดีคะ?', spoken: 'sà-wàt-dii khâ, ráp à-rai dii khá?', meaning: 'Hello! What would you like to order (คะ)?', tts: 'สวัสดีค่ะ รับอะไรดีคะ' },
-        user: { script: 'เอาน้ำใสค่ะ มีไก่ไหมคะ?', spoken: 'ao nám sǎi khâ, mii kài mǎi khá?', meaning: 'Clear broth please — do you have chicken (คะ)?', tts: 'เอาน้ำใสค่ะ มีไก่ไหมคะ' },
+        user: { script: 'เอาน้ำใสค่ะ มีไก่ไหมคะ?', spoken: 'ao nám sǎi khâ, mii gài mǎi khá?', meaning: 'Clear broth please — do you have chicken (คะ)?', tts: 'เอาน้ำใสค่ะ มีไก่ไหมคะ' },
         intentCue: '🙏 Respond politely using ค่ะ / คะ (khâ / khá)',
         earDistractors: ['Tell the driver to stop at the alley', 'Say you are totally confused', 'Ask to microwave the toastie']
       },
@@ -7081,16 +7142,16 @@
       },
       W_muu: {
         role: '👨‍🍳 Noodle Cook',
-        partner: { script: 'ก๋วยเตี๋ยวน้ำใส ใส่หมูหรือใส่ไก่ดีครับ?', spoken: 'gǔai-dtǐao nám sǎi, sài mǔu rǒe sài kài dii kháp?', meaning: 'For your clear noodle soup, put pork (หมู) or chicken?', tts: 'ก๋วยเตี๋ยวน้ำใส ใส่หมูหรือใส่ไก่ดีครับ' },
+        partner: { script: 'ก๋วยเตี๋ยวน้ำใส ใส่หมูหรือใส่ไก่ดีครับ?', spoken: 'gǔai-dtǐao nám sǎi, sài mǔu rǒe sài gài dii kháp?', meaning: 'For your clear noodle soup, put pork (หมู) or chicken?', tts: 'ก๋วยเตี๋ยวน้ำใส ใส่หมูหรือใส่ไก่ดีครับ' },
         user: { script: 'เอาหมูน้ำใสค่ะ', spoken: 'ao mǔu nám sǎi khâ', meaning: "I'll have pork (หมู) in clear broth.", tts: 'เอาหมูน้ำใสค่ะ' },
         intentCue: '🐷 Order pork in clear broth using หมู (mǔu)',
         earDistractors: ['Ask for 50% sweetness', 'Decline the plastic bag', 'Tell the driver to turn left']
       },
       W_kin: {
         role: '🙋 Thai Friend',
-        partner: { script: 'เที่ยงแล้ว วันนี้อยากกินอะไรดีคะ?', spoken: 'thîang láaeo, wan-níi yàak kin à-rai dii khá?', meaning: 'It is noon already — what do you want to eat (กิน) today?', tts: 'เที่ยงแล้ว วันนี้อยากกินอะไรดีคะ' },
-        user: { script: 'อยากกินก๋วยเตี๋ยวหมูค่ะ', spoken: 'yàak kin gǔai-dtǐao mǔu khâ', meaning: 'I want to eat (กิน) pork noodle soup.', tts: 'อยากกินก๋วยเตี๋ยวหมูค่ะ' },
-        intentCue: '🍽️ Say what you want to eat using กิน (kin)',
+        partner: { script: 'เที่ยงแล้ว วันนี้อยากกินอะไรดีคะ?', spoken: 'thîang láaeo, wan-níi yàak gin à-rai dii khá?', meaning: 'It is noon already — what do you want to eat (กิน) today?', tts: 'เที่ยงแล้ว วันนี้อยากกินอะไรดีคะ' },
+        user: { script: 'อยากกินก๋วยเตี๋ยวหมูค่ะ', spoken: 'yàak gin gǔai-dtǐao mǔu khâ', meaning: 'I want to eat (กิน) pork noodle soup.', tts: 'อยากกินก๋วยเตี๋ยวหมูค่ะ' },
+        intentCue: '🍽️ Say what you want to eat using กิน (gin)',
         earDistractors: ['Ask how much the fare is', 'Ask to microwave the sandwich', 'Tell the driver to stop here']
       },
       W_haeng: {
@@ -7137,9 +7198,9 @@
       },
       W_kuay_tiao: {
         role: '🙋 Thai Friend',
-        partner: { script: 'หิวหรือยัง ไปกินก๋วยเตี๋ยวร้านดังกันไหม?', spoken: 'hǐu rǒe yang, bpai kin gǔai-dtǐao ráan dang gan mǎi?', meaning: 'Hungry yet? Wanna go eat noodle soup (ก๋วยเตี๋ยว) at the famous shop?', tts: 'หิวหรือยัง ไปกินก๋วยเตี๋ยวร้านดังกันไหม' },
-        user: { script: 'ไปสิ! อยากกินก๋วยเตี๋ยวหมู', spoken: 'bpai sì! yàak kin gǔai-dtǐao mǔu', meaning: "Let's go! I want to eat pork noodle soup (ก๋วยเตี๋ยว).", tts: 'ไปสิ อยากกินก๋วยเตี๋ยวหมู' },
-        intentCue: '🍜 Reply using ก๋วยเตี๋ยว (kǔay-tǐaw — noodle soup)',
+        partner: { script: 'หิวหรือยัง ไปกินก๋วยเตี๋ยวร้านดังกันไหม?', spoken: 'hǐu rǒe yang, bpai gin gǔai-dtǐao ráan dang gan mǎi?', meaning: 'Hungry yet? Wanna go eat noodle soup (ก๋วยเตี๋ยว) at the famous shop?', tts: 'หิวหรือยัง ไปกินก๋วยเตี๋ยวร้านดังกันไหม' },
+        user: { script: 'ไปสิ! อยากกินก๋วยเตี๋ยวหมู', spoken: 'bpai sì! yàak gin gǔai-dtǐao mǔu', meaning: "Let's go! I want to eat pork noodle soup (ก๋วยเตี๋ยว).", tts: 'ไปสิ อยากกินก๋วยเตี๋ยวหมู' },
+        intentCue: '🍜 Reply using ก๋วยเตี๋ยว (gǔai-dtǐao — noodle soup)',
         earDistractors: ['Ask for zero sugar in your coffee', 'Decline the plastic bag', 'Tell the driver to stop here']
       },
       W_order_1: {
@@ -7289,7 +7350,7 @@
           user: { script: 'หวานน้อยค่ะ', spoken: 'wǎan nɔ́ɔi khâ', meaning: 'Less sweet, please.', tts: 'หวานน้อยค่ะ' }
         },
         standard: {
-          partner: { script: 'ชาไทยเย็นแก้วนึงนะคะ เอาหวานปกติไหมคะ?', spoken: 'chaa thai yen gâaeo nɯng ná khá, ao wǎan bpòk-gà-dtì mǎi khá?', meaning: 'One iced Thai tea — do you want normal sweetness?', tts: 'ชาไทยเย็น เอาหวานปกติไหมคะ' },
+          partner: { script: 'ชาไทยเย็นแก้วนึงนะคะ เอาหวานปกติไหมคะ?', spoken: 'chaa thai yen gâaeo nɯng ná khá, ao wǎan bpòk-gà-dtì mǎi khá?', meaning: 'One iced Thai tea — do you want normal sweetness?', tts: 'ชาไทยเย็นแก้วนึงนะคะ เอาหวานปกติไหมคะ' },
           user: { script: 'เอาหวานน้อยค่ะ', spoken: 'ao wǎan nɔ́ɔi khâ', meaning: 'Less sweet (50% sugar), please.', tts: 'เอาหวานน้อยค่ะ' }
         },
         harder: {
@@ -7419,43 +7480,9 @@
             p.tts = simplifiedScript.replace(/[?!]/g, '');
           }
           return { partner: p, user: u };
-        } else if (diff === 'harder') {
-          // Level 3: Compound extension with situational qualifiers
-          const cleanUser = u.script.replace(/(ค่ะ|ครับ|คะ|!|\?)+$/g, '').trim();
-          const cleanSpoken = u.spoken.replace(/\s*(khâ|kháp|khá|!|\?)+$/gi, '').trim();
-          return {
-            partner: {
-              script: `สวัสดีครับ ${p.script.replace(/\?$/, '')} สะดวกไหมครับ?`,
-              spoken: `sà-wàt-dii kháp, ${p.spoken.replace(/\?$/, '')} sà-dùak mǎi kháp?`,
-              meaning: `Hello! ${p.meaning} (Is that convenient?)`,
-              tts: `สวัสดีครับ ${p.tts} สะดวกไหมครับ`
-            },
-            user: {
-              script: `${cleanUser}ด้วยค่ะ ขอบคุณนะคะ`,
-              spoken: `${cleanSpoken} dûai khâ, khɔ̀ɔp-khun ná khá`,
-              meaning: `${u.meaning.replace(/\.$/, '')} as well please, thank you!`,
-              tts: `${cleanUser}ด้วยค่ะ ขอบคุณนะคะ`
-            }
-          };
-        } else if (diff === 'overdrive') {
-          // Level 4: Rapid multi-clause native street flow with stall jargon
-          const cleanUser = u.script.replace(/(ค่ะ|ครับ|คะ|!|\?)+$/g, '').trim();
-          const cleanSpoken = u.spoken.replace(/\s*(khâ|kháp|khá|!|\?)+$/gi, '').trim();
-          return {
-            partner: {
-              script: `คิวต่อไป สั่งได้เลยครับพี่! ${p.script}`,
-              spoken: `khiu dtɔ̀ɔ-bpai sàng dâi loei kháp phîi! ${p.spoken}`,
-              meaning: `Next in line, order away! ${p.meaning}`,
-              tts: `คิวต่อไป สั่งได้เลยครับพี่ ${p.tts}`
-            },
-            user: {
-              script: `ขอ${cleanUser} แล้วก็ใส่ถุงกลับบ้านด้วยนะคะ`,
-              spoken: `khɔ̌ɔ ${cleanSpoken}, láaeo gɔ̂ɔ sài thǔng glàp bâan dûai ná khá`,
-              meaning: `${u.meaning.replace(/\.$/, '')}, and please pack it to-go for me!`,
-              tts: `ขอ${cleanUser} แล้วก็ใส่ถุงกลับบ้านด้วยนะคะ`
-            }
-          };
         }
+        // For mapped turns without a custom tier in THAI_CONVO_TIERS_MAP, keep the natural dialogue clean
+        // (harder/overdrive already scale via audio speed, 4 options, bonus items, more exchanges & valid compounds)
         return { partner: p, user: u };
       }
 
@@ -7485,13 +7512,13 @@
             script: `ปกติคำว่า ${scriptTxt} ใช้ในประโยคยังไงครับ?`,
             spoken: `bpòk-gà-dtì kham wâa ${spokenTxt} chái nai bprà-yòok yang-ngai kháp?`,
             meaning: `How do people normally use "${meanTxt}" in everyday speech?`,
-            tts: `คำว่า ${scriptTxt} ใช้ยังไงครับ`
+            tts: `ปกติคำว่า ${scriptTxt} ใช้ในประโยคยังไงครับ`
           },
           user: {
             script: `ใช้คำว่า ${scriptTxt} ในชีวิตประจำวันได้เลยค่ะ`,
             spoken: `chái kham wâa ${spokenTxt} nai chii-wít bprà-jam-wan dâi loei khâ`,
             meaning: `You can use "${meanTxt}" right in daily conversation!`,
-            tts: `ใช้คำว่า ${scriptTxt} ได้เลยค่ะ`
+            tts: `ใช้คำว่า ${scriptTxt} ในชีวิตประจำวันได้เลยค่ะ`
           }
         };
       } else if (diff === 'overdrive') {
@@ -7500,13 +7527,13 @@
             script: `สวัสดีครับพี่ วันนี้รับ ${scriptTxt} เพิ่มด้วยไหมครับ หรือรับเป็นพิเศษดี?`,
             spoken: `sà-wàt-dii kháp phîi, wan-níi ráp ${spokenTxt} phôem dûai mǎi kháp, rǒe ráp pen phí-sèet dii?`,
             meaning: `Hello! Would you like extra "${meanTxt}" today, or get it special size?`,
-            tts: `สวัสดีครับ วันนี้รับ ${scriptTxt} เพิ่มด้วยไหมครับ`
+            tts: `สวัสดีครับพี่ วันนี้รับ ${scriptTxt} เพิ่มด้วยไหมครับ หรือรับเป็นพิเศษดี`
           },
           user: {
             script: `เอา ${scriptTxt} พิเศษเลยค่ะ แล้วขอใส่ถุงกลับบ้านด้วยนะคะ`,
             spoken: `ao ${spokenTxt} phí-sèet loei khâ, láaeo khɔ̌ɔ sài thǔng glàp bâan dûai ná khá`,
             meaning: `Make it ${meanTxt} special large, and pack it to-go please!`,
-            tts: `เอา ${scriptTxt} พิเศษ ใส่ถุงกลับบ้านด้วยนะคะ`
+            tts: `เอา ${scriptTxt} พิเศษเลยค่ะ แล้วขอใส่ถุงกลับบ้านด้วยนะคะ`
           }
         };
       }
@@ -7516,7 +7543,7 @@
           script: `คำว่า ${scriptTxt} ใช้ยังไงคะ?`,
           spoken: `kham wâa ${spokenTxt} chái yang-ngai khá?`,
           meaning: `How do you use "${meanTxt}" in everyday talk?`,
-          tts: `${scriptTxt}`
+          tts: `คำว่า ${scriptTxt} ใช้ยังไงคะ`
         },
         user: {
           script: `${scriptTxt} ค่ะ`,
@@ -7527,6 +7554,44 @@
       };
     }
 
+
+    // Only dish/flavor/option items that naturally fit Curveball templates ("A or B?", "Eat here or to-go?")
+    const CURVEBALL_CHOICE_GROUPS = [
+      ['ST_lek', 'ST_mhii_haeng', 'W_bami', 'W_sen_lek'],
+      ['W_muu', 'W_kai', 'W_pet'],
+      ['W_nam', 'W_haeng'],
+      ['ST_waan_noi', 'ST_mai_waan', 'ST_waan_pokati']
+    ];
+    const CURVEBALL_DINE_OR_GO_IDS = new Set(['ST_lek', 'ST_mhii_haeng', 'W_bami', 'W_sen_lek', 'W_kuay_tiao']);
+    const CURVEBALL_FOLLOWUP_ADDON_IDS = new Set(['ST_phiseet', 'ST_nam_kheng_plao']);
+
+    const COMPOUND_DOMAINS = [
+      new Set(['ST_lek', 'ST_yaak_nam', 'ST_mhii_haeng', 'ST_mai_chin_mai_ngok', 'ST_noodle_shorthand', 'ST_phet_noi', 'ST_mai_sai_phrik', 'ST_mai_sai_phakchii', 'ST_mai_sai_phongchurot', 'ST_kin_nii_hor', 'ST_sai_hor', 'ST_phiseet', 'W_nam', 'W_sai_clear', 'W_yai', 'W_muu', 'W_kai', 'W_haeng', 'W_bami', 'W_sen_lek', 'W_luk_chin', 'W_thua_ngok', 'W_pet', 'W_order_1', 'W_order_2', 'W_shorthand']),
+      new Set(['ST_waan_noi', 'ST_mai_waan', 'ST_nam_kheng_plao', 'ST_waan_pokati', 'ST_mai_ao_thung', 'ST_mii_hlort', 'ST_wen_dai_mai']),
+      new Set(['ST_trong_bpai', 'ST_liao_sai', 'ST_liao_kwaa', 'ST_yut_trong_nii', 'ST_khaang_naa', 'ST_soi_nii', 'ST_song_thii_nii'])
+    ];
+    const COMPOUND_CONFLICTS = [
+      new Set(['ST_kin_nii_hor', 'ST_sai_hor']),
+      new Set(['W_nam', 'W_haeng', 'ST_mhii_haeng']),
+      new Set(['ST_phet_noi', 'ST_mai_sai_phrik']),
+      new Set(['ST_waan_noi', 'ST_mai_waan', 'ST_waan_pokati']),
+      new Set(['ST_liao_sai', 'ST_liao_kwaa', 'ST_trong_bpai']),
+      new Set(['ST_yut_trong_nii', 'ST_khaang_naa', 'ST_song_thii_nii']),
+      new Set(['ST_lek', 'ST_phiseet', 'W_yai', 'W_bami', 'W_sen_lek', 'ST_mhii_haeng', 'W_order_1', 'W_order_2', 'ST_noodle_shorthand', 'W_shorthand']),
+      new Set(['W_muu', 'W_kai', 'W_pet'])
+    ];
+
+    function canShareCurveballChoice(idA, idB) {
+      if (!idA || !idB || idA === idB) return false;
+      return CURVEBALL_CHOICE_GROUPS.some(g => g.includes(idA) && g.includes(idB));
+    }
+
+    function canCombineCompoundTurns(idA, idB) {
+      if (!idA || !idB || idA === idB) return false;
+      const sameDomain = COMPOUND_DOMAINS.some(d => d.has(idA) && d.has(idB));
+      if (!sameDomain) return false;
+      return !COMPOUND_CONFLICTS.some(c => c.has(idA) && c.has(idB));
+    }
 
     function getConvoTurnDataForItem(item, isSpiral = false, sibling = null, remixSeed = 0, exchangeIdx = 0, difficulty = 'standard') {
       if (!item) return null;
@@ -7539,8 +7604,10 @@
       const itemSpoken = item.spoken || item.roman || (mapped ? mapped.user.spoken.replace(/khâ|kháp/gi, '').trim() : '');
       const itemMeaning = (item.meaning || (mapped ? mapped.user.meaning : '')).split('(')[0].trim();
       let siblingUser = null;
+      let siblingItemId = null;
+      let curveballType = null;
 
-      // Street Natural Variation: introduces authentic curveballs without repeating the spotlight drill verbatim (disabled at Lv.1 survival)
+      // Street Natural Variation: only applies Curveball templates to compatible dish/option nouns (never questions or slang)
       if (!isSpiral && sibling && difficulty !== 'easier') {
         const sibThai = sibling.thai || sibling.display || '';
         const sibSpoken = sibling.spoken || sibling.roman || '';
@@ -7548,8 +7615,14 @@
         const v = Math.abs((remixSeed + exchangeIdx * 7 + (item.id ? item.id.length : 0)) % 3);
 
         if (exchangeIdx === 0 && sibThai && sibThai !== itemThai) {
-          if (v === 1) {
-            // Curveball A: Choice between item and sibling
+          if (v === 1 && canShareCurveballChoice(item.id, sibling.id)) {
+            // Curveball A: Natural choice between two same-category items
+            curveballType = 'choice_or';
+            siblingItemId = sibling.id || null;
+            const userPrefix = /^(ไม่|เอา|ขอ)/.test(itemThai) ? '' : 'เอา';
+            const spokenPrefix = /^(mâi|ao|khɔ̌ɔ)\b/i.test(itemSpoken) ? '' : 'ao ';
+            const sibUserPrefix = /^(ไม่|เอา|ขอ)/.test(sibThai) ? '' : 'เอา';
+            const sibSpokenPrefix = /^(mâi|ao|khɔ̌ɔ)\b/i.test(sibSpoken) ? '' : 'ao ';
             partner = {
               script: `${itemThai} หรือ ${sibThai} ดีครับ?`,
               spoken: `${itemSpoken} rǔue ${sibSpoken} dii kháp?`,
@@ -7557,18 +7630,20 @@
               tts: `${itemThai} หรือ ${sibThai} ดีครับ`
             };
             user = {
-              script: `เอา${itemThai}ค่ะ`,
-              spoken: `ao ${itemSpoken} khâ`,
+              script: `${userPrefix}${itemThai}ค่ะ`,
+              spoken: `${spokenPrefix}${itemSpoken} khâ`,
               meaning: `I'll take the ${itemMeaning}.`,
-              tts: `เอา${itemThai}ค่ะ`
+              tts: `${userPrefix}${itemThai}ค่ะ`
             };
             siblingUser = {
-              script: `เอา${sibThai}ค่ะ`,
-              spoken: `ao ${sibSpoken} khâ`,
-              meaning: `I'll take the ${sibMeaning}.`
+              script: `${sibUserPrefix}${sibThai}ค่ะ`,
+              spoken: `${sibSpokenPrefix}${sibSpoken} khâ`,
+              meaning: `I'll take the ${sibMeaning}.`,
+              tts: `${sibUserPrefix}${sibThai}ค่ะ`
             };
-          } else if (v === 2) {
-            // Curveball B: Dine-in vs Takeaway check
+          } else if (v === 2 && CURVEBALL_DINE_OR_GO_IDS.has(item.id)) {
+            // Curveball B: Dine-in vs Takeaway check (dishes only)
+            curveballType = 'dine_or_go';
             partner = {
               script: `รับ${itemThai} ทานนี่หรือใส่ถุงครับ?`,
               spoken: `ráp ${itemSpoken}, thaan nîi rǔue sài thǔng kháp?`,
@@ -7582,9 +7657,10 @@
               tts: `เอา${itemThai} ทานนี่ค่ะ`
             };
           }
-        } else if (exchangeIdx === 1 && sibThai && sibThai !== itemThai) {
+        } else if (exchangeIdx === 1 && CURVEBALL_FOLLOWUP_ADDON_IDS.has(item.id) && sibThai && sibThai !== itemThai) {
           if (v === 1) {
-            // Curveball C: Follow-up check on customization
+            // Curveball C: Follow-up check on add-on/size
+            curveballType = 'followup_also';
             partner = {
               script: `แล้ว${itemThai}ด้วยไหมครับ?`,
               spoken: `láaeo ${itemSpoken} dûay mǎi kháp?`,
@@ -7609,6 +7685,8 @@
         partner,
         user,
         siblingUser,
+        siblingItemId,
+        curveballType,
         intentCue: (mapped && mapped.intentCue) || `🎯 Respond using ${itemSpoken} (${itemMeaning})`,
         earDistractors: (mapped && mapped.earDistractors) || [
           'Do you want a plastic bag for your drinks?',
@@ -7658,21 +7736,27 @@
       return known;
     }
 
-    // Builds a Compound Multi-Chunk Turn combining a NEW item + an OLD/Known item in ONE real-life sentence!
+    // Builds a Compound Multi-Chunk Turn combining a NEW item + an OLD/Known item in ONE coherent sentence
     function createCompoundOldNewTurn(primaryNewItem, secondaryOldOrNewItem, isOldItemSpiral) {
       const t1 = getConvoTurnDataForItem(primaryNewItem, false);
       const t2 = getConvoTurnDataForItem(secondaryOldOrNewItem, isOldItemSpiral);
       if (!t1 || !t2) return t1;
+      if (!canCombineCompoundTurns(primaryNewItem?.id, secondaryOldOrNewItem?.id) || /\?$/.test((t2.user.script || '').trim())) {
+        return t1;
+      }
 
       const cleanUser1 = t1.user.script.replace(/(ค่ะ|ครับ|คะ|!|\?)+$/g, '').trim();
       const cleanUser2 = t2.user.script.replace(/^(เอา|ขอ)/, '').replace(/(ค่ะ|ครับ|คะ|!|\?)+$/g, '').trim();
       const cleanSpoken1 = t1.user.spoken.replace(/\s*(khâ|kháp|khá|!|\?)+$/gi, '').trim();
       const cleanSpoken2 = t2.user.spoken.replace(/^(ao|khɔ̌ɔ)\s+/i, '').replace(/\s*(khâ|kháp|khá|!|\?)+$/gi, '').trim();
+      const t2PartnerScript = (t2.partner.script || '').replace(/^(พี่ครับ|สวัสดีครับ|สวัสดีค่ะ|วันนี้)\s*/g, '').trim();
+      const t2PartnerSpoken = (t2.partner.spoken || '').replace(/^(phîi kháp|sà-wàt-dii kháp|sà-wàt-dii khâ|wan-níi),?\s*/i, '').trim();
+      const t2PartnerTts = (t2.partner.tts || '').replace(/^(พี่ครับ|สวัสดีครับ|สวัสดีค่ะ|วันนี้)\s*/g, '').trim();
 
-      const combinedPartnerScript = `${t1.partner.script.replace(/\?$/, '')} แล้ว${t2.partner.script}`;
-      const combinedPartnerSpoken = `${t1.partner.spoken.replace(/\?$/, '')} — láaeo ${t2.partner.spoken}`;
+      const combinedPartnerScript = `${t1.partner.script.replace(/\?$/, '')} แล้ว${t2PartnerScript}`;
+      const combinedPartnerSpoken = `${t1.partner.spoken.replace(/\?$/, '')} — láaeo ${t2PartnerSpoken}`;
       const combinedPartnerMeaning = `${t1.partner.meaning} And ${t2.partner.meaning.charAt(0).toLowerCase() + t2.partner.meaning.slice(1)}`;
-      const combinedPartnerTts = `${t1.partner.tts} แล้ว${t2.partner.tts}`;
+      const combinedPartnerTts = `${t1.partner.tts} แล้ว${t2PartnerTts}`;
 
       const combinedUserScript = `${cleanUser1} ${cleanUser2}ค่ะ`;
       const combinedUserSpoken = `${cleanSpoken1}, ${cleanSpoken2} khâ`;
@@ -7710,6 +7794,94 @@
           ...t2.usedWords
         ]
       };
+    }
+
+    // Reasonable alternative replies for each Speaker A prompt in "Your turn — what do you say?"
+    // Maps a prompt's itemId -> other itemIds whose reply is also a natural, valid answer to that prompt.
+    const THAI_COMPATIBLE_REPLIES = {
+      // Unit 1: Noodle Stalls & Spice/Customizing
+      ST_lek: ['ST_mhii_haeng', 'ST_noodle_shorthand', 'W_yai', 'W_bami', 'W_sen_lek', 'W_order_1', 'W_order_2', 'W_shorthand'],
+      ST_mhii_haeng: ['ST_lek', 'ST_noodle_shorthand', 'W_nam', 'W_haeng', 'W_bami', 'W_sen_lek', 'W_order_1', 'W_order_2', 'W_shorthand'],
+      ST_mai_chin_mai_ngok: ['W_luk_chin', 'W_thua_ngok', 'W_mai_not'],
+      ST_noodle_shorthand: ['ST_lek', 'ST_mhii_haeng', 'ST_phiseet', 'W_yai', 'W_bami', 'W_sen_lek', 'W_muu', 'W_kai', 'W_pet', 'W_order_1', 'W_order_2', 'W_shorthand'],
+      ST_phet_noi: ['ST_mai_sai_phrik'],
+      ST_mai_sai_phrik: ['ST_phet_noi', 'W_mai_not'],
+      ST_mai_sai_phakchii: ['W_mai_not'],
+      ST_mai_sai_phongchurot: ['ST_phet_noi', 'ST_mai_sai_phrik', 'ST_mai_sai_phakchii'],
+      ST_kin_nii_hor: ['ST_sai_hor'],
+      ST_sai_hor: ['ST_kin_nii_hor'],
+
+      // Unit 2: Cafes, 7-Eleven & Paying
+      ST_waan_noi: ['ST_mai_waan', 'ST_waan_pokati'],
+      ST_mai_waan: ['ST_waan_noi', 'ST_waan_pokati', 'W_mai_not'],
+      ST_waan_pokati: ['ST_waan_noi', 'ST_mai_waan'],
+      ST_gep_dtang: ['ST_scan_dai_mai'],
+      ST_thao_rai: ['ST_scan_dai_mai'],
+      ST_mai_ao_thung: ['ST_scan_dai_mai'],
+      ST_mii_hlort: ['ST_mai_ao_thung', 'ST_scan_dai_mai', 'ST_nam_kheng_plao'],
+
+      // Unit 3: Taxis & Navigation
+      ST_trong_bpai: ['ST_liao_sai', 'ST_liao_kwaa', 'ST_yut_trong_nii', 'ST_khaang_naa', 'ST_song_thii_nii'],
+      ST_liao_sai: ['ST_liao_kwaa', 'ST_trong_bpai'],
+      ST_liao_kwaa: ['ST_liao_sai', 'ST_trong_bpai', 'ST_yut_trong_nii', 'ST_khaang_naa', 'ST_soi_nii', 'ST_song_thii_nii'],
+      ST_yut_trong_nii: ['ST_khaang_naa', 'ST_soi_nii', 'ST_song_thii_nii'],
+      ST_khaang_naa: ['ST_yut_trong_nii', 'ST_song_thii_nii'],
+      ST_soi_nii: ['ST_trong_bpai'],
+      ST_song_thii_nii: ['ST_yut_trong_nii', 'ST_khaang_naa'],
+
+      // Unit 4-6: Street Shifts, Particles & Slang
+      ST_khrap: ['ST_scan_dai_mai'],
+      ST_aroi_aloi: ['ST_sut_yoot', 'ST_nor'],
+      ST_yang_nan: ['ST_ao_ngai_dii'],
+      ST_baep_nueng: ['W_maa'],
+      ST_loei: ['ST_ao_di', 'ST_a', 'W_kuay_tiao'],
+      ST_si: ['ST_ao_di'],
+      ST_rao: ['ST_ao_di', 'ST_a', 'ST_loei'],
+      ST_khao: ['ST_loei', 'ST_ao_di', 'ST_a'],
+      ST_jing_roe: ['ST_roe'],
+      ST_ao_di: ['ST_loei', 'ST_a'],
+      ST_ao_ngai_dii: ['ST_yang_nan'],
+
+      // Reading Path Words (W_...)
+      W_mai_not: ['ST_mai_sai_phrik', 'ST_phet_noi'],
+      W_nam: ['W_haeng', 'W_sai_clear', 'W_sen_lek', 'W_order_2', 'ST_noodle_shorthand', 'W_shorthand'],
+      W_sai_clear: ['W_nam', 'W_muu', 'W_sen_lek', 'W_order_1'],
+      W_yai: ['ST_lek', 'W_sen_lek', 'W_order_1', 'W_order_2'],
+      W_muu: ['W_kai'],
+      W_kai: ['W_muu', 'W_order_1'],
+      W_kin: ['ST_rao', 'W_muu', 'W_kai', 'W_bami', 'W_order_1', 'ST_lek'],
+      W_haeng: ['W_nam', 'W_bami', 'ST_mhii_haeng'],
+      W_bami: ['ST_mhii_haeng', 'W_haeng', 'W_nam'],
+      W_sen_lek: ['ST_lek', 'W_yai', 'W_bami', 'ST_mhii_haeng', 'W_order_1', 'W_order_2', 'ST_noodle_shorthand', 'W_shorthand'],
+      W_luk_chin: ['W_mai_not', 'ST_mai_chin_mai_ngok'],
+      W_thua_ngok: ['W_mai_not', 'ST_mai_chin_mai_ngok'],
+      W_kha: ['ST_lek', 'ST_mhii_haeng', 'ST_noodle_shorthand', 'W_yai', 'W_bami', 'W_sen_lek', 'W_muu', 'W_kai', 'W_pet', 'W_order_1', 'W_order_2', 'W_shorthand', 'W_sai_clear'],
+      W_order_1: ['ST_lek', 'ST_mhii_haeng', 'ST_noodle_shorthand', 'W_yai', 'W_bami', 'W_sen_lek', 'W_muu', 'W_kai', 'W_pet', 'W_order_2', 'W_shorthand', 'W_sai_clear'],
+      W_order_2: ['ST_lek', 'W_yai', 'ST_mhii_haeng', 'W_bami', 'W_sen_lek', 'W_order_1', 'W_nam', 'W_haeng', 'ST_noodle_shorthand', 'W_shorthand'],
+      W_shorthand: ['ST_lek', 'ST_mhii_haeng', 'ST_noodle_shorthand', 'W_yai', 'W_bami', 'W_sen_lek', 'W_order_1', 'W_order_2']
+    };
+
+    function isCompatibleTurnReply(promptItemId, replyItemId) {
+      if (!promptItemId || !replyItemId) return false;
+      if (promptItemId === replyItemId) return true;
+      const list = THAI_COMPATIBLE_REPLIES[promptItemId];
+      return Array.isArray(list) && list.includes(replyItemId);
+    }
+
+    function isReasonableConvoOption(ex, candPrimaryId, candSecondaryId = null) {
+      if (!ex || !candPrimaryId) return false;
+      if (ex.curveballType === 'choice_or') {
+        return candPrimaryId === ex.itemId || (!!ex.siblingItemId && candPrimaryId === ex.siblingItemId);
+      }
+      if (ex.curveballType === 'dine_or_go') {
+        return candPrimaryId === ex.itemId || candPrimaryId === 'ST_kin_nii_hor' || candPrimaryId === 'ST_sai_hor';
+      }
+      if (ex.isCompound && ex.secondaryItemId) {
+        const pOk = isCompatibleTurnReply(ex.itemId, candPrimaryId);
+        const sOk = candSecondaryId ? isCompatibleTurnReply(ex.secondaryItemId, candSecondaryId) : false;
+        return pOk && sOk;
+      }
+      return isCompatibleTurnReply(ex.itemId, candPrimaryId);
     }
 
     // Determines the two local characters (Speaker A & Speaker B) for the 2-person quick conversation
@@ -7765,45 +7937,42 @@
       });
 
       // 3. Build Exchange Pairs (~75% New to fit recent situation + ~25% Old/Known Spiral Recall)
-      //    - Easier (Lv.1): 2 exchanges = 4 lines (2 New, or 1 New + 1 Known/New)
-      //    - Standard (Lv.2): 3 exchanges = 6 lines (2 New + 1 Old/Compound exchange)
-      //    - Harder (Lv.3): 4 exchanges = 8 rapid lines (New + Old + 2 Compound Multi-Chunk exchanges)
-      //    - Overdrive (Lv.3+): 5 exchanges = 10 rapid lines (New + Bonus Theme + Old + 3 Compound Multi-Chunk exchanges!)
+      //    - Easier (Lv.1): 2 exchanges = 4 short survival lines
+      //    - Standard (Lv.2): 3 exchanges = 6 clean single-sentence lines (2 New + 1 Known/New, no compound double-sentences)
+      //    - Harder (Lv.3): 4 exchanges = 8 rapid lines (New + Old + 1 Compound Multi-Chunk exchange)
+      //    - Overdrive (Lv.3+): 5 exchanges = 10 rapid lines (New + Bonus Theme + Old + up to 2 Compound Multi-Chunk exchanges)
       const rawTurns = [];
       const coreNew = remixSeed > 0 ? [...newItems].sort(() => Math.random() - 0.5) : [...newItems];
 
       if (difficulty === 'easier') {
         const s0 = coreNew[1] || shuffledOld[0] || null;
-        rawTurns.push(getConvoTurnDataForItem(coreNew[0], false, s0, remixSeed, 0));
+        rawTurns.push(getConvoTurnDataForItem(coreNew[0], false, s0, remixSeed, 0, difficulty));
         if (coreNew.length > 1) {
-          rawTurns.push(getConvoTurnDataForItem(coreNew[1], false, coreNew[0], remixSeed, 1));
+          rawTurns.push(getConvoTurnDataForItem(coreNew[1], false, coreNew[0], remixSeed, 1, difficulty));
         } else if (shuffledOld.length > 0) {
-          rawTurns.push(getConvoTurnDataForItem(shuffledOld[0], true, coreNew[0], remixSeed, 1));
+          rawTurns.push(getConvoTurnDataForItem(shuffledOld[0], true, coreNew[0], remixSeed, 1, difficulty));
         }
       } else if (difficulty === 'standard') {
         const s0 = coreNew[1] || shuffledOld[0] || null;
-        rawTurns.push(getConvoTurnDataForItem(coreNew[0], false, s0, remixSeed, 0));
+        rawTurns.push(getConvoTurnDataForItem(coreNew[0], false, s0, remixSeed, 0, difficulty));
         if (coreNew.length > 1) {
-          rawTurns.push(getConvoTurnDataForItem(coreNew[1], false, coreNew[0], remixSeed, 1));
+          rawTurns.push(getConvoTurnDataForItem(coreNew[1], false, coreNew[0], remixSeed, 1, difficulty));
         }
-        if (shuffledOld.length > 0 && coreNew.length >= 3) {
-          // 3rd exchange weaves 3rd New item + 1st Old Known item into a single compound exchange!
-          rawTurns.push(createCompoundOldNewTurn(coreNew[2], shuffledOld[0], true));
+        if (coreNew.length >= 3) {
+          rawTurns.push(getConvoTurnDataForItem(coreNew[2], false, null, remixSeed, 2, difficulty));
         } else if (shuffledOld.length > 0) {
-          rawTurns.push(getConvoTurnDataForItem(shuffledOld[0], true, null, remixSeed, 2));
-        } else if (coreNew.length >= 3) {
-          rawTurns.push(getConvoTurnDataForItem(coreNew[2], false, null, remixSeed, 2));
+          rawTurns.push(getConvoTurnDataForItem(shuffledOld[0], true, null, remixSeed, 2, difficulty));
         }
       } else if (difficulty === 'overdrive') {
-        // Lv.3+ Overdrive: Up to 5 exchanges (10 lines) with 3 Compound Multi-Clause turns!
+        // Lv.3+ Overdrive: Up to 5 exchanges (10 lines) with up to 2 Compound Multi-Clause turns
         const s0 = coreNew[1] || shuffledOld[0] || null;
-        rawTurns.push(getConvoTurnDataForItem(coreNew[0], false, s0, remixSeed, 0));
-        if (coreNew.length > 1) rawTurns.push(getConvoTurnDataForItem(coreNew[1], false, coreNew[0], remixSeed, 1));
-        if (shuffledOld.length > 0) rawTurns.splice(1, 0, getConvoTurnDataForItem(shuffledOld[0], true, null, remixSeed, 2));
-        if (coreNew.length > 2) rawTurns.push(getConvoTurnDataForItem(coreNew[2], false, null, remixSeed, 3));
-        if (coreNew.length > 3) rawTurns.push(getConvoTurnDataForItem(coreNew[3], false, null, remixSeed, 4));
+        rawTurns.push(getConvoTurnDataForItem(coreNew[0], false, s0, remixSeed, 0, difficulty));
+        if (coreNew.length > 1) rawTurns.push(getConvoTurnDataForItem(coreNew[1], false, coreNew[0], remixSeed, 1, difficulty));
+        if (shuffledOld.length > 0) rawTurns.splice(1, 0, getConvoTurnDataForItem(shuffledOld[0], true, null, remixSeed, 2, difficulty));
+        if (coreNew.length > 2) rawTurns.push(getConvoTurnDataForItem(coreNew[2], false, null, remixSeed, 3, difficulty));
+        if (coreNew.length > 3) rawTurns.push(getConvoTurnDataForItem(coreNew[3], false, null, remixSeed, 4, difficulty));
         if (rawTurns.length < 5 && shuffledOld.length > 1) {
-          rawTurns.push(getConvoTurnDataForItem(shuffledOld[1], true, null, remixSeed, 5));
+          rawTurns.push(getConvoTurnDataForItem(shuffledOld[1], true, null, remixSeed, 5, difficulty));
         }
         if (rawTurns.length > 5) rawTurns.length = 5;
         // Upgrade up to 2 exchanges into Compound Multi-Chunk Old+New sentences
@@ -7822,13 +7991,13 @@
           }
         }
       } else {
-        // Harder (Lv.3): 4 exchanges (8 lines) with Compound Old+New sentences!
+        // Harder (Lv.3): 4 exchanges (8 lines) with Compound Old+New sentences
         const s0 = coreNew[1] || shuffledOld[0] || null;
-        rawTurns.push(getConvoTurnDataForItem(coreNew[0], false, s0, remixSeed, 0));
-        if (coreNew.length > 1) rawTurns.push(getConvoTurnDataForItem(coreNew[1], false, coreNew[0], remixSeed, 1));
-        if (shuffledOld.length > 0) rawTurns.splice(1, 0, getConvoTurnDataForItem(shuffledOld[0], true, null, remixSeed, 2));
-        if (coreNew.length > 2 && rawTurns.length < 4) rawTurns.push(getConvoTurnDataForItem(coreNew[2], false, null, remixSeed, 3));
-        if (coreNew.length > 3 && rawTurns.length < 4) rawTurns.push(getConvoTurnDataForItem(coreNew[3], false, null, remixSeed, 4));
+        rawTurns.push(getConvoTurnDataForItem(coreNew[0], false, s0, remixSeed, 0, difficulty));
+        if (coreNew.length > 1) rawTurns.push(getConvoTurnDataForItem(coreNew[1], false, coreNew[0], remixSeed, 1, difficulty));
+        if (shuffledOld.length > 0) rawTurns.splice(1, 0, getConvoTurnDataForItem(shuffledOld[0], true, null, remixSeed, 2, difficulty));
+        if (coreNew.length > 2 && rawTurns.length < 4) rawTurns.push(getConvoTurnDataForItem(coreNew[2], false, null, remixSeed, 3, difficulty));
+        if (coreNew.length > 3 && rawTurns.length < 4) rawTurns.push(getConvoTurnDataForItem(coreNew[3], false, null, remixSeed, 4, difficulty));
         if (rawTurns.length > 4) rawTurns.length = 4;
         // Upgrade the final exchange into a Compound Multi-Chunk Old+New sentence
         if (coreNew.length >= 2) {
@@ -7887,9 +8056,9 @@
       });
 
       // 5. Build "Your Turn" reply tasks: at every Speaker B turn the learner plays Speaker B and picks
-      //    the right THAI reply to what Speaker A just said. This tests the target words in context
-      //    (turn-taking), instead of English trivia about who said what.
-      const allCandidatePool = [...newItems, ...shuffledOld, ...(typeof STREET_DB !== 'undefined' ? STREET_DB.slice(0, 12) : [])];
+      //    a valid THAI reply to what Speaker A just said (primary line or another reasonable fit).
+      const allCandidatePool = [...newItems, ...shuffledOld, ...(typeof STREET_DB !== 'undefined' ? STREET_DB.slice(0, 18) : [])];
+      const fallbackPool = typeof STREET_DB !== 'undefined' ? STREET_DB : [];
       const optionCount = (difficulty === 'harder' || difficulty === 'overdrive') ? 4 : 3;
 
       const questions = validExchanges.map((ex, qIdx) => {
@@ -7900,37 +8069,49 @@
           script: ex.user.script,
           spoken: ex.user.spoken,
           tts: ex.user.tts || ex.user.script,
-          isCorrect: true
+          isCorrect: true,
+          isPrimary: true
         };
 
         const seenScripts = new Set([correctOpt.script]);
         const distOpts = [];
         if (ex.siblingUser && ex.siblingUser.script && !seenScripts.has(ex.siblingUser.script)) {
           seenScripts.add(ex.siblingUser.script);
+          const sibReasonable = ex.curveballType === 'choice_or'
+            || isReasonableConvoOption(ex, ex.siblingItemId);
           distOpts.push({
             id: `q_${qIdx}_sib`,
             text: ex.siblingUser.meaning,
             script: ex.siblingUser.script,
             spoken: ex.siblingUser.spoken,
-            tts: ex.siblingUser.script,
-            isCorrect: false
+            tts: ex.siblingUser.tts || ex.siblingUser.script,
+            isCorrect: sibReasonable,
+            isPrimary: false
           });
         }
-        const candidates = allCandidatePool
+        const candidates = [...allCandidatePool, ...fallbackPool]
           .filter(cand => cand && cand.id !== ex.itemId && cand.id !== ex.secondaryItemId)
-          .filter((cand, cIdx, arr) => arr.findIndex(x => x.id === cand.id) === cIdx)
-          .sort(() => Math.random() - 0.5);
+          .filter((cand, cIdx, arr) => arr.findIndex(x => x.id === cand.id) === cIdx);
+        // Shuffle the primary pool and keep extra STREET_DB items as fallback for wrong distractors
+        const primaryCount = allCandidatePool.filter(cand => cand && cand.id !== ex.itemId && cand.id !== ex.secondaryItemId)
+          .filter((cand, cIdx, arr) => arr.findIndex(x => x.id === cand.id) === cIdx).length;
+        const shuffledPrimary = candidates.slice(0, primaryCount).sort(() => Math.random() - 0.5);
+        const orderedCandidates = [...shuffledPrimary, ...candidates.slice(primaryCount)];
 
-        for (const dItem of candidates) {
-          if (distOpts.length >= optionCount - 1) break;
+        const tryAddCandidate = (dItem, requireWrong) => {
+          let extraId = null;
           let dUser = getConvoTurnDataForItem(dItem, false, null, 0, 0, difficulty)?.user;
           if (ex.isCompound && coreNew.length > 0) {
             const extra = coreNew[(qIdx + distOpts.length) % coreNew.length];
             if (extra && extra.id !== dItem.id) {
               dUser = createCompoundOldNewTurn(dItem, extra, false, difficulty)?.user || dUser;
+              extraId = extra.id;
             }
           }
-          if (!dUser || !dUser.script || seenScripts.has(dUser.script)) continue;
+          if (!dUser || !dUser.script || seenScripts.has(dUser.script)) return false;
+          const reasonable = isReasonableConvoOption(ex, dItem.id, extraId);
+          const validCount = 1 + distOpts.filter(o => o.isCorrect).length;
+          if (reasonable && (requireWrong || validCount >= 2)) return false;
           seenScripts.add(dUser.script);
           distOpts.push({
             id: `q_${qIdx}_dist_${distOpts.length}`,
@@ -7938,8 +8119,25 @@
             script: dUser.script,
             spoken: dUser.spoken,
             tts: dUser.tts || dUser.script,
-            isCorrect: false
+            isCorrect: reasonable,
+            isPrimary: false
           });
+          return true;
+        };
+
+        for (const dItem of orderedCandidates) {
+          if (distOpts.length >= optionCount - 1) break;
+          const hasWrongAlready = distOpts.some(o => !o.isCorrect);
+          const isLastSlot = distOpts.length === optionCount - 2;
+          tryAddCandidate(dItem, isLastSlot && !hasWrongAlready);
+        }
+
+        // Safety fallback if pool couldn't fill all slots while reserving a wrong one
+        if (distOpts.length < optionCount - 1) {
+          for (const dItem of orderedCandidates) {
+            if (distOpts.length >= optionCount - 1) break;
+            tryAddCandidate(dItem, false);
+          }
         }
 
         return {
@@ -8019,28 +8217,32 @@
       const allCurricula = [...UNITS_CURRICULUM, ...STREET_CURRICULUM];
       const node = allCurricula.flatMap(u => u.nodes).find(n => n.id === step.nodeId) || allCurricula[0].nodes[0];
       const rebuilt = createLiveConversationStep(node, newDiff, step.remixSeed || 0);
+      if (typeof step.showText === 'boolean') rebuilt.showText = step.showText;
+      if (typeof step.showRoman === 'boolean') rebuilt.showRoman = step.showRoman;
+      if (typeof step.showEnglish === 'boolean') rebuilt.showEnglish = step.showEnglish;
+      if (typeof step.slow === 'boolean') rebuilt.slow = step.slow;
+      if (step.phase && CONVO_PHASES.some(p => p.id === step.phase)) rebuilt.phase = step.phase;
+      if (Array.isArray(step.phasesReached)) rebuilt.phasesReached = [...step.phasesReached];
       activeSession.steps[activeSession.currentIndex] = rebuilt;
       renderCurrentLessonStep();
       const labels = {
-        easier: '⭐ 4 Lines at 0.80x • Visible Script',
-        standard: '⭐⭐ 6 Lines at 1.0x • Ear-First Audio',
-        harder: '⭐⭐⭐ 8 Lines at 1.12x • Compound Mix',
-        overdrive: '⭐⭐⭐⭐ 10 Rapid Lines (1.18x) • 5-Choice Qs'
+        easier: '⭐ Lv 1: Short Survival Phrases (0.80x)',
+        standard: '⭐⭐ Lv 2: Standard Polite Street Talk (1.0x)',
+        harder: '⭐⭐⭐ Lv 3: Compound Fluent Dialogue (1.12x)',
+        overdrive: '⭐⭐⭐⭐ Lv 4: Rapid Multi-Clause Native Slang (1.18x)'
       };
       showToast(labels[newDiff] || 'Difficulty updated');
     }
 
     // =====================================================================
-    // 2-PERSON CONVO PLAYER (4 phases)
+    // 2-PERSON CONVO PLAYER (3 phases)
     //   🎧 Listen    – whole chat visible + media player (play/pause, prev/next, repeat line, slow)
     //   🎭 Role-play – you are Speaker B: hear Speaker A, pick your reply, hear the real line
-    //   🧠 Recall    – "vanishing chat": your lines turn into blanks; say them from memory, tap to check
     //   ✓ Recap      – words used + full annotated conversation
     // =====================================================================
     const CONVO_PHASES = [
       { id: 'listen', icon: '🎧', label: 'Listen' },
       { id: 'roleplay', icon: '🎭', label: 'Role-play' },
-      { id: 'recall', icon: '🧠', label: 'Recall' },
       { id: 'recap', icon: '🏁', label: 'Recap' }
     ];
     let convoAudioToken = 0;
@@ -8071,13 +8273,13 @@
       return step.difficulty === 'harder' || step.difficulty === 'overdrive';
     }
 
-    // Speaker A lines in Role-play: shown as text for Lv.1/2, audio-first for Lv.3+
+    // Speaker A lines in Role-play: shown as script + sound across all levels (levels control convo complexity, not hiding text)
     function getConvoBaseReveal(diff) {
-      return (diff === 'harder' || diff === 'overdrive') ? 0 : 2;
+      return 2;
     }
 
     function convoShowRomanInOptions(step) {
-      return appState.pace !== 'intensive' && !isHardConvo(step);
+      return step ? step.showRoman !== false : true;
     }
 
     function getConvoLineTask(step, line) {
@@ -8088,6 +8290,7 @@
     function ensureConvoState(step) {
       const lines = step.dialogueLines || [];
       if (step.phase === 'play') step.phase = 'roleplay';
+      if (step.phase === 'recall') step.phase = 'recap'; // Recall phase was removed
       if (!CONVO_PHASES.some(p => p.id === step.phase)) step.phase = step.allTurnsCompleted ? 'recap' : 'listen';
       if (!Array.isArray(step.phasesReached)) step.phasesReached = ['listen'];
       if (!step.phasesReached.includes(step.phase)) step.phasesReached.push(step.phase);
@@ -8095,10 +8298,9 @@
       step.listenIdx = Math.max(0, Math.min(step.listenIdx, Math.max(0, lines.length - 1)));
       if (typeof step.rpIdx !== 'number') step.rpIdx = 0;
       if (typeof step.showText !== 'boolean') step.showText = true;
-      if (typeof step.showRoman !== 'boolean') step.showRoman = !isHardConvo(step) && appState.pace !== 'intensive';
-      if (typeof step.showEnglish !== 'boolean') step.showEnglish = step.difficulty === 'easier';
+      if (typeof step.showRoman !== 'boolean') step.showRoman = true;
+      if (typeof step.showEnglish !== 'boolean') step.showEnglish = false;
       if (typeof step.repeatLine !== 'boolean') step.repeatLine = false;
-      if (!step.recall || typeof step.recall !== 'object') step.recall = {};
       const base = getConvoBaseReveal(step.difficulty);
       lines.forEach((l, i) => {
         l.lineIdx = i;
@@ -8296,11 +8498,9 @@
           enterRoleplayExchange(step);
           return;
         }
-        goConvoPhase('recall');
+        goConvoPhase('recap');
         return;
       }
-
-      if (step.phase === 'recall') { goConvoPhase('recap'); return; }
 
       // recap -> next lesson step
       step.allTurnsCompleted = true;
@@ -8329,7 +8529,7 @@
         }
         return true;
       }
-      goConvoPhase(step.phase === 'recall' ? 'roleplay' : 'recall');
+      goConvoPhase('roleplay');
       return true;
     }
 
@@ -8344,7 +8544,9 @@
         const q = (step.questions || [])[step.rpIdx];
         if (!q) return;
         const line = step.dialogueLines[q.answered ? q.lineIdx : q.lineIdx - 1];
-        if (line) playConvoAudioThen(line.tts, slowOverride ? 0.72 : getConvoRate(step), null);
+        const chosen = q.answered && q.isCorrect ? q.options?.find(o => o.id === q.chosenOptId) : null;
+        const tts = (chosen && chosen.tts) ? chosen.tts : (line ? line.tts : '');
+        if (tts) playConvoAudioThen(tts, slowOverride ? 0.72 : getConvoRate(step), null);
       }
     }
 
@@ -8393,8 +8595,9 @@
       if (line) line.reveal = 3;
       rerenderLiveConvo(step);
 
-      // Hear the real line; if correct, flow straight on to the next exchange
-      playConvoAudioThen(q.targetTts, getConvoRate(step), () => {
+      // Hear the chosen/real line; if correct, flow straight on to the next exchange
+      const spokenTts = (isRight && (chosen.tts || chosen.script)) ? (chosen.tts || chosen.script) : q.targetTts;
+      playConvoAudioThen(spokenTts, getConvoRate(step), () => {
         if (!isRight || getActiveConvoStep() !== step || step.phase !== 'roleplay') return;
         if (step.rpIdx === qIdx && step.rpIdx < step.questions.length - 1) {
           step.rpIdx += 1;
@@ -8402,6 +8605,20 @@
           enterRoleplayExchange(step);
         }
       });
+    }
+
+    function playConvoChosenAudio(qIdx, el = null) {
+      const step = getActiveConvoStep();
+      if (!step) return;
+      const q = step.questions?.[qIdx];
+      const chosen = q?.options?.find(o => o.id === q.chosenOptId);
+      const tts = chosen?.tts || chosen?.script || q?.targetTts;
+      if (!tts) return;
+      if (el) {
+        el.classList.add('ring-2', 'ring-sky-400');
+        setTimeout(() => el.classList.remove('ring-2', 'ring-sky-400'), 450);
+      }
+      playConvoAudioThen(tts, getConvoRate(step), null);
     }
 
     function revealConvoLine(lineIdx) {
@@ -8440,31 +8657,6 @@
       if (!w) return;
       playConvoAudioThen(w.script, getConvoRate(step), null);
       showToast(`${w.script} · ${w.spoken} = ${w.meaning}`);
-    }
-
-    // ---------- 🧠 RECALL (vanishing chat) ----------
-    function convoRecallReveal(lineIdx) {
-      const step = getActiveConvoStep();
-      if (!step) return;
-      const line = step.dialogueLines?.[lineIdx];
-      if (!line) return;
-      step.recall[lineIdx] = 'shown';
-      rerenderLiveConvo(step);
-      playConvoAudioThen(line.tts, getConvoRate(step), null);
-    }
-
-    function convoRecallGrade(lineIdx, knewIt) {
-      const step = getActiveConvoStep();
-      if (!step) return;
-      step.recall[lineIdx] = knewIt ? 'knew' : 'again';
-      rerenderLiveConvo(step);
-    }
-
-    function convoRecallResetAll() {
-      const step = getActiveConvoStep();
-      if (!step) return;
-      step.recall = {};
-      rerenderLiveConvo(step);
     }
 
     // Legacy hooks (kept for compatibility with older saved steps / buttons)
@@ -8550,16 +8742,6 @@
           <span class="text-sm">🔊</span>
           <span class="flex items-center gap-[3px] h-5 opacity-80">${bars}</span>
         </div>`;
-    }
-
-    // Blank-line hint for Recall: first word(s) of the pronunciation + bars for the rest
-    function renderConvoHint(line, revealWords) {
-      const words = (line.spoken || '').split(/\s+/).filter(Boolean);
-      if (!words.length) return '<span class="text-slate-500">· · ·</span>';
-      return words.map((w, i) => i < revealWords
-        ? `<span class="text-emerald-200">${w}</span>`
-        : `<span class="inline-block align-middle h-2.5 rounded-sm bg-white/15" style="width:${Math.max(14, Math.min(52, w.length * 7))}px"></span>`
-      ).join(' ');
     }
 
     function renderConvoText(line, idx, o) {
@@ -8730,14 +8912,21 @@
             extras: reveal < 3 ? `<button type="button" onclick="event.stopPropagation(); revealConvoLine(${i})" class="text-sky-300/90 hover:text-sky-200 cursor-pointer">👁 ${nextLabels[reveal + 1]}</button>` : ''
           }));
         } else {
-          const chosen = task.answered && !task.isCorrect ? task.options.find(o => o.id === task.chosenOptId) : null;
-          items.push(renderConvoBubble(step, line, i, {
-            body: renderConvoText(line, i, { big: i === upto, roman: true, english: true }),
+          const chosen = task.answered ? task.options.find(o => o.id === task.chosenOptId) : null;
+          const isAltRight = !!(task.isCorrect && chosen && chosen.script && chosen.script !== line.script);
+          const displayLine = isAltRight
+            ? { ...line, script: chosen.script, spoken: chosen.spoken || '', meaning: chosen.text || '', tts: chosen.tts || chosen.script, usedWords: [] }
+            : line;
+          items.push(renderConvoBubble(step, displayLine, i, {
+            body: renderConvoText(displayLine, i, { big: i === upto, roman: true, english: true }),
             active: i === upto,
             anchor: i === upto,
             dim: i < upto - 1,
+            onclick: isAltRight ? `playConvoChosenAudio(${task.qIdx}, this)` : undefined,
             extras: task.isCorrect
-              ? `<span class="text-emerald-300 font-semibold">✓ Right reply</span>`
+              ? (isAltRight
+                  ? `<span class="text-emerald-300 font-semibold">✓ Reasonable reply</span> <span class="text-slate-400">· dialogue used <span class="font-thai text-slate-300">${line.script}</span></span>`
+                  : `<span class="text-emerald-300 font-semibold">✓ Right reply</span>`)
               : `<span class="text-rose-300">✗ You picked <span  class="font-thai">${chosen ? chosen.script : ''}</span></span>`
           }));
         }
@@ -8761,65 +8950,12 @@
         </div>`;
     }
 
-    // ---------- 🧠 RECALL view ----------
-    function renderConvoRecall(step) {
-      const lines = step.dialogueLines || [];
-      const yours = lines.filter(l => l.speaker === 'B');
-      const knew = yours.filter(l => step.recall[l.lineIdx] === 'knew').length;
-      const hintWords = isHardConvo(step) ? 0 : 1;
-
-      const bubbles = lines.map((line, i) => {
-        if (line.speaker !== 'B') {
-          return renderConvoBubble(step, line, i, {
-            body: renderConvoText(line, i, { roman: step.showRoman, english: false })
-          });
-        }
-        const state = step.recall[i];
-        if (state === 'shown' || state === 'knew') {
-          return renderConvoBubble(step, line, i, {
-            body: renderConvoText(line, i, { big: state === 'shown', roman: true, english: true }),
-            active: state === 'shown',
-            extras: state === 'knew'
-              ? `<span class="text-emerald-300 font-semibold">✓ Knew it</span>`
-              : `<span class="text-slate-400">Did you get it?</span>
-                 <button type="button" onclick="convoRecallGrade(${i}, true)" class="px-2.5 py-1 rounded-lg bg-emerald-500/15 border border-emerald-400/40 text-emerald-200 font-semibold cursor-pointer hover:bg-emerald-500/25">✓ Knew it</button>
-                 <button type="button" onclick="convoRecallGrade(${i}, false)" class="px-2.5 py-1 rounded-lg bg-amber-500/10 border border-amber-400/40 text-amber-200 font-semibold cursor-pointer hover:bg-amber-500/20">↻ Not yet</button>`
-          });
-        }
-        const again = state === 'again';
-        return renderConvoBubble(step, line, i, {
-          tone: `rounded-br-md border-dashed ${again ? 'border-amber-400/60 bg-amber-500/[0.06]' : 'border-emerald-400/50 bg-emerald-500/[0.04]'} text-emerald-300`,
-          onclick: `convoRecallReveal(${i})`,
-          body: `
-            <div class="space-y-1.5 min-w-[9rem]">
-              <div class="font-mono text-xs leading-6">${renderConvoHint(line, again ? hintWords + 1 : hintWords)}</div>
-              <div class="text-[10px] ${again ? 'text-amber-300/80' : 'text-emerald-300/70'}">${again ? '↻ Try again · ' : ''}Say it out loud, then tap</div>
-            </div>`
-        });
-      }).join('');
-
-      return `
-        <div class="rounded-2xl bg-[#151a26] border border-[#242b3d] p-3 flex items-center justify-between gap-3">
-          <div class="min-w-0">
-            <div class="text-xs font-bold text-white">Your lines vanished 🫥</div>
-            <div class="text-[11px] text-slate-400">Say each one out loud from memory, then tap it to check. Tap their lines to hear them again.</div>
-          </div>
-          <div class="text-right shrink-0">
-            <div class="text-sm font-extrabold ${knew === yours.length ? 'text-emerald-300' : 'text-slate-200'}">${knew}/${yours.length}</div>
-            ${Object.keys(step.recall).length ? `<button type="button" onclick="convoRecallResetAll()" class="text-[10px] text-slate-500 hover:text-slate-300 cursor-pointer">reset</button>` : ''}
-          </div>
-        </div>
-        <div class="space-y-2.5" id="live-convo-thread">${bubbles}</div>`;
-    }
-
     // ---------- 🏁 RECAP view ----------
     function renderConvoRecap(step) {
       const lines = step.dialogueLines || [];
       const total = (step.questions || []).length;
       const right = (step.questions || []).filter(q => q.isCorrect).length;
-      const yours = lines.filter(l => l.speaker === 'B');
-      const knew = yours.filter(l => step.recall[l.lineIdx] === 'knew').length;
-      const perfect = total > 0 && right === total && knew === yours.length;
+      const perfect = total > 0 && right === total;
 
       const seen = new Set();
       const words = [];
@@ -8834,7 +8970,7 @@
         <div class="rounded-2xl border ${perfect ? 'border-emerald-400/40 bg-emerald-500/[0.07]' : 'border-amber-400/40 bg-amber-500/[0.07]'} p-3 flex items-center justify-between gap-3">
           <div class="min-w-0">
             <div class="text-sm font-bold text-white">${perfect ? '🎉 You own this conversation' : '👍 Conversation done'}</div>
-            <div class="text-[11px] text-slate-400">Role-play ${right}/${total} · Recalled ${knew}/${yours.length}</div>
+            <div class="text-[11px] text-slate-400">Role-play ${right}/${total}</div>
           </div>
           <div class="flex items-center gap-1.5 shrink-0">
             <button type="button" onclick="playFullConversationThread(false)"
@@ -8892,7 +9028,6 @@
       let bodyHtml = '';
       if (step.phase === 'listen') bodyHtml = renderConvoListen(step);
       else if (step.phase === 'roleplay') bodyHtml = renderConvoRoleplay(step);
-      else if (step.phase === 'recall') bodyHtml = renderConvoRecall(step);
       else bodyHtml = renderConvoRecap(step);
 
       stage.innerHTML = `
@@ -8946,13 +9081,8 @@
           setBtn('Next ▶', disabledCls, true);
         } else {
           footerMsg.innerHTML = '';
-          setBtn(step.rpIdx >= qs.length - 1 ? 'Recall from memory ▶' : 'Next reply ▶', primary);
+          setBtn(step.rpIdx >= qs.length - 1 ? 'See recap ▶' : 'Next reply ▶', primary);
         }
-      } else if (step.phase === 'recall') {
-        const yours = lines.filter(l => l.speaker === 'B');
-        const knew = yours.filter(l => step.recall[l.lineIdx] === 'knew').length;
-        footerMsg.innerHTML = `<span class="text-slate-400 text-xs">${knew}/${yours.length} recalled</span>`;
-        setBtn('See recap ▶', primary);
       } else {
         const right = (step.questions || []).filter(q => q.isCorrect).length;
         const isLastStep = activeSession && activeSession.currentIndex >= activeSession.steps.length - 1;
@@ -8988,7 +9118,7 @@
         const prompt = `Create a short, fast-paced, realistic 6-line (3-exchange) Bangkok street conversation between Speaker A (${step.cast.speakerA}) and Speaker B (${step.cast.speakerB}) for "${node.title}" at difficulty "${step.difficulty}".
 Use ~75% NEW words from this lesson: [${newList}] and ~25% KNOWN past words: [${oldPool || 'พี่ครับ, ขอบคุณครับ, อร่อยมาก'}].
 Return ONLY valid JSON array of 3 exchange objects with exact keys:
-[{"isSpiral":false,"partner":{"script":"Thai","spoken":"phonetics","meaning":"English","tts":"Thai"},"user":{"script":"Thai","spoken":"phonetics","meaning":"English","tts":"Thai"},"distractorReplies":[{"script":"Thai reply that does NOT fit partner's line","spoken":"phonetics","meaning":"English"},{"script":"Thai","spoken":"phonetics","meaning":"English"}]}]`;
+[{"isSpiral":false,"partner":{"script":"Thai","spoken":"phonetics","meaning":"English","tts":"Thai"},"user":{"script":"Thai","spoken":"phonetics","meaning":"English","tts":"Thai"},"distractorReplies":[{"script":"Clearly incompatible off-topic Thai reply (must NOT be another valid answer to partner's line, e.g. do not use 'mild spicy' if partner asked 'put chilies?')","spoken":"phonetics","meaning":"English"},{"script":"Thai","spoken":"phonetics","meaning":"English"}]}]`;
 
         const model = typeof getGeminiModel === 'function' ? getGeminiModel() : 'gemini-2.5-flash';
         const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${key}`, {
@@ -9395,7 +9525,7 @@ Return ONLY valid JSON array of 3 exchange objects with exact keys:
           id: w.id,
           thai: w.thai,
           tts: w.thai,
-          sub: appState.pace === 'intensive' ? w.meaning : `${w.roman} — ${w.meaning}`,
+          sub: `${w.roman} — ${w.meaning}`,
           detail: w.videoContext || '',
           unit: w.unit || 6,
           seconds: w.seconds,

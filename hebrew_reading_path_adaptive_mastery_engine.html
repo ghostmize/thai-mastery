@@ -292,7 +292,7 @@
             </button>
           </div>
 
-          <button type="button" id="global-auto-lvl-btn" onclick="toggleAutoLevel()" class="px-2.5 py-1 rounded-xl border text-[11px] font-bold transition-all cursor-pointer flex items-center gap-1 bg-emerald-500/15 border-emerald-500/40 text-emerald-300" title="Auto-Adapt: Automatically raises level on fast streaks or lowers on misses while keeping the same lesson theme">
+          <button type="button" id="global-auto-lvl-btn" onclick="toggleAutoLevel()" class="px-2.5 py-1 rounded-xl border text-[11px] font-bold transition-all cursor-pointer flex items-center gap-1 bg-emerald-500/15 border-emerald-500/40 text-emerald-300" title="Auto-Adapt: Automatically raises level on fast streaks (never lowers)">
             <span>🔄</span>
             <span>Auto: ON</span>
           </button>
@@ -6787,7 +6787,7 @@
       saveState();
       updatePaceUI();
       showToast(appState.autoLevel
-        ? '🔄 Auto-Adapt Level ON • Raises on fast streaks, lowers on misses (same theme!)'
+        ? '🔄 Auto-Adapt Level ON • Raises on fast streaks (never lowers)'
         : '🔒 Auto-Adapt Level OFF • Level locked to your manual choice');
     }
 
@@ -6811,25 +6811,10 @@
           setCourseLevel(3, false, true);
           showToast('Auto-Adapt: Max Level Activated • Fast Israeli slang & 5-turn dialogue');
         }
-      } else if (!isCorrect) {
-        appState.levelStruggle = (appState.levelStruggle || 0) + 1;
-        appState.levelStreak = 0;
-
-        // Auto-lower after 2 consecutive misses
-        if (appState.levelStruggle >= 2) {
-          appState.levelStruggle = 0;
-          if (cur === 3 && isOverdrive) {
-            setCourseLevel(3, false, false);
-            showToast('Auto-Adapted → Level 3 (Stepped down from Max to consolidate this theme)');
-          } else if (cur > 1) {
-            const prevLvl = cur - 1;
-            setCourseLevel(prevLvl, false, false);
-            showToast(`Auto-Adapted → Level ${prevLvl} • Shorter sentences & clearer audio`);
-          }
-        }
       } else {
-        // Correct but slow hesitation (> 6.5s) resets fast streak without penalizing struggle
+        // Misses or slow hesitation (> 6.5s) reset fast streak; never auto-reduce level
         appState.levelStreak = 0;
+        appState.levelStruggle = 0;
       }
     }
 
@@ -6848,7 +6833,14 @@
       if (curStep.type === 'live_conversation') {
         stopFullConversationPlayback();
         const targetNode = node || allCurricula.flatMap(u => u.nodes).find(n => n.id === curStep.nodeId) || allCurricula[0].nodes[0];
-        activeSession.steps[curIdx] = createLiveConversationStep(targetNode, appState.convoDifficulty, curStep.remixSeed || 0);
+        const rebuilt = createLiveConversationStep(targetNode, appState.convoDifficulty, curStep.remixSeed || 0);
+        if (typeof curStep.showText === 'boolean') rebuilt.showText = curStep.showText;
+        if (typeof curStep.showRoman === 'boolean') rebuilt.showRoman = curStep.showRoman;
+        if (typeof curStep.showEnglish === 'boolean') rebuilt.showEnglish = curStep.showEnglish;
+        if (typeof curStep.slow === 'boolean') rebuilt.slow = curStep.slow;
+        if (curStep.phase && CONVO_PHASES.some(p => p.id === curStep.phase)) rebuilt.phase = curStep.phase;
+        if (Array.isArray(curStep.phasesReached)) rebuilt.phasesReached = [...curStep.phasesReached];
+        activeSession.steps[curIdx] = rebuilt;
         renderCurrentLessonStep();
         return;
       }
@@ -7105,7 +7097,7 @@
         const labels = {
           chill: 'Chill Pace • Hints & Romanization On • 0.8x',
           standard: 'Standard Pace • Balanced Decoding • 1.0x',
-          intensive: 'Intensive Pace • Pure Hebrew Script (No Romanization) • 1.1x'
+          intensive: 'Advanced Convo Level • Compound & Rapid Street Talk • 1.1x'
         };
         badge.textContent = labels[appState.pace] || labels.standard;
       }
@@ -8254,7 +8246,7 @@
       // ---------------------------------------------------------------------
       else if (step.type === 'word_decode') {
         const w = step.target;
-        const showRoman = appState.pace !== 'intensive';
+        const showRoman = true;
 
         stage.innerHTML = `
           <div class="bg-[#16181d] border border-[#252934] rounded-3xl p-6 sm:p-8 space-y-6 shadow-xl">
@@ -9401,13 +9393,19 @@
       const allCurricula = [...UNITS_CURRICULUM, ...STREET_CURRICULUM];
       const node = allCurricula.flatMap(u => u.nodes).find(n => n.id === step.nodeId) || STREET_CURRICULUM[0].nodes[0];
       const rebuilt = createLiveConversationStep(node, newDiff, step.remixSeed);
+      if (typeof step.showText === 'boolean') rebuilt.showText = step.showText;
+      if (typeof step.showRoman === 'boolean') rebuilt.showRoman = step.showRoman;
+      if (typeof step.showEnglish === 'boolean') rebuilt.showEnglish = step.showEnglish;
+      if (typeof step.slow === 'boolean') rebuilt.slow = step.slow;
+      if (step.phase && CONVO_PHASES.some(p => p.id === step.phase)) rebuilt.phase = step.phase;
+      if (Array.isArray(step.phasesReached)) rebuilt.phasesReached = [...step.phasesReached];
       activeSession.steps[activeSession.currentIndex] = rebuilt;
 
       const labels = {
-        easier: '⭐ Lv 1: Short Survival Phrases (0.80x) • Visible Script',
-        standard: '⭐⭐ Lv 2: Standard Polite Street Talk (1.0x) • Ear-First Audio',
-        harder: '⭐⭐⭐ Lv 3: Compound Fluent Dialogue (1.12x) • Rich Exchanges',
-        overdrive: '⭐⭐⭐⭐ Lv 4: Rapid Multi-Clause Native Slang (1.18x) • Deep Talk'
+        easier: '⭐ Lv 1: Short Survival Phrases (0.80x)',
+        standard: '⭐⭐ Lv 2: Standard Polite Street Talk (1.0x)',
+        harder: '⭐⭐⭐ Lv 3: Compound Fluent Dialogue (1.12x)',
+        overdrive: '⭐⭐⭐⭐ Lv 4: Rapid Multi-Clause Native Slang (1.18x)'
       };
       showToast(labels[newDiff] || 'Difficulty updated');
       renderCurrentLessonStep();
@@ -9454,13 +9452,13 @@
       return step.difficulty === 'harder' || step.difficulty === 'overdrive';
     }
 
-    // Speaker A lines in Role-play: shown as text for Lv.1/2, audio-first for Lv.3+
+    // Speaker A lines in Role-play: shown as script + sound across all levels (levels control convo complexity, not hiding text)
     function getConvoBaseReveal(diff) {
-      return (diff === 'harder' || diff === 'overdrive') ? 0 : 2;
+      return 2;
     }
 
     function convoShowRomanInOptions(step) {
-      return appState.pace !== 'intensive' && !isHardConvo(step);
+      return step ? step.showRoman !== false : true;
     }
 
     function getConvoLineTask(step, line) {
@@ -9478,8 +9476,8 @@
       step.listenIdx = Math.max(0, Math.min(step.listenIdx, Math.max(0, lines.length - 1)));
       if (typeof step.rpIdx !== 'number') step.rpIdx = 0;
       if (typeof step.showText !== 'boolean') step.showText = true;
-      if (typeof step.showRoman !== 'boolean') step.showRoman = !isHardConvo(step) && appState.pace !== 'intensive';
-      if (typeof step.showEnglish !== 'boolean') step.showEnglish = step.difficulty === 'easier';
+      if (typeof step.showRoman !== 'boolean') step.showRoman = true;
+      if (typeof step.showEnglish !== 'boolean') step.showEnglish = false;
       if (typeof step.repeatLine !== 'boolean') step.repeatLine = false;
       if (!step.recall || typeof step.recall !== 'object') step.recall = {};
       const base = getConvoBaseReveal(step.difficulty);
@@ -10149,7 +10147,7 @@
       const lines = step.dialogueLines || [];
       const yours = lines.filter(l => l.speaker === 'B');
       const knew = yours.filter(l => step.recall[l.lineIdx] === 'knew').length;
-      const hintWords = isHardConvo(step) ? 0 : 1;
+      const hintWords = 1;
 
       const bubbles = lines.map((line, i) => {
         if (line.speaker !== 'B') {
@@ -10787,7 +10785,7 @@ Return ONLY valid JSON array of 3 exchange objects with keys:
           id: w.id,
           thai: w.thai,
           tts: w.thai,
-          sub: appState.pace === 'intensive' ? w.meaning : `${w.roman} — ${w.meaning}`,
+          sub: `${w.roman} — ${w.meaning}`,
           detail: w.videoContext || '',
           unit: w.unit || 6,
           seconds: w.seconds,

@@ -148,7 +148,7 @@
       "situationDistractors": [
         "sài hɔ̀ɔ khâ (ใส่ห่อค่ะ)",
         "phèt nɔ́ɔi khâ (เผ็ดน้อยค่ะ)",
-        "kin nîi khâ (กินนี่ค่ะ)"
+        "gin nîi khâ (กินนี่ค่ะ)"
       ],
       "situationDialogue": {
         "speaker": "Customer (Exclusion)",
@@ -373,8 +373,8 @@
     {
       "id": "ST_kin_nii_hor",
       "thai": "กินนี่หรือใส่ห่อ",
-      "spoken": "kin nîi rěu sài hɔ̀ɔ",
-      "roman": "kin nîi rǒe sài hɔ̀ɔ",
+      "spoken": "gin nîi rěu sài hɔ̀ɔ",
+      "roman": "gin nîi rǒe sài hɔ̀ɔ",
       "meaning": "'Eat here or wrap to-go?' (Vendor question)",
       "streetShift": "The universal question asked at every food court and street stall across Thailand before they prepare your bowl or container.",
       "unit": 1,
@@ -384,7 +384,7 @@
       "words": [
         {
           "th": "กินนี่",
-          "ro": "kin nîi",
+          "ro": "gin nîi",
           "en": "eat here"
         },
         {
@@ -399,7 +399,7 @@
         }
       ],
       "situationPrompt": "The food stall cook asks 'กินนี่หรือใส่ห่อ?' (Eat here or wrap to go?). You want to eat right at the food stall. How do you respond in natural everyday Thai?",
-      "situationCorrect": "kin nîi khâ (กินนี่ค่ะ)",
+      "situationCorrect": "gin nîi khâ (กินนี่ค่ะ)",
       "situationDistractors": [
         "sài hɔ̀ɔ khâ (ใส่ห่อค่ะ)",
         "mâi ao khâ (ไม่เอาค่ะ)",
@@ -408,7 +408,7 @@
       "situationDialogue": {
         "speaker": "Food Stall Cook",
         "thai": "กินนี่หรือใส่ห่อ?",
-        "spoken": "kin nîi rǔue sài hɔ̀ɔ?",
+        "spoken": "gin nîi rǔue sài hɔ̀ɔ?",
         "meaning": "Eat here or wrap to go?",
         "tts": "กินนี่หรือใส่ห่อ"
       },
@@ -441,14 +441,14 @@
       "situationPrompt": "The food stall cook asks 'กินนี่หรือใส่ห่อ?' (Eat here or wrap to go?). You want to take your street meal back to your hotel or condo. How do you answer naturally in everyday Thai?",
       "situationCorrect": "sài hɔ̀ɔ khâ (ใส่ห่อค่ะ)",
       "situationDistractors": [
-        "kin nîi khâ (กินนี่ค่ะ)",
+        "gin nîi khâ (กินนี่ค่ะ)",
         "mâi ao khâ (ไม่เอาค่ะ)",
         "thâo-lài khá? (เท่าไหร่คะ?)"
       ],
       "situationDialogue": {
         "speaker": "Food Stall Cook",
         "thai": "กินนี่หรือใส่ห่อ?",
-        "spoken": "kin nîi rǔue sài hɔ̀ɔ?",
+        "spoken": "gin nîi rǔue sài hɔ̀ɔ?",
         "meaning": "Eat here or wrap to go?",
         "tts": "กินนี่หรือใส่ห่อ"
       },
@@ -1418,7 +1418,7 @@
       "situationCorrect": "อย่างนี้ (yàang níi) — 'Like this / in this manner'",
       "situationDistractors": [
         "อย่าทำ (yàa tham) — 'Do not do that'",
-        "อยากกิน (yàak kin) — 'Want to eat'",
+        "อยากกิน (yàak gin) — 'Want to eat'",
         "ยังไง (yang-ngai) — 'How come?'"
       ],
       "situationDialogue": {
@@ -1448,7 +1448,7 @@
           "en": "in that case / like that"
         }
       ],
-      "situationPrompt": "Someone says 'Khao mai ma... ngan rao pai kan loei' (He's not coming... ngán let's go). What does 'ngan' signify?",
+      "situationPrompt": "Someone says 'Khao mai ma... ngan rao bpai gan loei' (He's not coming... ngán let's go). What does 'ngan' signify?",
       "situationCorrect": "อย่างนั้น (yàang nán) -> 'In that case / then'",
       "situationDistractors": [
         "เงิน (ngoen) — 'Money'",
@@ -1769,7 +1769,7 @@
           "en": "go ahead / do it!"
         }
       ],
-      "situationPrompt": "You are hesitating to try a spicy street snack. A friend smiles and says 'Kin sì!'. What are they saying?",
+      "situationPrompt": "You are hesitating to try a spicy street snack. A friend smiles and says 'Gin sì!'. What are they saying?",
       "situationCorrect": "'Go ahead and eat! / Just eat it!' (กินสิ!)",
       "situationDistractors": [
         "'Don't eat it' (อย่ากิน)",
@@ -1779,7 +1779,7 @@
       "situationDialogue": {
         "speaker": "Friend",
         "thai": "กินสิ!",
-        "spoken": "kin sì!",
+        "spoken": "gin sì!",
         "meaning": "Go ahead and eat it!",
         "tts": "กินสิ"
       },
@@ -1873,7 +1873,7 @@
           "en": "I / me (or friendly we)"
         }
       ],
-      "situationPrompt": "A Thai peer says 'เราอยากกินส้มตำ' (Rao yàak kin sôm-dtam). Who is 'เรา' referring to here?",
+      "situationPrompt": "A Thai peer says 'เราอยากกินส้มตำ' (Rao yàak gin sôm-dtam). Who is 'เรา' referring to here?",
       "situationCorrect": "'I / me' — casual friendly first-person pronoun",
       "situationDistractors": [
         "The king or royalty",
@@ -1883,7 +1883,7 @@
       "situationDialogue": {
         "speaker": "Thai Peer",
         "thai": "เราอยากกินส้มตำ",
-        "spoken": "rao yàak kin sôm-dtam",
+        "spoken": "rao yàak gin sôm-dtam",
         "meaning": "I want to eat papaya salad",
         "tts": "เราอยากกินส้มตำ"
       },
@@ -1956,7 +1956,7 @@
       "situationDialogue": {
         "speaker": "Thai Partner",
         "thai": "ตัวเองอยากกินอะไร?",
-        "spoken": "dtua-eeng yàak kin à-rai?",
+        "spoken": "dtua-eeng yàak gin à-rai?",
         "meaning": "Babe / Honey, what do you want to eat?",
         "tts": "ตัวเองอยากกินอะไร"
       },
@@ -2317,7 +2317,7 @@
           "title": "Vendor Exchanges & Takeaway",
           "type": "street",
           "icon": "🥡",
-          "description": "Vendor questions & takeout: kin nîi rǒe sài hɔ̀ɔ (eat here or wrap to-go?) → sài hɔ̀ɔ (takeaway) → phí-sèet (extra portion)",
+          "description": "Vendor questions & takeout: gin nîi rǒe sài hɔ̀ɔ (eat here or wrap to-go?) → sài hɔ̀ɔ (takeaway) → phí-sèet (extra portion)",
           "itemIds": [
             "ST_kin_nii_hor",
             "ST_sai_hor",

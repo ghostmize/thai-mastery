@@ -45,6 +45,30 @@ def test_critical_confusion_pairs(errors: list):
     if re.search(r'อยาก[^\n\'\"]*yâak', html) or re.search(r'อยาก[^\n\'\"]*yâek', html):
         errors.append("Critical Error: 'อยาก' (want) must be romanized as low-tone 'yàak', never falling 'yâak' or 'yâek'.")
 
+
+def test_ko_kai_g_romanization(errors: list):
+    """
+    Ensure unaspirated initial 'ก' (ko kai) is consistently romanized with 'g'
+    (e.g., 'gin', 'gài', 'gaa', 'gee', 'gǔai-dtǐao', 'gan') rather than 'k'.
+    """
+    files = [
+        ("street_data.json", STREET_JSON.read_text(encoding='utf-8')),
+        ("thai_reading_path_adaptive_mastery_engine.html", HTML_FILE.read_text(encoding='utf-8')),
+    ]
+    forbidden = [
+        (r'\bkin\b', 'กิน must be romanized as "gin", not "kin"'),
+        (r'\bkài\b', 'ไก่ must be romanized as "gài", not "kài"'),
+        (r'\bkaa\b', 'กา must be romanized as "gaa", not "kaa"'),
+        (r'\bkee\b', 'เก must be romanized as "gee", not "kee"'),
+        (r'\bkǔay', 'ก๋วยเตี๋ยว must be romanized with "g" ("gǔai-dtǐao"), not "kǔay"'),
+        (r'\bpai kan\b', 'ไปกัน must be romanized as "bpai gan", not "pai kan"'),
+    ]
+    for fname, content in files:
+        for pat, msg in forbidden:
+            for m in re.finditer(pat, content, re.IGNORECASE):
+                line_no = content[:m.start()].count('\n') + 1
+                errors.append(f"[{fname}:{line_no}] {msg} (found '{m.group(0)}')")
+
 def test_vowel_orthography(errors: list):
     """
     Verify that Thai vowels correspond accurately to roman vowels.
@@ -157,6 +181,7 @@ def main():
 
     errors = []
     test_critical_confusion_pairs(errors)
+    test_ko_kai_g_romanization(errors)
     test_vowel_orthography(errors)
     test_conversation_turns(errors)
     test_json_and_html_sync(errors)
@@ -171,6 +196,7 @@ def main():
         print("\n✅ ALL TESTS PASSED:")
         print("  ✓ 'อยาก' (want) verified as low-tone 'yàak' across all lessons.")
         print("  ✓ 'แยก' (separate) verified as falling-tone 'yâek' across all lessons.")
+        print("  ✓ Initial 'ก' (ko kai) verified as 'g' ('gin', 'gài', 'gaa', 'gee', 'gǔai-dtǐao') across all lessons.")
         print("  ✓ Vowel orthography (แ- vs -า) verified across all vocab items.")
         print("  ✓ All 59 street items & 168 dialogue turns verified.")
         print("  ✓ street_data.json and HTML engine in 100% sync.")
