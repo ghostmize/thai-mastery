@@ -174,6 +174,44 @@ def test_situation_drills_and_audio(errors: list):
             if 'Thin soup noodles' not in corr:
                 errors.append(f"[ST_noodle_shorthand] Correct option must explain meaning ('Thin soup noodles, no meatballs, no sprouts').")
 
+def test_drill_uniqueness_and_anti_repetition(errors: list):
+    """
+    Ensure no two items in the dataset have duplicate prompts or identical option sets
+    that cause perceived glitch repeats during study sessions.
+    """
+    with open(STREET_JSON, 'r', encoding='utf-8') as f:
+        sd = json.load(f)
+
+    seen_prompts = {}
+    seen_corrects = {}
+
+    for item in sd.get('items', []):
+        iid = item.get('id')
+        prompt = item.get('situationPrompt', '').strip()
+        corr = item.get('situationCorrect', '').strip()
+        distractors = set(item.get('situationDistractors', []))
+
+        if prompt in seen_prompts:
+            errors.append(f"Duplicate scenario prompt found between [{seen_prompts[prompt]}] and [{iid}]: '{prompt[:60]}...'")
+        else:
+            seen_prompts[prompt] = iid
+
+        if corr in seen_corrects:
+            errors.append(f"Duplicate correct option found between [{seen_corrects[corr]}] and [{iid}]: '{corr}'")
+        else:
+            seen_corrects[corr] = iid
+
+    # Verify ST_kin_nii_hor vs ST_sai_hor specifically:
+    kin = next((it for it in sd.get('items', []) if it.get('id') == 'ST_kin_nii_hor'), None)
+    sai = next((it for it in sd.get('items', []) if it.get('id') == 'ST_sai_hor'), None)
+
+    if kin and sai:
+        kin_opts = set([kin.get('situationCorrect')] + kin.get('situationDistractors', []))
+        sai_opts = set([sai.get('situationCorrect')] + sai.get('situationDistractors', []))
+        overlap = kin_opts.intersection(sai_opts)
+        if len(overlap) >= 3:
+            errors.append(f"High option collision between ST_kin_nii_hor and ST_sai_hor ({len(overlap)} overlapping options). Options must be distinct!")
+
 def main():
     print("=" * 60)
     print("Running Thai Dataset & Orthography Linter...")
@@ -186,6 +224,7 @@ def main():
     test_conversation_turns(errors)
     test_json_and_html_sync(errors)
     test_situation_drills_and_audio(errors)
+    test_drill_uniqueness_and_anti_repetition(errors)
 
     if errors:
         print(f"\nFAILED: Found {len(errors)} error(s):")
@@ -201,6 +240,7 @@ def main():
         print("  ✓ All 59 street items & 168 dialogue turns verified.")
         print("  ✓ street_data.json and HTML engine in 100% sync.")
         print("  ✓ All situation listening drills & audio playback verified.")
+        print("  ✓ Drill uniqueness & anti-repetition guards verified.")
         print("=" * 60)
         sys.exit(0)
 

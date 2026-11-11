@@ -1903,22 +1903,22 @@
         "en": "wrap to-go"
       }
     ],
-    "situationPrompt": "The food stall cook asks 'กินนี่หรือใส่ห่อ?' (gin nîi rǔue sài hɔ̀ɔ?). You want to eat right at the food stall. How do you respond in natural everyday Thai?",
-    "situationCorrect": "gin nîi khâ (กินนี่ค่ะ)",
+    "situationPrompt": "The food stall cook finishes cooking and asks you 'กินนี่หรือใส่ห่อ?' (gin nîi rěu sài hɔ̀ɔ?). What is the cook asking you?",
+    "situationCorrect": "Eat here or wrap to-go? (กินนี่หรือใส่ห่อ)",
     "situationDistractors": [
-      "sài hɔ̀ɔ khâ (ใส่ห่อค่ะ)",
-      "mâi ao khâ (ไม่เอาค่ะ)",
-      "thâo-lài khá? (เท่าไหร่คะ?)"
+      "What kind of noodles do you want? (เอาเส้นอะไร)",
+      "Do you want the broth packed separately? (แยกน้ำไหม)",
+      "How much does it cost? (เท่าไหร่คะ)"
     ],
     "situationDialogue": {
       "speaker": "Food Stall Cook",
       "thai": "กินนี่หรือใส่ห่อ?",
-      "spoken": "gin nîi rǔue sài hɔ̀ɔ?",
+      "spoken": "gin nîi rěu sài hɔ̀ɔ?",
       "meaning": "Eat here or wrap to go?",
       "tts": "กินนี่หรือใส่ห่อ"
     },
-    "situationEverydayTip": "Simply pick 'กินนี่ค่ะ' (eat here) or 'ใส่ห่อค่ะ' (wrap to go)!",
-    "responseTts": "กินนี่ค่ะ"
+    "situationEverydayTip": "'กินนี่หรือใส่ห่อ?' is the universal question vendors ask across Thailand to find out if you're eating at the stall or taking takeaway!",
+    "responseTts": "กินนี่หรือใส่ห่อ"
   },
   {
     "id": "ST_sai_hor",
@@ -2885,7 +2885,7 @@
         "en": "not / right?"
       }
     ],
-    "situationPrompt": "A friend asks 'Chob bpao?' (ชอบเปล่า). What does the ending 'bpao' mean here?",
+    "situationPrompt": "A friend asks 'ชอบเปล่า?' (chɔ̂ɔp bpao?). What does the ending 'bpao' mean here?",
     "situationCorrect": "'Do you like it or not?' — tag question (ชอบเปล่า)",
     "situationDistractors": [
       "'Do you want to eat?' (อยากกินไหม)",
@@ -2919,7 +2919,7 @@
         "en": "like this / this way"
       }
     ],
-    "situationPrompt": "A Thai colleague demonstrates how to do something and says 'Thum ngii si!'. What is 'ngii' short for?",
+    "situationPrompt": "A Thai colleague demonstrates how to do something and says 'ทำงี้สิ!' (tham ngíi sì!). What is 'ngii' short for?",
     "situationCorrect": "อย่างนี้ (yàang níi) — 'Like this / in this manner'",
     "situationDistractors": [
       "อย่าทำ (yàa tham) — 'Do not do that'",
@@ -3239,7 +3239,7 @@
         "en": "really?! / is that so?!"
       }
     ],
-    "situationPrompt": "A friend tells you an incredible piece of gossip. You react with surprise: 'Jing rǒe?!' (จริงเหรอ). What are you asking?",
+    "situationPrompt": "A friend tells you an incredible piece of gossip. You react with surprise: 'จริงเหรอ?!' (jing rǒe?!). What are you asking?",
     "situationCorrect": "'Really?! / For real?!' (จริงเหรอ?!)",
     "situationDistractors": [
       "'Thank you' (ขอบคุณ)",
@@ -3274,7 +3274,7 @@
         "en": "go ahead / do it!"
       }
     ],
-    "situationPrompt": "You are hesitating to try a spicy street snack. A friend smiles and says 'Gin sì!'. What are they saying?",
+    "situationPrompt": "You are hesitating to try a spicy street snack. A friend smiles and says 'กินสิ!' (gin sì!). What are they saying?",
     "situationCorrect": "'Go ahead and eat! / Just eat it!' (กินสิ!)",
     "situationDistractors": [
       "'Don't eat it' (อย่ากิน)",
@@ -4435,16 +4435,23 @@
     function toggleStreetLetteringHint() {
       const box = document.getElementById('box-hint-lettering');
       const btn = document.getElementById('btn-hint-lettering');
-      if (!box) return;
-      const isHidden = box.classList.contains('hidden');
+      const inlineEls = document.querySelectorAll('.street-prompt-lettering, #prompt-hint-lettering');
+      if (!box && inlineEls.length === 0) return;
+      const isHidden = box ? box.classList.contains('hidden') : (inlineEls[0] ? inlineEls[0].classList.contains('hidden') : true);
       if (isHidden) {
-        box.classList.remove('hidden');
-        btn?.classList.remove('bg-[#161924]', 'text-slate-300', 'border-[#2b3248]');
-        btn?.classList.add('bg-amber-400/25', 'text-amber-300', 'border-amber-400/60');
+        if (box) box.classList.remove('hidden');
+        inlineEls.forEach(el => el.classList.remove('hidden'));
+        if (btn) {
+          btn.classList.remove('bg-[#161924]', 'border-[#2b3248]');
+          btn.classList.add('bg-amber-400/25', 'border-amber-400/60', 'ring-1', 'ring-amber-400/40');
+        }
       } else {
-        box.classList.add('hidden');
-        btn?.classList.remove('bg-amber-400/25', 'text-amber-300', 'border-amber-400/60');
-        btn?.classList.add('bg-[#161924]', 'border-[#2b3248]');
+        if (box) box.classList.add('hidden');
+        inlineEls.forEach(el => el.classList.add('hidden'));
+        if (btn) {
+          btn.classList.remove('bg-amber-400/25', 'border-amber-400/60', 'ring-1', 'ring-amber-400/40');
+          btn.classList.add('bg-[#161924]', 'border-[#2b3248]');
+        }
       }
     }
 
@@ -4664,7 +4671,9 @@
             } else if (step.type === 'street_listen_spotlight' && step.item) {
               playThaiAudio(step.item.tts);
             } else if (step.type === 'street_listening_drill' && step.target) {
-              playThaiAudio(step.target.tts);
+              const diag = step.target?.situationDialogue;
+              const incomingAudio = (diag && diag.thai) ? (diag.tts || diag.thai) : null;
+              playThaiAudio(incomingAudio || step.target.tts);
             } else if (step.letter) {
               playThaiAudio(step.letter.tts);
             } else if (step.word) {
@@ -4960,8 +4969,8 @@
         const toastMap = {
           '1': '⭐ Short survival chunks & 0.80x audio',
           '2': '⭐⭐ Full polite sentences & 1.0x native audio',
-          '3': '⭐⭐⭐ Longer sentences & street slang',
-          '3+': '⭐⭐⭐⭐ Rapid 1.15x flow & extended dialogue'
+          '3': '⭐⭐⭐ 1.08x audio, bonus phrases & harder drills',
+          '3+': '⭐⭐⭐⭐ Rapid 1.15x audio, 5-choice drills & 10-line convo'
         };
         const key = (targetLvl === 3 && appState.levelOverdrive) ? '3+' : String(targetLvl);
         showToast(toastMap[key] || toastMap['2']);
@@ -5027,7 +5036,7 @@
         } else if (cur === 3 && !isOverdrive && appState.levelStreak >= 4) {
           appState.levelStreak = 0;
           setCourseLevel(3, false, true);
-          showToast('Auto-Adapt: Max Level Activated • Fast street slang & 5-turn dialogue');
+          showToast('Auto-Adapt: Max Level Activated • 1.15x audio, 5-choice drills & 10-line convo');
         }
       } else {
         // Misses or slow hesitation (> 6.5s) reset fast streak; never auto-reduce level
@@ -5311,11 +5320,11 @@
         globalText = '⭐⭐ • Full polite sentences, 1.0x native audio & 6-line convo';
         lessonText = '⭐⭐ 1.0x Audio';
       } else if (!isOverdrive) {
-        globalText = '⭐⭐⭐ • Longer sentences, street slang, +1 bonus word & 8-line convo';
-        lessonText = '⭐⭐⭐ 1.12x Audio';
+        globalText = '⭐⭐⭐ • 1.08x audio, +1 bonus phrase, 3 spiral reviews & 8-line convo';
+        lessonText = '⭐⭐⭐ 1.08x Audio';
       } else {
-        globalText = '⭐⭐⭐⭐ • Rapid 1.15x flow, multi-clause slang & 10-line convo';
-        lessonText = '⭐⭐⭐⭐ 1.18x Audio';
+        globalText = '⭐⭐⭐⭐ • 1.15x rapid audio, 5-choice drills, 4 reviews & 10-line convo';
+        lessonText = '⭐⭐⭐⭐ 1.15x Audio';
       }
 
       if (gDesc) gDesc.textContent = globalText;
@@ -5705,12 +5714,36 @@
     function spaceDrillsAfterSpotlights(drills, lastTaughtId) {
       if (!Array.isArray(drills) || drills.length <= 1) return drills || [];
       const copy = [...drills].sort(() => Math.random() - 0.5);
+
+      // 1. Prevent the first drill from immediately re-testing the final spotlight
       if (lastTaughtId && copy[0]?.itemId === lastTaughtId) {
         const swapIdx = copy.findIndex(d => d.itemId !== lastTaughtId);
         if (swapIdx > 0) {
           [copy[0], copy[swapIdx]] = [copy[swapIdx], copy[0]];
         }
       }
+
+      // 2. Anti-Repetition Guard: Prevent adjacent drills from sharing identical dialogue audio, prompts or IDs
+      for (let i = 0; i < copy.length - 1; i++) {
+        const cur = copy[i];
+        const next = copy[i + 1];
+        const curDiag = (cur?.target?.situationDialogue?.thai || cur?.target?.tts || '').trim();
+        const nextDiag = (next?.target?.situationDialogue?.thai || next?.target?.tts || '').trim();
+        const sameAudio = !!(curDiag && nextDiag && curDiag === nextDiag);
+        const sameItem = !!(cur?.itemId && next?.itemId && cur.itemId === next.itemId);
+
+        if (sameAudio || sameItem) {
+          const swapIdx = copy.findIndex((d, idx) => {
+            if (idx <= i + 1) return false;
+            const dDiag = (d?.target?.situationDialogue?.thai || d?.target?.tts || '').trim();
+            return dDiag !== curDiag && d.itemId !== cur.itemId;
+          });
+          if (swapIdx > i + 1) {
+            [copy[i + 1], copy[swapIdx]] = [copy[swapIdx], copy[i + 1]];
+          }
+        }
+      }
+
       return copy;
     }
 
@@ -5756,9 +5789,9 @@
         const lastSpotlightId = allLessonItems[allLessonItems.length - 1]?.id;
         const currentDrills = spaceDrillsAfterSpotlights(rawDrills, lastSpotlightId);
 
-        // Interleave 1-3 Spiral Review challenges from past learned phrases (scaled by Course Level)
+        // Interleave 1-4 Spiral Review challenges from past learned phrases (scaled by Course Level)
         if (pastLearned.length > 0) {
-          const maxReviews = lvl === 1 ? 1 : (lvl === 3 ? 3 : 2);
+          const maxReviews = lvl === 1 ? 1 : (appState.levelOverdrive ? 4 : (lvl === 3 ? 3 : 2));
           const reviewCount = Math.min(maxReviews, pastLearned.length);
           const reviewItems = pastLearned.slice(0, reviewCount);
           const reviewDrills = reviewItems.map(pItem => {
@@ -5771,11 +5804,16 @@
           const interleaved = [];
           let rIdx = 0;
           currentDrills.forEach((cDrill, cIdx) => {
+            const nextDrill = currentDrills[cIdx + 1];
+            const curDiag = (cDrill?.target?.situationDialogue?.thai || cDrill?.target?.tts || '').trim();
+            const nextDiag = (nextDrill?.target?.situationDialogue?.thai || nextDrill?.target?.tts || '').trim();
+            const sameDialogue = !!(nextDrill && curDiag && nextDiag && curDiag === nextDiag);
+
             if (currentDrills.length <= 2 && cIdx === 0 && rIdx < reviewDrills.length) {
               interleaved.push(reviewDrills[rIdx++]);
             }
             interleaved.push(cDrill);
-            if ((cIdx === 1 || cIdx === 3 || cIdx === 4) && rIdx < reviewDrills.length) {
+            if ((sameDialogue || cIdx === 1 || cIdx === 3 || cIdx === 4) && rIdx < reviewDrills.length) {
               interleaved.push(reviewDrills[rIdx++]);
             }
           });
@@ -5965,20 +6003,11 @@
       const lvl = getEffectiveCourseLevel();
       const isOverdrive = (lvl === 3 && !!appState.levelOverdrive);
       const distractorCount = lvl === 1 ? 2 : (isOverdrive ? 4 : 3); // 3 options at Lv.1, 4 at Lv.2/Lv.3, 5 at Lv.3+ Overdrive
-      const exp = lvl >= 3 ? getThaiLevelExpansion(targetItem) : null;
 
       if (targetItem.situationPrompt && targetItem.situationCorrect && targetItem.situationDistractors) {
-        let correctText = targetItem.situationCorrect;
-        if (lvl >= 3 && exp && exp.drillCompoundSuffix) {
-          const parsedBase = parseDrillOption(targetItem.situationCorrect);
-          if (parsedBase.primary && parsedBase.secondary) {
-            correctText = `${parsedBase.primary}, ${exp.drillCompoundSuffix.spoken} (${parsedBase.secondary} ${exp.drillCompoundSuffix.thai})`;
-          }
-        }
-
         const correctOpt = {
           id: targetItem.id,
-          text: correctText,
+          text: targetItem.situationCorrect,
           isCorrect: true
         };
 
@@ -6010,11 +6039,16 @@
           }
         }
 
-        // If Overdrive (5 options total = 4 distractors), pull extra close distractor(s) from STREET_DB
+        // If Overdrive (5 options total = 4 distractors), pull extra close distractor(s) from same theme/unit first
         if (distractorEntries.length < distractorCount && typeof STREET_DB !== 'undefined') {
-          for (const extraCand of STREET_DB) {
+          const sameThemePool = STREET_DB
+            .filter(s => s.id !== targetItem.id && (s.theme === targetItem.theme || s.unit === targetItem.unit))
+            .sort(() => Math.random() - 0.5);
+          const otherPool = STREET_DB
+            .filter(s => s.id !== targetItem.id && s.theme !== targetItem.theme && s.unit !== targetItem.unit)
+            .sort(() => Math.random() - 0.5);
+          for (const extraCand of [...sameThemePool, ...otherPool]) {
             if (distractorEntries.length >= distractorCount) break;
-            if (extraCand.id === targetItem.id) continue;
             if (distractorEntries.some(e => e.rawText.includes(extraCand.spoken || ''))) continue;
             const candText = extraCand.situationCorrect || `${extraCand.spoken || extraCand.roman} (${extraCand.thai || ''})`;
             addDistractorEntry(candText, extraCand);
@@ -6022,13 +6056,7 @@
         }
 
         const distractorOpts = distractorEntries.slice(0, distractorCount).map((entry, idx) => {
-          let dText = entry.rawText;
-          if (lvl >= 3 && exp && exp.drillCompoundSuffix) {
-            const p = parseDrillOption(dText);
-            if (p.primary && p.secondary) {
-              dText = `${p.primary}, ${exp.drillCompoundSuffix.spoken} (${p.secondary} ${exp.drillCompoundSuffix.thai})`;
-            }
-          }
+          const dText = entry.rawText;
           if (entry.compatItem) {
             return {
               id: `alt_${entry.compatItem.id}_${idx}`,
@@ -6052,7 +6080,6 @@
           itemId: targetItem.id,
           target: targetItem,
           prompt: targetItem.situationPrompt,
-          levelTwist: lvl >= 3 && exp ? exp.drillTwist : null,
           options
         };
       }
@@ -6094,7 +6121,6 @@
         itemId: targetItem.id,
         target: targetItem,
         prompt: `Listen carefully: What does the speaker mean?`,
-        levelTwist: lvl >= 3 && exp ? exp.drillTwist : null,
         options
       };
     }
@@ -6892,23 +6918,15 @@
       if (step.type === 'street_listen_spotlight') {
         const item = step.item;
         const lvl = getEffectiveCourseLevel();
-        const isOverdrive = (lvl === 3 && !!appState.levelOverdrive);
-        const exp = getThaiLevelExpansion(item);
+        const exp = lvl === 1 ? getThaiLevelExpansion(item) : null;
 
         stage.innerHTML = `
           <div class="max-w-xl mx-auto bg-[#14161d] border border-[#232735] rounded-3xl p-6 sm:p-8 space-y-5 shadow-2xl text-center">
             <!-- Header: Theme Badge & Card Counter -->
             <div class="flex flex-wrap items-center justify-between gap-2 text-xs pb-2 border-b border-[#1f2330]">
-              <div class="flex items-center gap-1.5 flex-wrap">
-                <span class="text-amber-400 font-semibold uppercase tracking-wider text-[11px]">
-                  ⚡ ${item.theme || 'Everyday Thai'} • ${item.category || 'Spoken'}
-                </span>
-                ${step.isBonusThemeWord ? `
-                  <span class="px-2 py-0.5 rounded-full bg-rose-500/20 border border-rose-400/40 text-rose-300 text-[10px] font-bold">
-                    Lv 3 Bonus Theme Phrase
-                  </span>
-                ` : ''}
-              </div>
+              <span class="text-amber-400 font-semibold uppercase tracking-wider text-[11px]">
+                ⚡ ${item.theme || 'Everyday Thai'} • ${item.category || 'Spoken'}
+              </span>
               <span class="text-slate-400 text-[11px]">Card ${activeSession.currentIndex + 1} of ${activeSession.steps.length}</span>
             </div>
 
@@ -6944,40 +6962,6 @@
               <div class="pt-3 border-t border-[#1f2330]">
                 <div class="text-[11px] text-slate-400 mb-2">Tap or hover words to hear each part:</div>
                 ${renderInteractiveWords(item)}
-              </div>
-            ` : ''}
-
-            ${lvl >= 3 && exp ? `
-              <!-- Level 3 / Overdrive Street Expansion: Longer Real-Life Sentence + Street Slang & Bonus Vocab -->
-              <div class="bg-gradient-to-br from-rose-500/12 via-[#191622] to-amber-500/10 border border-rose-400/35 rounded-2xl p-4 text-left space-y-3 shadow-lg">
-                <div class="flex items-center justify-between gap-2">
-                  <span class="text-[11px] font-extrabold uppercase tracking-wider ${isOverdrive ? 'text-fuchsia-300' : 'text-rose-300'} flex items-center gap-1.5">
-                    <span>${isOverdrive ? 'Max Overdrive: Full Local Street Flow & Slang' : 'Level 3 Expansion: Longer Sentence & Street Slang'}</span>
-                  </span>
-                  <button type="button" onclick="playThaiAudio('${exp.longerThai}', this)" class="px-2.5 py-1 rounded-xl bg-rose-500/25 hover:bg-rose-500/40 border border-rose-400/40 text-rose-200 text-xs font-bold flex items-center gap-1 cursor-pointer active:scale-95 shrink-0">
-                    <span>🔊</span><span>Hear Longer Sentence</span>
-                  </button>
-                </div>
-
-                <div class="bg-[#11131b]/90 border border-[#282c3e] rounded-xl p-3 space-y-1">
-                  <div class="text-xs sm:text-sm font-extrabold text-white font-mono tracking-wide">${exp.longerSpoken}</div>
-                  <div class="text-xs sm:text-sm font-bold text-amber-300 font-thai">${exp.longerThai}</div>
-                  <div class="text-xs text-emerald-300 font-medium">"${exp.longerMeaning}"</div>
-                </div>
-
-                <div class="space-y-1.5">
-                  <div class="text-[10px] font-bold uppercase tracking-wider text-amber-300/90">💬 Extra Street Slang &amp; Theme Modifiers (Tap to Hear):</div>
-                  <div class="flex flex-wrap gap-1.5">
-                    ${exp.slangChips.map(sc => `
-                      <button type="button" onclick="playThaiAudio('${sc.th}', this)" class="px-2.5 py-1.5 rounded-xl bg-[#161925] hover:bg-[#22273a] border border-[#2d344c] text-left text-xs flex items-center gap-1.5 cursor-pointer active:scale-95 transition-all">
-                        <span class="text-amber-400">🔊</span>
-                        <span class="font-bold text-white font-mono">${sc.ro}</span>
-                        <span class="font-thai text-amber-300 font-semibold">(${sc.th})</span>
-                        <span class="text-slate-300 text-[11px]">• ${sc.en}</span>
-                      </button>
-                    `).join('')}
-                  </div>
-                </div>
               </div>
             ` : ''}
 
@@ -7025,6 +7009,9 @@
 
         // Highlight the spoken Thai phrase inside the sentence if someone is speaking
         let formattedPrompt = promptRaw;
+        const dialogueSpoken = (diag && diag.spoken) ? diag.spoken : (item.spoken || item.roman || '');
+        const dialogueMeaning = (diag && diag.meaning) ? diag.meaning : item.meaning;
+
         if (hasIncomingDialogue && diag && diag.thai) {
           const cleanThai = diag.thai.replace(/[!?]/g, '').trim();
           const audioTarget = incomingAudio || diag.tts || diag.thai;
@@ -7044,10 +7031,21 @@
           } else if (cleanThai && formattedPrompt.includes(cleanThai)) {
             formattedPrompt = formattedPrompt.replace(cleanThai, makeAudioBtn(cleanThai));
           }
-        }
 
-        const dialogueSpoken = (diag && diag.spoken) ? diag.spoken : (item.spoken || item.roman);
-        const dialogueMeaning = (diag && diag.meaning) ? diag.meaning : item.meaning;
+          // English Lettering with Audio:
+          // Do NOT display English lettering initially with audio so the learner trains hearing only!
+          // Wrap it in a revealable tag (.street-prompt-lettering, hidden by default at ALL levels).
+          // If the user clicks the "Lettering" button (or taps this inline tag), it is revealed!
+          const inlineSpan = dialogueSpoken
+            ? ` <span id="prompt-hint-lettering" class="street-prompt-lettering hidden text-amber-300 font-mono text-xs sm:text-sm font-semibold align-middle px-2 py-0.5 mx-0.5 rounded-lg bg-amber-400/15 border border-amber-400/30 cursor-pointer transition-all" onclick="toggleStreetLetteringHint()" title="Toggle English Lettering">(${dialogueSpoken})</span>`
+            : '';
+
+          if (/(<\/button>)\s*\([^)]+\)/.test(formattedPrompt)) {
+            formattedPrompt = formattedPrompt.replace(/(<\/button>)\s*\([^)]+\)/g, `$1${inlineSpan}`);
+          } else if (inlineSpan && formattedPrompt.includes('</button>')) {
+            formattedPrompt = formattedPrompt.replace(/(<\/button>)/, `$1${inlineSpan}`);
+          }
+        }
 
         stage.innerHTML = `
           <div class="max-w-xl mx-auto bg-[#14161d] border border-[#232735] rounded-3xl p-5 sm:p-6 space-y-3.5 shadow-2xl">
@@ -7056,11 +7054,6 @@
                 <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-cyan-500/15 border border-cyan-500/30 text-cyan-300 text-xs font-bold tracking-wide uppercase">
                   <span>🔄</span>
                   <span>Spiral Review • Re-using Past Phrase</span>
-                </span>
-              ` : step.isBonusThemeWord ? `
-                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-rose-500/15 border border-rose-500/35 text-rose-300 text-xs font-bold tracking-wide uppercase">
-                  <span>🔥</span>
-                  <span>Lv.3 Bonus Theme Scenario</span>
                 </span>
               ` : `
                 <span class="text-xs font-semibold uppercase tracking-wider text-amber-400">⚡ Real Street Scenario</span>
@@ -7084,12 +7077,6 @@
               <div class="text-base sm:text-lg font-semibold text-white leading-relaxed">
                 ${formattedPrompt}
               </div>
-
-              ${step.levelTwist ? `
-                <div class="px-3 py-2 rounded-xl bg-rose-500/15 border border-rose-400/35 text-xs text-rose-200 font-semibold leading-snug">
-                  ${step.levelTwist}
-                </div>
-              ` : ''}
 
               ${hasIncomingDialogue ? `
                 <!-- Clean, Compact Hints for Incoming Dialogue -->
@@ -7116,8 +7103,8 @@
                     </button>
                   </div>
 
-                  <!-- Revealed Hints (Auto-opened at Level 1 for gentle onboarding!) -->
-                  <div id="box-hint-lettering" class="${lvl === 1 ? '' : 'hidden '}px-3.5 py-2.5 rounded-xl bg-amber-400/10 border border-amber-400/30 text-xs flex items-center gap-2.5">
+                  <!-- Revealed Hints (Starts hidden at ALL levels so user trains hearing only; revealable via Lettering button!) -->
+                  <div id="box-hint-lettering" class="hidden px-3.5 py-2.5 rounded-xl bg-amber-400/10 border border-amber-400/30 text-xs flex items-center gap-2.5">
                     <span class="text-amber-400 font-bold shrink-0">🔤 Lettering:</span>
                     <span class="text-amber-200 font-bold text-sm tracking-wide font-mono break-words leading-snug">${dialogueSpoken}</span>
                   </div>
@@ -8967,7 +8954,7 @@
       //    a valid THAI reply to what Speaker A just said (primary line or another reasonable fit).
       const allCandidatePool = [...newItems, ...shuffledOld, ...(typeof STREET_DB !== 'undefined' ? STREET_DB.slice(0, 18) : [])];
       const fallbackPool = typeof STREET_DB !== 'undefined' ? STREET_DB : [];
-      const optionCount = (difficulty === 'harder' || difficulty === 'overdrive') ? 4 : 3;
+      const optionCount = difficulty === 'overdrive' ? 5 : (difficulty === 'harder' ? 4 : 3);
 
       const questions = validExchanges.map((ex, qIdx) => {
         const lineIdx = qIdx * 2 + 1;
@@ -10075,7 +10062,7 @@ Return ONLY valid JSON array of 3 exchange objects with exact keys:
               peekScript: false
             });
             // "Your Turn" options: the real reply + AI-provided wrong Thai replies (fallback: other exchanges' replies)
-            const optCount = (rebuilt.difficulty === 'harder' || rebuilt.difficulty === 'overdrive') ? 4 : 3;
+            const optCount = rebuilt.difficulty === 'overdrive' ? 5 : (rebuilt.difficulty === 'harder' ? 4 : 3);
             const seen = new Set([ex.user.script]);
             const wrongPool = [
               ...(Array.isArray(ex.distractorReplies) ? ex.distractorReplies : []),
