@@ -66,6 +66,20 @@
       user-select: none;
     }
 
+    /* Enable smooth text selection in dialogue bubbles & phrase references */
+    .convo-bubble-text, .selectable-phrase, [data-selectable="true"], .select-text {
+      -webkit-user-select: text !important;
+      user-select: text !important;
+    }
+
+    #phrase-context-menu {
+      animation: pcmFadeIn 0.12s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    @keyframes pcmFadeIn {
+      from { opacity: 0; transform: scale(0.95); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
     /* Tactile press response for native app feel */
     button:active:not(:disabled), [role="button"]:active:not(:disabled) {
       transform: scale(0.97);
@@ -197,8 +211,99 @@
 <body class="min-h-screen antialiased pb-24 selection:bg-sky-500/30 selection:text-sky-200">
 
   <!-- Toast Notification -->
-  <div id="toast" class="fixed bottom-5 right-5 z-50 pointer-events-none opacity-0 translate-y-2 transition-all duration-200 bg-[#1e2128] border border-[#323744] text-slate-100 text-xs font-medium px-4 py-2.5 rounded-full shadow-xl">
+  <div id="toast" class="fixed bottom-5 right-5 z-[110] pointer-events-none opacity-0 translate-y-2 transition-all duration-200 bg-[#1e2128] border border-[#323744] text-slate-100 text-xs font-medium px-4 py-2.5 rounded-full shadow-xl">
     Saved
+  </div>
+
+  <!-- Phrase & Sentence Quick Context Menu (Copy for Gemini Agent Chat & AI Coach) -->
+  <div id="phrase-context-menu" class="fixed z-[105] hidden bg-[#141722]/95 backdrop-blur-xl border border-[#2b3348] rounded-2xl shadow-2xl p-1.5 w-76 text-xs text-slate-200 select-none">
+    <!-- Header: Phrase Preview -->
+    <div class="px-3 py-2 border-b border-[#212738] mb-1">
+      <div class="flex items-center justify-between gap-1 mb-0.5">
+        <span class="text-[10px] font-bold uppercase tracking-wider text-amber-400">Phrase Reference</span>
+        <span id="pcm-speaker-badge" class="text-[9px] px-1.5 py-0.5 rounded bg-white/5 text-slate-400 font-medium">Speaker</span>
+      </div>
+      <div id="pcm-preview-thai" dir="rtl" class="font-hebrew font-bold text-amber-200 text-sm truncate select-text"></div>
+      <div id="pcm-preview-spoken" class="text-[11px] text-slate-400 truncate select-text"></div>
+    </div>
+
+    <!-- Highlighted Text Option (if user selected specific text) -->
+    <div id="pcm-selected-text-opt" class="hidden mb-1 pb-1 border-b border-[#212738]">
+      <button type="button" onclick="pcmAction('copy_selection')" class="w-full text-left px-2.5 py-1.5 rounded-xl bg-amber-400/10 hover:bg-amber-400/20 text-amber-200 hover:text-white flex items-center justify-between cursor-pointer transition-colors">
+        <span class="flex items-center gap-2 truncate">
+          <span class="text-xs">✂️</span>
+          <span class="truncate">Copy Selection: <strong id="pcm-selected-text-label" class="font-hebrew text-white"></strong></span>
+        </span>
+        <span class="text-[9px] px-1.5 py-0.5 rounded bg-amber-400/20 text-amber-300 font-bold shrink-0">Selected</span>
+      </button>
+    </div>
+
+    <!-- Gemini Agent Chat Section -->
+    <div class="space-y-0.5">
+      <button type="button" onclick="pcmAction('copy_full')" class="w-full text-left px-2.5 py-2 rounded-xl bg-sky-500/15 hover:bg-sky-500/25 border border-sky-400/40 text-sky-200 hover:text-white flex items-center justify-between group cursor-pointer transition-all font-semibold shadow-xs">
+        <span class="flex items-center gap-2">
+          <span class="text-sm">📋</span>
+          <span>Copy for Gemini Chat</span>
+        </span>
+        <span class="text-[9px] px-1.5 py-0.5 rounded bg-sky-400/20 text-sky-300 font-bold">Ctrl+V</span>
+      </button>
+
+      <button type="button" onclick="pcmAction('copy_thai')" class="w-full text-left px-2.5 py-1.5 rounded-xl hover:bg-white/5 text-slate-300 hover:text-white flex items-center justify-between cursor-pointer transition-colors">
+        <span class="flex items-center gap-2">
+          <span class="text-xs">🇮🇱</span>
+          <span>Copy Hebrew Script Only</span>
+        </span>
+        <span class="text-[10px] text-slate-500">Hebrew</span>
+      </button>
+
+      <button type="button" onclick="pcmAction('copy_roman')" class="w-full text-left px-2.5 py-1.5 rounded-xl hover:bg-white/5 text-slate-300 hover:text-white flex items-center justify-between cursor-pointer transition-colors">
+        <span class="flex items-center gap-2">
+          <span class="text-xs">🔤</span>
+          <span>Copy Sound &amp; Meaning</span>
+        </span>
+        <span class="text-[10px] text-slate-500">Sound / En</span>
+      </button>
+    </div>
+
+    <div class="h-px bg-[#212738] my-1"></div>
+
+    <!-- In-App Gemini Coach Section -->
+    <div class="space-y-0.5">
+      <button type="button" onclick="pcmAction('gemini_explain')" class="w-full text-left px-2.5 py-1.5 rounded-xl hover:bg-gradient-to-r hover:from-sky-500/15 hover:to-purple-500/15 text-slate-200 hover:text-white flex items-center justify-between cursor-pointer transition-colors">
+        <span class="flex items-center gap-2">
+          <span class="text-xs">✨</span>
+          <span>Ask Gemini AI: Explain Phrase</span>
+        </span>
+        <span class="text-[9px] text-emerald-400 font-bold bg-emerald-500/10 px-1 rounded">AI Coach</span>
+      </button>
+
+      <button type="button" onclick="pcmAction('gemini_street')" class="w-full text-left px-2.5 py-1.5 rounded-xl hover:bg-white/5 text-slate-300 hover:text-white flex items-center gap-2 cursor-pointer transition-colors">
+        <span class="text-xs">💬</span>
+        <span>Ask Gemini AI: Street Variations</span>
+      </button>
+
+      <button type="button" onclick="pcmAction('gemini_tones')" class="w-full text-left px-2.5 py-1.5 rounded-xl hover:bg-white/5 text-slate-300 hover:text-white flex items-center gap-2 cursor-pointer transition-colors">
+        <span class="text-xs">🎯</span>
+        <span>Ask Gemini AI: Grammar &amp; Root (Shoresh)</span>
+      </button>
+
+      <button type="button" onclick="pcmAction('gemini_custom')" class="w-full text-left px-2.5 py-1.5 rounded-xl hover:bg-white/5 text-slate-300 hover:text-white flex items-center gap-2 cursor-pointer transition-colors">
+        <span class="text-xs">✍️</span>
+        <span>Ask Gemini AI: Custom Question...</span>
+      </button>
+    </div>
+
+    <div class="h-px bg-[#212738] my-1"></div>
+
+    <!-- Quick Audio Controls -->
+    <div class="flex items-center gap-1 pt-0.5">
+      <button type="button" onclick="pcmAction('play_normal')" class="flex-1 py-1.5 rounded-xl bg-[#1d2232] hover:bg-[#252c40] border border-[#2c354d] text-slate-200 hover:text-white flex items-center justify-center gap-1.5 cursor-pointer text-[11px] font-medium transition-colors">
+        <span>🔊</span> Play Audio
+      </button>
+      <button type="button" onclick="pcmAction('play_slow')" class="py-1.5 px-3 rounded-xl bg-[#1d2232] hover:bg-[#252c40] border border-[#2c354d] text-slate-300 hover:text-white flex items-center justify-center gap-1 cursor-pointer text-[11px] transition-colors" title="Slow Audio (0.72x)">
+        <span>🐢</span> Slow
+      </button>
+    </div>
   </div>
 
   <!-- ===================================================================== -->
@@ -248,6 +353,10 @@
             ⚠️ <span id="stat-weak">0</span>
           </button>
         </div>
+
+        <button id="header-mute-btn" onclick="toggleAudioMute()" class="px-2.5 py-1.5 rounded-xl bg-[#14161f] hover:bg-[#202433] border border-[#242735] text-slate-300 hover:text-white text-xs font-semibold transition-all cursor-pointer flex items-center gap-1 whitespace-nowrap shrink-0" title="Audio ON (Tap to mute - Key M)">
+          <span id="header-mute-icon">🔊</span>
+        </button>
 
         <button id="cloud-sync-btn" onclick="openCloudSyncModal()" class="px-2.5 py-1.5 rounded-xl bg-[#14161f] hover:bg-[#202433] border border-[#242735] text-slate-300 hover:text-white text-xs font-semibold transition-all cursor-pointer flex items-center gap-1 whitespace-nowrap shrink-0" title="Cloud Sync Status & Phone Pairing">
           <span id="cloud-sync-dot" class="w-2 h-2 rounded-full bg-slate-500"></span>
@@ -401,6 +510,11 @@
             ⭐⭐⭐⭐
           </button>
         </div>
+
+        <!-- Audio Mute / Unmute Button -->
+        <button id="lesson-mute-btn" onclick="toggleAudioMute()" class="w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-[#16181d] hover:bg-[#22252d] border border-[#262933] text-xs sm:text-sm flex items-center justify-center transition-all cursor-pointer shrink-0" title="Audio ON (Tap to mute - Key M)">
+          <span id="lesson-mute-icon">🔊</span>
+        </button>
 
         <!-- Step Counter -->
         <div class="text-xs font-bold text-slate-300 bg-[#16181d] border border-[#262933] px-2 py-0.5 rounded-lg shrink-0">
@@ -6068,6 +6182,8 @@
       levelStruggle: 0,
       convoDifficulty: 'standard', // 'easier' | 'standard' | 'harder' | 'overdrive'
       audioSpeed: 1.0,
+      muted: false, // Global audio mute toggle
+      autoReadScenario: true, // Auto-read intro prompt for street scenarios
       completedNodes: [],
       itemStats: {}, // { [id]: { exposures, correct, wrong, avgMs, masteryScore, status, intervalDays, nextReviewAt } }
       customWords: []
@@ -6090,6 +6206,8 @@
             autoLevel: parsed.autoLevel !== undefined ? !!parsed.autoLevel : true,
             levelStreak: Number(parsed.levelStreak) || 0,
             levelStruggle: Number(parsed.levelStruggle) || 0,
+            muted: !!parsed.muted,
+            autoReadScenario: parsed.autoReadScenario !== undefined ? !!parsed.autoReadScenario : true,
             itemStats: parsed.itemStats || {},
             completedNodes: parsed.completedNodes || [],
             customWords: parsed.customWords || []
@@ -6119,6 +6237,7 @@
       }
 
       ensureAllItemStatsInitialized();
+      updateMuteUI();
     }
 
     function switchTrack(track) {
@@ -6266,6 +6385,7 @@
       const step = activeSession.steps ? activeSession.steps[activeSession.currentIndex] : null;
       if (step && step.answered) return;
       activeSession.stepAnswered = true;
+      stopAllAudio();
 
       const isCorrect = (chosenId === correctId);
       if (step) {
@@ -6335,7 +6455,9 @@
 
       // Reinforce hearing by speaking the phrase
       // Reinforce hearing with native spoken response
-      playStreetItemAudio(correctId, 'drill_response');
+      if (!appState.muted) {
+        playStreetItemAudio(correctId, 'drill_response');
+      }
 
       // Show immediate feedback directly inside the card
       const reviewBox = document.getElementById('street-drill-review');
@@ -6439,7 +6561,11 @@
             } else if (step.type === 'street_listen_spotlight' && step.item) {
               playStreetItemAudio(step.item.id, 'main');
             } else if (step.type === 'street_listening_drill' && step.target) {
-              playStreetItemAudio(step.target.id, 'drill_prompt');
+              if (activeSession.stepAnswered) {
+                playStreetItemAudio(step.target.id, 'drill_response');
+              } else {
+                replayCurrentScenarioIntro();
+              }
             } else if (step.letter) {
               playHebrewAudio(step.letter.tts);
             } else if (step.word) {
@@ -6448,6 +6574,9 @@
               playHebrewAudio(step.target.tts);
             }
           }
+        } else if ((e.key === 'm' || e.key === 'M') && e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA') {
+          e.preventDefault();
+          toggleAudioMute();
         }
       }
     });
@@ -6599,12 +6728,23 @@
     // 3. REAL SPEAKING THAI AUDIO ENGINE (Google TTS + Web Speech th-TH)
     // =========================================================================
     // =========================================================================
-    // 3. BULLETPROOF HEBREW AUDIO ENGINE (Google TTS 'iw' + Web Speech Fallback)
+    // 3. REAL SPEAKING AUDIO ENGINE (Hebrew Speech + English Scenario Narrator + Mute System)
     // =========================================================================
     let currentAudio = null;
     let hebrewVoice = null;
     let thaiVoice = null;
+    let englishVoice = null;
     let hoverAudioTimer = null;
+    let scenarioAudioUtterance = null;
+    let scenarioAudioTimeout = null;
+
+    function playHoverAudio(text) {
+      if ('ontouchstart' in window || navigator.maxTouchPoints > 0) return; // Do not fire hover on touch/mobile
+      clearTimeout(hoverAudioTimer);
+      hoverAudioTimer = setTimeout(() => {
+        playHebrewAudio(text);
+      }, 120);
+    }
 
     function playHoverAudio(text) {
       if ('ontouchstart' in window || navigator.maxTouchPoints > 0) return; // Do not fire hover on touch/mobile
@@ -6624,13 +6764,262 @@
           const voices = window.speechSynthesis.getVoices();
           hebrewVoice = voices.find(v => v.lang && (v.lang.toLowerCase().includes('he') || v.lang.toLowerCase().includes('iw'))) || null;
           thaiVoice = hebrewVoice;
+          englishVoice = voices.find(v => v.lang && (v.lang.toLowerCase() === 'en-us' || v.lang.toLowerCase() === 'en_us'))
+            || voices.find(v => v.lang && (v.lang.toLowerCase().startsWith('en') || v.lang.toLowerCase().includes('en')))
+            || null;
         };
         load();
         window.speechSynthesis.onvoiceschanged = load;
       }
     }
 
+    function stopAllAudio() {
+      if (scenarioAudioTimeout) {
+        clearTimeout(scenarioAudioTimeout);
+        scenarioAudioTimeout = null;
+      }
+      if (typeof currentAudio !== 'undefined' && currentAudio) {
+        try { currentAudio.pause(); } catch(e) {}
+        currentAudio = null;
+      }
+      if ('speechSynthesis' in window) {
+        try { window.speechSynthesis.cancel(); } catch(e) {}
+      }
+      scenarioAudioUtterance = null;
+      updateScenarioAudioUI(false);
+    }
+
+    function toggleAudioMute(forceState) {
+      if (typeof forceState === 'boolean') {
+        appState.muted = forceState;
+      } else {
+        appState.muted = !appState.muted;
+      }
+      saveState();
+      if (appState.muted) {
+        stopAllAudio();
+        showToast('🔇 Audio Muted');
+      } else {
+        showToast('🔊 Audio Unmuted');
+        if (activeSession && activeSession.currentIndex < activeSession.steps.length) {
+          const step = activeSession.steps[activeSession.currentIndex];
+          if (step && step.type === 'street_listening_drill' && !step.answered) {
+            replayCurrentScenarioIntro();
+          }
+        }
+      }
+      updateMuteUI();
+    }
+
+    function updateMuteUI() {
+      const isMuted = !!appState.muted;
+
+      // Lesson overlay mute button
+      const lessonMuteBtn = document.getElementById('lesson-mute-btn');
+      const lessonMuteIcon = document.getElementById('lesson-mute-icon');
+      if (lessonMuteBtn && lessonMuteIcon) {
+        if (isMuted) {
+          lessonMuteBtn.className = 'w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-rose-500/15 hover:bg-rose-500/25 border border-rose-500/40 text-rose-300 text-xs sm:text-sm flex items-center justify-center transition-all cursor-pointer shrink-0';
+          lessonMuteBtn.title = 'Audio MUTED (Tap to unmute - Key M)';
+          lessonMuteIcon.textContent = '🔇';
+        } else {
+          lessonMuteBtn.className = 'w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-[#16181d] hover:bg-[#22252d] border border-[#262933] text-slate-300 hover:text-white text-xs sm:text-sm flex items-center justify-center transition-all cursor-pointer shrink-0';
+          lessonMuteBtn.title = 'Audio ON (Tap to mute - Key M)';
+          lessonMuteIcon.textContent = '🔊';
+        }
+      }
+
+      // Main header mute button
+      const headerMuteBtn = document.getElementById('header-mute-btn');
+      const headerMuteIcon = document.getElementById('header-mute-icon');
+      if (headerMuteBtn && headerMuteIcon) {
+        if (isMuted) {
+          headerMuteBtn.className = 'px-2.5 py-1.5 rounded-xl bg-rose-500/15 hover:bg-rose-500/25 border border-rose-500/40 text-rose-300 text-xs font-semibold transition-all cursor-pointer flex items-center gap-1 shrink-0';
+          headerMuteBtn.title = 'Audio MUTED (Tap to unmute - Key M)';
+          headerMuteIcon.textContent = '🔇';
+        } else {
+          headerMuteBtn.className = 'px-2.5 py-1.5 rounded-xl bg-[#14161f] hover:bg-[#202433] border border-[#242735] text-slate-300 hover:text-white text-xs font-semibold transition-all cursor-pointer flex items-center gap-1 shrink-0';
+          headerMuteBtn.title = 'Audio ON (Tap to mute - Key M)';
+          headerMuteIcon.textContent = '🔊';
+        }
+      }
+
+      updateScenarioAudioUI(false);
+    }
+
+    function cleanScenarioPromptForSpeech(text, item = null) {
+      if (!text) return '';
+      let t = text;
+
+      // 1. Quoted Hebrew followed by English translation in parentheses: e.g. 'שלום' (hello)
+      t = t.replace(/['"‘“][\u0590-\u05ff\s\d!?.,]+['"’”]?\s*\([^)]*?['"‘“]([^'"‘“’”]+)['"’”]?\s*\)/g, "'$1'");
+      t = t.replace(/['"‘“][\u0590-\u05ff\s\d!?.,]+['"’”]?\s*\(([^)]+)\)/g, "'$1'");
+
+      // 2. If item has spoken/transliteration
+      if (item) {
+        const spoken = (item.spoken || item.transliteration || item.roman || '').replace(/['"]/g, '').trim();
+        if (spoken) {
+          t = t.replace(/['"‘“][\u0590-\u05ff\s\d!?.,]+['"’”]/g, `'${spoken}'`);
+        }
+      }
+
+      // 3. Remove remaining Hebrew in quotes or bare Hebrew
+      t = t.replace(/['"‘“][\u0590-\u05ff\s\d!?.,]+['"’”]/g, '');
+      t = t.replace(/[\u0590-\u05ff]+/g, '');
+
+      // 4. Clean empty brackets or dangling punctuation
+      t = t.replace(/\(\s*\)/g, '');
+      t = t.replace(/['"‘“]\s*['"’”]/g, '');
+      t = t.replace(/\s*:\s*:/g, ':');
+      t = t.replace(/\s{2,}/g, ' ').trim();
+
+      return t;
+    }
+
+    function updateScenarioAudioUI(isPlaying) {
+      const btn = document.getElementById('btn-scenario-audio');
+      const icon = document.getElementById('icon-scenario-audio');
+      const text = document.getElementById('text-scenario-audio');
+      if (!btn || !icon || !text) return;
+
+      if (appState.muted) {
+        btn.className = 'inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl text-xs font-medium cursor-pointer active:scale-95 transition-all bg-rose-500/15 hover:bg-rose-500/25 border border-rose-500/30 text-rose-300';
+        icon.className = '';
+        icon.textContent = '🔇';
+        text.textContent = 'Muted (tap to unmute)';
+        btn.title = 'Audio is muted. Tap to unmute and read aloud (M)';
+      } else if (isPlaying) {
+        btn.className = 'inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl text-xs font-semibold cursor-pointer active:scale-95 transition-all bg-amber-400/25 hover:bg-amber-400/35 border border-amber-400/50 text-amber-200 ring-2 ring-amber-400/30';
+        icon.className = 'animate-pulse text-amber-300';
+        icon.textContent = '🔊';
+        text.textContent = 'Reading...';
+        btn.title = 'Click to stop reading (M to mute)';
+      } else {
+        btn.className = 'inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl text-xs font-semibold cursor-pointer active:scale-95 transition-all bg-amber-400/15 hover:bg-amber-400/25 border border-amber-400/30 text-amber-300';
+        icon.className = '';
+        icon.textContent = '🔊';
+        text.textContent = 'Replay';
+        btn.title = 'Click to re-read situation out loud (M to mute)';
+      }
+    }
+
+    function playScenarioIntroAudio(promptRaw, item, onDone = null) {
+      if (appState.muted) {
+        updateScenarioAudioUI(false);
+        return;
+      }
+      stopAllAudio();
+
+      const cleanText = cleanScenarioPromptForSpeech(promptRaw, item);
+      if (!cleanText) return;
+
+      updateScenarioAudioUI(true);
+
+      // Primary: Web Speech API (SpeechSynthesis) for English situation narration
+      if ('speechSynthesis' in window) {
+        try {
+          window.speechSynthesis.cancel();
+          const utter = new SpeechSynthesisUtterance(cleanText);
+          utter.lang = 'en-US';
+          utter.rate = (appState.audioSpeed || 1.0) * 0.95;
+          utter.pitch = 1.0;
+
+          const voices = window.speechSynthesis.getVoices();
+          const enVoice = englishVoice || voices.find(v => v.lang && (v.lang.toLowerCase() === 'en-us' || v.lang.toLowerCase() === 'en_us'))
+            || voices.find(v => v.lang && (v.lang.toLowerCase().startsWith('en') || v.lang.toLowerCase().includes('en')))
+            || null;
+          if (enVoice) utter.voice = enVoice;
+
+          utter.onstart = () => {
+            updateScenarioAudioUI(true);
+          };
+
+          utter.onend = () => {
+            updateScenarioAudioUI(false);
+            if (typeof onDone === 'function') onDone();
+          };
+
+          utter.onerror = (e) => {
+            console.warn('SpeechSynthesis error:', e);
+            updateScenarioAudioUI(false);
+            playGoogleTtsEnglish(cleanText, onDone);
+          };
+
+          scenarioAudioUtterance = utter;
+          window.speechSynthesis.speak(utter);
+          return;
+        } catch (e) {
+          console.warn('SpeechSynthesis exception:', e);
+        }
+      }
+
+      // Fallback: Google Translate TTS stream
+      playGoogleTtsEnglish(cleanText, onDone);
+    }
+
+    function playGoogleTtsEnglish(text, onDone = null) {
+      if (appState.muted) {
+        updateScenarioAudioUI(false);
+        return;
+      }
+      const slice = text.length > 180 ? text.slice(0, 180).replace(/\s+\S*$/, '...') : text;
+      const url = `https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&tl=en&q=${encodeURIComponent(slice)}`;
+      const audio = new Audio();
+      audio.referrerPolicy = 'no-referrer';
+      audio.src = url;
+      audio.playbackRate = appState.audioSpeed || 1.0;
+      currentAudio = audio;
+
+      audio.onplay = () => updateScenarioAudioUI(true);
+      audio.onended = () => {
+        updateScenarioAudioUI(false);
+        if (typeof onDone === 'function') onDone();
+      };
+      audio.onerror = () => {
+        updateScenarioAudioUI(false);
+      };
+
+      const p = audio.play();
+      if (p !== undefined) {
+        p.catch(() => updateScenarioAudioUI(false));
+      }
+    }
+
+    function toggleScenarioIntroAudio() {
+      if (appState.muted) {
+        toggleAudioMute(false);
+        replayCurrentScenarioIntro();
+        return;
+      }
+      const isSpeaking = ('speechSynthesis' in window && window.speechSynthesis.speaking) || (currentAudio && !currentAudio.paused);
+      if (isSpeaking) {
+        stopAllAudio();
+        updateScenarioAudioUI(false);
+      } else {
+        replayCurrentScenarioIntro();
+      }
+    }
+
+    function replayCurrentScenarioIntro() {
+      if (!activeSession) return;
+      const step = activeSession.steps?.[activeSession.currentIndex];
+      if (!step || step.type !== 'street_listening_drill') return;
+      const item = step.target;
+      const promptRaw = step.prompt || 'Listen carefully: What does the speaker mean?';
+      const diag = item?.dialogue;
+      const isSelf = !!(diag && diag.speakerA && diag.speakerA.includes('You'));
+      const hasHebrewInPrompt = /[\u0590-\u05ff]/.test(promptRaw);
+      const hasIncomingDialogue = !!(diag && (diag.lineHebrewA || diag.hebrew) && hasHebrewInPrompt && !isSelf);
+
+      playScenarioIntroAudio(promptRaw, item, () => {
+        if (hasIncomingDialogue && !step.answered && !appState.muted) {
+          setTimeout(() => playStreetItemAudio(item.id, 'drill_prompt'), 300);
+        }
+      });
+    }
+
     function playHebrewAudio(text, btnEl = null, customRate = null) {
+      if (appState.muted && !btnEl) return;
       let clean = (text || '').replace(/\.\.\./g, '').trim();
       if (!clean) return;
 
@@ -7925,6 +8314,7 @@
     }
 
     function exitLesson() {
+      stopAllAudio();
       document.getElementById('lesson-overlay').classList.add('hidden');
       activeSession = null;
       updateTrackUI();
@@ -7979,6 +8369,8 @@
 
     function renderCurrentLessonStep() {
       if (!activeSession) return;
+      stopAllAudio();
+      updateMuteUI();
       const stage = document.getElementById('lesson-stage');
       const footerMsg = document.getElementById('lesson-feedback-msg');
       const actionBtn = document.getElementById('lesson-action-btn');
@@ -8060,15 +8452,21 @@
             ` : ''}
 
             <!-- Central Target Expression: Vocalized Hebrew, Spoken Audio Pill & Meaning -->
-            <div class="text-center py-2 space-y-2">
-              <div class="font-hebrew text-4xl sm:text-5xl font-extrabold text-white tracking-wide" dir="rtl">${item.hebrew || item.thai}</div>
+            <div class="text-center py-2 space-y-2 relative group" oncontextmenu="handleSpotlightContextMenu(event)">
+              <div class="font-hebrew text-4xl sm:text-5xl font-extrabold text-white tracking-wide select-text" dir="rtl">${item.hebrew || item.thai}</div>
               <button onclick="playStreetItemAudio('${item.id}', 'main', this)" 
                       class="inline-flex items-center gap-2.5 px-6 py-2.5 rounded-2xl bg-amber-400 hover:bg-amber-300 text-[#0e0f12] shadow-lg shadow-amber-400/20 active:scale-95 transition-all cursor-pointer group"
-                      title="Click or press Spacebar to hear native voice">
+                      title="Click or press Spacebar to hear native voice (Right-click to Copy / Ask Gemini)">
                 <span class="text-xl group-hover:scale-110 transition-transform">🔊</span>
-                <span class="text-2xl sm:text-3xl font-extrabold tracking-wide font-mono">${item.spoken || item.roman}</span>
+                <span class="text-2xl sm:text-3xl font-extrabold tracking-wide font-mono select-text">${item.spoken || item.roman}</span>
               </button>
-              <div class="text-base sm:text-lg font-bold text-emerald-300">${item.meaning}</div>
+              <div class="text-base sm:text-lg font-bold text-emerald-300 select-text">${item.meaning}</div>
+              <div class="pt-1 flex justify-center">
+                <button type="button" onclick="handleSpotlightContextMenu(event)" class="px-2.5 py-1 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 text-sky-300 hover:text-white text-[11px] font-semibold transition-all cursor-pointer flex items-center gap-1.5" title="Right-click phrase or click here to reference in Gemini Chat">
+                  <span>✨</span>
+                  <span>Copy / Ask Gemini</span>
+                </button>
+              </div>
             </div>
 
             <!-- Words Breakdown (shown for compound phrases) -->
@@ -8161,9 +8559,17 @@
         const hasIncomingDialogue = !!(diag && (diag.lineHebrewA || diag.hebrew) && hasHebrewInPrompt && !isSelf);
         const incomingAudio = (diag && (diag.ttsA || diag.lineHebrewA)) ? (diag.ttsA || diag.lineHebrewA) : (item.situationAudio || item.tts || item.hebrew);
 
-        // Auto-play audio if there is an incoming dialogue from vendor/other speaker
-        if (!step.answered && hasIncomingDialogue && incomingAudio) {
-          setTimeout(() => playStreetItemAudio(item.id, 'drill_prompt'), 250);
+        // Auto-read scenario intro out loud (unless audio is muted by user!)
+        if (!step.answered && !appState.muted && appState.autoReadScenario !== false) {
+          scenarioAudioTimeout = setTimeout(() => {
+            playScenarioIntroAudio(promptRaw, item, () => {
+              if (hasIncomingDialogue && incomingAudio && !step.answered && !appState.muted) {
+                setTimeout(() => playStreetItemAudio(item.id, 'drill_prompt'), 300);
+              }
+            });
+          }, 250);
+        } else if (!step.answered && !appState.muted && hasIncomingDialogue && incomingAudio) {
+          scenarioAudioTimeout = setTimeout(() => playStreetItemAudio(item.id, 'drill_prompt'), 250);
         }
 
         // Highlight any quoted or bracketed Hebrew phrase inside the prompt as a prominent bold, clickable audio badge
@@ -8198,14 +8604,20 @@
 
             <!-- Realistic Scenario Box (Bigger, Clearer, High Contrast) -->
             <div class="bg-gradient-to-br from-[#1b1e2b] to-[#141620] border-2 border-[#2f354a] rounded-3xl p-4 sm:p-5 text-left shadow-xl space-y-3">
-              <div class="flex items-center justify-between">
+              <div class="flex items-center justify-between gap-2 flex-wrap">
                 <span class="px-2.5 py-1 rounded-full bg-amber-400/20 border border-amber-400/40 text-amber-300 text-xs font-bold tracking-wide flex items-center gap-1.5">
                   <span>🎭</span>
                   <span>The Situation</span>
                 </span>
-                ${hasIncomingDialogue ? `
-                  <span class="text-[11px] text-slate-400 font-medium">🔊 Audio auto-plays</span>
-                ` : ''}
+                <div class="flex items-center gap-1.5">
+                  <button type="button" id="btn-scenario-audio" onclick="toggleScenarioIntroAudio()" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl text-xs font-semibold cursor-pointer active:scale-95 transition-all ${appState.muted ? 'bg-rose-500/15 hover:bg-rose-500/25 border border-rose-500/30 text-rose-300' : 'bg-amber-400/15 hover:bg-amber-400/25 border border-amber-400/30 text-amber-300'}" title="${appState.muted ? 'Audio is muted. Tap to unmute and read aloud (M)' : 'Read situation aloud or replay (M to mute)'}">
+                    <span id="icon-scenario-audio">${appState.muted ? '🔇' : '🔊'}</span>
+                    <span id="text-scenario-audio">${appState.muted ? 'Muted' : 'Read Aloud'}</span>
+                  </button>
+                  <button type="button" onclick="toggleAudioMute()" class="w-7 h-7 rounded-xl bg-[#161822] hover:bg-[#202535] border border-[#272d40] text-xs flex items-center justify-center transition-colors cursor-pointer ${appState.muted ? 'text-rose-400' : 'text-slate-400 hover:text-white'}" title="Mute / Unmute Audio (Key M)">
+                    <span>${appState.muted ? '🔇' : '🔊'}</span>
+                  </button>
+                </div>
               </div>
 
               <!-- Prompt with Clickable Bold Hebrew Audio Badge -->
@@ -10164,11 +10576,292 @@
       ).join(' ');
     }
 
+    // =====================================================================
+    // PHRASE QUICK REFERENCE & CONTEXT MENU ENGINE (GEMINI CHAT INTEGRATION)
+    // =====================================================================
+    let activePhraseData = null;
+
+    function copyTextToClipboard(text, onSuccess) {
+      if (!text) return;
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(() => {
+          if (onSuccess) onSuccess();
+        }).catch(() => {
+          fallbackCopyText(text, onSuccess);
+        });
+      } else {
+        fallbackCopyText(text, onSuccess);
+      }
+    }
+
+    function fallbackCopyText(text, onSuccess) {
+      try {
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        ta.style.position = 'fixed';
+        ta.style.opacity = '0';
+        ta.style.left = '-9999px';
+        document.body.appendChild(ta);
+        ta.focus();
+        ta.select();
+        const ok = document.execCommand('copy');
+        document.body.removeChild(ta);
+        if (ok && onSuccess) onSuccess();
+        else if (!ok) showToast('⚠️ Could not copy to clipboard');
+      } catch (err) {
+        showToast('⚠️ Copy failed: ' + (err?.message || 'Permission denied'));
+      }
+    }
+
+    function openPhraseContextMenu(e, phraseData) {
+      activePhraseData = phraseData;
+      const menu = document.getElementById('phrase-context-menu');
+      if (!menu) return;
+
+      const scriptText = phraseData.hebrew || phraseData.thai || '';
+      const thaiEl = document.getElementById('pcm-preview-thai');
+      const spokenEl = document.getElementById('pcm-preview-spoken');
+      const speakerEl = document.getElementById('pcm-speaker-badge');
+      const selOpt = document.getElementById('pcm-selected-text-opt');
+      const selLabel = document.getElementById('pcm-selected-text-label');
+
+      if (thaiEl) thaiEl.textContent = scriptText;
+      if (spokenEl) {
+        const sub = [phraseData.spoken, phraseData.meaning].filter(Boolean).join(' — ');
+        spokenEl.textContent = sub || '';
+      }
+      if (speakerEl) {
+        speakerEl.textContent = phraseData.speaker || 'Phrase';
+      }
+
+      // Check if user has highlighted text
+      const currentSelection = window.getSelection ? window.getSelection().toString().trim() : '';
+      if (selOpt && selLabel) {
+        if (currentSelection && currentSelection.length > 0) {
+          selLabel.textContent = `"${currentSelection.length > 26 ? currentSelection.slice(0, 23) + '...' : currentSelection}"`;
+          selOpt.classList.remove('hidden');
+          selOpt.dataset.selection = currentSelection;
+        } else {
+          selOpt.classList.add('hidden');
+          delete selOpt.dataset.selection;
+        }
+      }
+
+      menu.classList.remove('hidden');
+
+      let x = 0, y = 0;
+      if (e && typeof e.clientX === 'number' && e.clientX > 0) {
+        x = e.clientX;
+        y = e.clientY;
+      } else if (e && e.target && e.target.getBoundingClientRect) {
+        const rect = e.target.getBoundingClientRect();
+        x = rect.left + rect.width / 2;
+        y = rect.bottom + 4;
+      } else {
+        x = window.innerWidth / 2 - 150;
+        y = window.innerHeight / 2 - 120;
+      }
+
+      const rect = menu.getBoundingClientRect();
+      const pad = 12;
+      let left = x;
+      let top = y;
+
+      if (left + rect.width > window.innerWidth - pad) {
+        left = window.innerWidth - rect.width - pad;
+      }
+      if (left < pad) left = pad;
+
+      if (top + rect.height > window.innerHeight - pad) {
+        top = window.innerHeight - rect.height - pad;
+      }
+      if (top < pad) top = pad;
+
+      menu.style.left = `${left}px`;
+      menu.style.top = `${top}px`;
+    }
+
+    function closePhraseContextMenu() {
+      const menu = document.getElementById('phrase-context-menu');
+      if (menu && !menu.classList.contains('hidden')) {
+        menu.classList.add('hidden');
+      }
+    }
+
+    function pcmAction(action) {
+      if (!activePhraseData) {
+        closePhraseContextMenu();
+        return;
+      }
+      const data = activePhraseData;
+      const scriptText = data.hebrew || data.thai || '';
+      const selOpt = document.getElementById('pcm-selected-text-opt');
+      const selectedText = (selOpt && !selOpt.classList.contains('hidden')) ? (selOpt.dataset.selection || '') : '';
+
+      closePhraseContextMenu();
+
+      if (action === 'copy_full') {
+        const parts = [];
+        if (scriptText) parts.push(scriptText);
+        const sub = [data.spoken, data.meaning].filter(Boolean).join(' — ');
+        const fullRef = parts.length ? `${scriptText} (${sub})` : sub;
+        copyTextToClipboard(fullRef, () => {
+          showToast('📋 Copied for Gemini Chat! Press Ctrl+V in chat');
+        });
+      } else if (action === 'copy_thai') {
+        copyTextToClipboard(scriptText, () => {
+          showToast('📋 Hebrew text copied!');
+        });
+      } else if (action === 'copy_roman') {
+        const soundText = [data.spoken, data.meaning].filter(Boolean).join(' — ');
+        copyTextToClipboard(soundText, () => {
+          showToast('📋 Pronunciation & meaning copied!');
+        });
+      } else if (action === 'copy_selection') {
+        if (selectedText) {
+          copyTextToClipboard(selectedText, () => {
+            showToast(`📋 Copied selection: "${selectedText}"`);
+          });
+        }
+      } else if (action === 'gemini_explain') {
+        openGeminiTutorWithPhrase(data, 'explain');
+      } else if (action === 'gemini_street') {
+        openGeminiTutorWithPhrase(data, 'street');
+      } else if (action === 'gemini_tones') {
+        openGeminiTutorWithPhrase(data, 'tones');
+      } else if (action === 'gemini_custom') {
+        openGeminiTutorWithPhrase(data, 'custom');
+      } else if (action === 'play_normal') {
+        playHebrewAudio(data.tts || scriptText);
+      } else if (action === 'play_slow') {
+        playHebrewAudio(data.tts || scriptText, null, 0.72);
+      }
+    }
+
+    function openGeminiTutorWithPhrase(data, mode = 'explain') {
+      toggleGeminiChat(true);
+      switchGeminiTab('chat');
+      const scriptText = data.hebrew || data.thai || '';
+
+      let prompt = '';
+      if (mode === 'explain') {
+        prompt = `Explain this Hebrew sentence from the dialogue: "${scriptText}" (${data.spoken} — "${data.meaning}"). Break down the root (shoresh), binyan/grammar, vocabulary words, and street usage in under 100 words.`;
+      } else if (mode === 'street') {
+        prompt = `For this Hebrew sentence: "${scriptText}" (${data.spoken} — "${data.meaning}"), what are common casual street variations or slang used in Tel Aviv / Israel? Include 2-3 audio clips with [audio: Hebrew | Roman | English].`;
+      } else if (mode === 'tones') {
+        prompt = `Explain the root (shoresh), vowels/nikkud, and pronunciation rules for: "${scriptText}" (${data.spoken}).`;
+      } else if (mode === 'custom') {
+        const input = document.getElementById('gemini-user-input');
+        if (input) {
+          input.value = `Regarding "${scriptText}" (${data.spoken}): `;
+          input.focus();
+          input.setSelectionRange(input.value.length, input.value.length);
+        }
+        return;
+      }
+
+      const key = getGeminiApiKey();
+      if (!key) {
+        const input = document.getElementById('gemini-user-input');
+        if (input) {
+          input.value = prompt;
+        }
+        toggleGeminiSettings(true);
+        showToast('✨ Phrase loaded! Enter your Gemini API key to ask AI Coach.');
+      } else {
+        sendGeminiMessage(prompt);
+      }
+    }
+
+    function handleConvoBubbleClick(e, idx, el, customJump = null) {
+      // Don't trigger playback if the user was selecting text
+      const sel = window.getSelection ? window.getSelection().toString() : '';
+      if (sel && sel.trim().length > 0) return;
+
+      if (typeof customJump === 'function') {
+        customJump();
+      } else {
+        playConvoLineAudio(idx, el);
+      }
+    }
+
+    function handleConvoBubbleContextMenu(e, lineIdx) {
+      if (e) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+      const step = getActiveConvoStep();
+      if (!step || !step.dialogueLines) return;
+      const line = step.dialogueLines[lineIdx];
+      if (!line) return;
+
+      const meta = getConvoSpeakerMeta(line.speakerName);
+      openPhraseContextMenu(e, {
+        hebrew: line.script || line.hebrew || '',
+        spoken: line.spoken || '',
+        meaning: line.meaning || '',
+        speaker: meta.label || (line.speaker === 'A' ? 'Speaker A' : 'Speaker B'),
+        tts: line.tts || line.script || ''
+      });
+    }
+
+    function handleConvoOptionContextMenu(e, qIdx, optIdx) {
+      if (e) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+      const step = getActiveConvoStep();
+      if (!step || !step.questions) return;
+      const opt = step.questions[qIdx]?.options?.[optIdx];
+      if (!opt) return;
+
+      openPhraseContextMenu(e, {
+        hebrew: opt.script || opt.hebrew || opt.text || '',
+        spoken: opt.spoken || '',
+        meaning: opt.meaning || opt.text || '',
+        speaker: 'Option Choice ' + (optIdx + 1),
+        tts: opt.tts || opt.script || opt.text || ''
+      });
+    }
+
+    function handleSpotlightContextMenu(e) {
+      if (e) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+      if (!activeSession) return;
+      const step = activeSession.steps?.[activeSession.currentIndex];
+      const item = step?.item || step?.target;
+      if (!item) return;
+
+      openPhraseContextMenu(e, {
+        hebrew: item.hebrew || '',
+        spoken: item.spoken || item.roman || '',
+        meaning: item.meaning || '',
+        speaker: item.theme || 'Spotlight Phrase',
+        tts: item.tts || item.hebrew || ''
+      });
+    }
+
+    // Dismiss context menu on click outside or Escape
+    document.addEventListener('click', (e) => {
+      const menu = document.getElementById('phrase-context-menu');
+      if (menu && !menu.classList.contains('hidden')) {
+        if (!e.target.closest('#phrase-context-menu')) {
+          closePhraseContextMenu();
+        }
+      }
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closePhraseContextMenu();
+    });
+
     function renderConvoText(line, idx, o) {
       return `
-        <div dir="rtl" class="font-hebrew font-bold text-amber-200 ${o.big ? 'text-base sm:text-lg' : 'text-sm sm:text-base'} leading-snug">${highlightConvoLineWords(line, idx)}</div>
-        ${o.roman && line.spoken ? `<div class="font-mono text-[11px] sm:text-xs text-slate-300 mt-0.5">${line.spoken}</div>` : ''}
-        ${o.english && line.meaning ? `<div class="text-[11px] sm:text-xs text-slate-400 italic mt-1">${line.meaning}</div>` : ''}`;
+        <div dir="rtl" class="font-hebrew font-bold text-amber-200 select-text ${o.big ? 'text-base sm:text-lg' : 'text-sm sm:text-base'} leading-snug">${highlightConvoLineWords(line, idx)}</div>
+        ${o.roman && line.spoken ? `<div class="font-mono text-[11px] sm:text-xs text-slate-300 select-text mt-0.5">${line.spoken}</div>` : ''}
+        ${o.english && line.meaning ? `<div class="text-[11px] sm:text-xs text-slate-400 select-text italic mt-1">${line.meaning}</div>` : ''}`;
     }
 
     // Generic chat bubble. o: { body, active, dim, label, onclick, tone, extras, anchor }
@@ -10179,14 +10872,27 @@
         ? 'bg-[#181c29] border-[#262d42] rounded-bl-md text-amber-300'
         : 'bg-[#10201f] border-emerald-500/30 rounded-br-md text-emerald-300');
       const ring = o.active ? (isA ? 'ring-2 ring-amber-400/80' : 'ring-2 ring-emerald-400/80') : '';
+      const speakerLabel = o.label === true ? meta.label : (o.label || meta.label);
       return `
         <div ${o.anchor ? 'id="convo-current-anchor"' : ''} class="flex items-end gap-2 ${isA ? '' : 'flex-row-reverse'} ${o.dim ? 'opacity-45 hover:opacity-100' : ''} transition-opacity scroll-mt-24 scroll-mb-32">
           <div class="w-8 h-8 shrink-0 rounded-full flex items-center justify-center text-base ${isA ? 'bg-amber-500/10 border border-amber-400/30' : 'bg-emerald-500/10 border border-emerald-400/30'}" title="${escapeConvoAttr(meta.label)}">${meta.emoji}</div>
           <div class="min-w-0 max-w-[82%] flex flex-col ${isA ? 'items-start' : 'items-end'}">
-            ${o.label ? `<span class="text-[10px] font-semibold mb-1 px-1 ${isA ? 'text-amber-300/80' : 'text-emerald-300/80'}">${o.label === true ? meta.label : o.label}</span>` : ''}
-            <div id="convo-line-bubble-${idx}" onclick="${o.onclick || `playConvoLineAudio(${idx}, this)`}"
-                 class="cursor-pointer select-none rounded-2xl border px-3.5 py-2.5 text-left transition-all hover:brightness-110 ${tone} ${ring}">
-              ${o.body || renderConvoText(line, idx, { roman: true, english: true })}
+            <div class="flex items-center justify-between gap-1.5 w-full mb-1 px-1">
+              <span class="text-[10px] font-semibold ${isA ? 'text-amber-300/80' : 'text-emerald-300/80'}">${speakerLabel}</span>
+              <button type="button" onclick="event.stopPropagation(); handleConvoBubbleContextMenu(event, ${idx})"
+                      class="opacity-60 hover:opacity-100 group-hover:opacity-100 p-0.5 px-1.5 rounded-md text-[10px] text-slate-400 hover:text-sky-300 hover:bg-white/10 transition-all cursor-pointer flex items-center gap-1 shrink-0"
+                      title="Right-click bubble or click here: Copy for Gemini Chat or Ask AI">
+                <span>✨</span>
+                <span class="text-[9px] uppercase tracking-wider font-semibold text-sky-400/90">Ref</span>
+              </button>
+            </div>
+            <div id="convo-line-bubble-${idx}"
+                 onclick="handleConvoBubbleClick(event, ${idx}, this${o.onclick ? `, () => { ${o.onclick}; }` : ''})"
+                 oncontextmenu="handleConvoBubbleContextMenu(event, ${idx})"
+                 class="phrase-ref-bubble group cursor-pointer select-text rounded-2xl border px-3.5 py-2.5 text-left transition-all hover:brightness-110 ${tone} ${ring}">
+              <div class="convo-bubble-text select-text">
+                ${o.body || renderConvoText(line, idx, { roman: true, english: true })}
+              </div>
             </div>
             ${o.extras ? `<div class="flex items-center gap-2 mt-1 px-1 text-[11px] flex-wrap ${isA ? '' : 'justify-end'}">${o.extras}</div>` : ''}
           </div>
@@ -10283,11 +10989,12 @@
       const showRoman = convoShowRomanInOptions(step);
       const opts = q.options.map((opt, oi) => `
         <div role="button" tabindex="0" onclick="handleConvoQuestionSelect(${q.qIdx}, '${opt.id}')"
-             class="flex items-center gap-2.5 p-2.5 rounded-xl border border-[#273047] bg-[#0f121b] hover:border-emerald-400/60 hover:bg-[#121a1f] cursor-pointer transition-all active:scale-[0.99]">
+             oncontextmenu="handleConvoOptionContextMenu(event, ${q.qIdx}, ${oi})"
+             class="flex items-center gap-2.5 p-2.5 rounded-xl border border-[#273047] bg-[#0f121b] hover:border-emerald-400/60 hover:bg-[#121a1f] cursor-pointer transition-all active:scale-[0.99] select-text">
           <span class="w-5 h-5 rounded-md bg-white/5 text-[10px] text-slate-400 font-mono flex items-center justify-center shrink-0">${oi + 1}</span>
-          <div class="min-w-0 flex-1 text-left">
-            <div dir="rtl" class="font-hebrew text-amber-200 font-bold text-sm sm:text-base leading-snug">${opt.script || opt.text}</div>
-            ${showRoman && opt.spoken ? `<div class="text-[11px] font-mono text-slate-400">${opt.spoken}</div>` : ''}
+          <div class="min-w-0 flex-1 text-left select-text">
+            <div dir="rtl" class="font-hebrew text-amber-200 font-bold text-sm sm:text-base leading-snug select-text">${opt.script || opt.text}</div>
+            ${showRoman && opt.spoken ? `<div class="text-[11px] font-mono text-slate-400 select-text">${opt.spoken}</div>` : ''}
           </div>
           <button type="button" onclick="event.stopPropagation(); playConvoOptionAudio(${q.qIdx}, ${oi})"
                   class="w-8 h-8 rounded-lg bg-white/5 hover:bg-white/10 text-xs flex items-center justify-center shrink-0 cursor-pointer" title="Hear this reply">🔊</button>
@@ -13018,6 +13725,7 @@ Examples:
       initSpeech();
       loadState();
       updatePaceUI();
+      updateMuteUI();
       updateTopMetricsUI();
       updateTrackUI();
       renderSkillTree();

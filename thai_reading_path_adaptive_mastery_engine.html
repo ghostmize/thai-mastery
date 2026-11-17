@@ -67,6 +67,20 @@
       user-select: none;
     }
 
+    /* Enable smooth text selection in dialogue bubbles & phrase references */
+    .convo-bubble-text, .selectable-phrase, [data-selectable="true"], .select-text {
+      -webkit-user-select: text !important;
+      user-select: text !important;
+    }
+
+    #phrase-context-menu {
+      animation: pcmFadeIn 0.12s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    @keyframes pcmFadeIn {
+      from { opacity: 0; transform: scale(0.95); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
     /* Tactile press response for native app feel */
     button:active:not(:disabled), [role="button"]:active:not(:disabled) {
       transform: scale(0.97);
@@ -207,8 +221,99 @@
 <body class="min-h-screen antialiased pb-24 selection:bg-sky-500/30 selection:text-sky-200">
 
   <!-- Toast Notification -->
-  <div id="toast" class="fixed bottom-5 right-5 z-50 pointer-events-none opacity-0 translate-y-2 transition-all duration-200 bg-[#1e2128] border border-[#323744] text-slate-100 text-xs font-medium px-4 py-2.5 rounded-full shadow-xl">
+  <div id="toast" class="fixed bottom-5 right-5 z-[110] pointer-events-none opacity-0 translate-y-2 transition-all duration-200 bg-[#1e2128] border border-[#323744] text-slate-100 text-xs font-medium px-4 py-2.5 rounded-full shadow-xl">
     Saved
+  </div>
+
+  <!-- Phrase & Sentence Quick Context Menu (Copy for Gemini Agent Chat & AI Coach) -->
+  <div id="phrase-context-menu" class="fixed z-[105] hidden bg-[#141722]/95 backdrop-blur-xl border border-[#2b3348] rounded-2xl shadow-2xl p-1.5 w-76 text-xs text-slate-200 select-none">
+    <!-- Header: Phrase Preview -->
+    <div class="px-3 py-2 border-b border-[#212738] mb-1">
+      <div class="flex items-center justify-between gap-1 mb-0.5">
+        <span class="text-[10px] font-bold uppercase tracking-wider text-amber-400">Phrase Reference</span>
+        <span id="pcm-speaker-badge" class="text-[9px] px-1.5 py-0.5 rounded bg-white/5 text-slate-400 font-medium">Speaker</span>
+      </div>
+      <div id="pcm-preview-thai" class="font-thai font-bold text-amber-200 text-sm truncate select-text"></div>
+      <div id="pcm-preview-spoken" class="text-[11px] text-slate-400 truncate select-text"></div>
+    </div>
+
+    <!-- Highlighted Text Option (if user selected specific text) -->
+    <div id="pcm-selected-text-opt" class="hidden mb-1 pb-1 border-b border-[#212738]">
+      <button type="button" onclick="pcmAction('copy_selection')" class="w-full text-left px-2.5 py-1.5 rounded-xl bg-amber-400/10 hover:bg-amber-400/20 text-amber-200 hover:text-white flex items-center justify-between cursor-pointer transition-colors">
+        <span class="flex items-center gap-2 truncate">
+          <span class="text-xs">✂️</span>
+          <span class="truncate">Copy Selection: <strong id="pcm-selected-text-label" class="font-thai text-white"></strong></span>
+        </span>
+        <span class="text-[9px] px-1.5 py-0.5 rounded bg-amber-400/20 text-amber-300 font-bold shrink-0">Selected</span>
+      </button>
+    </div>
+
+    <!-- Gemini Agent Chat Section -->
+    <div class="space-y-0.5">
+      <button type="button" onclick="pcmAction('copy_full')" class="w-full text-left px-2.5 py-2 rounded-xl bg-sky-500/15 hover:bg-sky-500/25 border border-sky-400/40 text-sky-200 hover:text-white flex items-center justify-between group cursor-pointer transition-all font-semibold shadow-xs">
+        <span class="flex items-center gap-2">
+          <span class="text-sm">📋</span>
+          <span>Copy for Gemini Chat</span>
+        </span>
+        <span class="text-[9px] px-1.5 py-0.5 rounded bg-sky-400/20 text-sky-300 font-bold">Ctrl+V</span>
+      </button>
+
+      <button type="button" onclick="pcmAction('copy_thai')" class="w-full text-left px-2.5 py-1.5 rounded-xl hover:bg-white/5 text-slate-300 hover:text-white flex items-center justify-between cursor-pointer transition-colors">
+        <span class="flex items-center gap-2">
+          <span class="text-xs">🇹🇭</span>
+          <span>Copy Thai Script Only</span>
+        </span>
+        <span class="text-[10px] text-slate-500">Thai</span>
+      </button>
+
+      <button type="button" onclick="pcmAction('copy_roman')" class="w-full text-left px-2.5 py-1.5 rounded-xl hover:bg-white/5 text-slate-300 hover:text-white flex items-center justify-between cursor-pointer transition-colors">
+        <span class="flex items-center gap-2">
+          <span class="text-xs">🔤</span>
+          <span>Copy Sound &amp; Meaning</span>
+        </span>
+        <span class="text-[10px] text-slate-500">Sound / En</span>
+      </button>
+    </div>
+
+    <div class="h-px bg-[#212738] my-1"></div>
+
+    <!-- In-App Gemini Coach Section -->
+    <div class="space-y-0.5">
+      <button type="button" onclick="pcmAction('gemini_explain')" class="w-full text-left px-2.5 py-1.5 rounded-xl hover:bg-gradient-to-r hover:from-sky-500/15 hover:to-purple-500/15 text-slate-200 hover:text-white flex items-center justify-between cursor-pointer transition-colors">
+        <span class="flex items-center gap-2">
+          <span class="text-xs">✨</span>
+          <span>Ask Gemini AI: Explain Phrase</span>
+        </span>
+        <span class="text-[9px] text-emerald-400 font-bold bg-emerald-500/10 px-1 rounded">AI Coach</span>
+      </button>
+
+      <button type="button" onclick="pcmAction('gemini_street')" class="w-full text-left px-2.5 py-1.5 rounded-xl hover:bg-white/5 text-slate-300 hover:text-white flex items-center gap-2 cursor-pointer transition-colors">
+        <span class="text-xs">💬</span>
+        <span>Ask Gemini AI: Street Variations</span>
+      </button>
+
+      <button type="button" onclick="pcmAction('gemini_tones')" class="w-full text-left px-2.5 py-1.5 rounded-xl hover:bg-white/5 text-slate-300 hover:text-white flex items-center gap-2 cursor-pointer transition-colors">
+        <span class="text-xs">🎯</span>
+        <span>Ask Gemini AI: Tone Rules</span>
+      </button>
+
+      <button type="button" onclick="pcmAction('gemini_custom')" class="w-full text-left px-2.5 py-1.5 rounded-xl hover:bg-white/5 text-slate-300 hover:text-white flex items-center gap-2 cursor-pointer transition-colors">
+        <span class="text-xs">✍️</span>
+        <span>Ask Gemini AI: Custom Question...</span>
+      </button>
+    </div>
+
+    <div class="h-px bg-[#212738] my-1"></div>
+
+    <!-- Quick Audio Controls -->
+    <div class="flex items-center gap-1 pt-0.5">
+      <button type="button" onclick="pcmAction('play_normal')" class="flex-1 py-1.5 rounded-xl bg-[#1d2232] hover:bg-[#252c40] border border-[#2c354d] text-slate-200 hover:text-white flex items-center justify-center gap-1.5 cursor-pointer text-[11px] font-medium transition-colors">
+        <span>🔊</span> Play Audio
+      </button>
+      <button type="button" onclick="pcmAction('play_slow')" class="py-1.5 px-3 rounded-xl bg-[#1d2232] hover:bg-[#252c40] border border-[#2c354d] text-slate-300 hover:text-white flex items-center justify-center gap-1 cursor-pointer text-[11px] transition-colors" title="Slow Audio (0.72x)">
+        <span>🐢</span> Slow
+      </button>
+    </div>
   </div>
 
   <!-- ===================================================================== -->
@@ -259,9 +364,18 @@
           </button>
         </div>
 
+        <button id="header-mute-btn" onclick="toggleAudioMute()" class="px-2.5 py-1.5 rounded-xl bg-[#14161f] hover:bg-[#202433] border border-[#242735] text-slate-300 hover:text-white text-xs font-semibold transition-all cursor-pointer flex items-center gap-1 whitespace-nowrap shrink-0" title="Audio ON (Tap to mute - Key M)">
+          <span id="header-mute-icon">🔊</span>
+        </button>
+
         <button id="cloud-sync-btn" onclick="openCloudSyncModal()" class="px-2.5 py-1.5 rounded-xl bg-[#14161f] hover:bg-[#202433] border border-[#242735] text-slate-300 hover:text-white text-xs font-semibold transition-all cursor-pointer flex items-center gap-1 whitespace-nowrap shrink-0" title="Cloud Sync Status & Phone Pairing">
           <span id="cloud-sync-dot" class="w-2 h-2 rounded-full bg-slate-500"></span>
           <span>☁️</span>
+        </button>
+
+        <button id="nav-reading-test-btn" onclick="openOnTheFlyTestModal()" class="px-2.5 sm:px-3 py-1.5 rounded-xl bg-gradient-to-r from-sky-500/15 to-amber-500/15 hover:from-sky-500/25 hover:to-amber-500/25 border border-sky-400/40 text-sky-300 hover:text-white text-xs font-semibold transition-all cursor-pointer flex items-center gap-1.5 whitespace-nowrap shrink-0 shadow-sm" title="On-The-Fly Reading Test (Known Letters & Words)">
+          <span>⚡</span>
+          <span class="hidden md:inline">Reading Test</span>
         </button>
 
         <button id="nav-bank-btn" onclick="switchMainView(document.getElementById('view-bank').classList.contains('hidden') ? 'bank' : 'path')" class="px-2.5 sm:px-3 py-1.5 rounded-xl bg-[#14161f] hover:bg-[#202433] border border-[#242735] text-slate-300 hover:text-white text-xs font-semibold transition-all cursor-pointer flex items-center gap-1.5 whitespace-nowrap shrink-0" title="Letter & Word Bank">
@@ -319,6 +433,23 @@
   <!-- VIEW 1: CLEAN SKILL TREE PATH                                         -->
   <!-- ===================================================================== -->
   <main id="view-path" class="max-w-2xl mx-auto px-4 pt-4 pb-16">
+    <!-- On-The-Fly Reading Test Banner -->
+    <div id="path-onthefly-banner" class="bg-gradient-to-r from-sky-950/40 via-[#141722] to-amber-950/30 border border-sky-500/25 rounded-2xl px-4 py-3 mb-3 flex items-center justify-between gap-3 shadow-md">
+      <div class="flex items-center gap-2.5 min-w-0">
+        <span class="text-xl">⚡</span>
+        <div class="truncate">
+          <div class="text-xs font-bold text-white flex items-center gap-1.5">
+            <span>On-The-Fly Reading Test</span>
+            <span class="text-[10px] text-sky-400 font-normal hidden sm:inline">• Test words from your known letters</span>
+          </div>
+          <div class="text-[11px] text-slate-400 truncate">Adaptive phonics test with smart hints for unknown letters or meanings</div>
+        </div>
+      </div>
+      <button onclick="openOnTheFlyTestModal()" class="px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-sky-500 to-amber-400 hover:from-sky-400 hover:to-amber-300 text-[#0e0f12] text-xs font-bold transition-all cursor-pointer whitespace-nowrap shrink-0 shadow-sm active:scale-95">
+        Start Test →
+      </button>
+    </div>
+
     <!-- Winding Skill Tree Container -->
     <div id="skill-tree-container" class="space-y-8 pt-2">
       <!-- Rendered dynamically by JS -->
@@ -339,6 +470,10 @@
           <p class="text-xs text-slate-400 mt-0.5">Live mastery score, response accuracy &amp; letter breakdowns tracked automatically</p>
         </div>
         <div class="flex flex-wrap items-center gap-2">
+          <button id="bank-onthefly-btn" onclick="openOnTheFlyTestModal()" class="px-3.5 py-2 rounded-xl bg-gradient-to-r from-sky-500 to-amber-400 hover:from-sky-400 hover:to-amber-300 text-[#0e0f12] text-xs font-bold transition-all shadow-md active:scale-95 cursor-pointer flex items-center gap-1.5 shrink-0" title="Make an on-the-fly reading test from your known letters & words">
+            <span>⚡</span>
+            <span>On-The-Fly Reading Test</span>
+          </button>
           <button onclick="openAddWordModal()" class="px-3.5 py-2 rounded-xl bg-sky-500 hover:bg-sky-400 text-[#0e0f12] text-xs font-semibold transition-colors cursor-pointer">
             + Add Video Word
           </button>
@@ -411,6 +546,11 @@
             ⭐⭐⭐⭐
           </button>
         </div>
+
+        <!-- Audio Mute / Unmute Button -->
+        <button id="lesson-mute-btn" onclick="toggleAudioMute()" class="w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-[#16181d] hover:bg-[#22252d] border border-[#262933] text-xs sm:text-sm flex items-center justify-center transition-all cursor-pointer shrink-0" title="Audio ON (Tap to mute - Key M)">
+          <span id="lesson-mute-icon">🔊</span>
+        </button>
 
         <!-- Step Counter -->
         <div class="text-xs font-bold text-slate-300 bg-[#16181d] border border-[#262933] px-2 py-0.5 rounded-lg shrink-0">
@@ -541,6 +681,102 @@
       <div class="pt-2 flex justify-end gap-2">
         <button onclick="closeAddWordModal()" class="px-4 py-2 rounded-xl bg-[#1e2128] text-slate-300 text-xs font-medium cursor-pointer">Cancel</button>
         <button onclick="saveCustomWord()" class="px-4 py-2 rounded-xl bg-emerald-400 hover:bg-emerald-300 text-[#0e0f12] text-xs font-semibold cursor-pointer">Save to Bank</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================================================================== -->
+  <!-- ON-THE-FLY READING TEST MODAL (KNOWN LETTERS & WORDS)                 -->
+  <!-- ===================================================================== -->
+  <div id="onthefly-test-modal" class="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm hidden items-center justify-center p-4">
+    <div class="bg-[#14161f] border border-[#272b3b] rounded-3xl max-w-lg w-full p-6 sm:p-7 space-y-5 shadow-2xl">
+      <!-- Header -->
+      <div class="flex items-start justify-between gap-3 pb-3 border-b border-[#212534]">
+        <div class="space-y-1">
+          <div class="flex items-center gap-2">
+            <span class="w-8 h-8 rounded-xl bg-amber-400/20 border border-amber-400/40 text-amber-300 text-lg flex items-center justify-center">⚡</span>
+            <h3 class="text-base sm:text-lg font-bold text-white">On-The-Fly Reading Test</h3>
+          </div>
+          <p class="text-xs text-slate-300">
+            Learn how to read by sounding out Thai words built from the letters &amp; words you know.
+          </p>
+        </div>
+        <button onclick="closeOnTheFlyTestModal()" class="w-8 h-8 rounded-xl bg-[#1c1f2b] hover:bg-[#252a3a] text-slate-400 hover:text-white text-sm flex items-center justify-center transition-colors cursor-pointer">✕</button>
+      </div>
+
+      <!-- Diagnostic Phonics Pool Status -->
+      <div class="bg-[#0e1017] border border-[#212534] rounded-2xl p-4 space-y-3">
+        <div class="flex items-center justify-between gap-2 text-xs">
+          <span class="text-slate-400 font-semibold uppercase tracking-wider text-[11px]">Your Phonics Knowledge</span>
+          <span id="onthefly-purity-badge" class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/15 border border-emerald-400/35 text-emerald-300">
+            100% Known Letters First
+          </span>
+        </div>
+
+        <div class="grid grid-cols-2 gap-2 text-center text-xs">
+          <div class="bg-[#151823] p-2.5 rounded-xl border border-[#212638]">
+            <div id="onthefly-stat-letters" class="text-lg font-bold text-sky-400">0</div>
+            <div class="text-[11px] text-slate-400">Known Letters</div>
+          </div>
+          <div class="bg-[#151823] p-2.5 rounded-xl border border-[#212638]">
+            <div id="onthefly-stat-words" class="text-lg font-bold text-emerald-400">0</div>
+            <div class="text-[11px] text-slate-400">Known Words</div>
+          </div>
+        </div>
+
+        <!-- Known Letter Chips Preview -->
+        <div class="space-y-1.5">
+          <div class="text-[11px] text-slate-400 flex items-center justify-between">
+            <span>Your Known Alphabet:</span>
+            <span id="onthefly-pure-words-count" class="text-amber-300 font-semibold text-[10px]">-- pure words available</span>
+          </div>
+          <div id="onthefly-letters-preview" class="flex flex-wrap gap-1.5 max-h-24 overflow-y-auto p-1.5 bg-[#12141c] rounded-xl border border-[#1b1f2b]">
+            <!-- Populated dynamically -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Test Configuration -->
+      <div class="space-y-4 text-xs">
+        <!-- Test Length -->
+        <div>
+          <label class="block text-slate-300 font-semibold mb-1.5">Test Length</label>
+          <div class="grid grid-cols-3 gap-2">
+            <button type="button" onclick="setOntheflyLength(5)" id="otf-len-5" class="py-2 px-3 rounded-xl border font-bold text-xs transition-all cursor-pointer bg-[#151823] border-[#222738] text-slate-300 hover:text-white">5 Words</button>
+            <button type="button" onclick="setOntheflyLength(10)" id="otf-len-10" class="py-2 px-3 rounded-xl border font-bold text-xs transition-all cursor-pointer bg-sky-500/20 border-sky-400 text-sky-300">10 Words</button>
+            <button type="button" onclick="setOntheflyLength(15)" id="otf-len-15" class="py-2 px-3 rounded-xl border font-bold text-xs transition-all cursor-pointer bg-[#151823] border-[#222738] text-slate-300 hover:text-white">15 Words</button>
+          </div>
+        </div>
+
+        <!-- Learning Focus -->
+        <div>
+          <label class="block text-slate-300 font-semibold mb-1.5">Learning Focus</label>
+          <div class="grid grid-cols-3 gap-2">
+            <button type="button" onclick="setOntheflyFocus('read')" id="otf-focus-read" class="py-2 px-2.5 rounded-xl border font-bold text-[11px] transition-all cursor-pointer bg-amber-400/20 border-amber-400 text-amber-300">Sound Out &amp; Read</button>
+            <button type="button" onclick="setOntheflyFocus('meaning')" id="otf-focus-meaning" class="py-2 px-2.5 rounded-xl border font-bold text-[11px] transition-all cursor-pointer bg-[#151823] border-[#222738] text-slate-300 hover:text-white">Word Meaning</button>
+            <button type="button" onclick="setOntheflyFocus('mixed')" id="otf-focus-mixed" class="py-2 px-2.5 rounded-xl border font-bold text-[11px] transition-all cursor-pointer bg-[#151823] border-[#222738] text-slate-300 hover:text-white">Mixed Phonics</button>
+          </div>
+        </div>
+
+        <!-- Zero Frustration Guarantee -->
+        <div class="bg-amber-500/10 border border-amber-400/30 rounded-2xl p-3 text-[11px] text-amber-200/90 leading-relaxed flex items-start gap-2.5">
+          <span class="text-base shrink-0">💡</span>
+          <div>
+            <strong class="text-amber-300 font-semibold">Adaptive Matching Guarantee:</strong>
+            Tests strictly what you know first. If an unlearned letter or word meaning is needed, audio phonics clues and meaning hints are provided automatically.
+          </div>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="pt-2 flex items-center justify-end gap-2.5 border-t border-[#212534]">
+        <button onclick="closeOnTheFlyTestModal()" class="px-4 py-2.5 rounded-xl bg-[#181b24] hover:bg-[#222734] border border-[#2b3040] text-slate-300 hover:text-white text-xs font-semibold cursor-pointer transition-colors">
+          Cancel
+        </button>
+        <button onclick="launchConfiguredOnTheFlyTest()" class="px-5 py-2.5 rounded-2xl bg-gradient-to-r from-sky-500 to-amber-400 hover:from-sky-400 hover:to-amber-300 text-[#0e0f12] text-xs font-bold transition-all shadow-lg shadow-sky-500/20 active:scale-95 cursor-pointer flex items-center gap-1.5">
+          <span>🚀</span>
+          <span>Start Reading Test</span>
+        </button>
       </div>
     </div>
   </div>
@@ -4279,6 +4515,8 @@
       levelStruggle: 0,
       convoDifficulty: 'standard', // 'easier' | 'standard' | 'harder' | 'overdrive'
       audioSpeed: 1.0,
+      muted: false, // Global audio mute toggle
+      autoReadScenario: true, // Auto-read intro prompt for street scenarios
       completedNodes: [],
       itemStats: {}, // { [id]: { exposures, correct, wrong, avgMs, masteryScore, status, nextReviewAt, intervalDays } }
       customWords: []
@@ -4301,6 +4539,8 @@
             autoLevel: parsed.autoLevel !== undefined ? !!parsed.autoLevel : true,
             levelStreak: Number(parsed.levelStreak) || 0,
             levelStruggle: Number(parsed.levelStruggle) || 0,
+            muted: !!parsed.muted,
+            autoReadScenario: parsed.autoReadScenario !== undefined ? !!parsed.autoReadScenario : true,
             itemStats: parsed.itemStats || {},
             completedNodes: parsed.completedNodes || [],
             customWords: parsed.customWords || []
@@ -4330,6 +4570,7 @@
       }
 
       ensureAllItemStatsInitialized();
+      updateMuteUI();
     }
 
     function switchTrack(track) {
@@ -4477,6 +4718,7 @@
       const step = activeSession.steps ? activeSession.steps[activeSession.currentIndex] : null;
       if (step && step.answered) return;
       activeSession.stepAnswered = true;
+      stopAllAudio();
 
       const chosenOpt = step?.options?.find(o => o.id === chosenId) || null;
       const isCorrect = (chosenId === correctId) || !!chosenOpt?.isCorrect;
@@ -4564,7 +4806,7 @@
       });
 
       // Reinforce hearing by speaking the chosen valid phrase (or primary target if wrong)
-      if (chosenAudio) {
+      if (chosenAudio && !appState.muted) {
         playThaiAudio(chosenAudio);
       }
 
@@ -4671,9 +4913,12 @@
             } else if (step.type === 'street_listen_spotlight' && step.item) {
               playThaiAudio(step.item.tts);
             } else if (step.type === 'street_listening_drill' && step.target) {
-              const diag = step.target?.situationDialogue;
-              const incomingAudio = (diag && diag.thai) ? (diag.tts || diag.thai) : null;
-              playThaiAudio(incomingAudio || step.target.tts);
+              if (activeSession.stepAnswered) {
+                const audioToSpeak = step.target.responseTts || step.target.tts || step.target.thai;
+                playThaiAudio(audioToSpeak);
+              } else {
+                replayCurrentScenarioIntro();
+              }
             } else if (step.letter) {
               playThaiAudio(step.letter.tts);
             } else if (step.word) {
@@ -4682,6 +4927,9 @@
               playThaiAudio(step.target.tts);
             }
           }
+        } else if ((e.key === 'm' || e.key === 'M') && e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA') {
+          e.preventDefault();
+          toggleAudioMute();
         }
       }
     });
@@ -4831,11 +5079,14 @@
     }
 
     // =========================================================================
-    // 3. REAL SPEAKING THAI AUDIO ENGINE (Google TTS + Web Speech th-TH)
+    // 3. REAL SPEAKING AUDIO ENGINE (Thai Speech + English Scenario Narrator + Mute System)
     // =========================================================================
     let currentAudio = null;
     let thaiVoice = null;
+    let englishVoice = null;
     let hoverAudioTimer = null;
+    let scenarioAudioUtterance = null;
+    let scenarioAudioTimeout = null;
 
     function playHoverAudio(text) {
       if ('ontouchstart' in window || navigator.maxTouchPoints > 0) return; // Do not fire hover on touch/mobile
@@ -4854,13 +5105,268 @@
         const load = () => {
           const voices = window.speechSynthesis.getVoices();
           thaiVoice = voices.find(v => v.lang && (v.lang.toLowerCase().includes('th') || v.lang.toLowerCase() === 'th-th')) || null;
+          englishVoice = voices.find(v => v.lang && (v.lang.toLowerCase() === 'en-us' || v.lang.toLowerCase() === 'en_us'))
+            || voices.find(v => v.lang && (v.lang.toLowerCase().startsWith('en') || v.lang.toLowerCase().includes('en')))
+            || null;
         };
         load();
         window.speechSynthesis.onvoiceschanged = load;
       }
     }
 
+    function stopAllAudio() {
+      if (scenarioAudioTimeout) {
+        clearTimeout(scenarioAudioTimeout);
+        scenarioAudioTimeout = null;
+      }
+      if (typeof currentAudio !== 'undefined' && currentAudio) {
+        try { currentAudio.pause(); } catch(e) {}
+        currentAudio = null;
+      }
+      if ('speechSynthesis' in window) {
+        try { window.speechSynthesis.cancel(); } catch(e) {}
+      }
+      scenarioAudioUtterance = null;
+      updateScenarioAudioUI(false);
+    }
+
+    function toggleAudioMute(forceState) {
+      if (typeof forceState === 'boolean') {
+        appState.muted = forceState;
+      } else {
+        appState.muted = !appState.muted;
+      }
+      saveState();
+      if (appState.muted) {
+        stopAllAudio();
+        showToast('🔇 Audio Muted');
+      } else {
+        showToast('🔊 Audio Unmuted');
+        if (activeSession && activeSession.currentIndex < activeSession.steps.length) {
+          const step = activeSession.steps[activeSession.currentIndex];
+          if (step && step.type === 'street_listening_drill' && !step.answered) {
+            replayCurrentScenarioIntro();
+          }
+        }
+      }
+      updateMuteUI();
+    }
+
+    function updateMuteUI() {
+      const isMuted = !!appState.muted;
+
+      // Lesson overlay mute button
+      const lessonMuteBtn = document.getElementById('lesson-mute-btn');
+      const lessonMuteIcon = document.getElementById('lesson-mute-icon');
+      if (lessonMuteBtn && lessonMuteIcon) {
+        if (isMuted) {
+          lessonMuteBtn.className = 'w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-rose-500/15 hover:bg-rose-500/25 border border-rose-500/40 text-rose-300 text-xs sm:text-sm flex items-center justify-center transition-all cursor-pointer shrink-0';
+          lessonMuteBtn.title = 'Audio MUTED (Tap to unmute - Key M)';
+          lessonMuteIcon.textContent = '🔇';
+        } else {
+          lessonMuteBtn.className = 'w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-[#16181d] hover:bg-[#22252d] border border-[#262933] text-slate-300 hover:text-white text-xs sm:text-sm flex items-center justify-center transition-all cursor-pointer shrink-0';
+          lessonMuteBtn.title = 'Audio ON (Tap to mute - Key M)';
+          lessonMuteIcon.textContent = '🔊';
+        }
+      }
+
+      // Main header mute button
+      const headerMuteBtn = document.getElementById('header-mute-btn');
+      const headerMuteIcon = document.getElementById('header-mute-icon');
+      if (headerMuteBtn && headerMuteIcon) {
+        if (isMuted) {
+          headerMuteBtn.className = 'px-2.5 py-1.5 rounded-xl bg-rose-500/15 hover:bg-rose-500/25 border border-rose-500/40 text-rose-300 text-xs font-semibold transition-all cursor-pointer flex items-center gap-1 shrink-0';
+          headerMuteBtn.title = 'Audio MUTED (Tap to unmute - Key M)';
+          headerMuteIcon.textContent = '🔇';
+        } else {
+          headerMuteBtn.className = 'px-2.5 py-1.5 rounded-xl bg-[#14161f] hover:bg-[#202433] border border-[#242735] text-slate-300 hover:text-white text-xs font-semibold transition-all cursor-pointer flex items-center gap-1 shrink-0';
+          headerMuteBtn.title = 'Audio ON (Tap to mute - Key M)';
+          headerMuteIcon.textContent = '🔊';
+        }
+      }
+
+      updateScenarioAudioUI(false);
+    }
+
+    function cleanScenarioPromptForSpeech(text, item = null) {
+      if (!text) return '';
+      let t = text;
+
+      // 1. Quoted Thai followed by English translation in parentheses: e.g. 'เอาเส้นอะไร?' (ao sên à-rai? — 'What noodles do you want?')
+      t = t.replace(/['"‘“][\u0e00-\u0e7f\s\d!?.,]+['"’”]?\s*\([^)]*?['"‘“]([^'"‘“’”]+)['"’”]?\s*\)/g, "'$1'");
+
+      // 2. Quoted Thai followed by phonetic/translation in parentheses: e.g. 'กินนี่หรือใส่ห่อ?' (Eat here or wrap to go?)
+      t = t.replace(/['"‘“][\u0e00-\u0e7f\s\d!?.,]+['"’”]?\s*\(([^)]+)\)/g, "'$1'");
+
+      // 3. If item has spoken/romanization and prompt has isolated Thai in quotes: e.g. 'ครับ' -> 'kháp'
+      if (item) {
+        const spoken = (item.spoken || item.roman || '').replace(/['"]/g, '').trim();
+        if (spoken) {
+          t = t.replace(/['"‘“][\u0e00-\u0e7f\s\d!?.,]+['"’”]/g, `'${spoken}'`);
+        }
+      }
+
+      // 4. Remove any remaining quoted Thai phrases
+      t = t.replace(/['"‘“][\u0e00-\u0e7f\s\d!?.,]+['"’”]/g, '');
+
+      // 5. Remove any leftover Thai characters
+      t = t.replace(/[\u0e00-\u0e7f]+/g, '');
+
+      // 6. Clean empty brackets or dangling punctuation
+      t = t.replace(/\(\s*\)/g, '');
+      t = t.replace(/['"‘“]\s*['"’”]/g, '');
+      t = t.replace(/\s*:\s*:/g, ':');
+      t = t.replace(/\s{2,}/g, ' ').trim();
+
+      return t;
+    }
+
+    function updateScenarioAudioUI(isPlaying) {
+      const btn = document.getElementById('btn-scenario-audio');
+      const icon = document.getElementById('icon-scenario-audio');
+      const text = document.getElementById('text-scenario-audio');
+      if (!btn || !icon || !text) return;
+
+      if (appState.muted) {
+        btn.className = 'inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl text-xs font-medium cursor-pointer active:scale-95 transition-all bg-rose-500/15 hover:bg-rose-500/25 border border-rose-500/30 text-rose-300';
+        icon.className = '';
+        icon.textContent = '🔇';
+        text.textContent = 'Muted (tap to unmute)';
+        btn.title = 'Audio is muted. Tap to unmute and read aloud (M)';
+      } else if (isPlaying) {
+        btn.className = 'inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl text-xs font-semibold cursor-pointer active:scale-95 transition-all bg-amber-400/25 hover:bg-amber-400/35 border border-amber-400/50 text-amber-200 ring-2 ring-amber-400/30';
+        icon.className = 'animate-pulse text-amber-300';
+        icon.textContent = '🔊';
+        text.textContent = 'Reading...';
+        btn.title = 'Click to stop reading (M to mute)';
+      } else {
+        btn.className = 'inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl text-xs font-semibold cursor-pointer active:scale-95 transition-all bg-amber-400/15 hover:bg-amber-400/25 border border-amber-400/30 text-amber-300';
+        icon.className = '';
+        icon.textContent = '🔊';
+        text.textContent = 'Replay';
+        btn.title = 'Click to re-read situation out loud (M to mute)';
+      }
+    }
+
+    function playScenarioIntroAudio(promptRaw, item, onDone = null) {
+      if (appState.muted) {
+        updateScenarioAudioUI(false);
+        return;
+      }
+      stopAllAudio();
+
+      const cleanText = cleanScenarioPromptForSpeech(promptRaw, item);
+      if (!cleanText) return;
+
+      updateScenarioAudioUI(true);
+
+      // Primary: Web Speech API (SpeechSynthesis) for English situation narration
+      if ('speechSynthesis' in window) {
+        try {
+          window.speechSynthesis.cancel();
+          const utter = new SpeechSynthesisUtterance(cleanText);
+          utter.lang = 'en-US';
+          utter.rate = (appState.audioSpeed || 1.0) * 0.95;
+          utter.pitch = 1.0;
+
+          const voices = window.speechSynthesis.getVoices();
+          const enVoice = englishVoice || voices.find(v => v.lang && (v.lang.toLowerCase() === 'en-us' || v.lang.toLowerCase() === 'en_us'))
+            || voices.find(v => v.lang && (v.lang.toLowerCase().startsWith('en') || v.lang.toLowerCase().includes('en')))
+            || null;
+          if (enVoice) utter.voice = enVoice;
+
+          utter.onstart = () => {
+            updateScenarioAudioUI(true);
+          };
+
+          utter.onend = () => {
+            updateScenarioAudioUI(false);
+            if (typeof onDone === 'function') onDone();
+          };
+
+          utter.onerror = (e) => {
+            console.warn('SpeechSynthesis error:', e);
+            updateScenarioAudioUI(false);
+            playGoogleTtsEnglish(cleanText, onDone);
+          };
+
+          scenarioAudioUtterance = utter;
+          window.speechSynthesis.speak(utter);
+          return;
+        } catch (e) {
+          console.warn('SpeechSynthesis exception:', e);
+        }
+      }
+
+      // Fallback: Google Translate TTS stream
+      playGoogleTtsEnglish(cleanText, onDone);
+    }
+
+    function playGoogleTtsEnglish(text, onDone = null) {
+      if (appState.muted) {
+        updateScenarioAudioUI(false);
+        return;
+      }
+      const slice = text.length > 180 ? text.slice(0, 180).replace(/\s+\S*$/, '...') : text;
+      const url = `https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&tl=en&q=${encodeURIComponent(slice)}`;
+      const audio = new Audio();
+      audio.referrerPolicy = 'no-referrer';
+      audio.src = url;
+      audio.playbackRate = appState.audioSpeed || 1.0;
+      currentAudio = audio;
+
+      audio.onplay = () => updateScenarioAudioUI(true);
+      audio.onended = () => {
+        updateScenarioAudioUI(false);
+        if (typeof onDone === 'function') onDone();
+      };
+      audio.onerror = () => {
+        updateScenarioAudioUI(false);
+      };
+
+      const p = audio.play();
+      if (p !== undefined) {
+        p.catch(() => updateScenarioAudioUI(false));
+      }
+    }
+
+    function toggleScenarioIntroAudio() {
+      if (appState.muted) {
+        toggleAudioMute(false);
+        replayCurrentScenarioIntro();
+        return;
+      }
+      const isSpeaking = ('speechSynthesis' in window && window.speechSynthesis.speaking) || (currentAudio && !currentAudio.paused);
+      if (isSpeaking) {
+        stopAllAudio();
+        updateScenarioAudioUI(false);
+      } else {
+        replayCurrentScenarioIntro();
+      }
+    }
+
+    function replayCurrentScenarioIntro() {
+      if (!activeSession) return;
+      const step = activeSession.steps?.[activeSession.currentIndex];
+      if (!step || step.type !== 'street_listening_drill') return;
+      const item = step.target;
+      const promptRaw = step.prompt || item?.situationPrompt || 'Listen carefully: What does the speaker mean?';
+      const diag = item?.situationDialogue || null;
+      const isThirdPartySpeaker = /local customer|vendor|cook|cashier|barista|driver|friend|peer|partner|passerby|native speaker/i.test(diag?.speaker || '') || /you hear|asks|shout|says/i.test(promptRaw);
+      const isLearnerSpeaking = (/^(Customer\s*\(|Passenger\b)/i.test(diag?.speaker || '')) && !isThirdPartySpeaker;
+      const hasThaiInPrompt = /[\u0e00-\u0e7f]/.test(promptRaw);
+      const hasIncomingDialogue = !!(diag && diag.thai && (hasThaiInPrompt || isThirdPartySpeaker) && !isLearnerSpeaking);
+      const incomingAudio = hasIncomingDialogue ? (diag.tts || diag.thai) : null;
+
+      playScenarioIntroAudio(promptRaw, item, () => {
+        if (hasIncomingDialogue && incomingAudio && !step.answered && !appState.muted) {
+          setTimeout(() => playThaiAudio(incomingAudio), 300);
+        }
+      });
+    }
+
     function playThaiAudio(text, btnEl = null, customRate = null) {
+      if (appState.muted && !btnEl) return;
       const clean = (text || '').replace(/\.\.\./g, '').trim();
       if (!clean) return;
       const rateToUse = customRate || appState.audioSpeed || 1.0;
@@ -6253,7 +6759,14 @@
       'ำ': { display: '-ำ', label: '"am" vowel (built-in "-m" ending)' },
       'ต': { display: 'ต', label: 't (unaspirated "dt", like "star")' },
       'ร': { display: 'ร', label: 'r (at start) / n (at syllable end)' },
-      'ญ': { display: 'ญ', label: 'y (yo ying — sounds like "y")' }
+      'ญ': { display: 'ญ', label: 'y (yo ying — sounds like "y")' },
+      'ึ': { display: '-ึ', label: 'short "ue" vowel (sits above consonant)' },
+      'ื': { display: '-ื', label: 'long "uue" vowel (sits above consonant)' },
+      'โ': { display: 'โ-', label: 'front "oo" vowel (written left, read after)' },
+      '๊': { display: '◌๊', label: 'high tone mark (mai tri)' },
+      '์': { display: '◌์', label: 'silent mark (gaaran — do not pronounce this letter)' },
+      'ๆ': { display: 'ๆ', label: 'repetition mark (repeat preceding word)' },
+      'ฯ': { display: 'ฯ', label: 'abbreviation mark (pai-yan noi)' }
     };
 
     const READING_PRACTICE_WORDS = [
@@ -6387,6 +6900,429 @@
         }
       }
       return priorIds;
+    }
+
+    // =========================================================================
+    // ON-THE-FLY PHONICS READING TEST ENGINE (FROM KNOWN LETTERS & WORDS)
+    // =========================================================================
+    let ontheflyConfig = {
+      count: 10,
+      focus: 'read' // 'read' | 'meaning' | 'mixed'
+    };
+
+    function getLearnerKnownPhonicsProfile() {
+      const knownLetterIds = new Set();
+      const knownLetterChars = new Set();
+      const knownWordIds = new Set();
+      const knownWordThai = new Set();
+
+      ensureAllItemStatsInitialized();
+
+      // 1. Letters from itemStats (mastered, learning, weak, or with exposures/score)
+      LETTERS_DB.forEach(l => {
+        const st = appState?.itemStats?.[l.id];
+        if (st && (st.status === 'mastered' || st.status === 'learning' || st.status === 'weak' || (st.exposures || 0) > 0 || (st.masteryScore || 0) > 0)) {
+          knownLetterIds.add(l.id);
+          if (l.char) knownLetterChars.add(l.char);
+        }
+      });
+
+      // 2. Letters and Words from completedNodes
+      (appState?.completedNodes || []).forEach(nodeId => {
+        for (const u of UNITS_CURRICULUM) {
+          const n = (u.nodes || []).find(x => x.id === nodeId);
+          if (n) {
+            (n.letterIds || []).forEach(lid => {
+              knownLetterIds.add(lid);
+              const l = LETTERS_DB.find(x => x.id === lid);
+              if (l && l.char) knownLetterChars.add(l.char);
+            });
+            (n.wordIds || []).forEach(wid => {
+              knownWordIds.add(wid);
+              const w = getAllWords().find(x => x.id === wid);
+              if (w && w.thai) knownWordThai.add(w.thai);
+            });
+          }
+        }
+        if (typeof STREET_CURRICULUM !== 'undefined' && Array.isArray(STREET_CURRICULUM)) {
+          for (const su of STREET_CURRICULUM) {
+            const sn = (su.nodes || []).find(x => x.id === nodeId);
+            if (sn && Array.isArray(sn.itemIds)) {
+              sn.itemIds.forEach(sid => knownWordIds.add(sid));
+            }
+          }
+        }
+      });
+
+      // 3. Words from itemStats
+      getAllWords().forEach(w => {
+        const st = appState?.itemStats?.[w.id];
+        if (st && (st.status === 'mastered' || st.status === 'learning' || st.status === 'weak' || (st.exposures || 0) > 0 || (st.masteryScore || 0) > 0)) {
+          knownWordIds.add(w.id);
+          if (w.thai) knownWordThai.add(w.thai);
+        }
+      });
+
+      if (typeof STREET_DB !== 'undefined' && Array.isArray(STREET_DB)) {
+        STREET_DB.forEach(s => {
+          const st = appState?.itemStats?.[s.id];
+          if (st && (st.status === 'mastered' || st.status === 'learning' || st.status === 'weak' || (st.exposures || 0) > 0 || (st.masteryScore || 0) > 0)) {
+            knownWordIds.add(s.id);
+            if (s.thai) knownWordThai.add(s.thai);
+          }
+        });
+      }
+
+      // 4. Fallback if learner has not marked or completed any letters yet
+      let isStarterFallback = false;
+      if (knownLetterChars.size === 0) {
+        isStarterFallback = true;
+        const starterIds = ['L_ko', 'L_no', 'L_mo', 'L_aa', 'L_e'];
+        starterIds.forEach(lid => {
+          knownLetterIds.add(lid);
+          const l = LETTERS_DB.find(x => x.id === lid);
+          if (l && l.char) knownLetterChars.add(l.char);
+        });
+      }
+
+      return {
+        knownLetterIds,
+        knownLetterChars,
+        knownWordIds,
+        knownWordThai,
+        isStarterFallback
+      };
+    }
+
+    function getAllReadingCandidates() {
+      const all = [];
+      const seenThai = new Set();
+
+      const addCandidate = (item, source) => {
+        if (!item || !item.thai || (!item.roman && !item.spoken) || !item.meaning) return;
+        const th = String(item.thai).trim();
+        if (!th || seenThai.has(th) || (th.includes(' ') && th.length > 8)) return;
+        seenThai.add(th);
+        all.push({
+          id: item.id || `C_${th}`,
+          thai: th,
+          roman: item.roman || item.spoken,
+          meaning: item.meaning,
+          unit: item.unit || 1,
+          readingHint: item.readingHint || '',
+          videoContext: item.videoContext || item.streetShift || item.scene || '',
+          source
+        });
+      };
+
+      // 1. WORDS_DB + custom words
+      getAllWords().forEach(w => addCandidate(w, 'words_db'));
+
+      // 2. READING_PRACTICE_WORDS
+      (typeof READING_PRACTICE_WORDS !== 'undefined' ? READING_PRACTICE_WORDS : []).forEach(w => addCandidate(w, 'reading_practice'));
+
+      // 3. Street single words or short chunks
+      if (typeof STREET_DB !== 'undefined' && Array.isArray(STREET_DB)) {
+        STREET_DB.forEach(s => {
+          if (s.thai && !s.thai.includes(' ') && s.thai.length <= 6) {
+            addCandidate({
+              id: s.id,
+              thai: s.thai,
+              roman: s.spoken || s.roman,
+              meaning: s.meaning,
+              unit: s.unit || 1,
+              readingHint: s.situationEverydayTip || '',
+              videoContext: s.streetShift || s.scene || ''
+            }, 'street_db');
+          }
+          if (Array.isArray(s.words)) {
+            s.words.forEach(w => {
+              if (w.th && !w.th.includes(' ') && w.th.length <= 6) {
+                addCandidate({
+                  id: `STW_${w.th}`,
+                  thai: w.th,
+                  roman: w.ro,
+                  meaning: w.en,
+                  unit: s.unit || 1,
+                  readingHint: '',
+                  videoContext: `From "${s.meaning}"`
+                }, 'street_word');
+              }
+            });
+          }
+        });
+      }
+
+      return all;
+    }
+
+    function rankAndFilterReadingCandidates(candidates, knownProfile) {
+      const { knownLetterChars, knownWordIds, knownWordThai } = knownProfile;
+
+      return candidates.map(w => {
+        const breakdown = getWordCharBreakdown(w.thai, knownLetterChars);
+        const unknownLetterCount = breakdown.unseenHints.length;
+        const isWordKnown = knownWordIds.has(w.id) || knownWordThai.has(w.thai);
+
+        // Classification into tier
+        let tier = 4;
+        if (unknownLetterCount === 0) {
+          tier = isWordKnown ? 0 : 1;
+        } else if (unknownLetterCount === 1) {
+          tier = 2;
+        } else if (unknownLetterCount === 2) {
+          tier = 3;
+        } else {
+          tier = 4;
+        }
+
+        return {
+          word: w,
+          breakdown,
+          unknownLetterCount,
+          isWordKnown,
+          tier
+        };
+      });
+    }
+
+    function createOnTheFlyReadingTestStep(options = {}) {
+      const count = options.count || ontheflyConfig.count || 10;
+      const focus = options.focus || ontheflyConfig.focus || 'read';
+      const knownProfile = getLearnerKnownPhonicsProfile();
+      const allCandidates = getAllReadingCandidates();
+      const scored = rankAndFilterReadingCandidates(allCandidates, knownProfile);
+
+      // Separate tiers
+      const tier0 = scored.filter(s => s.tier === 0).sort(() => Math.random() - 0.5); // 0 unknown letters, known word
+      const tier1 = scored.filter(s => s.tier === 1).sort(() => Math.random() - 0.5); // 0 unknown letters, novel word
+      const tier2 = scored.filter(s => s.tier === 2).sort(() => Math.random() - 0.5); // 1 unknown letter
+      const tier3 = scored.filter(s => s.tier === 3).sort(() => Math.random() - 0.5); // 2 unknown letters
+
+      // Prioritize 100% known letters first (Tier 0 & Tier 1)
+      let selectedEntries = [];
+      const purePool = [...tier0, ...tier1].sort(() => Math.random() - 0.5);
+
+      if (purePool.length >= count) {
+        selectedEntries = purePool.slice(0, count);
+      } else {
+        selectedEntries = [...purePool];
+        const needed = count - selectedEntries.length;
+        selectedEntries.push(...tier2.slice(0, needed));
+        if (selectedEntries.length < count) {
+          const remainingNeeded = count - selectedEntries.length;
+          selectedEntries.push(...tier3.slice(0, remainingNeeded));
+        }
+      }
+
+      // Shuffle selected words
+      selectedEntries.sort(() => Math.random() - 0.5);
+
+      const optCount = 4;
+      const distractorCandidates = allCandidates;
+
+      const questions = selectedEntries.map((entry, qIdx) => {
+        const word = entry.word;
+        const isWordKnown = entry.isWordKnown;
+        const unknownLetterCount = entry.unknownLetterCount;
+
+        // Mode determination
+        let qMode = 'read_new';
+        if (focus === 'meaning') {
+          qMode = 'meaning';
+        } else if (focus === 'mixed') {
+          if (qIdx % 3 === 1 && isWordKnown) {
+            qMode = 'meaning';
+          } else if (qIdx % 3 === 2 && isWordKnown) {
+            qMode = 'pick_thai';
+          } else {
+            qMode = 'read_new';
+          }
+        } else {
+          qMode = 'read_new';
+        }
+
+        // Build distractors
+        const distractors = [];
+        const usedThai = new Set([word.thai]);
+        const usedRoman = new Set([word.roman]);
+        const usedMeaning = new Set([word.meaning]);
+
+        const shuffledOthers = [...distractorCandidates].sort(() => Math.random() - 0.5);
+        for (const d of shuffledOthers) {
+          if (distractors.length >= optCount - 1) break;
+          if (usedThai.has(d.thai) || usedRoman.has(d.roman) || usedMeaning.has(d.meaning)) continue;
+          usedThai.add(d.thai);
+          usedRoman.add(d.roman);
+          usedMeaning.add(d.meaning);
+          distractors.push(d);
+        }
+
+        const options = [
+          {
+            id: `otf_${qIdx}_ok`,
+            thai: word.thai,
+            roman: word.roman,
+            meaning: word.meaning,
+            isCorrect: true
+          },
+          ...distractors.map((d, dIdx) => ({
+            id: `otf_${qIdx}_d_${dIdx}`,
+            thai: d.thai,
+            roman: d.roman,
+            meaning: d.meaning,
+            isCorrect: false
+          }))
+        ].sort(() => Math.random() - 0.5);
+
+        return {
+          qIdx,
+          mode: qMode,
+          word,
+          breakdown: entry.breakdown,
+          options,
+          answered: false,
+          isCorrect: null,
+          chosenOptId: null,
+          isWordKnown,
+          isOntheFly: true
+        };
+      });
+
+      return {
+        type: 'word_reading_finale',
+        isOntheFlyTest: true,
+        focus,
+        target: questions[0]?.word || null,
+        questions,
+        cursor: 0,
+        allWordsCompleted: questions.length === 0,
+        knownLetterCount: knownProfile.knownLetterChars.size,
+        pureCount: purePool.length
+      };
+    }
+
+    function openOnTheFlyTestModal() {
+      const modal = document.getElementById('onthefly-test-modal');
+      if (!modal) return;
+
+      const profile = getLearnerKnownPhonicsProfile();
+      const allCandidates = getAllReadingCandidates();
+      const scored = rankAndFilterReadingCandidates(allCandidates, profile);
+      const pureCount = scored.filter(s => s.unknownLetterCount === 0).length;
+
+      const lettersCountEl = document.getElementById('onthefly-stat-letters');
+      const wordsCountEl = document.getElementById('onthefly-stat-words');
+      const pureWordsCountEl = document.getElementById('onthefly-pure-words-count');
+      const previewEl = document.getElementById('onthefly-letters-preview');
+      const purityBadgeEl = document.getElementById('onthefly-purity-badge');
+
+      if (lettersCountEl) lettersCountEl.textContent = profile.knownLetterChars.size;
+      if (wordsCountEl) wordsCountEl.textContent = profile.knownWordIds.size;
+      if (pureWordsCountEl) pureWordsCountEl.textContent = `${pureCount} pure words match`;
+
+      if (purityBadgeEl) {
+        if (pureCount >= 10) {
+          purityBadgeEl.className = 'px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/15 border border-emerald-400/35 text-emerald-300';
+          purityBadgeEl.textContent = '100% Pure Letters Ready';
+        } else {
+          purityBadgeEl.className = 'px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/15 border border-amber-400/35 text-amber-300';
+          purityBadgeEl.textContent = 'Smart Hints Active';
+        }
+      }
+
+      if (previewEl) {
+        const lettersList = Array.from(profile.knownLetterChars).map(ch => {
+          const lObj = LETTERS_DB.find(l => l.char === ch);
+          return {
+            char: ch,
+            display: lObj?.display || ch,
+            name: lObj?.name || ''
+          };
+        });
+
+        if (lettersList.length === 0) {
+          previewEl.innerHTML = `<span class="text-xs text-slate-400 p-1">No letters marked yet. Using Unit 1 starter alphabet!</span>`;
+        } else {
+          previewEl.innerHTML = lettersList.map(l => `
+            <span class="inline-flex items-center gap-1 px-2 py-1 rounded-lg bg-[#181d2a] border border-[#2b3346] text-xs font-thai text-white shadow-xs" title="${l.name}">
+              <strong class="font-thai-standard">${l.display}</strong>
+              <span class="font-thai-modern text-[10px] text-slate-400">${l.char}</span>
+            </span>
+          `).join('');
+        }
+      }
+
+      setOntheflyLength(ontheflyConfig.count || 10);
+      setOntheflyFocus(ontheflyConfig.focus || 'read');
+
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+
+    function closeOnTheFlyTestModal() {
+      const modal = document.getElementById('onthefly-test-modal');
+      if (modal) {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+      }
+    }
+
+    function setOntheflyLength(cnt) {
+      ontheflyConfig.count = cnt;
+      [5, 10, 15].forEach(n => {
+        const btn = document.getElementById(`otf-len-${n}`);
+        if (!btn) return;
+        if (n === cnt) {
+          btn.className = 'py-2 px-3 rounded-xl border font-bold text-xs transition-all cursor-pointer bg-sky-500/20 border-sky-400 text-sky-300 shadow-sm';
+        } else {
+          btn.className = 'py-2 px-3 rounded-xl border font-bold text-xs transition-all cursor-pointer bg-[#151823] border-[#222738] text-slate-400 hover:text-white';
+        }
+      });
+    }
+
+    function setOntheflyFocus(focus) {
+      ontheflyConfig.focus = focus;
+      ['read', 'meaning', 'mixed'].forEach(f => {
+        const btn = document.getElementById(`otf-focus-${f}`);
+        if (!btn) return;
+        if (f === focus) {
+          btn.className = 'py-2 px-2.5 rounded-xl border font-bold text-[11px] transition-all cursor-pointer bg-amber-400/20 border-amber-400 text-amber-300 shadow-sm';
+        } else {
+          btn.className = 'py-2 px-2.5 rounded-xl border font-bold text-[11px] transition-all cursor-pointer bg-[#151823] border-[#222738] text-slate-400 hover:text-white';
+        }
+      });
+    }
+
+    function launchConfiguredOnTheFlyTest() {
+      closeOnTheFlyTestModal();
+      startOnTheFlyReadingTest(ontheflyConfig);
+    }
+
+    function startOnTheFlyReadingTest(options = {}) {
+      const step = createOnTheFlyReadingTestStep(options);
+      if (!step || !step.questions || step.questions.length === 0) {
+        showToast('⚠️ No matching words found for current letters. Try marking a few letters in Bank!');
+        return;
+      }
+
+      activeSession = {
+        nodeId: null,
+        isOntheFlyTest: true,
+        title: '⚡ On-The-Fly Reading Test • Known Letters & Words',
+        isWeakReview: false,
+        steps: [step],
+        currentIndex: 0,
+        correctCount: 0,
+        stepAnswered: false,
+        stepStartTime: Date.now(),
+        selectedTiles: []
+      };
+
+      openLessonOverlay();
+      renderCurrentLessonStep();
+      if (typeof updateGeminiContextUI === 'function') updateGeminiContextUI();
+      showToast('⚡ Reading Test generated from your known alphabet!');
     }
 
     function createWordReadingFinaleStep(node) {
@@ -6566,10 +7502,19 @@
         <div class="bg-[#16181d] border border-[#252934] rounded-3xl p-5 sm:p-7 space-y-5 shadow-xl">
           <!-- Header + Mini Word Progress -->
           <div class="flex flex-wrap items-center justify-between gap-2">
-            <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-sky-500/15 border border-sky-400/35 text-sky-300 text-xs font-bold">
-              <span>📖</span>
-              <span>Final Step • Read Single Words</span>
+            <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full ${step.isOntheFlyTest ? 'bg-gradient-to-r from-sky-500/20 to-amber-500/20 border-sky-400/40 text-sky-200' : 'bg-sky-500/15 border-sky-400/35 text-sky-300'} border text-xs font-bold">
+              <span>${step.isOntheFlyTest ? '⚡' : '📖'}</span>
+              <span>${step.isOntheFlyTest ? 'On-The-Fly Phonics Reading' : 'Final Step • Read Single Words'}</span>
             </div>
+            ${step.isOntheFlyTest ? (unseenHints.length === 0 ? `
+              <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-emerald-500/15 border border-emerald-400/30 text-emerald-300 text-[10px] font-bold">
+                ✓ 100% Known Letters
+              </span>
+            ` : `
+              <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-amber-500/15 border border-amber-400/30 text-amber-300 text-[10px] font-bold">
+                💡 Smart Hints Active
+              </span>
+            `) : ''}
             <div class="flex items-center gap-1.5">
               ${qs.map((item, i) => `
                 <span class="h-2 rounded-full transition-all ${
@@ -6635,7 +7580,7 @@
                 <div class="bg-amber-500/10 border border-amber-400/30 rounded-xl px-3.5 py-2.5 text-left space-y-1.5">
                   <div class="text-[10px] font-extrabold uppercase tracking-wider text-amber-300 flex items-center gap-1.5">
                     <span>💡</span>
-                    <span>${unseenHints.length > 0 ? 'New Letter / Mark Hint' : 'Reading Tip'}</span>
+                    <span>${unseenHints.length > 0 ? 'Unknown Letter / Mark Hint' : 'Reading Tip'}</span>
                   </div>
                   ${unseenHints.map(h => `
                     <div class="text-xs text-slate-200 flex items-center gap-2">
@@ -6653,6 +7598,29 @@
                   <span>100% letters you already know</span>
                 </div>
               `}
+
+              <!-- Automatic Unlearned Word Meaning Hint Box -->
+              ${(!q.isWordKnown && w.meaning) ? `
+                <div class="bg-sky-500/10 border border-sky-400/30 rounded-xl px-3.5 py-2.5 text-left space-y-1">
+                  <div class="text-[10px] font-extrabold uppercase tracking-wider text-sky-300 flex items-center justify-between">
+                    <div class="flex items-center gap-1.5">
+                      <span>💡</span>
+                      <span>Word Meaning Hint (New Word)</span>
+                    </div>
+                    <span class="text-[9px] text-slate-400 font-normal">Sound out the letters to read it!</span>
+                  </div>
+                  <div class="text-xs text-slate-200 flex flex-wrap items-baseline gap-2">
+                    <span>Meaning:</span>
+                    <strong class="text-white text-sm">"${w.meaning}"</strong>
+                    ${w.videoContext ? `<span class="text-slate-400 text-[11px]">(${w.videoContext})</span>` : ''}
+                  </div>
+                </div>
+              ` : ''}
+              ${(isMeaning && !q.isWordKnown) ? `
+                <div class="bg-amber-500/10 border border-amber-400/30 rounded-xl px-3.5 py-2 text-left text-xs text-amber-200 flex items-center justify-between">
+                  <span>💡 Clue: Meaning relates to "${w.meaning.split('/')[0].trim()}"</span>
+                </div>
+              ` : ''}
             </div>
           ` : `
             <!-- Pick-Thai Word Prompt Card -->
@@ -6765,7 +7733,7 @@
       q.isCorrect = !!opt.isCorrect;
 
       const elapsed = Date.now() - activeSession.stepStartTime;
-      if (q.word?.id && q.word.id.startsWith('W_')) {
+      if (q.word?.id) {
         recordItemAttempt(q.word.id, q.isCorrect, elapsed);
       }
 
@@ -6823,6 +7791,7 @@
     }
 
     function exitLesson() {
+      stopAllAudio();
       document.getElementById('lesson-overlay').classList.add('hidden');
       activeSession = null;
       updateTrackUI();
@@ -6875,6 +7844,8 @@
 
     function renderCurrentLessonStep() {
       if (!activeSession) return;
+      stopAllAudio();
+      updateMuteUI();
       const stage = document.getElementById('lesson-stage');
       const footerMsg = document.getElementById('lesson-feedback-msg');
       const actionBtn = document.getElementById('lesson-action-btn');
@@ -6946,15 +7917,21 @@
             ` : ''}
 
             <!-- Central Phrase & Audio: Clean Audio Pill (Minimalist, Airy & Zero Clutter) -->
-            <div class="py-3 space-y-2.5">
+            <div class="py-3 space-y-2.5 relative group" oncontextmenu="handleSpotlightContextMenu(event)">
               <button onclick="playThaiAudio('${item.tts}', this)" 
                       class="inline-flex items-center gap-3 px-7 py-3.5 rounded-2xl bg-amber-400 hover:bg-amber-300 text-[#0e0f12] shadow-xl shadow-amber-400/20 active:scale-95 transition-all cursor-pointer group"
-                      title="Click or press Spacebar to hear native voice">
+                      title="Click or press Spacebar to hear native voice (Right-click to Copy / Ask Gemini)">
                 <span class="text-2xl group-hover:scale-110 transition-transform">🔊</span>
-                <span class="text-2xl sm:text-3xl font-extrabold tracking-wide">${item.spoken || item.roman}</span>
+                <span class="text-2xl sm:text-3xl font-extrabold tracking-wide select-text">${item.spoken || item.roman}</span>
               </button>
-              <div class="text-sm font-bold text-amber-300/90 font-thai">${item.thai || ''}</div>
-              <div class="text-base sm:text-lg font-bold text-emerald-300">${item.meaning}</div>
+              <div class="text-sm font-bold text-amber-300/90 font-thai select-text">${item.thai || ''}</div>
+              <div class="text-base sm:text-lg font-bold text-emerald-300 select-text">${item.meaning}</div>
+              <div class="pt-1 flex justify-center">
+                <button type="button" onclick="handleSpotlightContextMenu(event)" class="px-2.5 py-1 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 text-sky-300 hover:text-white text-[11px] font-semibold transition-all cursor-pointer flex items-center gap-1.5" title="Right-click phrase or click here to reference in Gemini Chat">
+                  <span>✨</span>
+                  <span>Copy / Ask Gemini</span>
+                </button>
+              </div>
             </div>
 
             <!-- Words Breakdown (shown for compound phrases) -->
@@ -7001,10 +7978,17 @@
         const hasIncomingDialogue = !!(diag && diag.thai && (hasThaiInPrompt || isThirdPartySpeaker) && !isLearnerSpeaking);
         const incomingAudio = hasIncomingDialogue ? (diag.tts || diag.thai) : null;
 
-        // ONLY auto-play audio if there is an incoming dialogue from vendor/other speaker!
-        // Never auto-play when the prompt is asking the learner how to say/order something!
-        if (hasIncomingDialogue && incomingAudio) {
-          setTimeout(() => playThaiAudio(incomingAudio), 250);
+        // Auto-read scenario intro out loud (unless audio is muted by user!)
+        if (!step.answered && !appState.muted && appState.autoReadScenario !== false) {
+          scenarioAudioTimeout = setTimeout(() => {
+            playScenarioIntroAudio(promptRaw, item, () => {
+              if (hasIncomingDialogue && incomingAudio && !step.answered && !appState.muted) {
+                setTimeout(() => playThaiAudio(incomingAudio), 300);
+              }
+            });
+          }, 250);
+        } else if (!step.answered && !appState.muted && hasIncomingDialogue && incomingAudio) {
+          scenarioAudioTimeout = setTimeout(() => playThaiAudio(incomingAudio), 250);
         }
 
         // Highlight the spoken Thai phrase inside the sentence if someone is speaking
@@ -7063,14 +8047,20 @@
 
             <!-- Sleek Scenario Box -->
             <div class="bg-gradient-to-br from-[#1b1e2b] to-[#141620] border-2 border-[#2f354a] rounded-3xl p-4 sm:p-5 text-left shadow-xl space-y-3">
-              <div class="flex items-center justify-between">
+              <div class="flex items-center justify-between gap-2 flex-wrap">
                 <span class="px-2.5 py-1 rounded-full bg-amber-400/20 border border-amber-400/40 text-amber-300 text-xs font-bold tracking-wide flex items-center gap-1.5">
                   <span>🎭</span>
                   <span>The Situation</span>
                 </span>
-                ${hasIncomingDialogue ? `
-                  <span class="text-[11px] text-slate-400 font-medium">🔊 Audio auto-plays</span>
-                ` : ''}
+                <div class="flex items-center gap-1.5">
+                  <button type="button" id="btn-scenario-audio" onclick="toggleScenarioIntroAudio()" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl text-xs font-semibold cursor-pointer active:scale-95 transition-all ${appState.muted ? 'bg-rose-500/15 hover:bg-rose-500/25 border border-rose-500/30 text-rose-300' : 'bg-amber-400/15 hover:bg-amber-400/25 border border-amber-400/30 text-amber-300'}" title="${appState.muted ? 'Audio is muted. Tap to unmute and read aloud (M)' : 'Read situation aloud or replay (M to mute)'}">
+                    <span id="icon-scenario-audio">${appState.muted ? '🔇' : '🔊'}</span>
+                    <span id="text-scenario-audio">${appState.muted ? 'Muted' : 'Read Aloud'}</span>
+                  </button>
+                  <button type="button" onclick="toggleAudioMute()" class="w-7 h-7 rounded-xl bg-[#161822] hover:bg-[#202535] border border-[#272d40] text-xs flex items-center justify-center transition-colors cursor-pointer ${appState.muted ? 'text-rose-400' : 'text-slate-400 hover:text-white'}" title="Mute / Unmute Audio (Key M)">
+                    <span>${appState.muted ? '🔇' : '🔊'}</span>
+                  </button>
+                </div>
               </div>
 
               <!-- Clear Prompt with Clickable Thai Audio Badge if vendor speaks -->
@@ -9639,11 +10629,289 @@
         </div>`;
     }
 
+    // =====================================================================
+    // PHRASE QUICK REFERENCE & CONTEXT MENU ENGINE (GEMINI CHAT INTEGRATION)
+    // =====================================================================
+    let activePhraseData = null;
+
+    function copyTextToClipboard(text, onSuccess) {
+      if (!text) return;
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(() => {
+          if (onSuccess) onSuccess();
+        }).catch(() => {
+          fallbackCopyText(text, onSuccess);
+        });
+      } else {
+        fallbackCopyText(text, onSuccess);
+      }
+    }
+
+    function fallbackCopyText(text, onSuccess) {
+      try {
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        ta.style.position = 'fixed';
+        ta.style.opacity = '0';
+        ta.style.left = '-9999px';
+        document.body.appendChild(ta);
+        ta.focus();
+        ta.select();
+        const ok = document.execCommand('copy');
+        document.body.removeChild(ta);
+        if (ok && onSuccess) onSuccess();
+        else if (!ok) showToast('⚠️ Could not copy to clipboard');
+      } catch (err) {
+        showToast('⚠️ Copy failed: ' + (err?.message || 'Permission denied'));
+      }
+    }
+
+    function openPhraseContextMenu(e, phraseData) {
+      activePhraseData = phraseData;
+      const menu = document.getElementById('phrase-context-menu');
+      if (!menu) return;
+
+      const thaiEl = document.getElementById('pcm-preview-thai');
+      const spokenEl = document.getElementById('pcm-preview-spoken');
+      const speakerEl = document.getElementById('pcm-speaker-badge');
+      const selOpt = document.getElementById('pcm-selected-text-opt');
+      const selLabel = document.getElementById('pcm-selected-text-label');
+
+      if (thaiEl) thaiEl.textContent = phraseData.thai || '';
+      if (spokenEl) {
+        const sub = [phraseData.spoken, phraseData.meaning].filter(Boolean).join(' — ');
+        spokenEl.textContent = sub || '';
+      }
+      if (speakerEl) {
+        speakerEl.textContent = phraseData.speaker || 'Phrase';
+      }
+
+      // Check if user has highlighted text
+      const currentSelection = window.getSelection ? window.getSelection().toString().trim() : '';
+      if (selOpt && selLabel) {
+        if (currentSelection && currentSelection.length > 0) {
+          selLabel.textContent = `"${currentSelection.length > 26 ? currentSelection.slice(0, 23) + '...' : currentSelection}"`;
+          selOpt.classList.remove('hidden');
+          selOpt.dataset.selection = currentSelection;
+        } else {
+          selOpt.classList.add('hidden');
+          delete selOpt.dataset.selection;
+        }
+      }
+
+      menu.classList.remove('hidden');
+
+      let x = 0, y = 0;
+      if (e && typeof e.clientX === 'number' && e.clientX > 0) {
+        x = e.clientX;
+        y = e.clientY;
+      } else if (e && e.target && e.target.getBoundingClientRect) {
+        const rect = e.target.getBoundingClientRect();
+        x = rect.left + rect.width / 2;
+        y = rect.bottom + 4;
+      } else {
+        x = window.innerWidth / 2 - 150;
+        y = window.innerHeight / 2 - 120;
+      }
+
+      const rect = menu.getBoundingClientRect();
+      const pad = 12;
+      let left = x;
+      let top = y;
+
+      if (left + rect.width > window.innerWidth - pad) {
+        left = window.innerWidth - rect.width - pad;
+      }
+      if (left < pad) left = pad;
+
+      if (top + rect.height > window.innerHeight - pad) {
+        top = window.innerHeight - rect.height - pad;
+      }
+      if (top < pad) top = pad;
+
+      menu.style.left = `${left}px`;
+      menu.style.top = `${top}px`;
+    }
+
+    function closePhraseContextMenu() {
+      const menu = document.getElementById('phrase-context-menu');
+      if (menu && !menu.classList.contains('hidden')) {
+        menu.classList.add('hidden');
+      }
+    }
+
+    function pcmAction(action) {
+      if (!activePhraseData) {
+        closePhraseContextMenu();
+        return;
+      }
+      const data = activePhraseData;
+      const selOpt = document.getElementById('pcm-selected-text-opt');
+      const selectedText = (selOpt && !selOpt.classList.contains('hidden')) ? (selOpt.dataset.selection || '') : '';
+
+      closePhraseContextMenu();
+
+      if (action === 'copy_full') {
+        const parts = [];
+        if (data.thai) parts.push(data.thai);
+        const sub = [data.spoken, data.meaning].filter(Boolean).join(' — ');
+        const fullRef = parts.length ? `${data.thai} (${sub})` : sub;
+        copyTextToClipboard(fullRef, () => {
+          showToast('📋 Copied for Gemini Chat! Press Ctrl+V in chat');
+        });
+      } else if (action === 'copy_thai') {
+        copyTextToClipboard(data.thai || '', () => {
+          showToast('📋 Thai script copied!');
+        });
+      } else if (action === 'copy_roman') {
+        const soundText = [data.spoken, data.meaning].filter(Boolean).join(' — ');
+        copyTextToClipboard(soundText, () => {
+          showToast('📋 Pronunciation & meaning copied!');
+        });
+      } else if (action === 'copy_selection') {
+        if (selectedText) {
+          copyTextToClipboard(selectedText, () => {
+            showToast(`📋 Copied selection: "${selectedText}"`);
+          });
+        }
+      } else if (action === 'gemini_explain') {
+        openGeminiTutorWithPhrase(data, 'explain');
+      } else if (action === 'gemini_street') {
+        openGeminiTutorWithPhrase(data, 'street');
+      } else if (action === 'gemini_tones') {
+        openGeminiTutorWithPhrase(data, 'tones');
+      } else if (action === 'gemini_custom') {
+        openGeminiTutorWithPhrase(data, 'custom');
+      } else if (action === 'play_normal') {
+        playThaiAudio(data.tts || data.thai);
+      } else if (action === 'play_slow') {
+        playThaiAudio(data.tts || data.thai, null, 0.72);
+      }
+    }
+
+    function openGeminiTutorWithPhrase(data, mode = 'explain') {
+      toggleGeminiChat(true);
+      switchGeminiTab('chat');
+
+      let prompt = '';
+      if (mode === 'explain') {
+        prompt = `Explain this sentence from the Thai dialogue: "${data.thai}" (${data.spoken} — "${data.meaning}"). Break down the vocabulary words, tone rules, grammar nuance, and street usage in under 100 words.`;
+      } else if (mode === 'street') {
+        prompt = `For this sentence: "${data.thai}" (${data.spoken} — "${data.meaning}"), what are common casual street variations or slang used by Bangkok locals? Include 2-3 audio clips with [audio: Thai | Roman | English].`;
+      } else if (mode === 'tones') {
+        prompt = `Explain the tone rules and pronunciation for: "${data.thai}" (${data.spoken}). Break down the consonant classes, vowels, and tone marks step by step.`;
+      } else if (mode === 'custom') {
+        const input = document.getElementById('gemini-user-input');
+        if (input) {
+          input.value = `Regarding "${data.thai}" (${data.spoken}): `;
+          input.focus();
+          input.setSelectionRange(input.value.length, input.value.length);
+        }
+        return;
+      }
+
+      const key = getGeminiApiKey();
+      if (!key) {
+        const input = document.getElementById('gemini-user-input');
+        if (input) {
+          input.value = prompt;
+        }
+        toggleGeminiSettings(true);
+        showToast('✨ Phrase loaded! Enter your Gemini API key to ask AI Coach.');
+      } else {
+        sendGeminiMessage(prompt);
+      }
+    }
+
+    function handleConvoBubbleClick(e, idx, el, customJump = null) {
+      // Don't trigger playback if the user was selecting text
+      const sel = window.getSelection ? window.getSelection().toString() : '';
+      if (sel && sel.trim().length > 0) return;
+
+      if (typeof customJump === 'function') {
+        customJump();
+      } else {
+        playConvoLineAudio(idx, el);
+      }
+    }
+
+    function handleConvoBubbleContextMenu(e, lineIdx) {
+      if (e) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+      const step = getActiveConvoStep();
+      if (!step || !step.dialogueLines) return;
+      const line = step.dialogueLines[lineIdx];
+      if (!line) return;
+
+      const meta = getConvoSpeakerMeta(line.speakerName);
+      openPhraseContextMenu(e, {
+        thai: line.script || '',
+        spoken: line.spoken || '',
+        meaning: line.meaning || '',
+        speaker: meta.label || (line.speaker === 'A' ? 'Speaker A' : 'Speaker B'),
+        tts: line.tts || line.script || ''
+      });
+    }
+
+    function handleConvoOptionContextMenu(e, qIdx, optIdx) {
+      if (e) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+      const step = getActiveConvoStep();
+      if (!step || !step.questions) return;
+      const opt = step.questions[qIdx]?.options?.[optIdx];
+      if (!opt) return;
+
+      openPhraseContextMenu(e, {
+        thai: opt.script || opt.text || '',
+        spoken: opt.spoken || '',
+        meaning: opt.meaning || opt.text || '',
+        speaker: 'Option Choice ' + (optIdx + 1),
+        tts: opt.tts || opt.script || opt.text || ''
+      });
+    }
+
+    function handleSpotlightContextMenu(e) {
+      if (e) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+      if (!activeSession) return;
+      const step = activeSession.steps?.[activeSession.currentIndex];
+      const item = step?.item || step?.target;
+      if (!item) return;
+
+      openPhraseContextMenu(e, {
+        thai: item.thai || '',
+        spoken: item.spoken || item.roman || '',
+        meaning: item.meaning || '',
+        speaker: item.theme || 'Spotlight Phrase',
+        tts: item.tts || item.thai || ''
+      });
+    }
+
+    // Dismiss context menu on click outside or Escape
+    document.addEventListener('click', (e) => {
+      const menu = document.getElementById('phrase-context-menu');
+      if (menu && !menu.classList.contains('hidden')) {
+        if (!e.target.closest('#phrase-context-menu')) {
+          closePhraseContextMenu();
+        }
+      }
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closePhraseContextMenu();
+    });
+
     function renderConvoText(line, idx, o) {
       return `
-        <div  class="font-thai font-bold text-amber-200 ${o.big ? 'text-base sm:text-lg' : 'text-sm sm:text-base'} leading-snug">${highlightConvoLineWords(line, idx)}</div>
-        ${o.roman && line.spoken ? `<div class="font-mono text-[11px] sm:text-xs text-slate-300 mt-0.5">${line.spoken}</div>` : ''}
-        ${o.english && line.meaning ? `<div class="text-[11px] sm:text-xs text-slate-400 italic mt-1">${line.meaning}</div>` : ''}`;
+        <div class="font-thai font-bold text-amber-200 select-text ${o.big ? 'text-base sm:text-lg' : 'text-sm sm:text-base'} leading-snug">${highlightConvoLineWords(line, idx)}</div>
+        ${o.roman && line.spoken ? `<div class="font-mono text-[11px] sm:text-xs text-slate-300 select-text mt-0.5">${line.spoken}</div>` : ''}
+        ${o.english && line.meaning ? `<div class="text-[11px] sm:text-xs text-slate-400 select-text italic mt-1">${line.meaning}</div>` : ''}`;
     }
 
     // Generic chat bubble. o: { body, active, dim, label, onclick, tone, extras, anchor }
@@ -9654,14 +10922,27 @@
         ? 'bg-[#181c29] border-[#262d42] rounded-bl-md text-amber-300'
         : 'bg-[#10201f] border-emerald-500/30 rounded-br-md text-emerald-300');
       const ring = o.active ? (isA ? 'ring-2 ring-amber-400/80' : 'ring-2 ring-emerald-400/80') : '';
+      const speakerLabel = o.label === true ? meta.label : (o.label || meta.label);
       return `
         <div ${o.anchor ? 'id="convo-current-anchor"' : ''} class="flex items-end gap-2 ${isA ? '' : 'flex-row-reverse'} ${o.dim ? 'opacity-45 hover:opacity-100' : ''} transition-opacity scroll-mt-24 scroll-mb-32">
           <div class="w-8 h-8 shrink-0 rounded-full flex items-center justify-center text-base ${isA ? 'bg-amber-500/10 border border-amber-400/30' : 'bg-emerald-500/10 border border-emerald-400/30'}" title="${escapeConvoAttr(meta.label)}">${meta.emoji}</div>
           <div class="min-w-0 max-w-[82%] flex flex-col ${isA ? 'items-start' : 'items-end'}">
-            ${o.label ? `<span class="text-[10px] font-semibold mb-1 px-1 ${isA ? 'text-amber-300/80' : 'text-emerald-300/80'}">${o.label === true ? meta.label : o.label}</span>` : ''}
-            <div id="convo-line-bubble-${idx}" onclick="${o.onclick || `playConvoLineAudio(${idx}, this)`}"
-                 class="cursor-pointer select-none rounded-2xl border px-3.5 py-2.5 text-left transition-all hover:brightness-110 ${tone} ${ring}">
-              ${o.body || renderConvoText(line, idx, { roman: true, english: true })}
+            <div class="flex items-center justify-between gap-1.5 w-full mb-1 px-1">
+              <span class="text-[10px] font-semibold ${isA ? 'text-amber-300/80' : 'text-emerald-300/80'}">${speakerLabel}</span>
+              <button type="button" onclick="event.stopPropagation(); handleConvoBubbleContextMenu(event, ${idx})"
+                      class="opacity-60 hover:opacity-100 group-hover:opacity-100 p-0.5 px-1.5 rounded-md text-[10px] text-slate-400 hover:text-sky-300 hover:bg-white/10 transition-all cursor-pointer flex items-center gap-1 shrink-0"
+                      title="Right-click bubble or click here: Copy for Gemini Chat or Ask AI">
+                <span>✨</span>
+                <span class="text-[9px] uppercase tracking-wider font-semibold text-sky-400/90">Ref</span>
+              </button>
+            </div>
+            <div id="convo-line-bubble-${idx}"
+                 onclick="handleConvoBubbleClick(event, ${idx}, this${o.onclick ? `, () => { ${o.onclick}; }` : ''})"
+                 oncontextmenu="handleConvoBubbleContextMenu(event, ${idx})"
+                 class="phrase-ref-bubble group cursor-pointer select-text rounded-2xl border px-3.5 py-2.5 text-left transition-all hover:brightness-110 ${tone} ${ring}">
+              <div class="convo-bubble-text select-text">
+                ${o.body || renderConvoText(line, idx, { roman: true, english: true })}
+              </div>
             </div>
             ${o.extras ? `<div class="flex items-center gap-2 mt-1 px-1 text-[11px] flex-wrap ${isA ? '' : 'justify-end'}">${o.extras}</div>` : ''}
           </div>
@@ -9758,11 +11039,12 @@
       const showRoman = convoShowRomanInOptions(step);
       const opts = q.options.map((opt, oi) => `
         <div role="button" tabindex="0" onclick="handleConvoQuestionSelect(${q.qIdx}, '${opt.id}')"
-             class="flex items-center gap-2.5 p-2.5 rounded-xl border border-[#273047] bg-[#0f121b] hover:border-emerald-400/60 hover:bg-[#121a1f] cursor-pointer transition-all active:scale-[0.99]">
+             oncontextmenu="handleConvoOptionContextMenu(event, ${q.qIdx}, ${oi})"
+             class="flex items-center gap-2.5 p-2.5 rounded-xl border border-[#273047] bg-[#0f121b] hover:border-emerald-400/60 hover:bg-[#121a1f] cursor-pointer transition-all active:scale-[0.99] select-text">
           <span class="w-5 h-5 rounded-md bg-white/5 text-[10px] text-slate-400 font-mono flex items-center justify-center shrink-0">${oi + 1}</span>
-          <div class="min-w-0 flex-1 text-left">
-            <div  class="font-thai text-amber-200 font-bold text-sm sm:text-base leading-snug">${opt.script || opt.text}</div>
-            ${showRoman && opt.spoken ? `<div class="text-[11px] font-mono text-slate-400">${opt.spoken}</div>` : ''}
+          <div class="min-w-0 flex-1 text-left select-text">
+            <div class="font-thai text-amber-200 font-bold text-sm sm:text-base leading-snug select-text">${opt.script || opt.text}</div>
+            ${showRoman && opt.spoken ? `<div class="text-[11px] font-mono text-slate-400 select-text">${opt.spoken}</div>` : ''}
           </div>
           <button type="button" onclick="event.stopPropagation(); playConvoOptionAudio(${q.qIdx}, ${oi})"
                   class="w-8 h-8 rounded-lg bg-white/5 hover:bg-white/10 text-xs flex items-center justify-center shrink-0 cursor-pointer" title="Hear this reply">🔊</button>
@@ -9911,7 +11193,7 @@
       const title = step.nodeTitle || (step.sceneTitle || '').replace(/^.*•\s*/, '');
 
       // Start by playing the whole conversation when the module first opens
-      if (!skipAutoAudio && !step._autoPlayedOnce && step.phase === 'listen') {
+      if (!skipAutoAudio && !step._autoPlayedOnce && step.phase === 'listen' && !appState.muted) {
         step._autoPlayedOnce = true;
         setTimeout(() => {
           if (getActiveConvoStep() === step && step.phase === 'listen' && !convoPlayer.playing) {
@@ -10319,7 +11601,9 @@ Return ONLY valid JSON array of 3 exchange objects with exact keys:
       const msg = document.getElementById('lesson-feedback-msg');
       const actionBtn = document.getElementById('lesson-action-btn');
 
-      if (activeSession.nodeId && !appState.completedNodes.includes(activeSession.nodeId)) {
+      if (activeSession.isOntheFlyTest) {
+        // Dynamic on-the-fly test: metrics recorded without modifying curriculum node milestones
+      } else if (activeSession.nodeId && !appState.completedNodes.includes(activeSession.nodeId)) {
         appState.completedNodes.push(activeSession.nodeId);
       }
       saveState();
@@ -10481,8 +11765,30 @@ Return ONLY valid JSON array of 3 exchange objects with exact keys:
         return true;
       });
 
+      let heroHtml = '';
+      if (bankFilter.type === 'letter' || bankFilter.type === 'all') {
+        heroHtml = `
+          <div class="col-span-full bg-gradient-to-r from-sky-950/70 via-[#151926] to-amber-950/40 border border-sky-500/35 rounded-3xl p-5 sm:p-6 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-xl">
+            <div class="space-y-1.5 text-center sm:text-left">
+              <div class="flex items-center justify-center sm:justify-start gap-2">
+                <span class="w-8 h-8 rounded-xl bg-sky-500/20 border border-sky-400/40 text-sky-300 flex items-center justify-center font-bold text-base">⚡</span>
+                <h3 class="text-base font-bold text-white">Learn to Read from Your Letters</h3>
+                <span class="px-2 py-0.5 rounded-full bg-emerald-500/15 border border-emerald-400/35 text-emerald-300 text-[10px] font-bold">Adaptive Phonics</span>
+              </div>
+              <p class="text-xs text-slate-300 max-w-xl leading-relaxed">
+                Make an on-the-fly test built strictly from the letters and words you know. Tests your phonetic reading, with instant clues whenever an unknown letter or word meaning appears!
+              </p>
+            </div>
+            <button onclick="openOnTheFlyTestModal()" class="px-5 py-2.5 rounded-2xl bg-gradient-to-r from-sky-500 to-amber-400 hover:from-sky-400 hover:to-amber-300 text-[#0e0f12] text-xs font-bold transition-all shadow-lg shadow-sky-500/25 active:scale-95 shrink-0 flex items-center gap-2 cursor-pointer">
+              <span>⚡</span>
+              <span>Start Reading Test</span>
+            </button>
+          </div>
+        `;
+      }
+
       if (filtered.length === 0) {
-        grid.innerHTML = `
+        grid.innerHTML = heroHtml + `
           <div class="col-span-full bg-[#16181d] border border-[#242731] rounded-3xl p-8 text-center text-xs text-slate-400">
             No items match this filter yet. Complete a lesson node on the Path to populate your mastery stats!
           </div>
@@ -10490,7 +11796,7 @@ Return ONLY valid JSON array of 3 exchange objects with exact keys:
         return;
       }
 
-      grid.innerHTML = filtered.map(item => {
+      grid.innerHTML = heroHtml + filtered.map(item => {
         const st = item.stat;
         const badgeStyles = {
           mastered: 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30',
@@ -12453,6 +13759,7 @@ Examples:
       initSpeech();
       loadState();
       updatePaceUI();
+      updateMuteUI();
       updateTopMetricsUI();
       updateTrackUI();
       renderSkillTree();
