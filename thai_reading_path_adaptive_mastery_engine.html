@@ -7926,29 +7926,17 @@
               </button>
               <div class="text-sm font-bold text-amber-300/90 font-thai select-text">${item.thai || ''}</div>
               <div class="text-base sm:text-lg font-bold text-emerald-300 select-text">${item.meaning}</div>
-              <div class="pt-1 flex justify-center">
-                <button type="button" onclick="handleSpotlightContextMenu(event)" class="px-2.5 py-1 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 text-sky-300 hover:text-white text-[11px] font-semibold transition-all cursor-pointer flex items-center gap-1.5" title="Right-click phrase or click here to reference in Gemini Chat">
+              <div class="pt-0.5 flex justify-center">
+                <button type="button" onclick="handleSpotlightContextMenu(event)" class="w-7 h-7 rounded-full bg-white/5 hover:bg-white/15 border border-white/10 text-sky-300 hover:text-white text-xs transition-all cursor-pointer flex items-center justify-center hover:scale-110 active:scale-95" title="Copy for Gemini Chat / Ask AI">
                   <span>✨</span>
-                  <span>Copy / Ask Gemini</span>
                 </button>
               </div>
             </div>
 
             <!-- Words Breakdown (shown for compound phrases) -->
             ${item.words && item.words.length > 1 ? `
-              <div class="pt-3 border-t border-[#1f2330]">
-                <div class="text-[11px] text-slate-400 mb-2">Tap or hover words to hear each part:</div>
+              <div class="pt-2.5 border-t border-[#1f2330]">
                 ${renderInteractiveWords(item)}
-              </div>
-            ` : ''}
-
-            <!-- Short Setting / Location Hint (Minimal & Clean) -->
-            ${(item.scene || item.theme || item.category) ? `
-              <div class="pt-1 flex justify-center">
-                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-slate-400 text-xs">
-                  <span>📍</span>
-                  <span>Used in: <strong class="text-slate-300 font-medium">${item.scene || item.theme || item.category}</strong></span>
-                </span>
               </div>
             ` : ''}
           </div>
@@ -10930,10 +10918,9 @@
             <div class="flex items-center justify-between gap-1.5 w-full mb-1 px-1">
               <span class="text-[10px] font-semibold ${isA ? 'text-amber-300/80' : 'text-emerald-300/80'}">${speakerLabel}</span>
               <button type="button" onclick="event.stopPropagation(); handleConvoBubbleContextMenu(event, ${idx})"
-                      class="opacity-60 hover:opacity-100 group-hover:opacity-100 p-0.5 px-1.5 rounded-md text-[10px] text-slate-400 hover:text-sky-300 hover:bg-white/10 transition-all cursor-pointer flex items-center gap-1 shrink-0"
+                      class="opacity-40 hover:opacity-100 group-hover:opacity-100 w-5 h-5 rounded-md text-[11px] text-slate-400 hover:text-sky-300 hover:bg-white/10 transition-all cursor-pointer flex items-center justify-center shrink-0"
                       title="Right-click bubble or click here: Copy for Gemini Chat or Ask AI">
                 <span>✨</span>
-                <span class="text-[9px] uppercase tracking-wider font-semibold text-sky-400/90">Ref</span>
               </button>
             </div>
             <div id="convo-line-bubble-${idx}"
