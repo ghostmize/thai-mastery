@@ -6737,14 +6737,8 @@
     let hoverAudioTimer = null;
     let scenarioAudioUtterance = null;
     let scenarioAudioTimeout = null;
-
-    function playHoverAudio(text) {
-      if ('ontouchstart' in window || navigator.maxTouchPoints > 0) return; // Do not fire hover on touch/mobile
-      clearTimeout(hoverAudioTimer);
-      hoverAudioTimer = setTimeout(() => {
-        playHebrewAudio(text);
-      }, 120);
-    }
+    let scenarioAudioSeqCounter = 0;
+    let currentScenarioAudioSeqId = 0;
 
     function playHoverAudio(text) {
       if ('ontouchstart' in window || navigator.maxTouchPoints > 0) return; // Do not fire hover on touch/mobile
@@ -6774,18 +6768,23 @@
     }
 
     function stopAllAudio() {
+      currentScenarioAudioSeqId = 0;
       if (scenarioAudioTimeout) {
         clearTimeout(scenarioAudioTimeout);
         scenarioAudioTimeout = null;
       }
       if (typeof currentAudio !== 'undefined' && currentAudio) {
-        try { currentAudio.pause(); } catch(e) {}
+        try {
+          currentAudio.pause();
+          currentAudio.currentTime = 0;
+        } catch(e) {}
         currentAudio = null;
       }
       if ('speechSynthesis' in window) {
         try { window.speechSynthesis.cancel(); } catch(e) {}
       }
       scenarioAudioUtterance = null;
+      highlightPromptHebrewBadge(false);
       updateScenarioAudioUI(false);
     }
 
@@ -6847,33 +6846,83 @@
       updateScenarioAudioUI(false);
     }
 
-    function cleanScenarioPromptForSpeech(text, item = null) {
+    function cleanHebrewEnChunk(text) {
       if (!text) return '';
       let t = text;
+      // Remove empty parens, brackets, orphan quotes
+      t = t.replace(/\(\s*\)/g, '');
+      t = t.replace(/['"‘“]\s*['"’”]/g, '');
+      t = t.replace(/\[\s*\]/g, '');
+      t = t.replace(/\s{2,}/g, ' ');
+      t = t.replace(/^[\s,;:.!\-–—"‘“'”]+/, '');
+      t = t.replace(/[\s,;:\-–—"‘“'”]+$/, '');
+      return t.trim();
+    }
 
-      // 1. Quoted Hebrew followed by English translation in parentheses: e.g. 'שלום' (hello)
-      t = t.replace(/['"‘“][\u0590-\u05ff\s\d!?.,]+['"’”]?\s*\([^)]*?['"‘“]([^'"‘“’”]+)['"’”]?\s*\)/g, "'$1'");
-      t = t.replace(/['"‘“][\u0590-\u05ff\s\d!?.,]+['"’”]?\s*\(([^)]+)\)/g, "'$1'");
+    function cleanScenarioPromptForSpeech(text, item = null) {
+      const segs = segmentHebrewScenarioPrompt(text, item);
+      return segs.map(s => s.text).join(' ');
+    }
 
-      // 2. If item has spoken/transliteration
-      if (item) {
-        const spoken = (item.spoken || item.transliteration || item.roman || '').replace(/['"]/g, '').trim();
-        if (spoken) {
-          t = t.replace(/['"‘“][\u0590-\u05ff\s\d!?.,]+['"’”]/g, `'${spoken}'`);
+    function segmentHebrewScenarioPrompt(promptRaw, item = null) {
+      if (!promptRaw) return [];
+      const segments = [];
+      // Match Hebrew text, optional enclosing quotes, and optional trailing parens:
+      // e.g. 'פִּיתָה אוֹ לַאפָה?' (Pita or lafa?)
+      const hebrewRegex = /(?:['"‘“]?\s*[\u0590-\u05ff][\u0590-\u05ff\s\d!?.,-]*\s*['"’”]?)(?:\s*\([^)]*\))?/g;
+      let lastIndex = 0;
+      let match;
+
+      while ((match = hebrewRegex.exec(promptRaw)) !== null) {
+        const matchStart = match.index;
+        const matchEnd = match.index + match[0].length;
+
+        if (matchStart > lastIndex) {
+          const enBefore = cleanHebrewEnChunk(promptRaw.substring(lastIndex, matchStart));
+          if (enBefore && /[a-zA-Z0-9]/.test(enBefore)) {
+            segments.push({ lang: 'en', text: enBefore });
+          }
+        }
+
+        const matchedChunk = match[0];
+        const hebMatch = matchedChunk.match(/[\u0590-\u05ff][\u0590-\u05ff\s\d!?.,-]*/);
+        const hebClean = hebMatch ? hebMatch[0].trim() : '';
+
+        if (hebClean) {
+          segments.push({
+            lang: 'he',
+            text: hebClean,
+            original: matchedChunk
+          });
+        }
+
+        lastIndex = matchEnd;
+      }
+
+      if (lastIndex < promptRaw.length) {
+        const enAfter = cleanHebrewEnChunk(promptRaw.substring(lastIndex));
+        if (enAfter && /[a-zA-Z0-9]/.test(enAfter)) {
+          segments.push({ lang: 'en', text: enAfter });
         }
       }
 
-      // 3. Remove remaining Hebrew in quotes or bare Hebrew
-      t = t.replace(/['"‘“][\u0590-\u05ff\s\d!?.,]+['"’”]/g, '');
-      t = t.replace(/[\u0590-\u05ff]+/g, '');
+      if (segments.length === 0) {
+        const clean = cleanHebrewEnChunk(promptRaw);
+        if (clean) segments.push({ lang: 'en', text: clean });
+      }
 
-      // 4. Clean empty brackets or dangling punctuation
-      t = t.replace(/\(\s*\)/g, '');
-      t = t.replace(/['"‘“]\s*['"’”]/g, '');
-      t = t.replace(/\s*:\s*:/g, ':');
-      t = t.replace(/\s{2,}/g, ' ').trim();
+      return segments;
+    }
 
-      return t;
+    function highlightPromptHebrewBadge(active) {
+      const badges = document.querySelectorAll('#prompt-hebrew-badge, .prompt-hebrew-badge-btn');
+      badges.forEach(b => {
+        if (active) {
+          b.classList.add('ring-2', 'ring-amber-400', 'bg-amber-400/40', 'scale-105', 'shadow-lg');
+        } else {
+          b.classList.remove('ring-2', 'ring-amber-400', 'bg-amber-400/40', 'scale-105', 'shadow-lg');
+        }
+      });
     }
 
     function updateScenarioAudioUI(isPlaying) {
@@ -6903,66 +6952,17 @@
       }
     }
 
-    function playScenarioIntroAudio(promptRaw, item, onDone = null) {
-      if (appState.muted) {
-        updateScenarioAudioUI(false);
+    function playEnglishUtterance(text, onComplete) {
+      if (appState.muted) return;
+      const clean = (text || '').replace(/\.\.\./g, '').trim();
+      if (!clean) {
+        onComplete();
         return;
       }
-      stopAllAudio();
 
-      const cleanText = cleanScenarioPromptForSpeech(promptRaw, item);
-      if (!cleanText) return;
-
-      updateScenarioAudioUI(true);
-
-      // Primary: Web Speech API (SpeechSynthesis) for English situation narration
-      if ('speechSynthesis' in window) {
-        try {
-          window.speechSynthesis.cancel();
-          const utter = new SpeechSynthesisUtterance(cleanText);
-          utter.lang = 'en-US';
-          utter.rate = (appState.audioSpeed || 1.0) * 0.95;
-          utter.pitch = 1.0;
-
-          const voices = window.speechSynthesis.getVoices();
-          const enVoice = englishVoice || voices.find(v => v.lang && (v.lang.toLowerCase() === 'en-us' || v.lang.toLowerCase() === 'en_us'))
-            || voices.find(v => v.lang && (v.lang.toLowerCase().startsWith('en') || v.lang.toLowerCase().includes('en')))
-            || null;
-          if (enVoice) utter.voice = enVoice;
-
-          utter.onstart = () => {
-            updateScenarioAudioUI(true);
-          };
-
-          utter.onend = () => {
-            updateScenarioAudioUI(false);
-            if (typeof onDone === 'function') onDone();
-          };
-
-          utter.onerror = (e) => {
-            console.warn('SpeechSynthesis error:', e);
-            updateScenarioAudioUI(false);
-            playGoogleTtsEnglish(cleanText, onDone);
-          };
-
-          scenarioAudioUtterance = utter;
-          window.speechSynthesis.speak(utter);
-          return;
-        } catch (e) {
-          console.warn('SpeechSynthesis exception:', e);
-        }
-      }
-
-      // Fallback: Google Translate TTS stream
-      playGoogleTtsEnglish(cleanText, onDone);
-    }
-
-    function playGoogleTtsEnglish(text, onDone = null) {
-      if (appState.muted) {
-        updateScenarioAudioUI(false);
-        return;
-      }
-      const slice = text.length > 180 ? text.slice(0, 180).replace(/\s+\S*$/, '...') : text;
+      // PRIMARY: High-fidelity Google Translate Neural English narrator
+      // Provides authentic, natural, human-sounding narration (matches Hebrew voice quality)
+      const slice = clean.length > 180 ? clean.slice(0, 180).replace(/\s+\S*$/, '...') : clean;
       const url = `https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&tl=en&q=${encodeURIComponent(slice)}`;
       const audio = new Audio();
       audio.referrerPolicy = 'no-referrer';
@@ -6970,19 +6970,196 @@
       audio.playbackRate = appState.audioSpeed || 1.0;
       currentAudio = audio;
 
-      audio.onplay = () => updateScenarioAudioUI(true);
-      audio.onended = () => {
-        updateScenarioAudioUI(false);
-        if (typeof onDone === 'function') onDone();
+      let called = false;
+      const done = () => {
+        if (called) return;
+        called = true;
+        if (currentAudio === audio) currentAudio = null;
+        onComplete();
       };
+
+      audio.onended = done;
       audio.onerror = () => {
-        updateScenarioAudioUI(false);
+        if (called) return;
+        speakWithWebSpeechEnglishDirect(slice, appState.audioSpeed || 1.0, done);
       };
 
       const p = audio.play();
       if (p !== undefined) {
-        p.catch(() => updateScenarioAudioUI(false));
+        p.catch(() => {
+          if (called) return;
+          speakWithWebSpeechEnglishDirect(slice, appState.audioSpeed || 1.0, done);
+        });
       }
+    }
+
+    function speakWithWebSpeechEnglishDirect(text, rate, onComplete) {
+      if ('speechSynthesis' in window) {
+        try {
+          window.speechSynthesis.cancel();
+          const utter = new SpeechSynthesisUtterance(text);
+          utter.lang = 'en-US';
+          utter.rate = rate * 0.95;
+          utter.pitch = 1.0;
+
+          const voices = window.speechSynthesis.getVoices();
+          // Prefer natural female English voice if available in system
+          const enVoice = englishVoice
+            || voices.find(v => v.lang && (v.lang.toLowerCase() === 'en-us' || v.lang.toLowerCase() === 'en_us') && /female|zira|samantha|karen|victoria|natural/i.test(v.name))
+            || voices.find(v => v.lang && (v.lang.toLowerCase() === 'en-us' || v.lang.toLowerCase() === 'en_us'))
+            || voices.find(v => v.lang && v.lang.toLowerCase().startsWith('en'))
+            || null;
+          if (enVoice) utter.voice = enVoice;
+
+          let called = false;
+          const done = () => {
+            if (called) return;
+            called = true;
+            scenarioAudioUtterance = null;
+            onComplete();
+          };
+
+          utter.onend = done;
+          utter.onerror = done;
+
+          scenarioAudioUtterance = utter;
+          window.speechSynthesis.speak(utter);
+          return;
+        } catch(e) {
+          console.warn('SpeechSynthesis offline fallback error:', e);
+        }
+      }
+      onComplete();
+    }
+
+    function playHebrewAudioDirect(text, onComplete) {
+      if (appState.muted) return;
+      let clean = (text || '').replace(/\.\.\./g, '').trim();
+      clean = clean.replace(/\([^)]*\)/g, '').replace(/[A-Za-z]/g, '').trim();
+      clean = clean.replace(/^[\s!?,.:;]+/g, '').replace(/[\s!?,.:;]+$/g, '').trim();
+      if (!clean) {
+        onComplete();
+        return;
+      }
+
+      highlightPromptHebrewBadge(true);
+
+      let called = false;
+      const done = () => {
+        if (called) return;
+        called = true;
+        highlightPromptHebrewBadge(false);
+        if (currentAudio) currentAudio = null;
+        onComplete();
+      };
+
+      const targetRate = appState.audioSpeed || 1.0;
+      const url = `https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&tl=iw&q=${encodeURIComponent(clean)}`;
+      const audio = new Audio();
+      audio.referrerPolicy = 'no-referrer';
+      audio.src = url;
+      audio.playbackRate = targetRate;
+      currentAudio = audio;
+
+      audio.onended = done;
+      audio.onerror = () => {
+        speakWithHebrewWebSpeechDirect(clean, targetRate, done);
+      };
+
+      const p = audio.play();
+      if (p !== undefined) {
+        p.catch(() => {
+          speakWithHebrewWebSpeechDirect(clean, targetRate, done);
+        });
+      }
+    }
+
+    function speakWithHebrewWebSpeechDirect(clean, rate, onComplete) {
+      if ('speechSynthesis' in window) {
+        try {
+          window.speechSynthesis.cancel();
+          const utter = new SpeechSynthesisUtterance(clean);
+          if (hebrewVoice) utter.voice = hebrewVoice;
+          utter.lang = 'he-IL';
+          utter.rate = rate || appState.audioSpeed || 1.0;
+
+          let called = false;
+          const done = () => {
+            if (called) return;
+            called = true;
+            highlightPromptHebrewBadge(false);
+            scenarioAudioUtterance = null;
+            onComplete();
+          };
+
+          utter.onend = done;
+          utter.onerror = done;
+          scenarioAudioUtterance = utter;
+          window.speechSynthesis.speak(utter);
+          return;
+        } catch(e) {
+          console.warn('Web Speech Hebrew direct error:', e);
+        }
+      }
+      highlightPromptHebrewBadge(false);
+      onComplete();
+    }
+
+    function playScenarioIntroAudio(promptRaw, item, onDone = null) {
+      if (appState.muted) {
+        updateScenarioAudioUI(false);
+        return;
+      }
+      stopAllAudio();
+
+      const segments = segmentHebrewScenarioPrompt(promptRaw, item);
+      if (!segments || segments.length === 0) {
+        updateScenarioAudioUI(false);
+        return;
+      }
+
+      const seqId = ++scenarioAudioSeqCounter;
+      currentScenarioAudioSeqId = seqId;
+      updateScenarioAudioUI(true);
+
+      let currentIdx = 0;
+
+      function runNextSegment() {
+        if (currentScenarioAudioSeqId !== seqId || appState.muted) {
+          updateScenarioAudioUI(false);
+          highlightPromptHebrewBadge(false);
+          return;
+        }
+
+        if (currentIdx >= segments.length) {
+          updateScenarioAudioUI(false);
+          highlightPromptHebrewBadge(false);
+          currentScenarioAudioSeqId = 0;
+          if (typeof onDone === 'function') onDone();
+          return;
+        }
+
+        const seg = segments[currentIdx++];
+        if (seg.lang === 'he') {
+          playHebrewAudioDirect(seg.text, () => {
+            if (currentScenarioAudioSeqId === seqId && !appState.muted) {
+              scenarioAudioTimeout = setTimeout(runNextSegment, 180);
+            } else {
+              updateScenarioAudioUI(false);
+            }
+          });
+        } else {
+          playEnglishUtterance(seg.text, () => {
+            if (currentScenarioAudioSeqId === seqId && !appState.muted) {
+              scenarioAudioTimeout = setTimeout(runNextSegment, 120);
+            } else {
+              updateScenarioAudioUI(false);
+            }
+          });
+        }
+      }
+
+      runNextSegment();
     }
 
     function toggleScenarioIntroAudio() {
@@ -6991,7 +7168,7 @@
         replayCurrentScenarioIntro();
         return;
       }
-      const isSpeaking = ('speechSynthesis' in window && window.speechSynthesis.speaking) || (currentAudio && !currentAudio.paused);
+      const isSpeaking = ('speechSynthesis' in window && window.speechSynthesis.speaking) || (currentAudio && !currentAudio.paused) || currentScenarioAudioSeqId > 0;
       if (isSpeaking) {
         stopAllAudio();
         updateScenarioAudioUI(false);
@@ -7006,16 +7183,7 @@
       if (!step || step.type !== 'street_listening_drill') return;
       const item = step.target;
       const promptRaw = step.prompt || 'Listen carefully: What does the speaker mean?';
-      const diag = item?.dialogue;
-      const isSelf = !!(diag && diag.speakerA && diag.speakerA.includes('You'));
-      const hasHebrewInPrompt = /[\u0590-\u05ff]/.test(promptRaw);
-      const hasIncomingDialogue = !!(diag && (diag.lineHebrewA || diag.hebrew) && hasHebrewInPrompt && !isSelf);
-
-      playScenarioIntroAudio(promptRaw, item, () => {
-        if (hasIncomingDialogue && !step.answered && !appState.muted) {
-          setTimeout(() => playStreetItemAudio(item.id, 'drill_prompt'), 300);
-        }
-      });
+      playScenarioIntroAudio(promptRaw, item);
     }
 
     function playHebrewAudio(text, btnEl = null, customRate = null) {
@@ -8549,13 +8717,13 @@
         const incomingAudio = (diag && (diag.ttsA || diag.lineHebrewA)) ? (diag.ttsA || diag.lineHebrewA) : (item.situationAudio || item.tts || item.hebrew);
 
         // Auto-read scenario intro out loud (unless audio is muted by user!)
+        if (scenarioAudioTimeout) {
+          clearTimeout(scenarioAudioTimeout);
+          scenarioAudioTimeout = null;
+        }
         if (!step.answered && !appState.muted && appState.autoReadScenario !== false) {
           scenarioAudioTimeout = setTimeout(() => {
-            playScenarioIntroAudio(promptRaw, item, () => {
-              if (hasIncomingDialogue && incomingAudio && !step.answered && !appState.muted) {
-                setTimeout(() => playStreetItemAudio(item.id, 'drill_prompt'), 300);
-              }
-            });
+            playScenarioIntroAudio(promptRaw, item);
           }, 250);
         } else if (!step.answered && !appState.muted && hasIncomingDialogue && incomingAudio) {
           scenarioAudioTimeout = setTimeout(() => playStreetItemAudio(item.id, 'drill_prompt'), 250);
@@ -8567,7 +8735,7 @@
         formattedPrompt = promptRaw.replace(quoteHebrewRegex, (match, cleanHeb) => {
           const safeHeb = cleanHeb.trim();
           const safeAudio = (incomingAudio || safeHeb).replace(/'/g, "\\'");
-          return `<bdi class="inline-block mx-1 my-0.5 align-middle"><button type="button" onclick="playHebrewAudio('${safeAudio}', this)" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-2xl bg-amber-400/25 hover:bg-amber-400/40 text-amber-300 border border-amber-400/50 text-base sm:text-lg font-hebrew font-bold transition-all cursor-pointer shadow-md active:scale-95 group" dir="rtl" title="לחץ לשמיעה / Click to hear audio"><span class="text-xs text-amber-400">🔊</span><span class="underline decoration-dotted group-hover:text-amber-200 font-hebrew font-bold" dir="rtl">${safeHeb}</span></button></bdi>`;
+          return `<bdi class="inline-block mx-1 my-0.5 align-middle"><button type="button" id="prompt-hebrew-badge" class="prompt-hebrew-badge-btn inline-flex items-center gap-1.5 px-3 py-1 rounded-2xl bg-amber-400/25 hover:bg-amber-400/40 text-amber-300 border border-amber-400/50 text-base sm:text-lg font-hebrew font-bold transition-all cursor-pointer shadow-md active:scale-95 group" onclick="playHebrewAudio('${safeAudio}', this)" dir="rtl" title="לחץ לשמיעה / Click to hear audio"><span class="text-xs text-amber-400">🔊</span><span class="underline decoration-dotted group-hover:text-amber-200 font-hebrew font-bold" dir="rtl">${safeHeb}</span></button></bdi>`;
         });
 
         if (lvl >= 3 && hasIncomingDialogue) {

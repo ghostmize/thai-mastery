@@ -5087,6 +5087,8 @@
     let hoverAudioTimer = null;
     let scenarioAudioUtterance = null;
     let scenarioAudioTimeout = null;
+    let scenarioAudioSeqCounter = 0;
+    let currentScenarioAudioSeqId = 0;
 
     function playHoverAudio(text) {
       if ('ontouchstart' in window || navigator.maxTouchPoints > 0) return; // Do not fire hover on touch/mobile
@@ -5115,18 +5117,23 @@
     }
 
     function stopAllAudio() {
+      currentScenarioAudioSeqId = 0;
       if (scenarioAudioTimeout) {
         clearTimeout(scenarioAudioTimeout);
         scenarioAudioTimeout = null;
       }
       if (typeof currentAudio !== 'undefined' && currentAudio) {
-        try { currentAudio.pause(); } catch(e) {}
+        try {
+          currentAudio.pause();
+          currentAudio.currentTime = 0;
+        } catch(e) {}
         currentAudio = null;
       }
       if ('speechSynthesis' in window) {
         try { window.speechSynthesis.cancel(); } catch(e) {}
       }
       scenarioAudioUtterance = null;
+      highlightPromptThaiBadge(false);
       updateScenarioAudioUI(false);
     }
 
@@ -5188,37 +5195,84 @@
       updateScenarioAudioUI(false);
     }
 
-    function cleanScenarioPromptForSpeech(text, item = null) {
+    function cleanEnChunk(text) {
       if (!text) return '';
       let t = text;
+      // Remove empty parens, brackets, orphan quotes
+      t = t.replace(/\(\s*\)/g, '');
+      t = t.replace(/['"‘“]\s*['"’”]/g, '');
+      t = t.replace(/\[\s*\]/g, '');
+      t = t.replace(/\s{2,}/g, ' ');
+      t = t.replace(/^[\s,;:.!\-–—"‘“'”]+/, '');
+      t = t.replace(/[\s,;:\-–—"‘“'”]+$/, '');
+      return t.trim();
+    }
 
-      // 1. Quoted Thai followed by English translation in parentheses: e.g. 'เอาเส้นอะไร?' (ao sên à-rai? — 'What noodles do you want?')
-      t = t.replace(/['"‘“][\u0e00-\u0e7f\s\d!?.,]+['"’”]?\s*\([^)]*?['"‘“]([^'"‘“’”]+)['"’”]?\s*\)/g, "'$1'");
+    function cleanScenarioPromptForSpeech(text, item = null) {
+      const segs = segmentScenarioPrompt(text, item);
+      return segs.map(s => s.text).join(' ');
+    }
 
-      // 2. Quoted Thai followed by phonetic/translation in parentheses: e.g. 'กินนี่หรือใส่ห่อ?' (Eat here or wrap to go?)
-      t = t.replace(/['"‘“][\u0e00-\u0e7f\s\d!?.,]+['"’”]?\s*\(([^)]+)\)/g, "'$1'");
+    function segmentScenarioPrompt(promptRaw, item = null) {
+      if (!promptRaw) return [];
+      const segments = [];
+      // Match Thai text, optional enclosing quotes, and optional trailing parens:
+      // e.g. 'รับถุงไหมคะ?' (Do you want a plastic bag?)
+      // e.g. 'เอาเส้นอะไร?' (ao sên à-rai? — 'What noodles do you want?')
+      const thaiRegex = /(?:['"‘“]?\s*[\u0e00-\u0e7f][\u0e00-\u0e7f\s\d!?.,-]*\s*['"’”]?)(?:\s*\([^)]*\))?/g;
+      let lastIndex = 0;
+      let match;
 
-      // 3. If item has spoken/romanization and prompt has isolated Thai in quotes: e.g. 'ครับ' -> 'kháp'
-      if (item) {
-        const spoken = (item.spoken || item.roman || '').replace(/['"]/g, '').trim();
-        if (spoken) {
-          t = t.replace(/['"‘“][\u0e00-\u0e7f\s\d!?.,]+['"’”]/g, `'${spoken}'`);
+      while ((match = thaiRegex.exec(promptRaw)) !== null) {
+        const matchStart = match.index;
+        const matchEnd = match.index + match[0].length;
+
+        if (matchStart > lastIndex) {
+          const enBefore = cleanEnChunk(promptRaw.substring(lastIndex, matchStart));
+          if (enBefore && /[a-zA-Z0-9]/.test(enBefore)) {
+            segments.push({ lang: 'en', text: enBefore });
+          }
+        }
+
+        const matchedChunk = match[0];
+        const thaiMatch = matchedChunk.match(/[\u0e00-\u0e7f][\u0e00-\u0e7f\s\d!?.,-]*/);
+        const thaiClean = thaiMatch ? thaiMatch[0].trim() : '';
+
+        if (thaiClean) {
+          segments.push({
+            lang: 'th',
+            text: thaiClean,
+            original: matchedChunk
+          });
+        }
+
+        lastIndex = matchEnd;
+      }
+
+      if (lastIndex < promptRaw.length) {
+        const enAfter = cleanEnChunk(promptRaw.substring(lastIndex));
+        if (enAfter && /[a-zA-Z0-9]/.test(enAfter)) {
+          segments.push({ lang: 'en', text: enAfter });
         }
       }
 
-      // 4. Remove any remaining quoted Thai phrases
-      t = t.replace(/['"‘“][\u0e00-\u0e7f\s\d!?.,]+['"’”]/g, '');
+      if (segments.length === 0) {
+        const clean = cleanEnChunk(promptRaw);
+        if (clean) segments.push({ lang: 'en', text: clean });
+      }
 
-      // 5. Remove any leftover Thai characters
-      t = t.replace(/[\u0e00-\u0e7f]+/g, '');
+      return segments;
+    }
 
-      // 6. Clean empty brackets or dangling punctuation
-      t = t.replace(/\(\s*\)/g, '');
-      t = t.replace(/['"‘“]\s*['"’”]/g, '');
-      t = t.replace(/\s*:\s*:/g, ':');
-      t = t.replace(/\s{2,}/g, ' ').trim();
-
-      return t;
+    function highlightPromptThaiBadge(active) {
+      const badges = document.querySelectorAll('#prompt-thai-badge, .prompt-thai-badge-btn');
+      badges.forEach(b => {
+        if (active) {
+          b.classList.add('ring-2', 'ring-amber-400', 'bg-amber-400/40', 'scale-105', 'shadow-lg');
+        } else {
+          b.classList.remove('ring-2', 'ring-amber-400', 'bg-amber-400/40', 'scale-105', 'shadow-lg');
+        }
+      });
     }
 
     function updateScenarioAudioUI(isPlaying) {
@@ -5248,66 +5302,17 @@
       }
     }
 
-    function playScenarioIntroAudio(promptRaw, item, onDone = null) {
-      if (appState.muted) {
-        updateScenarioAudioUI(false);
+    function playEnglishUtterance(text, onComplete) {
+      if (appState.muted) return;
+      const clean = (text || '').replace(/\.\.\./g, '').trim();
+      if (!clean) {
+        onComplete();
         return;
       }
-      stopAllAudio();
 
-      const cleanText = cleanScenarioPromptForSpeech(promptRaw, item);
-      if (!cleanText) return;
-
-      updateScenarioAudioUI(true);
-
-      // Primary: Web Speech API (SpeechSynthesis) for English situation narration
-      if ('speechSynthesis' in window) {
-        try {
-          window.speechSynthesis.cancel();
-          const utter = new SpeechSynthesisUtterance(cleanText);
-          utter.lang = 'en-US';
-          utter.rate = (appState.audioSpeed || 1.0) * 0.95;
-          utter.pitch = 1.0;
-
-          const voices = window.speechSynthesis.getVoices();
-          const enVoice = englishVoice || voices.find(v => v.lang && (v.lang.toLowerCase() === 'en-us' || v.lang.toLowerCase() === 'en_us'))
-            || voices.find(v => v.lang && (v.lang.toLowerCase().startsWith('en') || v.lang.toLowerCase().includes('en')))
-            || null;
-          if (enVoice) utter.voice = enVoice;
-
-          utter.onstart = () => {
-            updateScenarioAudioUI(true);
-          };
-
-          utter.onend = () => {
-            updateScenarioAudioUI(false);
-            if (typeof onDone === 'function') onDone();
-          };
-
-          utter.onerror = (e) => {
-            console.warn('SpeechSynthesis error:', e);
-            updateScenarioAudioUI(false);
-            playGoogleTtsEnglish(cleanText, onDone);
-          };
-
-          scenarioAudioUtterance = utter;
-          window.speechSynthesis.speak(utter);
-          return;
-        } catch (e) {
-          console.warn('SpeechSynthesis exception:', e);
-        }
-      }
-
-      // Fallback: Google Translate TTS stream
-      playGoogleTtsEnglish(cleanText, onDone);
-    }
-
-    function playGoogleTtsEnglish(text, onDone = null) {
-      if (appState.muted) {
-        updateScenarioAudioUI(false);
-        return;
-      }
-      const slice = text.length > 180 ? text.slice(0, 180).replace(/\s+\S*$/, '...') : text;
+      // PRIMARY: High-fidelity Google Translate Neural English narrator
+      // Provides authentic, natural, human-sounding narration (matches Thai/Hebrew voice quality)
+      const slice = clean.length > 180 ? clean.slice(0, 180).replace(/\s+\S*$/, '...') : clean;
       const url = `https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&tl=en&q=${encodeURIComponent(slice)}`;
       const audio = new Audio();
       audio.referrerPolicy = 'no-referrer';
@@ -5315,19 +5320,194 @@
       audio.playbackRate = appState.audioSpeed || 1.0;
       currentAudio = audio;
 
-      audio.onplay = () => updateScenarioAudioUI(true);
-      audio.onended = () => {
-        updateScenarioAudioUI(false);
-        if (typeof onDone === 'function') onDone();
+      let called = false;
+      const done = () => {
+        if (called) return;
+        called = true;
+        if (currentAudio === audio) currentAudio = null;
+        onComplete();
       };
+
+      audio.onended = done;
       audio.onerror = () => {
-        updateScenarioAudioUI(false);
+        if (called) return;
+        speakWithWebSpeechEnglishDirect(slice, appState.audioSpeed || 1.0, done);
       };
 
       const p = audio.play();
       if (p !== undefined) {
-        p.catch(() => updateScenarioAudioUI(false));
+        p.catch(() => {
+          if (called) return;
+          speakWithWebSpeechEnglishDirect(slice, appState.audioSpeed || 1.0, done);
+        });
       }
+    }
+
+    function speakWithWebSpeechEnglishDirect(text, rate, onComplete) {
+      if ('speechSynthesis' in window) {
+        try {
+          window.speechSynthesis.cancel();
+          const utter = new SpeechSynthesisUtterance(text);
+          utter.lang = 'en-US';
+          utter.rate = rate * 0.95;
+          utter.pitch = 1.0;
+
+          const voices = window.speechSynthesis.getVoices();
+          // Prefer natural female English voice if available in system
+          const enVoice = englishVoice
+            || voices.find(v => v.lang && (v.lang.toLowerCase() === 'en-us' || v.lang.toLowerCase() === 'en_us') && /female|zira|samantha|karen|victoria|natural/i.test(v.name))
+            || voices.find(v => v.lang && (v.lang.toLowerCase() === 'en-us' || v.lang.toLowerCase() === 'en_us'))
+            || voices.find(v => v.lang && v.lang.toLowerCase().startsWith('en'))
+            || null;
+          if (enVoice) utter.voice = enVoice;
+
+          let called = false;
+          const done = () => {
+            if (called) return;
+            called = true;
+            scenarioAudioUtterance = null;
+            onComplete();
+          };
+
+          utter.onend = done;
+          utter.onerror = done;
+
+          scenarioAudioUtterance = utter;
+          window.speechSynthesis.speak(utter);
+          return;
+        } catch(e) {
+          console.warn('SpeechSynthesis offline fallback error:', e);
+        }
+      }
+      onComplete();
+    }
+
+    function playThaiAudioDirect(text, onComplete) {
+      if (appState.muted) return;
+      const clean = (text || '').replace(/\.\.\./g, '').trim();
+      if (!clean) {
+        onComplete();
+        return;
+      }
+
+      highlightPromptThaiBadge(true);
+
+      let called = false;
+      const done = () => {
+        if (called) return;
+        called = true;
+        highlightPromptThaiBadge(false);
+        if (currentAudio) currentAudio = null;
+        onComplete();
+      };
+
+      const rateToUse = appState.audioSpeed || 1.0;
+      const url = `https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&tl=th&q=${encodeURIComponent(clean)}`;
+      const audio = new Audio();
+      audio.referrerPolicy = 'no-referrer';
+      audio.src = url;
+      audio.playbackRate = rateToUse;
+      currentAudio = audio;
+
+      audio.onended = done;
+      audio.onerror = () => {
+        speakWithWebSpeechDirect(clean, rateToUse, done);
+      };
+
+      const p = audio.play();
+      if (p !== undefined) {
+        p.catch(() => {
+          speakWithWebSpeechDirect(clean, rateToUse, done);
+        });
+      }
+    }
+
+    function speakWithWebSpeechDirect(clean, rate, onComplete) {
+      if ('speechSynthesis' in window) {
+        try {
+          window.speechSynthesis.cancel();
+          const utter = new SpeechSynthesisUtterance(clean);
+          if (thaiVoice) utter.voice = thaiVoice;
+          utter.lang = 'th-TH';
+          utter.rate = rate || appState.audioSpeed || 1.0;
+
+          let called = false;
+          const done = () => {
+            if (called) return;
+            called = true;
+            highlightPromptThaiBadge(false);
+            scenarioAudioUtterance = null;
+            onComplete();
+          };
+
+          utter.onend = done;
+          utter.onerror = done;
+          scenarioAudioUtterance = utter;
+          window.speechSynthesis.speak(utter);
+          return;
+        } catch(e) {
+          console.warn('Web Speech Thai direct error:', e);
+        }
+      }
+      highlightPromptThaiBadge(false);
+      onComplete();
+    }
+
+    function playScenarioIntroAudio(promptRaw, item, onDone = null) {
+      if (appState.muted) {
+        updateScenarioAudioUI(false);
+        return;
+      }
+      stopAllAudio();
+
+      const segments = segmentScenarioPrompt(promptRaw, item);
+      if (!segments || segments.length === 0) {
+        updateScenarioAudioUI(false);
+        return;
+      }
+
+      const seqId = ++scenarioAudioSeqCounter;
+      currentScenarioAudioSeqId = seqId;
+      updateScenarioAudioUI(true);
+
+      let currentIdx = 0;
+
+      function runNextSegment() {
+        if (currentScenarioAudioSeqId !== seqId || appState.muted) {
+          updateScenarioAudioUI(false);
+          highlightPromptThaiBadge(false);
+          return;
+        }
+
+        if (currentIdx >= segments.length) {
+          updateScenarioAudioUI(false);
+          highlightPromptThaiBadge(false);
+          currentScenarioAudioSeqId = 0;
+          if (typeof onDone === 'function') onDone();
+          return;
+        }
+
+        const seg = segments[currentIdx++];
+        if (seg.lang === 'th') {
+          playThaiAudioDirect(seg.text, () => {
+            if (currentScenarioAudioSeqId === seqId && !appState.muted) {
+              scenarioAudioTimeout = setTimeout(runNextSegment, 180);
+            } else {
+              updateScenarioAudioUI(false);
+            }
+          });
+        } else {
+          playEnglishUtterance(seg.text, () => {
+            if (currentScenarioAudioSeqId === seqId && !appState.muted) {
+              scenarioAudioTimeout = setTimeout(runNextSegment, 120);
+            } else {
+              updateScenarioAudioUI(false);
+            }
+          });
+        }
+      }
+
+      runNextSegment();
     }
 
     function toggleScenarioIntroAudio() {
@@ -5336,7 +5516,7 @@
         replayCurrentScenarioIntro();
         return;
       }
-      const isSpeaking = ('speechSynthesis' in window && window.speechSynthesis.speaking) || (currentAudio && !currentAudio.paused);
+      const isSpeaking = ('speechSynthesis' in window && window.speechSynthesis.speaking) || (currentAudio && !currentAudio.paused) || currentScenarioAudioSeqId > 0;
       if (isSpeaking) {
         stopAllAudio();
         updateScenarioAudioUI(false);
@@ -5351,18 +5531,7 @@
       if (!step || step.type !== 'street_listening_drill') return;
       const item = step.target;
       const promptRaw = step.prompt || item?.situationPrompt || 'Listen carefully: What does the speaker mean?';
-      const diag = item?.situationDialogue || null;
-      const isThirdPartySpeaker = /local customer|vendor|cook|cashier|barista|driver|friend|peer|partner|passerby|native speaker/i.test(diag?.speaker || '') || /you hear|asks|shout|says/i.test(promptRaw);
-      const isLearnerSpeaking = (/^(Customer\s*\(|Passenger\b)/i.test(diag?.speaker || '')) && !isThirdPartySpeaker;
-      const hasThaiInPrompt = /[\u0e00-\u0e7f]/.test(promptRaw);
-      const hasIncomingDialogue = !!(diag && diag.thai && (hasThaiInPrompt || isThirdPartySpeaker) && !isLearnerSpeaking);
-      const incomingAudio = hasIncomingDialogue ? (diag.tts || diag.thai) : null;
-
-      playScenarioIntroAudio(promptRaw, item, () => {
-        if (hasIncomingDialogue && incomingAudio && !step.answered && !appState.muted) {
-          setTimeout(() => playThaiAudio(incomingAudio), 300);
-        }
-      });
+      playScenarioIntroAudio(promptRaw, item);
     }
 
     function playThaiAudio(text, btnEl = null, customRate = null) {
@@ -7967,13 +8136,13 @@
         const incomingAudio = hasIncomingDialogue ? (diag.tts || diag.thai) : null;
 
         // Auto-read scenario intro out loud (unless audio is muted by user!)
+        if (scenarioAudioTimeout) {
+          clearTimeout(scenarioAudioTimeout);
+          scenarioAudioTimeout = null;
+        }
         if (!step.answered && !appState.muted && appState.autoReadScenario !== false) {
           scenarioAudioTimeout = setTimeout(() => {
-            playScenarioIntroAudio(promptRaw, item, () => {
-              if (hasIncomingDialogue && incomingAudio && !step.answered && !appState.muted) {
-                setTimeout(() => playThaiAudio(incomingAudio), 300);
-              }
-            });
+            playScenarioIntroAudio(promptRaw, item);
           }, 250);
         } else if (!step.answered && !appState.muted && hasIncomingDialogue && incomingAudio) {
           scenarioAudioTimeout = setTimeout(() => playThaiAudio(incomingAudio), 250);
@@ -7987,7 +8156,7 @@
         if (hasIncomingDialogue && diag && diag.thai) {
           const cleanThai = diag.thai.replace(/[!?]/g, '').trim();
           const audioTarget = incomingAudio || diag.tts || diag.thai;
-          const makeAudioBtn = (displayText) => `<button type="button" onclick="playThaiAudio('${audioTarget}', this)" class="inline-flex items-center gap-1.5 px-2.5 py-0.5 mx-0.5 rounded-xl bg-amber-400/20 hover:bg-amber-400/35 text-amber-300 border border-amber-400/40 text-base font-thai font-bold transition-all cursor-pointer shadow-sm active:scale-95 align-middle" title="Click to hear voice"><span>🔊</span> <span class="underline decoration-dotted">${displayText}</span></button>`;
+          const makeAudioBtn = (displayText) => `<button type="button" id="prompt-thai-badge" onclick="playThaiAudio('${audioTarget}', this)" class="prompt-thai-badge-btn inline-flex items-center gap-1.5 px-2.5 py-0.5 mx-0.5 rounded-xl bg-amber-400/20 hover:bg-amber-400/35 text-amber-300 border border-amber-400/40 text-base font-thai font-bold transition-all cursor-pointer shadow-sm active:scale-95 align-middle" title="Click to hear voice"><span>🔊</span> <span class="underline decoration-dotted">${displayText}</span></button>`;
 
           const escapedThai = diag.thai.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
           const quoteRegex = new RegExp(`['"‘“]${escapedThai}['"’”]?`, 'g');
