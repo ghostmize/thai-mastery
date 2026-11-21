@@ -237,7 +237,9 @@ def main():
         print("  ✓ 'แยก' (separate) verified as falling-tone 'yâek' across all lessons.")
         print("  ✓ Initial 'ก' (ko kai) verified as 'g' ('gin', 'gài', 'gaa', 'gee', 'gǔai-dtǐao') across all lessons.")
         print("  ✓ Vowel orthography (แ- vs -า) verified across all vocab items.")
-        print("  ✓ All 59 street items & 168 dialogue turns verified.")
+        with open(STREET_JSON, 'r', encoding='utf-8') as f:
+            _sd_count = len(json.load(f).get('items', []))
+        print(f"  ✓ All {_sd_count} street items verified.")
         print("  ✓ street_data.json and HTML engine in 100% sync.")
         print("  ✓ All situation listening drills & audio playback verified.")
         print("  ✓ Drill uniqueness & anti-repetition guards verified.")

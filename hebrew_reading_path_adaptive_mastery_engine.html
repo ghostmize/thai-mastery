@@ -6752,15 +6752,99 @@
       clearTimeout(hoverAudioTimer);
     }
 
+    // ---- Consistent voice handling ----
+    // Primary voice = Google neural TTS (female). Previously, stopping/replacing a clip
+    // (hover, replay, next card) rejected audio.play() with AbortError, which was treated
+    // as a failure and ALSO spoke the text with the system voice (often male) -> mixed voices.
+    // Now: aborts are ignored, stale clips are ignored, transient errors retry Google once,
+    // and the system fallback always prefers a female voice.
+    let ttsGeneration = 0;
+    const FEMALE_VOICE_RE = /female|woman|zira|aria|jenny|michelle|samantha|karen|victoria|moira|tessa|susan|hazel|libby|sonia|emma|\bava\b|allison|serena|fiona|premwadee|kanya|narisa|achara|hila|carmit|google/i;
+    const MALE_VOICE_RE = /\bmale\b|\bman\b|david|\bmark\b|\bguy\b|daniel|\balex\b|\bfred\b|george|ryan|\beric\b|christopher|roger|steffan|brian|andrew|pattara|niwat|asaf|avri|aaron|oliver|thomas|rishi/i;
+
+    function pickPreferredVoice(langPrefixes) {
+      if (!('speechSynthesis' in window)) return null;
+      const voices = window.speechSynthesis.getVoices() || [];
+      const langRank = v => {
+        const l = (v.lang || '').toLowerCase().replace('_', '-');
+        const idx = langPrefixes.findIndex(p => l.startsWith(p));
+        return idx;
+      };
+      const cands = voices.filter(v => langRank(v) !== -1);
+      if (!cands.length) return null;
+      const score = v => (MALE_VOICE_RE.test(v.name) ? -100 : 0)
+        + (FEMALE_VOICE_RE.test(v.name) ? 10 : 0)
+        + (/natural|neural|online/i.test(v.name) ? 3 : 0)
+        + (langPrefixes.length - langRank(v));
+      return cands.slice().sort((a, b) => score(b) - score(a))[0];
+    }
+
+    function applyVoice(utter, voice, fallbackLang) {
+      if (voice) {
+        utter.voice = voice;
+        utter.lang = voice.lang || fallbackLang;
+      } else {
+        utter.lang = fallbackLang;
+      }
+      utter.pitch = 1.0;
+    }
+
+    function playGoogleTts(lang, text, rate, onEnded, onFail, attempt = 0) {
+      if (attempt === 0) ttsGeneration++;
+      const gen = ttsGeneration;
+      try { if ('speechSynthesis' in window) window.speechSynthesis.cancel(); } catch (e) {}
+
+      const url = `https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&tl=${lang}&q=${encodeURIComponent(text)}`;
+      const audio = new Audio();
+      audio.referrerPolicy = 'no-referrer';
+      audio.src = url;
+      audio.playbackRate = rate;
+      audio.defaultPlaybackRate = rate;
+      currentAudio = audio;
+
+      let settled = false;
+      const isStale = () => currentAudio !== audio || gen !== ttsGeneration;
+
+      audio.onended = () => {
+        if (settled) return;
+        settled = true;
+        if (currentAudio === audio) currentAudio = null;
+        if (onEnded) onEnded();
+      };
+
+      const fail = (err) => {
+        if (settled) return;
+        if (err && err.name === 'AbortError') return; // stopped/replaced on purpose
+        if (isStale()) { settled = true; return; }    // a newer clip owns the speaker
+        settled = true;
+        audio.onended = null;
+        audio.onerror = null;
+        try { audio.pause(); } catch (e) {}
+        currentAudio = null;
+        const autoplayBlocked = err && err.name === 'NotAllowedError';
+        if (!autoplayBlocked && attempt < 1) {
+          // Transient network/rate-limit hiccup: retry once to keep the same Google voice
+          setTimeout(() => {
+            if (gen !== ttsGeneration || currentAudio !== null) return;
+            playGoogleTts(lang, text, rate, onEnded, onFail, attempt + 1);
+          }, 300);
+          return;
+        }
+        if (onFail) onFail();
+      };
+
+      audio.onerror = () => fail(audio.error);
+      const p = audio.play();
+      if (p && typeof p.catch === 'function') p.catch(fail);
+      return audio;
+    }
+
     function initSpeech() {
       if ('speechSynthesis' in window) {
         const load = () => {
-          const voices = window.speechSynthesis.getVoices();
-          hebrewVoice = voices.find(v => v.lang && (v.lang.toLowerCase().includes('he') || v.lang.toLowerCase().includes('iw'))) || null;
+          hebrewVoice = pickPreferredVoice(['he', 'iw']);
           thaiVoice = hebrewVoice;
-          englishVoice = voices.find(v => v.lang && (v.lang.toLowerCase() === 'en-us' || v.lang.toLowerCase() === 'en_us'))
-            || voices.find(v => v.lang && (v.lang.toLowerCase().startsWith('en') || v.lang.toLowerCase().includes('en')))
-            || null;
+          englishVoice = pickPreferredVoice(['en-us', 'en']);
         };
         load();
         window.speechSynthesis.onvoiceschanged = load;
@@ -6768,6 +6852,7 @@
     }
 
     function stopAllAudio() {
+      ttsGeneration++;
       currentScenarioAudioSeqId = 0;
       if (scenarioAudioTimeout) {
         clearTimeout(scenarioAudioTimeout);
@@ -6959,38 +7044,15 @@
         onComplete();
         return;
       }
-
-      // PRIMARY: High-fidelity Google Translate Neural English narrator
-      // Provides authentic, natural, human-sounding narration (matches Hebrew voice quality)
       const slice = clean.length > 180 ? clean.slice(0, 180).replace(/\s+\S*$/, '...') : clean;
-      const url = `https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&tl=en&q=${encodeURIComponent(slice)}`;
-      const audio = new Audio();
-      audio.referrerPolicy = 'no-referrer';
-      audio.src = url;
-      audio.playbackRate = appState.audioSpeed || 1.0;
-      currentAudio = audio;
-
+      const rate = appState.audioSpeed || 1.0;
       let called = false;
       const done = () => {
         if (called) return;
         called = true;
-        if (currentAudio === audio) currentAudio = null;
         onComplete();
       };
-
-      audio.onended = done;
-      audio.onerror = () => {
-        if (called) return;
-        speakWithWebSpeechEnglishDirect(slice, appState.audioSpeed || 1.0, done);
-      };
-
-      const p = audio.play();
-      if (p !== undefined) {
-        p.catch(() => {
-          if (called) return;
-          speakWithWebSpeechEnglishDirect(slice, appState.audioSpeed || 1.0, done);
-        });
-      }
+      playGoogleTts('en', slice, rate, done, () => speakWithWebSpeechEnglishDirect(slice, rate, done));
     }
 
     function speakWithWebSpeechEnglishDirect(text, rate, onComplete) {
@@ -6998,18 +7060,8 @@
         try {
           window.speechSynthesis.cancel();
           const utter = new SpeechSynthesisUtterance(text);
-          utter.lang = 'en-US';
           utter.rate = rate * 0.95;
-          utter.pitch = 1.0;
-
-          const voices = window.speechSynthesis.getVoices();
-          // Prefer natural female English voice if available in system
-          const enVoice = englishVoice
-            || voices.find(v => v.lang && (v.lang.toLowerCase() === 'en-us' || v.lang.toLowerCase() === 'en_us') && /female|zira|samantha|karen|victoria|natural/i.test(v.name))
-            || voices.find(v => v.lang && (v.lang.toLowerCase() === 'en-us' || v.lang.toLowerCase() === 'en_us'))
-            || voices.find(v => v.lang && v.lang.toLowerCase().startsWith('en'))
-            || null;
-          if (enVoice) utter.voice = enVoice;
+          applyVoice(utter, englishVoice || pickPreferredVoice(['en-us', 'en']), 'en-US');
 
           let called = false;
           const done = () => {
@@ -7049,29 +7101,11 @@
         if (called) return;
         called = true;
         highlightPromptHebrewBadge(false);
-        if (currentAudio) currentAudio = null;
         onComplete();
       };
 
       const targetRate = appState.audioSpeed || 1.0;
-      const url = `https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&tl=iw&q=${encodeURIComponent(clean)}`;
-      const audio = new Audio();
-      audio.referrerPolicy = 'no-referrer';
-      audio.src = url;
-      audio.playbackRate = targetRate;
-      currentAudio = audio;
-
-      audio.onended = done;
-      audio.onerror = () => {
-        speakWithHebrewWebSpeechDirect(clean, targetRate, done);
-      };
-
-      const p = audio.play();
-      if (p !== undefined) {
-        p.catch(() => {
-          speakWithHebrewWebSpeechDirect(clean, targetRate, done);
-        });
-      }
+      playGoogleTts('iw', clean, targetRate, done, () => speakWithHebrewWebSpeechDirect(clean, targetRate, done));
     }
 
     function speakWithHebrewWebSpeechDirect(clean, rate, onComplete) {
@@ -7079,8 +7113,7 @@
         try {
           window.speechSynthesis.cancel();
           const utter = new SpeechSynthesisUtterance(clean);
-          if (hebrewVoice) utter.voice = hebrewVoice;
-          utter.lang = 'he-IL';
+          applyVoice(utter, hebrewVoice || pickPreferredVoice(['he', 'iw']), 'he-IL');
           utter.rate = rate || appState.audioSpeed || 1.0;
 
           let called = false;
@@ -7209,27 +7242,8 @@
 
       const targetRate = customRate !== null ? customRate : (appState.audioSpeed || 1.0);
 
-      // 1. PRIMARY: High-Fidelity Google Translate Neural Hebrew Stream
-      // Matches 100% with translate.google.com neural pronunciation (correct Israeli stress, p vs f, toda vs teoda)
-      const url = `https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&tl=iw&q=${encodeURIComponent(clean)}`;
-      const audio = new Audio();
-      audio.referrerPolicy = 'no-referrer';
-      audio.src = url;
-      audio.playbackRate = targetRate;
-      currentAudio = audio;
-
-      audio.onerror = () => {
-        // Fallback to local Web Speech ONLY if offline or network error
-        speakWithWebSpeech(clean, targetRate);
-      };
-
-      const p = audio.play();
-      if (p !== undefined) {
-        p.catch(() => {
-          // Fallback if browser blocks autoplay
-          speakWithWebSpeech(clean, targetRate);
-        });
-      }
+      // PRIMARY: Google neural Hebrew TTS (consistent female voice); system voice only as last resort
+      playGoogleTts('iw', clean, targetRate, null, () => speakWithWebSpeech(clean, targetRate));
     }
 
     function speakWithWebSpeech(clean, customRate = null) {
@@ -7237,9 +7251,7 @@
         try {
           window.speechSynthesis.cancel();
           const utter = new SpeechSynthesisUtterance(clean);
-          if (hebrewVoice) utter.voice = hebrewVoice;
-          else if (thaiVoice) utter.voice = thaiVoice;
-          utter.lang = 'he-IL';
+          applyVoice(utter, hebrewVoice || pickPreferredVoice(['he', 'iw']), 'he-IL');
           utter.rate = customRate !== null ? customRate : (appState.audioSpeed || 1.0);
           window.speechSynthesis.speak(utter);
         } catch (e) {}
@@ -12791,7 +12803,7 @@ Examples:
         playHebrewAudio(clean);
       } else if ('speechSynthesis' in window) {
         const utter = new SpeechSynthesisUtterance(clean);
-        utter.lang = lang === 'he' ? 'he-IL' : 'th-TH';
+        applyVoice(utter, lang === 'he' ? pickPreferredVoice(['he', 'iw']) : pickPreferredVoice(['th']), lang === 'he' ? 'he-IL' : 'th-TH');
         window.speechSynthesis.speak(utter);
       }
 

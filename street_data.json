@@ -936,14 +936,54 @@
       "responseTts": "พี่คะ"
     },
     {
+      "id": "ST_poet_meter",
+      "thai": "เปิดมิเตอร์",
+      "spoken": "bpə̀ət mí-dtə̂ə",
+      "roman": "bpə̀ət mí-dtə̂ə",
+      "meaning": "Turn on the meter (Taxi street rule #1)",
+      "streetShift": "Bangkok taxi street rule: always politely ask the driver to run the meter ('เปิดมิเตอร์ด้วยนะคะ') instead of accepting an inflated flat rate.",
+      "unit": 3,
+      "theme": "Taxis & Directions",
+      "category": "Taxi Essentials",
+      "tts": "เปิดมิเตอร์ด้วยค่ะ",
+      "words": [
+        {
+          "th": "เปิด",
+          "ro": "bpə̀ət",
+          "en": "turn on / open"
+        },
+        {
+          "th": "มิเตอร์",
+          "ro": "mí-dtə̂ə",
+          "en": "meter"
+        }
+      ],
+      "situationPrompt": "You hop into a Bangkok taxi and want to ensure the trip is charged on the meter. What do you politely tell the driver?",
+      "situationCorrect": "bpə̀ət mí-dtə̂ə dûai khá (เปิดมิเตอร์ด้วยนะคะ)",
+      "situationDistractors": [
+        "gèp dtang dûai khá (เก็บตังค์ด้วยค่ะ)",
+        "mâi ao thǔng khá (ไม่เอาถุงค่ะ)",
+        "yâek nám khá (แยกน้ำค่ะ)"
+      ],
+      "situationDialogue": {
+        "speaker": "Passenger",
+        "thai": "เปิดมิเตอร์ด้วยนะคะ",
+        "spoken": "bpə̀ət mí-dtə̂ə dûai ná khá",
+        "meaning": "Please turn on the meter, okay?",
+        "tts": "เปิดมิเตอร์ด้วยนะคะ"
+      },
+      "situationEverydayTip": "In Bangkok taxis, always politely say 'เปิดมิเตอร์ด้วยนะคะ' to make sure the trip is metered.",
+      "responseTts": "เปิดมิเตอร์ด้วยนะคะ"
+    },
+    {
       "id": "ST_nong_staff",
       "thai": "น้องครับ / น้องคะ",
       "spoken": "nɔ́ɔng kháp / khá",
       "roman": "nɔ́ɔng kháp",
       "meaning": "Friendly address for younger servers, baristas & staff",
       "streetShift": "The standard natural way to call over restaurant servers, cafe baristas, or 7-Eleven staff who appear younger than you.",
-      "unit": 3,
-      "theme": "Taxis & Directions",
+      "unit": 2,
+      "theme": "Cafes & Dining",
       "category": "Polite Address",
       "tts": "น้องครับ",
       "words": [
@@ -2347,11 +2387,12 @@
         },
         {
           "id": "s2_n2",
-          "title": "Paying the Bill & Shorthand",
+          "title": "Calling Staff & Paying the Bill",
           "type": "street",
           "icon": "💸",
-          "description": "Paying the bill: gèp dtang (check please) → thâo-lài (how much) → sà-gaen dâi mǎi (can I scan PromptPay QR?)",
+          "description": "Calling staff & paying: nɔ́ɔng kháp/khá (younger server) → gèp dtang (check please) → thâo-lài (how much) → sà-gaen dâi mǎi (can I scan PromptPay QR?)",
           "itemIds": [
+            "ST_nong_staff",
             "ST_gep_dtang",
             "ST_thao_rai",
             "ST_scan_dai_mai"
@@ -2379,13 +2420,13 @@
       "nodes": [
         {
           "id": "s3_n1",
-          "title": "Polite Addressing for Drivers & Peers",
+          "title": "Hailing Drivers & Setting the Meter",
           "type": "street",
           "icon": "🚕",
-          "description": "Polite titles: phîi kháp/khá (polite address / driver / peer) → nɔ́ɔng kháp/khá (younger server / barista)",
+          "description": "Hailing & getting in: phîi kháp/khá (warm driver title & destination) → bpə̀ət mí-dtə̂ə (turn on the meter)",
           "itemIds": [
             "ST_phii_driver",
-            "ST_nong_staff"
+            "ST_poet_meter"
           ]
         },
         {

@@ -373,6 +373,11 @@
           <span>☁️</span>
         </button>
 
+        <button id="nav-recent-practice-btn" onclick="startRecentPracticeSession()" class="px-2.5 sm:px-3 py-1.5 rounded-xl bg-gradient-to-r from-emerald-500/15 to-teal-500/15 hover:from-emerald-500/25 hover:to-teal-500/25 border border-emerald-400/40 text-emerald-300 hover:text-white text-xs font-semibold transition-all cursor-pointer flex items-center gap-1.5 whitespace-nowrap shrink-0 shadow-sm" title="Smart Practice: Random mix from your last 2–3 lessons">
+          <span>🎲</span>
+          <span class="hidden md:inline">Practice</span>
+        </button>
+
         <button id="nav-reading-test-btn" onclick="openOnTheFlyTestModal()" class="px-2.5 sm:px-3 py-1.5 rounded-xl bg-gradient-to-r from-sky-500/15 to-amber-500/15 hover:from-sky-500/25 hover:to-amber-500/25 border border-sky-400/40 text-sky-300 hover:text-white text-xs font-semibold transition-all cursor-pointer flex items-center gap-1.5 whitespace-nowrap shrink-0 shadow-sm" title="On-The-Fly Reading Test (Known Letters & Words)">
           <span>⚡</span>
           <span class="hidden md:inline">Reading Test</span>
@@ -447,6 +452,23 @@
       </div>
       <button onclick="openOnTheFlyTestModal()" class="px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-sky-500 to-amber-400 hover:from-sky-400 hover:to-amber-300 text-[#0e0f12] text-xs font-bold transition-all cursor-pointer whitespace-nowrap shrink-0 shadow-sm active:scale-95">
         Start Test →
+      </button>
+    </div>
+
+    <!-- Smart Practice (Last 2-3 Lessons) Banner -->
+    <div id="path-recent-practice-banner" class="bg-gradient-to-r from-emerald-950/40 via-[#141722] to-teal-950/30 border border-emerald-500/25 rounded-2xl px-4 py-3 mb-3 flex items-center justify-between gap-3 shadow-md">
+      <div class="flex items-center gap-2.5 min-w-0">
+        <span class="text-xl">🎲</span>
+        <div class="min-w-0">
+          <div class="text-xs font-bold text-white flex items-center gap-1.5">
+            <span>Smart Practice</span>
+            <span id="recent-practice-badge" class="text-[10px] text-emerald-400 font-normal hidden sm:inline">• Last 2–3 lessons</span>
+          </div>
+          <div id="recent-practice-subtitle" class="text-[11px] text-slate-400 truncate">Random mix from your recent lessons (prioritizes weak &amp; due items)</div>
+        </div>
+      </div>
+      <button onclick="startRecentPracticeSession()" class="px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-400 hover:from-emerald-400 hover:to-teal-300 text-[#0e0f12] text-xs font-bold transition-all cursor-pointer whitespace-nowrap shrink-0 shadow-sm active:scale-95">
+        Practice →
       </button>
     </div>
 
@@ -2677,14 +2699,54 @@
     "responseTts": "พี่คะ"
   },
   {
+    "id": "ST_poet_meter",
+    "thai": "เปิดมิเตอร์",
+    "spoken": "bpə̀ət mí-dtə̂ə",
+    "roman": "bpə̀ət mí-dtə̂ə",
+    "meaning": "Turn on the meter (Taxi street rule #1)",
+    "streetShift": "Bangkok taxi street rule: always politely ask the driver to run the meter ('เปิดมิเตอร์ด้วยนะคะ') instead of accepting an inflated flat rate.",
+    "unit": 3,
+    "theme": "Taxis & Directions",
+    "category": "Taxi Essentials",
+    "tts": "เปิดมิเตอร์ด้วยค่ะ",
+    "words": [
+      {
+        "th": "เปิด",
+        "ro": "bpə̀ət",
+        "en": "turn on / open"
+      },
+      {
+        "th": "มิเตอร์",
+        "ro": "mí-dtə̂ə",
+        "en": "meter"
+      }
+    ],
+    "situationPrompt": "You hop into a Bangkok taxi and want to ensure the trip is charged on the meter. What do you politely tell the driver?",
+    "situationCorrect": "bpə̀ət mí-dtə̂ə dûai khá (เปิดมิเตอร์ด้วยนะคะ)",
+    "situationDistractors": [
+      "gèp dtang dûai khá (เก็บตังค์ด้วยค่ะ)",
+      "mâi ao thǔng khá (ไม่เอาถุงค่ะ)",
+      "yâek nám khá (แยกน้ำค่ะ)"
+    ],
+    "situationDialogue": {
+      "speaker": "Passenger",
+      "thai": "เปิดมิเตอร์ด้วยนะคะ",
+      "spoken": "bpə̀ət mí-dtə̂ə dûai ná khá",
+      "meaning": "Please turn on the meter, okay?",
+      "tts": "เปิดมิเตอร์ด้วยนะคะ"
+    },
+    "situationEverydayTip": "In Bangkok taxis, always politely say 'เปิดมิเตอร์ด้วยนะคะ' to make sure the trip is metered.",
+    "responseTts": "เปิดมิเตอร์ด้วยนะคะ"
+  },
+  {
     "id": "ST_nong_staff",
     "thai": "น้องครับ / น้องคะ",
     "spoken": "nɔ́ɔng kháp / khá",
     "roman": "nɔ́ɔng kháp",
     "meaning": "Friendly address for younger servers, baristas & staff",
     "streetShift": "The standard natural way to call over restaurant servers, cafe baristas, or 7-Eleven staff who appear younger than you.",
-    "unit": 3,
-    "theme": "Taxis & Directions",
+    "unit": 2,
+    "theme": "Cafes & Dining",
     "category": "Polite Address",
     "tts": "น้องครับ",
     "words": [
@@ -4089,11 +4151,12 @@
                   },
                   {
                         "id": "s2_n2",
-                        "title": "Paying the Bill & Shorthand",
+                        "title": "Calling Staff & Paying the Bill",
                         "type": "street",
                         "icon": "💸",
-                        "description": "Paying the bill: gèp dtang (check please) → thâo-lài (how much) → sà-gaen dâi mǎi (can I scan PromptPay QR?)",
+                        "description": "Calling staff & paying: nɔ́ɔng kháp/khá (younger server) → gèp dtang (check please) → thâo-lài (how much) → sà-gaen dâi mǎi (can I scan PromptPay QR?)",
                         "itemIds": [
+                              "ST_nong_staff",
                               "ST_gep_dtang",
                               "ST_thao_rai",
                               "ST_scan_dai_mai"
@@ -4121,13 +4184,13 @@
             "nodes": [
                   {
                         "id": "s3_n1",
-                        "title": "Polite Addressing for Drivers & Peers",
+                        "title": "Hailing Drivers & Setting the Meter",
                         "type": "street",
                         "icon": "🚕",
-                        "description": "Polite titles: phîi kháp/khá (polite address / driver / peer) → nɔ́ɔng kháp/khá (younger server / barista)",
+                        "description": "Hailing & getting in: phîi kháp/khá (warm driver title & destination) → bpə̀ət mí-dtə̂ə (turn on the meter)",
                         "itemIds": [
                               "ST_phii_driver",
-                              "ST_nong_staff"
+                              "ST_poet_meter"
                         ]
                   },
                   {
@@ -5102,14 +5165,98 @@
       clearTimeout(hoverAudioTimer);
     }
 
+    // ---- Consistent voice handling ----
+    // Primary voice = Google neural TTS (female). Previously, stopping/replacing a clip
+    // (hover, replay, next card) rejected audio.play() with AbortError, which was treated
+    // as a failure and ALSO spoke the text with the system voice (often male) -> mixed voices.
+    // Now: aborts are ignored, stale clips are ignored, transient errors retry Google once,
+    // and the system fallback always prefers a female voice.
+    let ttsGeneration = 0;
+    const FEMALE_VOICE_RE = /female|woman|zira|aria|jenny|michelle|samantha|karen|victoria|moira|tessa|susan|hazel|libby|sonia|emma|\bava\b|allison|serena|fiona|premwadee|kanya|narisa|achara|hila|carmit|google/i;
+    const MALE_VOICE_RE = /\bmale\b|\bman\b|david|\bmark\b|\bguy\b|daniel|\balex\b|\bfred\b|george|ryan|\beric\b|christopher|roger|steffan|brian|andrew|pattara|niwat|asaf|avri|aaron|oliver|thomas|rishi/i;
+
+    function pickPreferredVoice(langPrefixes) {
+      if (!('speechSynthesis' in window)) return null;
+      const voices = window.speechSynthesis.getVoices() || [];
+      const langRank = v => {
+        const l = (v.lang || '').toLowerCase().replace('_', '-');
+        const idx = langPrefixes.findIndex(p => l.startsWith(p));
+        return idx;
+      };
+      const cands = voices.filter(v => langRank(v) !== -1);
+      if (!cands.length) return null;
+      const score = v => (MALE_VOICE_RE.test(v.name) ? -100 : 0)
+        + (FEMALE_VOICE_RE.test(v.name) ? 10 : 0)
+        + (/natural|neural|online/i.test(v.name) ? 3 : 0)
+        + (langPrefixes.length - langRank(v));
+      return cands.slice().sort((a, b) => score(b) - score(a))[0];
+    }
+
+    function applyVoice(utter, voice, fallbackLang) {
+      if (voice) {
+        utter.voice = voice;
+        utter.lang = voice.lang || fallbackLang;
+      } else {
+        utter.lang = fallbackLang;
+      }
+      utter.pitch = 1.0;
+    }
+
+    function playGoogleTts(lang, text, rate, onEnded, onFail, attempt = 0) {
+      if (attempt === 0) ttsGeneration++;
+      const gen = ttsGeneration;
+      try { if ('speechSynthesis' in window) window.speechSynthesis.cancel(); } catch (e) {}
+
+      const url = `https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&tl=${lang}&q=${encodeURIComponent(text)}`;
+      const audio = new Audio();
+      audio.referrerPolicy = 'no-referrer';
+      audio.src = url;
+      audio.playbackRate = rate;
+      audio.defaultPlaybackRate = rate;
+      currentAudio = audio;
+
+      let settled = false;
+      const isStale = () => currentAudio !== audio || gen !== ttsGeneration;
+
+      audio.onended = () => {
+        if (settled) return;
+        settled = true;
+        if (currentAudio === audio) currentAudio = null;
+        if (onEnded) onEnded();
+      };
+
+      const fail = (err) => {
+        if (settled) return;
+        if (err && err.name === 'AbortError') return; // stopped/replaced on purpose
+        if (isStale()) { settled = true; return; }    // a newer clip owns the speaker
+        settled = true;
+        audio.onended = null;
+        audio.onerror = null;
+        try { audio.pause(); } catch (e) {}
+        currentAudio = null;
+        const autoplayBlocked = err && err.name === 'NotAllowedError';
+        if (!autoplayBlocked && attempt < 1) {
+          // Transient network/rate-limit hiccup: retry once to keep the same Google voice
+          setTimeout(() => {
+            if (gen !== ttsGeneration || currentAudio !== null) return;
+            playGoogleTts(lang, text, rate, onEnded, onFail, attempt + 1);
+          }, 300);
+          return;
+        }
+        if (onFail) onFail();
+      };
+
+      audio.onerror = () => fail(audio.error);
+      const p = audio.play();
+      if (p && typeof p.catch === 'function') p.catch(fail);
+      return audio;
+    }
+
     function initSpeech() {
       if ('speechSynthesis' in window) {
         const load = () => {
-          const voices = window.speechSynthesis.getVoices();
-          thaiVoice = voices.find(v => v.lang && (v.lang.toLowerCase().includes('th') || v.lang.toLowerCase() === 'th-th')) || null;
-          englishVoice = voices.find(v => v.lang && (v.lang.toLowerCase() === 'en-us' || v.lang.toLowerCase() === 'en_us'))
-            || voices.find(v => v.lang && (v.lang.toLowerCase().startsWith('en') || v.lang.toLowerCase().includes('en')))
-            || null;
+          thaiVoice = pickPreferredVoice(['th']);
+          englishVoice = pickPreferredVoice(['en-us', 'en']);
         };
         load();
         window.speechSynthesis.onvoiceschanged = load;
@@ -5117,6 +5264,7 @@
     }
 
     function stopAllAudio() {
+      ttsGeneration++;
       currentScenarioAudioSeqId = 0;
       if (scenarioAudioTimeout) {
         clearTimeout(scenarioAudioTimeout);
@@ -5309,38 +5457,15 @@
         onComplete();
         return;
       }
-
-      // PRIMARY: High-fidelity Google Translate Neural English narrator
-      // Provides authentic, natural, human-sounding narration (matches Thai/Hebrew voice quality)
       const slice = clean.length > 180 ? clean.slice(0, 180).replace(/\s+\S*$/, '...') : clean;
-      const url = `https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&tl=en&q=${encodeURIComponent(slice)}`;
-      const audio = new Audio();
-      audio.referrerPolicy = 'no-referrer';
-      audio.src = url;
-      audio.playbackRate = appState.audioSpeed || 1.0;
-      currentAudio = audio;
-
+      const rate = appState.audioSpeed || 1.0;
       let called = false;
       const done = () => {
         if (called) return;
         called = true;
-        if (currentAudio === audio) currentAudio = null;
         onComplete();
       };
-
-      audio.onended = done;
-      audio.onerror = () => {
-        if (called) return;
-        speakWithWebSpeechEnglishDirect(slice, appState.audioSpeed || 1.0, done);
-      };
-
-      const p = audio.play();
-      if (p !== undefined) {
-        p.catch(() => {
-          if (called) return;
-          speakWithWebSpeechEnglishDirect(slice, appState.audioSpeed || 1.0, done);
-        });
-      }
+      playGoogleTts('en', slice, rate, done, () => speakWithWebSpeechEnglishDirect(slice, rate, done));
     }
 
     function speakWithWebSpeechEnglishDirect(text, rate, onComplete) {
@@ -5348,18 +5473,8 @@
         try {
           window.speechSynthesis.cancel();
           const utter = new SpeechSynthesisUtterance(text);
-          utter.lang = 'en-US';
           utter.rate = rate * 0.95;
-          utter.pitch = 1.0;
-
-          const voices = window.speechSynthesis.getVoices();
-          // Prefer natural female English voice if available in system
-          const enVoice = englishVoice
-            || voices.find(v => v.lang && (v.lang.toLowerCase() === 'en-us' || v.lang.toLowerCase() === 'en_us') && /female|zira|samantha|karen|victoria|natural/i.test(v.name))
-            || voices.find(v => v.lang && (v.lang.toLowerCase() === 'en-us' || v.lang.toLowerCase() === 'en_us'))
-            || voices.find(v => v.lang && v.lang.toLowerCase().startsWith('en'))
-            || null;
-          if (enVoice) utter.voice = enVoice;
+          applyVoice(utter, englishVoice || pickPreferredVoice(['en-us', 'en']), 'en-US');
 
           let called = false;
           const done = () => {
@@ -5397,29 +5512,11 @@
         if (called) return;
         called = true;
         highlightPromptThaiBadge(false);
-        if (currentAudio) currentAudio = null;
         onComplete();
       };
 
       const rateToUse = appState.audioSpeed || 1.0;
-      const url = `https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&tl=th&q=${encodeURIComponent(clean)}`;
-      const audio = new Audio();
-      audio.referrerPolicy = 'no-referrer';
-      audio.src = url;
-      audio.playbackRate = rateToUse;
-      currentAudio = audio;
-
-      audio.onended = done;
-      audio.onerror = () => {
-        speakWithWebSpeechDirect(clean, rateToUse, done);
-      };
-
-      const p = audio.play();
-      if (p !== undefined) {
-        p.catch(() => {
-          speakWithWebSpeechDirect(clean, rateToUse, done);
-        });
-      }
+      playGoogleTts('th', clean, rateToUse, done, () => speakWithWebSpeechDirect(clean, rateToUse, done));
     }
 
     function speakWithWebSpeechDirect(clean, rate, onComplete) {
@@ -5427,8 +5524,7 @@
         try {
           window.speechSynthesis.cancel();
           const utter = new SpeechSynthesisUtterance(clean);
-          if (thaiVoice) utter.voice = thaiVoice;
-          utter.lang = 'th-TH';
+          applyVoice(utter, thaiVoice || pickPreferredVoice(['th']), 'th-TH');
           utter.rate = rate || appState.audioSpeed || 1.0;
 
           let called = false;
@@ -5550,25 +5646,8 @@
         currentAudio = null;
       }
 
-      // PRIMARY: High-fidelity Google Translate Neural Thai TTS stream
-      // Provides authentic native Bangkok pronunciation, natural tones & rhythm on ALL devices (iPhone/iOS, Android & Desktop)
-      const url = `https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&tl=th&q=${encodeURIComponent(clean)}`;
-      const audio = new Audio();
-      audio.referrerPolicy = 'no-referrer';
-      audio.src = url;
-      audio.playbackRate = rateToUse;
-      currentAudio = audio;
-
-      audio.onerror = () => {
-        speakWithWebSpeech(clean, rateToUse);
-      };
-
-      const p = audio.play();
-      if (p !== undefined) {
-        p.catch(() => {
-          speakWithWebSpeech(clean, rateToUse);
-        });
-      }
+      // PRIMARY: Google neural Thai TTS (consistent female voice); system voice only as last resort
+      playGoogleTts('th', clean, rateToUse, null, () => speakWithWebSpeech(clean, rateToUse));
     }
 
     function speakWithWebSpeech(clean, rate = 1.0) {
@@ -5576,8 +5655,7 @@
         try {
           window.speechSynthesis.cancel();
           const utter = new SpeechSynthesisUtterance(clean);
-          if (thaiVoice) utter.voice = thaiVoice;
-          utter.lang = 'th-TH';
+          applyVoice(utter, thaiVoice || pickPreferredVoice(['th']), 'th-TH');
           utter.rate = rate || appState.audioSpeed || 1.0;
           window.speechSynthesis.speak(utter);
         } catch(e) {}
@@ -6162,6 +6240,7 @@
           </section>
         `;
       }).join('');
+      if (typeof updateRecentPracticeBanner === 'function') updateRecentPracticeBanner();
     }
 
     function startNodeConversationOnly(nodeId) {
@@ -6294,6 +6373,190 @@
         title: 'Smart Review: Weak Spots',
         isWeakReview: true,
         steps: finalSteps,
+        currentIndex: 0,
+        correctCount: 0,
+        stepAnswered: false,
+        stepStartTime: Date.now(),
+        selectedTiles: []
+      };
+
+      openLessonOverlay();
+      renderCurrentLessonStep();
+      if (typeof updateGeminiContextUI === 'function') updateGeminiContextUI();
+    }
+
+    /**
+     * Returns the last 2–3 relevant lessons for the active track (prioritizing completed nodes,
+     * falling back to the next/first nodes if fewer than 2 are completed).
+     */
+    function getRecentPracticeNodes(maxCount = 3) {
+      const isStreet = appState.currentTrack === 'street';
+      const activeCurriculum = isStreet ? STREET_CURRICULUM : UNITS_CURRICULUM;
+      const allNodes = activeCurriculum.flatMap(u => u.nodes);
+      const completedSet = new Set(appState.completedNodes || []);
+      const completedInTrack = allNodes.filter(n => completedSet.has(n.id));
+
+      if (completedInTrack.length >= 2) {
+        return completedInTrack.slice(-maxCount);
+      }
+      if (completedInTrack.length === 1) {
+        const nextNode = allNodes.find(n => !completedSet.has(n.id));
+        return nextNode ? [completedInTrack[0], nextNode] : [completedInTrack[0]];
+      }
+      return allNodes.slice(0, Math.min(maxCount, allNodes.length));
+    }
+
+    function updateRecentPracticeBanner() {
+      const badgeEl = document.getElementById('recent-practice-badge');
+      const subEl = document.getElementById('recent-practice-subtitle');
+      const headerBtn = document.getElementById('nav-recent-practice-btn');
+      const recentNodes = getRecentPracticeNodes(3);
+      if (!recentNodes.length) return;
+
+      const titles = recentNodes.map(n => n.title);
+      if (badgeEl) {
+        badgeEl.textContent = `• Last ${recentNodes.length} ${appState.currentTrack === 'street' ? 'Street' : 'Reading'} lessons`;
+      }
+      if (subEl) {
+        subEl.textContent = `Random mix from: ${titles.join(' • ')}`;
+      }
+      if (headerBtn) {
+        headerBtn.title = `Smart Practice: Random mix from ${titles.join(', ')}`;
+      }
+    }
+
+    /**
+     * Weighted random sampler that prioritizes weak, due, or unpracticed items while keeping variety.
+     */
+    function pickSmartRandomItems(entries, count) {
+      const now = Date.now();
+      const scored = entries.map(entry => {
+        const id = entry.item?.id;
+        const st = id && appState?.itemStats ? appState.itemStats[id] : null;
+        let weight = 1.0;
+        if (!st || !st.exposures) {
+          weight += 1.2;
+        } else {
+          if ((st.masteryScore || 0) < 60 || (st.wrong || 0) > (st.correct || 0)) weight += 2.0;
+          if (st.nextReviewAt && st.nextReviewAt <= now) weight += 1.5;
+        }
+        // Add random jitter so every practice session feels fresh
+        return { entry, score: weight + Math.random() * 1.8 };
+      });
+      scored.sort((a, b) => b.score - a.score);
+      const picked = scored.slice(0, count).map(x => x.entry);
+      for (let i = picked.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [picked[i], picked[j]] = [picked[j], picked[i]];
+      }
+      return picked;
+    }
+
+    function startRecentPracticeSession() {
+      const recentNodes = getRecentPracticeNodes(3);
+      if (!recentNodes.length) return;
+
+      const isStreet = appState.currentTrack === 'street';
+      const steps = [];
+
+      if (isStreet) {
+        const seenIds = new Set();
+        const pool = [];
+        recentNodes.forEach(node => {
+          (node.itemIds || []).forEach(id => {
+            if (seenIds.has(id)) return;
+            const item = STREET_DB.find(s => s.id === id);
+            if (item) {
+              seenIds.add(id);
+              pool.push({ item, node });
+            }
+          });
+        });
+
+        const picked = pickSmartRandomItems(pool, Math.min(7, pool.length));
+        const pastLearned = pool.map(p => p.item);
+        const rawDrills = picked.map(({ item, node }) => {
+          const drill = createStreetListeningDrillStep(item, pastLearned);
+          drill.reviewBadge = `🎲 Practice • ${node.title}`;
+          return drill;
+        });
+
+        const spaced = spaceDrillsAfterSpotlights(rawDrills, null);
+        spaced.forEach(d => steps.push(d));
+
+        const convoNode = recentNodes[Math.floor(Math.random() * recentNodes.length)];
+        if (convoNode) {
+          steps.push(createLiveConversationStep(convoNode, appState.convoDifficulty, Math.floor(Math.random() * 10000)));
+        }
+      } else {
+        const latestNode = recentNodes[recentNodes.length - 1];
+        const allowedLetterIds = getAllowedLetterIdsForNode(latestNode.id);
+        const knownChars = getKnownThaiCharsForNode(latestNode.id);
+
+        const seenLetters = new Set();
+        const letterPool = [];
+        const seenWords = new Set();
+        const wordPool = [];
+        const allWords = getAllWords();
+
+        recentNodes.forEach(node => {
+          (node.letterIds || []).forEach(lid => {
+            if (seenLetters.has(lid)) return;
+            const letter = LETTERS_DB.find(l => l.id === lid);
+            if (letter) {
+              seenLetters.add(lid);
+              letterPool.push({ item: letter, node });
+            }
+          });
+          (node.wordIds || []).forEach(wid => {
+            if (seenWords.has(wid)) return;
+            const word = allWords.find(w => w.id === wid);
+            if (word) {
+              seenWords.add(wid);
+              wordPool.push({ item: word, node });
+            }
+          });
+        });
+
+        const pickedLetters = pickSmartRandomItems(letterPool, Math.min(4, letterPool.length));
+        const pickedWords = pickSmartRandomItems(wordPool, Math.min(4, wordPool.length));
+
+        const rawDrills = [];
+        pickedLetters.forEach(({ item, node }) => {
+          const allowed = new Set(allowedLetterIds);
+          allowed.add(item.id);
+          const step = createSoundToLetterStep(item, false, allowed);
+          step.reviewBadge = `🎲 Practice • ${node.title}`;
+          rawDrills.push(step);
+        });
+
+        pickedWords.forEach(({ item, node }, idx) => {
+          const step = idx % 2 === 0
+            ? createWordDecodeStep(item, node)
+            : createBuildWordStep(item, knownChars);
+          step.reviewBadge = `🎲 Practice • ${node.title}`;
+          rawDrills.push(step);
+        });
+
+        const spaced = spaceDrillsAfterSpotlights(rawDrills, null);
+        spaced.slice(0, 8).forEach(s => steps.push(s));
+
+        if (latestNode) {
+          steps.push(createWordReadingFinaleStep(latestNode));
+        }
+      }
+
+      if (!steps.length) {
+        showToast('Complete at least one lesson first to unlock Smart Practice!');
+        return;
+      }
+
+      activeSession = {
+        nodeId: null,
+        title: `Smart Practice • ${recentNodes.map(n => n.title).join(' + ')}`,
+        isWeakReview: true,
+        isRecentPractice: true,
+        steps,
         currentIndex: 0,
         correctCount: 0,
         stepAnswered: false,
@@ -7621,7 +7884,8 @@
           options,
           answered: false,
           isCorrect: null,
-          chosenOptId: null
+          chosenOptId: null,
+          isWordKnown: canTestMeaningPure
         };
       });
 
@@ -7640,7 +7904,7 @@
       const qs = step.questions || [];
       if (qs.length === 0) {
         step.allWordsCompleted = true;
-        stage.innerHTML = `<div class="bg-[#16181d] border border-[#252934] rounded-3xl p-6 text-center text-slate-300">No words available for this node.</div>`;
+        stage.innerHTML = `<div class="bg-[#16181d] border border-[#252934] rounded-2xl p-6 text-center text-slate-300">No words available for this node.</div>`;
         actionBtn.textContent = 'Finish Lesson →';
         actionBtn.disabled = false;
         return;
@@ -7667,155 +7931,154 @@
           ? 'Decode the Thai letters below — no pronunciation spoiler!'
           : 'Sound out the letters you know (plus any hint below)';
 
+      const hasLetterHints = unseenHints.length > 0 || !!w.readingHint;
+      const hasMeaningClue = (!q.isWordKnown && !!w.meaning);
+
       stage.innerHTML = `
-        <div class="bg-[#16181d] border border-[#252934] rounded-3xl p-5 sm:p-7 space-y-5 shadow-xl">
+        <div class="bg-[#16181d] border border-[#252934] rounded-2xl sm:rounded-3xl p-3.5 sm:p-5 space-y-3 sm:space-y-3.5 shadow-xl">
           <!-- Header + Mini Word Progress -->
-          <div class="flex flex-wrap items-center justify-between gap-2">
-            <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full ${step.isOntheFlyTest ? 'bg-gradient-to-r from-sky-500/20 to-amber-500/20 border-sky-400/40 text-sky-200' : 'bg-sky-500/15 border-sky-400/35 text-sky-300'} border text-xs font-bold">
+          <div class="flex items-center justify-between gap-2">
+            <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full ${step.isOntheFlyTest ? 'bg-gradient-to-r from-sky-500/20 to-amber-500/20 border-sky-400/40 text-sky-200' : 'bg-sky-500/15 border-sky-400/35 text-sky-300'} border text-[11px] font-bold">
               <span>${step.isOntheFlyTest ? '⚡' : '📖'}</span>
-              <span>${step.isOntheFlyTest ? 'On-The-Fly Phonics Reading' : 'Final Step • Read Single Words'}</span>
+              <span>${step.isOntheFlyTest ? 'Phonics Reading' : 'Final Step • Read Single Words'}</span>
             </div>
             ${step.isOntheFlyTest ? (unseenHints.length === 0 ? `
-              <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-emerald-500/15 border border-emerald-400/30 text-emerald-300 text-[10px] font-bold">
-                ✓ 100% Known Letters
+              <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-500/15 border border-emerald-400/30 text-emerald-300 text-[10px] font-bold">
+                ✓ 100% Known
               </span>
             ` : `
-              <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-amber-500/15 border border-amber-400/30 text-amber-300 text-[10px] font-bold">
-                💡 Smart Hints Active
+              <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-amber-500/15 border border-amber-400/30 text-amber-300 text-[10px] font-bold">
+                💡 Hints Active
               </span>
             `) : ''}
             <div class="flex items-center gap-1.5">
               ${qs.map((item, i) => `
-                <span class="h-2 rounded-full transition-all ${
+                <span class="h-1.5 rounded-full transition-all ${
                   i === idx
-                    ? 'w-6 bg-amber-400'
+                    ? 'w-5 bg-amber-400'
                     : item.answered
-                      ? (item.isCorrect ? 'w-2.5 bg-emerald-400' : 'w-2.5 bg-rose-400')
-                      : 'w-2.5 bg-[#2a2f3d]'
+                      ? (item.isCorrect ? 'w-2 bg-emerald-400' : 'w-2 bg-rose-400')
+                      : 'w-2 bg-[#2a2f3d]'
                 }"></span>
               `).join('')}
-              <span class="text-[11px] font-bold text-slate-400 ml-1">${idx + 1} / ${qs.length}</span>
+              <span class="text-[11px] font-bold text-slate-400 ml-1">${idx + 1}/${qs.length}</span>
             </div>
           </div>
 
           <!-- Question Prompt -->
-          <div class="text-center space-y-1">
-            <h3 class="text-lg sm:text-xl font-bold text-white">${promptTitle}</h3>
-            <p class="text-xs text-slate-400">${promptSub}</p>
+          <div class="text-center space-y-0.5">
+            <h3 class="text-base sm:text-lg font-bold text-white tracking-tight leading-tight">${promptTitle}</h3>
+            <p class="text-[11px] text-slate-400 leading-tight">${promptSub}</p>
           </div>
 
           ${!isPickThai ? `
             <!-- Single Thai Word Card (Standard + Modern) -->
-            <div class="bg-[#0e0f12] border border-[#232732] rounded-2xl p-5 text-center space-y-4">
-              <div class="flex items-center justify-center gap-4">
-                <div class="flex flex-col items-center">
-                  <span class="font-thai-standard text-5xl sm:text-6xl font-bold text-white tracking-wide leading-tight">${w.thai}</span>
-                  <span class="font-thai-modern text-xl text-slate-400 mt-1" title="Modern loopless font">${w.thai}</span>
-                </div>
+            <div class="bg-[#0e0f12] border border-[#232732] rounded-xl sm:rounded-2xl p-3 sm:p-4 text-center space-y-2.5 shadow-inner">
+              <div class="flex flex-wrap items-baseline justify-center gap-2.5 sm:gap-3">
+                <span class="font-thai-standard text-4xl sm:text-5xl font-bold text-white tracking-wide leading-none">${w.thai}</span>
+                <span class="font-thai-modern text-lg sm:text-xl text-slate-400 hover:text-slate-200 transition-colors" title="Modern loopless font style">${w.thai}</span>
                 <button
                   type="button"
                   onclick="playThaiAudio('${w.thai}', this)"
-                  class="w-11 h-11 rounded-full bg-sky-500/15 hover:bg-sky-500/30 border border-sky-400/40 text-sky-300 flex items-center justify-center transition-all cursor-pointer shrink-0"
+                  class="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-sky-500/15 hover:bg-sky-500/30 border border-sky-400/35 text-sky-300 flex items-center justify-center text-xs transition-all cursor-pointer shrink-0 active:scale-95 shadow-sm ml-1"
                   title="Listen to pronunciation">
                   🔊
                 </button>
               </div>
 
               <!-- Letter Breakdown Chips (Known vs New Hint) -->
-              <div class="pt-3 border-t border-[#1c1f28] space-y-2">
+              <div class="pt-2 border-t border-[#1c1f28]/80 space-y-1">
                 <div class="flex flex-wrap items-center justify-center gap-1.5">
                   ${chars.map((c, cIdx) => `
                     <button
                       type="button"
                       onclick="peekWordReadingLetter(${cIdx})"
-                      class="relative px-3 py-1.5 rounded-xl border text-base font-thai font-semibold transition-all cursor-pointer ${
+                      class="relative px-2.5 py-1 rounded-lg border text-sm sm:text-base font-thai font-semibold transition-all cursor-pointer active:scale-95 ${
                         c.known
-                          ? 'bg-[#171a23] hover:bg-[#1f2431] border-[#2c3344] text-slate-100'
+                          ? 'bg-[#151822] hover:bg-[#1f2434] border-[#293042] text-slate-100'
                           : 'bg-amber-500/15 hover:bg-amber-500/25 border-amber-400/50 text-amber-200'
                       }"
                       title="${c.known ? 'Known letter — tap if you need a clue' : 'New letter/mark hint: ' + c.label}">
                       <span>${c.display}</span>
-                      ${!c.known ? `<span class="ml-1 text-[9px] font-sans font-extrabold uppercase text-amber-300">NEW</span>` : ''}
+                      ${!c.known ? `<span class="ml-1 text-[8px] font-sans font-extrabold uppercase px-1 py-0.2 rounded bg-amber-400/20 text-amber-300">NEW</span>` : ''}
                     </button>
                   `).join('')}
                 </div>
-                <div id="wr-letter-peek" class="text-[11px] text-sky-300 min-h-[1rem]">
+                <div id="wr-letter-peek" class="text-[11px] text-slate-400 min-h-[1.1rem] flex items-center justify-center">
                   Tap any letter if you need a clue
                 </div>
               </div>
 
-              <!-- Automatic New-Letter / Reading Rule Hint Box -->
-              ${(unseenHints.length > 0 || w.readingHint) ? `
-                <div class="bg-amber-500/10 border border-amber-400/30 rounded-xl px-3.5 py-2.5 text-left space-y-1.5">
-                  <div class="text-[10px] font-extrabold uppercase tracking-wider text-amber-300 flex items-center gap-1.5">
-                    <span>💡</span>
-                    <span>${unseenHints.length > 0 ? 'Unknown Letter / Mark Hint' : 'Reading Tip'}</span>
-                  </div>
-                  ${unseenHints.map(h => `
-                    <div class="text-xs text-slate-200 flex items-center gap-2">
-                      <span class="px-2 py-0.5 rounded-lg bg-[#12141b] border border-amber-400/40 font-thai font-bold text-amber-300 text-sm">${h.display}</span>
-                      <span>${h.label}</span>
+              <!-- Smart Unified Hints Panel (Compact & Clean) -->
+              ${(hasLetterHints || hasMeaningClue) ? `
+                <div class="bg-[#12151e]/90 border border-[#23283a] rounded-xl px-3 py-2 text-left space-y-1.5 text-xs">
+                  <div class="flex items-center justify-between text-[10px] font-extrabold uppercase tracking-wider text-amber-300/90">
+                    <div class="flex items-center gap-1.5">
+                      <span>💡</span>
+                      <span>${hasLetterHints ? (unseenHints.length > 0 ? 'Unknown Letter / Mark Hint' : 'Reading Tip') : 'Word Clue'}</span>
                     </div>
-                  `).join('')}
+                    ${(!q.isWordKnown && !isMeaning) ? `
+                      <span class="text-[9px] text-slate-400 font-normal lowercase tracking-normal">sound out letters to read</span>
+                    ` : ''}
+                  </div>
+
+                  ${unseenHints.length > 0 ? `
+                    <div class="flex flex-wrap items-center gap-2">
+                      ${unseenHints.map(h => `
+                        <div class="inline-flex items-center gap-1.5 text-xs text-slate-200">
+                          <span class="px-1.5 py-0.5 rounded-md bg-[#181b26] border border-amber-400/40 font-thai font-bold text-amber-300 text-xs">${h.display}</span>
+                          <span class="text-slate-300 text-[11.5px]">${h.label}</span>
+                        </div>
+                      `).join('')}
+                    </div>
+                  ` : ''}
+
                   ${w.readingHint ? `
-                    <div class="text-xs text-amber-100/90">${w.readingHint}</div>
+                    <div class="text-[11.5px] text-amber-100/90 leading-snug pl-1.5 border-l-2 border-amber-400/40">
+                      ${w.readingHint}
+                    </div>
+                  ` : ''}
+
+                  ${hasMeaningClue ? `
+                    <div class="${(hasLetterHints && (unseenHints.length > 0 || w.readingHint)) ? 'pt-1.5 border-t border-[#1b2030]' : ''} text-xs text-slate-300 flex flex-wrap items-baseline gap-x-1.5 gap-y-0.5 leading-snug">
+                      <span class="text-sky-300 font-bold">${isMeaning ? 'Clue:' : 'Meaning:'}</span>
+                      <strong class="text-white font-semibold">"${isMeaning ? (w.meaning.split('/')[0].trim()) : w.meaning}"</strong>
+                      ${w.videoContext ? `<span class="text-slate-400 text-[11px]">(${w.videoContext})</span>` : ''}
+                    </div>
                   ` : ''}
                 </div>
               ` : `
-                <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/25 text-emerald-300 text-[11px] font-semibold">
+                <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/25 text-emerald-300 text-[10px] font-semibold">
                   <span>✓</span>
                   <span>100% letters you already know</span>
                 </div>
               `}
-
-              <!-- Automatic Unlearned Word Meaning Hint Box -->
-              ${(!q.isWordKnown && w.meaning) ? `
-                <div class="bg-sky-500/10 border border-sky-400/30 rounded-xl px-3.5 py-2.5 text-left space-y-1">
-                  <div class="text-[10px] font-extrabold uppercase tracking-wider text-sky-300 flex items-center justify-between">
-                    <div class="flex items-center gap-1.5">
-                      <span>💡</span>
-                      <span>Word Meaning Hint (New Word)</span>
-                    </div>
-                    <span class="text-[9px] text-slate-400 font-normal">Sound out the letters to read it!</span>
-                  </div>
-                  <div class="text-xs text-slate-200 flex flex-wrap items-baseline gap-2">
-                    <span>Meaning:</span>
-                    <strong class="text-white text-sm">"${w.meaning}"</strong>
-                    ${w.videoContext ? `<span class="text-slate-400 text-[11px]">(${w.videoContext})</span>` : ''}
-                  </div>
-                </div>
-              ` : ''}
-              ${(isMeaning && !q.isWordKnown) ? `
-                <div class="bg-amber-500/10 border border-amber-400/30 rounded-xl px-3.5 py-2 text-left text-xs text-amber-200 flex items-center justify-between">
-                  <span>💡 Clue: Meaning relates to "${w.meaning.split('/')[0].trim()}"</span>
-                </div>
-              ` : ''}
             </div>
           ` : `
             <!-- Pick-Thai Word Prompt Card -->
-            <div class="bg-[#0e0f12] border border-[#232732] rounded-2xl p-5 text-center space-y-2">
-              <div class="text-xs font-semibold uppercase tracking-wider text-emerald-400">English Meaning</div>
-              <div class="text-2xl sm:text-3xl font-bold text-white">${w.meaning}</div>
+            <div class="bg-[#0e0f12] border border-[#232732] rounded-xl sm:rounded-2xl p-3.5 sm:p-4 text-center space-y-1.5 shadow-inner">
+              <div class="text-[11px] font-semibold uppercase tracking-wider text-emerald-400">English Meaning</div>
+              <div class="text-xl sm:text-2xl font-bold text-white">${w.meaning}</div>
               ${unseenHints.length > 0 ? `
-                <div class="pt-2 flex flex-wrap items-center justify-center gap-1.5 text-[11px] text-amber-300">
+                <div class="pt-1.5 flex flex-wrap items-center justify-center gap-1.5 text-[11px] text-amber-300">
                   <span>💡 Hint:</span>
-                  ${unseenHints.map(h => `<span class="px-2 py-0.5 rounded-lg bg-amber-500/10 border border-amber-400/30"><strong class="font-thai">${h.display}</strong> = ${h.label.split('(')[0].trim()}</span>`).join('')}
+                  ${unseenHints.map(h => `<span class="px-2 py-0.5 rounded-md bg-amber-500/10 border border-amber-400/30"><strong class="font-thai">${h.display}</strong> = ${h.label.split('(')[0].trim()}</span>`).join('')}
                 </div>
               ` : ''}
             </div>
           `}
 
           <!-- Answer Choices -->
-          <div class="${isPickThai ? 'grid grid-cols-1 sm:grid-cols-2 gap-2.5' : 'space-y-2.5'}">
+          <div class="${isPickThai ? 'grid grid-cols-1 sm:grid-cols-2 gap-2' : 'space-y-2'}">
             ${q.options.map((opt, optIdx) => {
-              let btnStyle = 'bg-[#0e0f12] hover:bg-[#1d2028] border-[#252934] text-slate-200';
+              let btnStyle = 'bg-[#0e0f12] hover:bg-[#181b24] hover:border-[#353b4c] border-[#232734] text-slate-200';
               if (q.answered) {
                 if (opt.isCorrect) {
-                  btnStyle = 'bg-emerald-500/20 border-emerald-400 text-emerald-100';
+                  btnStyle = 'bg-emerald-500/15 border-emerald-400 text-emerald-100 shadow-sm shadow-emerald-500/20';
                 } else if (opt.id === q.chosenOptId) {
-                  btnStyle = 'bg-rose-500/20 border-rose-400 text-rose-100';
+                  btnStyle = 'bg-rose-500/15 border-rose-400 text-rose-100';
                 } else {
-                  btnStyle = 'bg-[#0e0f12] border-[#1c1f28] text-slate-500 opacity-60';
+                  btnStyle = 'bg-[#0e0f12]/60 border-[#1a1d25] text-slate-500 opacity-50';
                 }
               }
 
@@ -7825,19 +8088,19 @@
                   id="wr-opt-${opt.id}"
                   ${q.answered ? 'disabled' : ''}
                   onclick="submitWordReadingFinaleOption('${opt.id}')"
-                  class="w-full p-3.5 sm:p-4 rounded-2xl border-2 text-left transition-all flex items-center justify-between gap-3 ${q.answered ? 'cursor-default' : 'cursor-pointer active:scale-[0.99]'} ${btnStyle}">
-                  <div class="flex items-center gap-3 min-w-0">
-                    <span class="w-6 h-6 rounded-lg bg-[#181b24] border border-[#2c3140] text-[11px] font-bold text-slate-400 flex items-center justify-center shrink-0">${optIdx + 1}</span>
+                  class="w-full px-3.5 py-2.5 sm:py-3 rounded-xl border text-left transition-all flex items-center justify-between gap-3 ${q.answered ? 'cursor-default' : 'cursor-pointer active:scale-[0.99]'} ${btnStyle}">
+                  <div class="flex items-center gap-2.5 min-w-0">
+                    <span class="w-5 h-5 rounded-md bg-[#181b24] border border-[#2c3140] text-[10px] font-bold text-slate-400 flex items-center justify-center shrink-0">${optIdx + 1}</span>
                     ${isPickThai ? `
-                      <div class="flex items-baseline gap-2.5">
-                        <span class="font-thai-standard text-2xl font-bold text-white">${opt.thai}</span>
-                        <span class="font-thai-modern text-sm text-slate-400">${opt.thai}</span>
+                      <div class="flex items-baseline gap-2">
+                        <span class="font-thai-standard text-xl sm:text-2xl font-bold text-white">${opt.thai}</span>
+                        <span class="font-thai-modern text-xs sm:text-sm text-slate-400">${opt.thai}</span>
                       </div>
                     ` : isMeaning ? `
-                      <span class="text-sm sm:text-base font-semibold">${opt.meaning}</span>
+                      <span class="text-sm sm:text-base font-semibold leading-snug">${opt.meaning}</span>
                     ` : `
-                      <div class="flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
-                        <span class="text-base font-bold text-white">${opt.roman}</span>
+                      <div class="flex flex-wrap items-baseline gap-x-2 gap-y-0.5 leading-snug">
+                        <span class="text-sm sm:text-base font-bold text-white">${opt.roman}</span>
                         <span class="text-xs text-slate-400">— ${opt.meaning}</span>
                       </div>
                     `}
@@ -7856,19 +8119,19 @@
         const footer = document.getElementById('lesson-footer');
         const detail = `<span class="font-thai font-bold text-white">${w.thai}</span> <span class="text-sky-300">(${w.roman})</span> = ${w.meaning}`;
         if (q.isCorrect) {
-          footer.className = 'border-t border-emerald-500/30 bg-emerald-950/40 px-4 py-4 transition-colors';
-          footerMsg.innerHTML = `<span class="text-emerald-300 font-semibold">✓ Spot on!</span> <span class="text-slate-200 ml-1">${detail}</span>`;
+          footer.className = 'border-t border-emerald-500/30 bg-emerald-950/40 px-4 py-3 sm:py-4 transition-colors';
+          footerMsg.innerHTML = `<span class="text-emerald-300 font-semibold">✓ Spot on!</span> <span class="text-slate-200 ml-1 text-xs sm:text-sm">${detail}</span>`;
         } else {
-          footer.className = 'border-t border-amber-500/30 bg-amber-950/40 px-4 py-4 transition-colors';
-          footerMsg.innerHTML = `<span class="text-amber-300 font-semibold">Keep reading:</span> <span class="text-slate-200 ml-1">${detail}</span>`;
+          footer.className = 'border-t border-amber-500/30 bg-amber-950/40 px-4 py-3 sm:py-4 transition-colors';
+          footerMsg.innerHTML = `<span class="text-amber-300 font-semibold">Keep reading:</span> <span class="text-slate-200 ml-1 text-xs sm:text-sm">${detail}</span>`;
         }
         const isLast = idx >= qs.length - 1;
         actionBtn.textContent = isLast ? 'Finish Lesson →' : 'Next Word →';
-        actionBtn.className = 'px-6 py-3 rounded-2xl bg-emerald-400 hover:bg-emerald-300 text-[#0e0f12] text-sm font-bold transition-all cursor-pointer shrink-0';
+        actionBtn.className = 'px-5 py-2.5 sm:px-6 sm:py-3 rounded-2xl bg-emerald-400 hover:bg-emerald-300 text-[#0e0f12] text-xs sm:text-sm font-bold transition-all cursor-pointer shrink-0';
         actionBtn.disabled = false;
       } else {
         actionBtn.textContent = 'Pick an Answer';
-        actionBtn.className = 'px-6 py-3 rounded-2xl bg-[#22252e] text-slate-500 text-sm font-semibold cursor-not-allowed shrink-0';
+        actionBtn.className = 'px-5 py-2.5 sm:px-6 sm:py-3 rounded-2xl bg-[#22252e] text-slate-500 text-xs sm:text-sm font-semibold cursor-not-allowed shrink-0';
         actionBtn.disabled = true;
       }
     }
@@ -7882,7 +8145,7 @@
       if (!c) return;
       const peekEl = document.getElementById('wr-letter-peek');
       if (peekEl) {
-        peekEl.innerHTML = `<span class="font-thai font-bold text-white">${c.display}</span> → <span class="text-amber-300">${c.label}</span>`;
+        peekEl.innerHTML = `<span class="inline-flex items-center gap-1.5"><span class="px-1.5 py-0.5 rounded bg-sky-500/15 border border-sky-400/40 font-thai font-bold text-sky-200 text-xs">${c.display}</span> <span class="text-slate-500">→</span> <span class="text-amber-300 font-medium">${c.label}</span></span>`;
       }
       playThaiAudio(getThaiAudioTextForChar(c.char));
     }
@@ -8664,6 +8927,113 @@
     // =========================================================================
     // SMART ADAPTIVE LIVE CONVERSATION ENGINE (THAI)
     // =========================================================================
+    // =====================================================================
+    // CONVERSATION GLOSSARY: every word that appears in 2-person convos but is not a lesson item.
+    // Format: thai: [spoken, meaning, tag]   tag 'c' = core "glue" word (grammar/particles/high-frequency verbs)
+    // Used to (1) gloss untaught words on tap, (2) pre-teach them before listening, (3) track incidental acquisition.
+    // =====================================================================
+    const THAI_CONVO_GLOSSARY = {
+      // --- Core glue: particles, pronouns, question words ---
+      'ครับ': ['kháp', 'polite ending (male)', 'c'], 'ค่ะ': ['khâ', 'polite ending (female, statements)', 'c'], 'คะ': ['khá', 'polite ending (female, questions)', 'c'],
+      'คับ': ['kháp', 'casual ครับ', 'c'], 'จ้า': ['jâa', 'friendly "yes / okay!" ending', 'c'], 'จ้ะ': ['jâ', 'warm, soft ending', 'c'],
+      'นะ': ['ná', 'softener ("okay?", "you know")', 'c'], 'ไหม': ['mǎi', 'yes/no question marker', 'c'], 'เลย': ['loei', 'right away / totally (emphasis)', 'c'],
+      'สิ': ['sì', 'go on / do it (urging)', 'c'], 'อ่ะ': ['à', 'casual filler ending', 'c'], 'อะ': ['à', 'casual filler ending', 'c'], 'แหละ': ['làe', 'exactly / that\'s it', 'c'],
+      'ล่ะ': ['lâ', 'then? / what about', 'c'], 'เนี่ย': ['nîa', 'this here (emphasis)', 'c'], 'หรือ': ['rǔue', 'or', 'c'], 'กับ': ['gàp', 'and / with', 'c'],
+      'และ': ['láe', 'and', 'c'], 'ก็': ['gɔ̂ɔ', 'then / also / well…', 'c'], 'แล้ว': ['láaeo', 'already / and then', 'c'], 'ด้วย': ['dûai', 'too / also / please (add-on)', 'c'],
+      'จะ': ['jà', 'will (future)', 'c'], 'ได้': ['dâi', 'can / okay / get', 'c'], 'ไม่': ['mâi', 'not / no', 'c'], 'ยัง': ['yang', 'still / yet', 'c'],
+      'แค่': ['khâe', 'just / only', 'c'], 'อีก': ['ìik', 'more / again / another', 'c'], 'หน่อย': ['nɔ̀i', 'a little (softens requests)', 'c'], 'นิด': ['nít', 'a tiny bit', 'c'],
+      'นิดนึง': ['nít-nɯng', 'just a little bit', 'c'], 'นึง': ['nɯng', 'one (casual)', 'c'], 'มาก': ['mâak', 'very / a lot', 'c'], 'เยอะ': ['yə́', 'a lot / many', 'c'],
+      'ที่': ['thîi', 'at / that / which', 'c'], 'ของ': ['khɔ̌ɔng', 'of / thing', 'c'], 'ให้': ['hâi', 'give / for / let', 'c'], 'ใน': ['nai', 'in', 'c'],
+      'บน': ['bon', 'on / above', 'c'], 'ว่า': ['wâa', 'that / say (quote)', 'c'], 'เป็น': ['bpen', 'is / be', 'c'], 'มี': ['mii', 'have / there is', 'c'],
+      'นี้': ['níi', 'this', 'c'], 'นี่': ['nîi', 'this (here)', 'c'], 'นั้น': ['nán', 'that', 'c'], 'โน่น': ['nôon', 'over there', 'c'],
+      'ไหน': ['nǎi', 'which / where', 'c'], 'ที่ไหน': ['thîi-nǎi', 'where', 'c'], 'อะไร': ['à-rai', 'what', 'c'], 'ยังไง': ['yang-ngai', 'how', 'c'],
+      'ไง': ['ngai', 'how / what (casual)', 'c'], 'กี่': ['gìi', 'how many', 'c'], 'ใคร': ['khrai', 'who', 'c'], 'ทำไม': ['tham-mai', 'why', 'c'],
+      'เท่าไหร่': ['thâo-rài', 'how much', 'c'], 'แค่ไหน': ['khâe-nǎi', 'how much / to what degree', 'c'], 'งั้น': ['ngán', 'in that case / so', 'c'], 'งี้': ['ngíi', 'like this (casual)', 'c'],
+      'แบบ': ['bàaep', 'style / kind / like', 'c'], 'อย่าง': ['yàang', 'kind / like', 'c'], 'อย่างเดียว': ['yàang-diao', 'only that / just one kind', 'c'], 'เดียว': ['diao', 'single / only', 'c'],
+      'ทุก': ['thúk', 'every', 'c'], 'บ้าง': ['bâang', 'some / any', 'c'], 'เอง': ['eeng', 'oneself / just (emphasis)', 'c'], 'พอ': ['phɔɔ', 'enough', 'c'],
+      'พอดี': ['phɔɔ-dii', 'just right / just so happens', 'c'], 'ก่อน': ['gɔ̀ɔn', 'first / before', 'c'], 'เดี๋ยว': ['dǐao', 'in a moment / hold on', 'c'], 'ต้อง': ['dtɔ̂ng', 'must / have to', 'c'],
+      'อยาก': ['yàak', 'want to', 'c'], 'กำลัง': ['gam-lang', 'currently (-ing)', 'c'], 'เพิ่ง': ['phôeng', 'just (recently)', 'c'], 'กัน': ['gan', 'together / each other', 'c'],
+      'เหมือน': ['mǔean', 'same as / like', 'c'], 'เดิม': ['dəəm', 'original / as before', 'c'], 'เหมือนเดิม': ['mǔean-dəəm', 'same as usual', 'c'], 'กว่า': ['gwàa', 'more than', 'c'],
+      'สุด': ['sùt', 'most / end', 'c'], 'จัง': ['jang', 'so / really', 'c'], 'แน่': ['nâe', 'sure / certain', 'c'], 'จริง': ['jing', 'real / true', 'c'],
+      'ผม': ['phǒm', 'I (male)', 'c'], 'ฉัน': ['chǎn', 'I', 'c'], 'เธอ': ['thəə', 'you / she', 'c'], 'แก': ['gae', 'you (close friends)', 'c'],
+      'เขา': ['khǎo', 'he / she / they', 'c'], 'คุณ': ['khun', 'you (polite)', 'c'], 'ท่าน': ['thâan', 'you / sir (very polite)', 'c'], 'พวก': ['phûak', 'group (plural marker)', 'c'],
+      'คน': ['khon', 'person / people', 'c'], 'อัน': ['an', 'thing / piece', 'c'], 'ตัว': ['dtua', 'body / item (classifier)', 'c'], 'ความ': ['khwaam', '-ness (makes nouns)', 'c'],
+      // --- Core verbs & adjectives ---
+      'เอา': ['ao', 'take / want', 'c'], 'ขอ': ['khɔ̌ɔ', 'may I have / please give', 'c'], 'ไป': ['bpai', 'go', 'c'], 'มา': ['maa', 'come', 'c'],
+      'ดี': ['dii', 'good', 'c'], 'รับ': ['ráp', 'receive / take (polite "would you like")', 'c'], 'สั่ง': ['sàng', 'order', 'c'], 'กิน': ['gin', 'eat', 'c'],
+      'ทาน': ['thaan', 'eat (polite)', 'c'], 'ดื่ม': ['dɯ̀ɯm', 'drink', 'c'], 'ใส่': ['sài', 'put in / add', 'c'], 'ทำ': ['tham', 'do / make', 'c'],
+      'ใช้': ['chái', 'use', 'c'], 'ดู': ['duu', 'look / see', 'c'], 'รอ': ['rɔɔ', 'wait', 'c'], 'อยู่': ['yùu', 'be at / stay', 'c'],
+      'รู้': ['rúu', 'know', 'c'], 'ไม่รู้': ['mâi-rúu', 'don\'t know', 'c'], 'พูด': ['phûut', 'speak', 'c'], 'ชอบ': ['chɔ̂ɔp', 'like', 'c'],
+      'ลอง': ['lɔɔng', 'try', 'c'], 'ซื้อ': ['sɯ́ɯ', 'buy', 'c'], 'จ่าย': ['jàai', 'pay', 'c'], 'เปิด': ['bpə̀ət', 'open / turn on', 'c'],
+      'ปิด': ['bpìt', 'close / turn off', 'c'], 'กลับ': ['glàp', 'return / go back', 'c'], 'กลับบ้าน': ['glàp-bâan', 'go home / to take home', 'c'], 'ถึง': ['thɯ̌ng', 'arrive / reach', 'c'],
+      'ขึ้น': ['khɯ̂n', 'go up / get on', 'c'], 'ลง': ['long', 'go down / get off', 'c'], 'ออก': ['ɔ̀ɔk', 'go out / exit', 'c'], 'เข้า': ['khâo', 'enter', 'c'],
+      'เข้าไป': ['khâo-bpai', 'go in', 'c'], 'เดิน': ['dəən', 'walk', 'c'], 'นั่ง': ['nâng', 'sit', 'c'], 'เรียก': ['rîak', 'call', 'c'],
+      'ส่ง': ['sòng', 'send / drop off', 'c'], 'เพิ่ม': ['phôem', 'add / extra', 'c'], 'เสร็จ': ['sèt', 'finished / done', 'c'], 'พร้อม': ['phrɔ́ɔm', 'ready', 'c'],
+      'ว่าง': ['wâang', 'free / empty', 'c'], 'ใหม่': ['mài', 'new', 'c'], 'ร้อน': ['rɔ́ɔn', 'hot', 'c'], 'เย็น': ['yen', 'cold / cool / evening', 'c'],
+      'ใกล้': ['glâi', 'near', 'c'], 'สวย': ['sǔai', 'beautiful', 'c'], 'หิว': ['hǐu', 'hungry', 'c'], 'อิ่ม': ['ìm', 'full (after eating)', 'c'],
+      'ใหญ่': ['yài', 'big', 'c'], 'ธรรมดา': ['tham-má-daa', 'normal / regular', 'c'], 'สะดวก': ['sà-dùak', 'convenient', 'c'], 'วัน': ['wan', 'day', 'c'],
+      'วันนี้': ['wan-níi', 'today', 'c'], 'บาท': ['bàat', 'baht', 'c'], 'สวัสดี': ['sà-wàt-dii', 'hello', 'c'], 'ขอบคุณ': ['khɔ̀ɔp-khun', 'thank you', 'c'],
+      'ขอโทษ': ['khɔ̌ɔ-thôot', 'sorry / excuse me', 'c'], 'ใช่': ['châi', 'yes / correct', 'c'], 'ใช่ไหม': ['châi mǎi', 'right?', 'c'], 'โอเค': ['oo-khee', 'okay', 'c'],
+      'บ้าน': ['bâan', 'home / house', 'c'], 'ร้าน': ['ráan', 'shop / restaurant', 'c'], 'ทาง': ['thaang', 'way / route', 'c'], 'คำ': ['kham', 'word', 'c'],
+      // --- Numbers ---
+      'หนึ่ง': ['nɯ̀ng', 'one'], 'สอง': ['sɔ̌ɔng', 'two'], 'สาม': ['sǎam', 'three'], 'สี่': ['sìi', 'four'], 'ห้า': ['hâa', 'five'], 'หก': ['hòk', 'six'],
+      'เจ็ด': ['jèt', 'seven'], 'แปด': ['bpàaet', 'eight'], 'สิบ': ['sìp', 'ten'], 'ยี่สิบ': ['yîi-sìp', 'twenty'], 'เอ็ด': ['èt', 'one (in 21, 31…)'], 'ร้อย': ['rɔ́ɔi', 'hundred'],
+      'ศูนย์': ['sǔun', 'zero'], 'เปอร์เซ็นต์': ['bpəə-sen', 'percent'], 'ทั้งหมด': ['tháng-mòt', 'all / in total'], 'รวม': ['ruam', 'altogether / combined'],
+      // --- Food & stall ---
+      'เส้น': ['sên', 'noodles (strands)'], 'ก๋วยเตี๋ยว': ['gǔai-dtǐao', 'rice noodle soup'], 'ซุป': ['súp', 'soup'], 'ชาม': ['chaam', 'bowl'], 'ถ้วย': ['thûai', 'cup / small bowl'],
+      'จาน': ['jaan', 'plate'], 'แก้ว': ['gâaeo', 'glass'], 'ขวด': ['khùat', 'bottle'], 'ช้อน': ['chɔ́ɔn', 'spoon'], 'ส้อม': ['sɔ̂m', 'fork'], 'ซอง': ['sɔɔng', 'sachet / packet'],
+      'ลูก': ['lûuk', 'ball / round thing'], 'ชิ้น': ['chín', 'piece'], 'ลูกค้า': ['lûuk-kháa', 'customer'], 'คิว': ['khiu', 'queue / turn'], 'ต่อ': ['dtɔ̀ɔ', 'next / continue'],
+      'ต่อไป': ['dtɔ̀ɔ-bpai', 'next'], 'โต๊ะ': ['dtó', 'table'], 'เมนู': ['mee-nuu', 'menu'], 'อาหาร': ['aa-hǎan', 'food'], 'ข้าว': ['khâao', 'rice / meal'],
+      'ผัด': ['phàt', 'stir-fry'], 'กะเพรา': ['gà-phrao', 'holy basil (stir-fry)'], 'กระทะ': ['grà-thá', 'wok'], 'กระเทียม': ['grà-thiam', 'garlic'], 'ไข่': ['khài', 'egg'],
+      'ไข่ดาว': ['khài-daao', 'fried egg'], 'ไข่เจียว': ['khài-jiao', 'omelette'], 'สุก': ['sùk', 'cooked / well-done'], 'ต้ม': ['dtôm', 'boil'], 'ต้มยำ': ['dtôm-yam', 'tom yum (hot & sour soup)'],
+      'ตุ๋น': ['dtǔn', 'stewed'], 'ลวก': ['lûak', 'blanch / dip in hot water'], 'นึ่ง': ['nɯ̂ng', 'steamed'], 'ปิ้ง': ['bpîng', 'grilled (on skewer)'], 'ย่าง': ['yâang', 'grilled / roasted'],
+      'สับ': ['sàp', 'minced / chopped'], 'สด': ['sòt', 'fresh'], 'โรย': ['rooi', 'sprinkle'], 'ปรุง': ['bprung', 'season'], 'รส': ['rót', 'taste / flavor'],
+      'ปรุงรส': ['bprung-rót', 'season to taste'], 'เครื่องปรุง': ['khrɯ̂ang-bprung', 'condiments'], 'เครื่อง': ['khrɯ̂ang', 'machine / set (of ingredients)'], 'เครื่องเครา': ['khrɯ̂ang-khrao', 'all the toppings'],
+      'ครบ': ['khróp', 'complete / all in'], 'ล้วนๆ': ['lúan-lúan', 'purely / only'], 'หอม': ['hɔ̌ɔm', 'fragrant'], 'เด็ด': ['dèt', 'outstanding / the best'], 'ผัก': ['phàk', 'vegetables'],
+      'พริกป่น': ['phrík-bpòn', 'chili flakes'], 'ป่น': ['bpòn', 'ground / crushed'], 'น้ำส้มสายชู': ['nám-sôm-sǎai-chuu', 'vinegar'], 'น้ำตาล': ['nám-dtaan', 'sugar'], 'ถั่ว': ['thùa', 'beans / nuts'],
+      'ถั่วลิสง': ['thùa-lí-sǒng', 'peanuts'], 'หมูแดง': ['mǔu-daaeng', 'red BBQ pork'], 'หมูสับ': ['mǔu-sàp', 'minced pork'], 'ส้มตำ': ['sôm-dtam', 'papaya salad'], 'ตำ': ['dtam', 'pound (papaya salad)'],
+      'ตำไทย': ['dtam-thai', 'Thai-style papaya salad'], 'ตำซั่ว': ['dtam-sûa', 'papaya salad with noodles'], 'แซ่บ': ['sâep', 'spicy-delicious (Isan)'], 'แซ่บๆ': ['sâep-sâep', 'super spicy-tasty'], 'เม็ด': ['mét', 'seed / pellet (chili count)'],
+      'ระดับ': ['rá-dàp', 'level'], 'ชิม': ['chim', 'taste (try)'], 'จิ้ม': ['jîm', 'dip'], 'แกะ': ['gàe', 'peel / unwrap'], 'ขนม': ['khà-nǒm', 'snack / dessert'],
+      'ขนมปัง': ['khà-nǒm-bpang', 'bread'], 'แฮม': ['haem', 'ham'], 'ชีส': ['chíit', 'cheese'], 'อุ่น': ['ùn', 'warm up / heat'], 'ไก่': ['gài', 'chicken'],
+      'มะม่วง': ['má-mûang', 'mango'], 'มะพร้าว': ['má-phráao', 'coconut'], 'กะทิ': ['gà-thí', 'coconut milk'], 'ไอติม': ['ai-dtim', 'ice cream'], 'ข้าวเหนียว': ['khâao-nǐao', 'sticky rice'],
+      'ชา': ['chaa', 'tea'], 'ชาไทย': ['chaa-thai', 'Thai iced tea'], 'กาแฟ': ['gaa-fae', 'coffee'], 'อเมริกาโน่': ['à-mee-rí-gaa-nôo', 'americano'], 'ดำ': ['dam', 'black'],
+      'น้ำอัดลม': ['nám-àt-lom', 'soda / soft drink'], 'อัดลม': ['àt-lom', 'carbonated'], 'น้ำส้ม': ['nám-sôm', 'orange juice'], 'เย็นๆ': ['yen-yen', 'nice and cold'], 'ร้อนๆ': ['rɔ́ɔn-rɔ́ɔn', 'piping hot'],
+      'หลอดดูด': ['lɔ̀ɔt-dùut', 'drinking straw'], 'ดูด': ['dùut', 'suck / sip'], 'ถุง': ['thǔng', 'bag'], 'พลาสติก': ['phláat-sà-dtìk', 'plastic'], 'ผ้า': ['phâa', 'cloth'],
+      'ถือ': ['thɯ̌ɯ', 'carry / hold'], 'ขาด': ['khàat', 'run out / torn'], 'หมด': ['mòt', 'used up / sold out'], 'มัน': ['man', 'it / oily'], 'ชำระ': ['cham-rá', 'pay (formal)'],
+      'โอน': ['oon', 'transfer (money)'], 'เงินสด': ['ngoen-sòt', 'cash'], 'คิวอาร์': ['khiu-aa', 'QR'], 'คิวอาร์โค้ด': ['khiu-aa-khóot', 'QR code'], 'โค้ด': ['khóot', 'code'],
+      'พร้อมเพย์': ['phrɔ́ɔm-phee', 'PromptPay (QR payment)'], 'บัตร': ['bàt', 'card'], 'ค่า': ['khâa', 'fee / cost'], 'ฟรี': ['frii', 'free'], 'แจก': ['jàaek', 'give out'],
+      'ร้านอาหาร': ['ráan-aa-hǎan', 'restaurant'], 'เซเว่น': ['see-wên', '7-Eleven'], 'คาเฟ่': ['khaa-fêe', 'café'], 'ตลาด': ['dtà-làat', 'market'], 'ไม้': ['máai', 'stick / skewer'],
+      'วาง': ['waang', 'put down / place'], 'กระจก': ['grà-jòk', 'glass / mirror'], 'จีบ': ['jìip', 'pinch / pleated (dumpling)'], 'ห่อ': ['hɔ̀ɔ', 'wrap / pack'], 'ใส': ['sǎi', 'clear (broth)'],
+      // --- Taxi & places ---
+      'รถ': ['rót', 'car / vehicle'], 'รถเมล์': ['rót-mee', 'city bus'], 'รถไฟ': ['rót-fai', 'train'], 'รถไฟฟ้า': ['rót-fai-fáa', 'skytrain (BTS)'], 'แท็กซี่': ['tháek-sîi', 'taxi'],
+      'ไฟ': ['fai', 'light / fire'], 'ไฟแดง': ['fai-daaeng', 'red light (traffic light)'], 'แดง': ['daaeng', 'red'], 'ป้าย': ['bpâai', 'sign / stop'], 'ป้ายรถเมล์': ['bpâai-rót-mee', 'bus stop'],
+      'ตึก': ['dtɯ̀k', 'building'], 'หน้าตึก': ['nâa dtɯ̀k', 'in front of the building'], 'หมุด': ['mùt', 'pin (on the map)'], 'คอนโด': ['khɔn-doo', 'condo'], 'โรงแรม': ['roong-raaem', 'hotel'],
+      'สุขุมวิท': ['sù-khǔm-wít', 'Sukhumvit (main road)'], 'ทางด่วน': ['thaang-dùan', 'expressway'], 'ด่วน': ['dùan', 'urgent / express'], 'ติด': ['dtìt', 'stuck / jammed'], 'รถติด': ['rót-dtìt', 'traffic jam'],
+      'ชิด': ['chít', 'close to / pull in'], 'ชิดซ้าย': ['chít sáai', 'pull over to the left'], 'ริม': ['rim', 'edge / side'], 'ด้าน': ['dâan', 'side'], 'แถว': ['thǎaeo', 'around / area'],
+      'บริเวณ': ['bɔɔ-rí-ween', 'area'], 'ฟุตบาท': ['fút-bàat', 'sidewalk'], 'สะพาน': ['sà-phaan', 'bridge'], 'พ้น': ['phón', 'past / beyond'],
+      'กด': ['gòt', 'press'], 'มิเตอร์': ['mí-dtə̂ə', 'meter'], 'ลุง': ['lung', 'uncle (older man)'], 'ขับ': ['khàp', 'drive'], 'คนขับ': ['khon-khàp', 'driver'],
+      'รีบ': ['rîip', 'hurry'], 'ถูก': ['thùuk', 'cheap / correct'], 'แพง': ['phaaeng', 'expensive'], 'ซอย': ['sɔɔi', 'side street / alley (soi)'], 'หน้า': ['nâa', 'front'],
+      'ข้าง': ['khâang', 'side'], 'อีกหน่อย': ['ìik nɔ̀i', 'a little more / further'], 'ต้น': ['dtôn', 'start / beginning (Ton)'], 'ปาก': ['bpàak', 'mouth / entrance'], 'ปากซอย': ['bpàak-sɔɔi', 'mouth of the soi'],
+      // --- Social & daily life ---
+      'เพื่อน': ['phɯ̂an', 'friend'], 'ชวน': ['chuan', 'invite'], 'นัด': ['nát', 'appointment / meet-up'], 'เที่ยว': ['thîao', 'go out / travel'], 'แผน': ['phǎaen', 'plan'],
+      'เที่ยง': ['thîang', 'noon'], 'คืน': ['khɯɯn', 'night / return'], 'ศุกร์': ['sùk', 'Friday'], 'อาทิตย์': ['aa-thít', 'Sunday / week'], 'เดือน': ['dɯan', 'month'],
+      'สิ้นเดือน': ['sîn-dɯan', 'end of the month'], 'สิ้น': ['sîn', 'end'], 'ดาดฟ้า': ['dàat-fáa', 'rooftop'], 'ฟ้า': ['fáa', 'sky'], 'บรรยากาศ': ['ban-yaa-gàat', 'atmosphere'],
+      'แม่น้ำ': ['mâae-nám', 'river'], 'เจ้าพระยา': ['jâo-phrá-yaa', 'Chao Phraya (river)'], 'อากาศ': ['aa-gàat', 'weather / air'], 'ฝน': ['fǒn', 'rain'], 'ฝนตก': ['fǒn dtòk', 'it\'s raining'],
+      'ตก': ['dtòk', 'fall'], 'ตกหนัก': ['dtòk nàk', 'pour heavily'], 'หนัก': ['nàk', 'heavy'], 'เริ่ม': ['rə̂əm', 'start'], 'ลม': ['lom', 'wind'],
+      'ง่วง': ['ngûang', 'sleepy'], 'สบาย': ['sà-baai', 'comfortable / well'], 'เจ็บ': ['jèp', 'hurt'], 'ชน': ['chon', 'bump / crash'], 'ไหว': ['wǎi', 'can manage / cope'],
+      'หวย': ['hǔai', 'lottery'], 'รางวัล': ['raang-wan', 'prize'], 'เลข': ['lêek', 'number'], 'ท้าย': ['tháai', 'last / end'], 'เลี้ยง': ['líang', 'treat (pay for others)'],
+      'ตกลง': ['dtòk-long', 'agree / okay'], 'ปรับปรุง': ['bpràp-bprung', 'renovate'], 'เฉย': ['chə̌əi', 'just / for no reason'], 'เฉยๆ': ['chə̌əi-chə̌əi', 'just because / nothing special'], 'ลุก': ['lúk', 'get up'],
+      'เสียง': ['sǐang', 'sound / voice'], 'ดัง': ['dang', 'loud'], 'เมื่อกี้': ['mɯ̂a-gîi', 'just now'], 'มอง': ['mɔɔng', 'look at'], 'เห็น': ['hěn', 'see'],
+      'ทุ่ง': ['thûng', 'field'], 'เขียว': ['khǐao', 'green'], 'เหลือง': ['lɯ̌ang', 'yellow'], 'สี': ['sǐi', 'color'], 'อัญชัน': ['an-chan', 'butterfly pea (blue flower)'],
+      'หล่อ': ['lɔ̀ɔ', 'handsome'], 'ใหม่ๆ': ['mài-mài', 'brand new'], 'เชิญ': ['choen', 'please (invite) / go ahead'], 'เตา': ['dtao', 'stove'], 'รบกวน': ['róp-guan', 'sorry to bother / could you please'],
+      'เชื่อม': ['chɯ̂am', 'connect'], 'ระวัง': ['rá-wang', 'be careful'], 'พนักงาน': ['phá-nák-ngaan', 'staff / employee'], 'พ่อค้า': ['phɔ̂ɔ-kháa', 'vendor (man)'], 'แม่ค้า': ['mâae-kháa', 'vendor (woman)'],
+      'อุ๊ย': ['úi', 'oops!'], 'โอ้โห': ['ôo-hǒo', 'wow!'], 'อ้าว': ['âao', 'oh! (surprise)'], 'ชิลๆ': ['chin-chin', 'chill / relaxed'], 'ประโยค': ['bprà-yòok', 'sentence'],
+      'ชีวิต': ['chii-wít', 'life'], 'ประจำวัน': ['bprà-jam-wan', 'daily'], 'ชีวิตประจำวัน': ['chii-wít bprà-jam-wan', 'everyday life'], 'ที': ['thii', 'time / turn'], 'เจ้า': ['jâo', 'stall / owner (เจ้านี้ = this stall)'],
+      'เปล่า': ['bplàao', 'no / plain'], 'น้ำตก': ['nám-dtòk', 'waterfall / spicy grilled-meat salad'], 'มะนาว': ['má-naao', 'lime'],
+      'อะหล่อย': ['à-lɔ̀i', 'yummy! (playful slang for อร่อย)'], 'สุดๆ': ['sùt-sùt', 'super / to the max'],
+      'เจียว': ['jiao', 'crispy-fried'], 'กระเทียมเจียว': ['grà-thiam-jiao', 'crispy fried garlic']
+    };
+
     const THAI_CONVO_TURNS_MAP = {
       // UNIT 1: NOODLE STALL
       ST_lek: {
@@ -8780,6 +9150,13 @@
         intentCue: '🍬 Confirm regular / normal Thai sweetness',
         earDistractors: ['Where is the nearest BTS skytrain station?', 'Do you want chilies and MSG in your salad?', 'Can you wait one second while I check?']
       },
+      ST_nong_staff: {
+        role: '🧑‍🍳 Young Cafe Server',
+        partner: { script: 'สวัสดีค่ะ นั่งโต๊ะไหนดีคะ เรียกได้เลยนะคะ!', spoken: 'sà-wàt-dii khâ, nâng dtó nǎi dii khá, rîak dâi loei ná khá!', meaning: 'Hello! Pick any table, just call me when you are ready!', tts: 'สวัสดีค่ะ นั่งโต๊ะไหนดีคะ เรียกได้เลยนะคะ' },
+        user: { script: 'น้องคะ สั่งอาหารหน่อยค่ะ', spoken: 'nɔ́ɔng khá, sàng aa-hǎan nɔ̀ɔi khâ', meaning: 'Younger sibling/server, could I order please.', tts: 'น้องคะ สั่งอาหารหน่อยค่ะ' },
+        intentCue: '🙋 Call over the younger server politely using น้อง (nɔ́ɔng)',
+        earDistractors: ['Tell the driver to pull over right here', 'Ask for no MSG in the papaya salad', 'Say that the movie was insanely good']
+      },
       ST_gep_dtang: {
         role: '👨‍🍳 Night Market Waiter',
         partner: { script: 'อิ่มแล้วใช่ไหมครับ รับอะไรเพิ่มไหมครับ?', spoken: 'ìm láaeo châi mǎi kháp, ráp à-rai phôem mǎi kháp?', meaning: 'All full now, right? Would you like anything else?', tts: 'อิ่มแล้วใช่ไหมครับ รับอะไรเพิ่มไหมครับ' },
@@ -8831,12 +9208,12 @@
         intentCue: '🚕 Address the driver warmly as พี่ (phîi) and give destination',
         earDistractors: ['Do you want thin noodles or wide noodles?', 'Would you like 50% sugar in your iced coffee?', 'Do you need a plastic bag for your items?']
       },
-      ST_nong_staff: {
-        role: '🧑‍🍳 Young Cafe Server',
-        partner: { script: 'สวัสดีค่ะ นั่งโต๊ะไหนดีคะ เรียกได้เลยนะคะ!', spoken: 'sà-wàt-dii khâ, nâng dtó nǎi dii khá, rîak dâi loei ná khá!', meaning: 'Hello! Pick any table, just call me when you are ready!', tts: 'สวัสดีค่ะ นั่งโต๊ะไหนดีคะ เรียกได้เลยนะคะ' },
-        user: { script: 'น้องคะ สั่งอาหารหน่อยค่ะ', spoken: 'nɔ́ɔng khá, sàng aa-hǎan nɔ̀ɔi khâ', meaning: 'Younger sibling/server, could I order please.', tts: 'น้องคะ สั่งอาหารหน่อยค่ะ' },
-        intentCue: '🙋 Call over the younger server politely using น้อง (nɔ́ɔng)',
-        earDistractors: ['Tell the driver to pull over right here', 'Ask for no MSG in the papaya salad', 'Say that the movie was insanely good']
+      ST_poet_meter: {
+        role: '🚕 Taxi Driver',
+        partner: { script: 'ได้ครับผม ขึ้นมาเลยครับ', spoken: 'dâi kháp phǒm, khɯ̂n maa loei kháp', meaning: 'Sure thing! Hop right in.', tts: 'ได้ครับผม ขึ้นมาเลยครับ' },
+        user: { script: 'รบกวนเปิดมิเตอร์ด้วยนะคะ', spoken: 'róp-guan bpə̀ət mí-dtə̂ə dûai ná khá', meaning: 'Please turn on the meter, driver.', tts: 'รบกวนเปิดมิเตอร์ด้วยนะคะ' },
+        intentCue: '🚕 Ask the driver politely to turn on the meter',
+        earDistractors: ['Do you want your iced tea sweet or unsweetened?', 'Would you like a plastic bag with that?', 'How spicy do you want your soup?']
       },
       ST_trong_bpai: {
         role: '🚕 Grab Driver',
@@ -9458,6 +9835,24 @@
           user: { script: 'ขอสแกนพร้อมเพย์เลยค่ะ รบกวนเปิดคิวอาร์โค้ดให้หน่อยนะคะ', spoken: 'khɔ̌ɔ sà-gaaen phrɔ́ɔm-phee loei khâ, róp-guan bpə̀ət khiu-aa khôot hâi nɔ̀ɔi ná khá', meaning: 'PromptPay QR scan please, could you show me your QR code?', tts: 'ขอสแกนพร้อมเพย์เลยค่ะ รบกวนเปิดคิวอาร์โค้ดให้หน่อยนะคะ' }
         }
       },
+      ST_nong_staff: {
+        easier: {
+          partner: { script: 'รับอะไรดีคะ?', spoken: 'ráp à-rai dii khá?', meaning: 'What would you like to order?', tts: 'รับอะไรดีคะ' },
+          user: { script: 'น้องคะ สั่งอาหารหน่อยค่ะ', spoken: 'nɔ́ɔng khá, sàng aa-hǎan nɔ̀ɔi khâ', meaning: 'Excuse me server, could I order please.', tts: 'น้องคะ สั่งอาหารหน่อยค่ะ' }
+        },
+        standard: {
+          partner: { script: 'สวัสดีค่ะ นั่งโต๊ะไหนดีคะ เรียกได้เลยนะคะ!', spoken: 'sà-wàt-dii khâ, nâng dtó nǎi dii khá, rîak dâi loei ná khá!', meaning: 'Hello! Pick any table, just call me when you are ready!', tts: 'สวัสดีค่ะ นั่งโต๊ะไหนดีคะ เรียกได้เลยนะคะ' },
+          user: { script: 'น้องคะ สั่งอาหารหน่อยค่ะ', spoken: 'nɔ́ɔng khá, sàng aa-hǎan nɔ̀ɔi khâ', meaning: 'Younger sibling/server, could I order please.', tts: 'น้องคะ สั่งอาหารหน่อยค่ะ' }
+        },
+        harder: {
+          partner: { script: 'สวัสดีค่ะคุณลูกค้า เมนูวางอยู่บนโต๊ะแล้วนะคะ พร้อมแล้วเรียกได้เลยค่ะ', spoken: 'sà-wàt-dii khâ khun lûuk-kháa, mee-nuu waang yùu bon dtó láaeo ná khá, phrɔ́ɔm láaeo rîak dâi loei khâ', meaning: 'Welcome! The menus are on the table, feel free to call when ready.', tts: 'สวัสดีค่ะคุณลูกค้า เมนูวางอยู่บนโต๊ะแล้วนะคะ พร้อมแล้วเรียกได้เลยค่ะ' },
+          user: { script: 'น้องคะ รบกวนสั่งอาหารหน่อยค่ะ ขอชาไทยหวานน้อยหนึ่งแก้วด้วยค่ะ', spoken: 'nɔ́ɔng khá, róp-guan sàng aa-hǎan nɔ̀ɔi khâ, khɔ̌ɔ chaa-thai wǎan nɔ́ɔi nɯ̀ng gâaeo dûai khâ', meaning: 'Excuse me server! Could I order please, one iced Thai tea less sweet as well.', tts: 'น้องคะ รบกวนสั่งอาหารหน่อยค่ะ ขอชาไทยหวานน้อยหนึ่งแก้วด้วยค่ะ' }
+        },
+        overdrive: {
+          partner: { script: 'สวัสดีค่ะ วันนี้มีโต๊ะว่างริมกระจก นั่งตรงนั้นได้เลยนะคะ!', spoken: 'sà-wàt-dii khâ, wan-níi mii dtó wâang rim grà-jòk, nâng dtrong nán dâi loei ná khá', meaning: 'Hello! We have an open table by the window today, you can sit right there!', tts: 'สวัสดีค่ะ วันนี้มีโต๊ะว่างริมกระจก นั่งตรงนั้นได้เลยนะคะ' },
+          user: { script: 'น้องคะ ขอสั่งอาหารกับเครื่องดื่มก่อนเลยนะคะ หิวน้ำมากค่ะ', spoken: 'nɔ́ɔng khá, khɔ̌ɔ sàng aa-hǎan gàp khrɯ̂ang-dɯ̀əm gɔ̀ɔn loei ná khá, hǐu nám mâak khâ', meaning: 'Excuse me server! Let me order the food and drinks right away please, I am so thirsty!', tts: 'น้องคะ ขอสั่งอาหารกับเครื่องดื่มก่อนเลยนะคะ หิวน้ำมากค่ะ' }
+        }
+      },
       ST_phii_driver: {
         easier: {
           partner: { script: 'ไปไหนครับ?', spoken: 'bpai nǎi kháp?', meaning: 'Where to?', tts: 'ไปไหนครับ' },
@@ -9476,13 +9871,61 @@
           user: { script: 'พี่คะ ไปสุขุมวิทซอยยี่สิบสาม ขึ้นทางด่วนได้เลยนะคะ เดี๋ยวออกค่าทางด่วนเองค่ะ', spoken: 'phîi khá, bpai sù-khǔm-wít sɔɔi yîi-sìp-sǎam, khɯ̂n thaang-dùan dâi loei ná khá, dǐao ɔ̀ɔk khâa thaang-dùan eeng khâ', meaning: 'Driver, Sukhumvit Soi 23 please — take the expressway right away, I will pay the toll!', tts: 'พี่คะ ไปสุขุมวิทซอยยี่สิบสาม ขึ้นทางด่วนได้เลยนะคะ เดี๋ยวออกค่าทางด่วนเองค่ะ' }
         }
       },
+      ST_poet_meter: {
+        easier: {
+          partner: { script: 'ขึ้นมาเลยครับ', spoken: 'khɯ̂n maa loei kháp', meaning: 'Hop right in!', tts: 'ขึ้นมาเลยครับ' },
+          user: { script: 'เปิดมิเตอร์ด้วยค่ะ', spoken: 'bpə̀ət mí-dtə̂ə dûai khâ', meaning: 'Turn on the meter please.', tts: 'เปิดมิเตอร์ด้วยค่ะ' }
+        },
+        standard: {
+          partner: { script: 'ได้ครับผม ขึ้นมาเลยครับ', spoken: 'dâi kháp phǒm, khɯ̂n maa loei kháp', meaning: 'Sure thing! Hop right in.', tts: 'ได้ครับผม ขึ้นมาเลยครับ' },
+          user: { script: 'รบกวนเปิดมิเตอร์ด้วยนะคะ', spoken: 'róp-guan bpə̀ət mí-dtə̂ə dûai ná khá', meaning: 'Please turn on the meter, driver.', tts: 'รบกวนเปิดมิเตอร์ด้วยนะคะ' }
+        },
+        harder: {
+          partner: { script: 'สุขุมวิทรถติดหน่อยนะพี่ ไปได้ครับ', spoken: 'sù-khǔm-wít rót dtìt nɔ̀ɔi ná phîi, bpai dâi kháp', meaning: 'Sukhumvit traffic is a bit heavy, but I can go!', tts: 'สุขุมวิทรถติดหน่อยนะพี่ ไปได้ครับ' },
+          user: { script: 'ได้ค่ะ รบกวนกดมิเตอร์ด้วยนะคะ ขอบคุณค่ะ', spoken: 'dâi khâ, róp-guan gòt mí-dtə̂ə dûai ná khá, khɔ̀ɔp-khun khâ', meaning: 'Sure! Please run the meter, thank you!', tts: 'ได้ค่ะ รบกวนกดมิเตอร์ด้วยนะคะ ขอบคุณค่ะ' }
+        },
+        overdrive: {
+          partner: { script: 'ไปสุขุมวิทใช่ไหมครับ ขึ้นมาเลยครับพี่', spoken: 'bpai sù-khǔm-wít châi mǎi kháp, khɯ̂n maa loei kháp phîi', meaning: 'Heading to Sukhumvit, right? Hop right in!', tts: 'ไปสุขุมวิทใช่ไหมครับ ขึ้นมาเลยครับพี่' },
+          user: { script: 'ขอบคุณค่ะพี่ รบกวนกดมิเตอร์ด้วยนะคะ แล้วขึ้นทางด่วนได้เลยค่ะ', spoken: 'khɔ̀ɔp-khun khâ phîi, róp-guan gòt mí-dtə̂ə dûai ná khá, láaeo khɯ̂n thaang-dùan dâi loei khâ', meaning: 'Thank you driver! Please run the meter, and you can take the expressway right away.', tts: 'ขอบคุณค่ะพี่ รบกวนกดมิเตอร์ด้วยนะคะ แล้วขึ้นทางด่วนได้เลยค่ะ' }
+        }
+      },
+      ST_trong_bpai: {
+        easier: {
+          partner: { script: 'ตรงไปไหมครับ?', spoken: 'drong bpai mǎi kháp?', meaning: 'Go straight?', tts: 'ตรงไปไหมครับ' },
+          user: { script: 'ตรงไปค่ะ', spoken: 'drong bpai khâ', meaning: 'Keep going straight ahead.', tts: 'ตรงไปค่ะ' }
+        },
+        standard: {
+          partner: { script: 'พี่ครับ ตรงไปหรือเลี้ยวซ้ายครับ?', spoken: 'phîi kháp, drong bpai rǒe líao sáai kháp?', meaning: 'Excuse me, go straight or turn left?', tts: 'พี่ครับ ตรงไปหรือเลี้ยวซ้ายครับ' },
+          user: { script: 'ตรงไปค่ะ', spoken: 'drong bpai khâ', meaning: 'Keep going straight ahead.', tts: 'ตรงไปค่ะ' }
+        }
+      },
+      ST_liao_sai: {
+        easier: {
+          partner: { script: 'เลี้ยวซ้ายไหมครับ?', spoken: 'líao sáai mǎi kháp?', meaning: 'Turn left?', tts: 'เลี้ยวซ้ายไหมครับ' },
+          user: { script: 'เลี้ยวซ้ายค่ะ', spoken: 'líao sáai khâ', meaning: 'Turn left, please.', tts: 'เลี้ยวซ้ายค่ะ' }
+        },
+        standard: {
+          partner: { script: 'เลี้ยวซ้ายหรือเลี้ยวขวาครับ?', spoken: 'líao sáai rǒe líao khwǎa kháp?', meaning: 'Turn left or turn right?', tts: 'เลี้ยวซ้ายหรือเลี้ยวขวาครับ' },
+          user: { script: 'เลี้ยวซ้ายค่ะ', spoken: 'líao sáai khâ', meaning: 'Turn left, please.', tts: 'เลี้ยวซ้ายค่ะ' }
+        }
+      },
+      ST_liao_kwaa: {
+        easier: {
+          partner: { script: 'เลี้ยวขวาไหมครับ?', spoken: 'líao khwǎa mǎi kháp?', meaning: 'Turn right?', tts: 'เลี้ยวขวาไหมครับ' },
+          user: { script: 'เลี้ยวขวาค่ะ', spoken: 'líao khwǎa khâ', meaning: 'Turn right, please.', tts: 'เลี้ยวขวาค่ะ' }
+        },
+        standard: {
+          partner: { script: 'ตรงไปหรือเลี้ยวขวาครับ?', spoken: 'drong bpai rǒe líao khwǎa kháp?', meaning: 'Go straight or turn right?', tts: 'ตรงไปหรือเลี้ยวขวาครับ' },
+          user: { script: 'เลี้ยวขวาค่ะ', spoken: 'líao khwǎa khâ', meaning: 'Turn right, please.', tts: 'เลี้ยวขวาค่ะ' }
+        }
+      },
       ST_yut_trong_nii: {
         easier: {
           partner: { script: 'จอดตรงไหนครับ?', spoken: 'jɔ̀ɔt dtrong nǎi kháp?', meaning: 'Stop where?', tts: 'จอดตรงไหนครับ' },
           user: { script: 'จอดตรงนี้ค่ะ', spoken: 'jɔ̀ɔt dtrong níi khâ', meaning: 'Stop right here.', tts: 'จอดตรงนี้ค่ะ' }
         },
         standard: {
-          partner: { script: 'ใกล้ถึงหมุดแล้ว จอดตรงไหนดีครับ?', spoken: 'glâi thǔeng mùt láaeo, jɔ̀ɔt dtrong nǎi dii kháp?', meaning: 'Almost at the pin — where should I pull over?', tts: 'ใกล้ถึงหมุดแล้ว จอดตรงไหนดีครับ' },
+          partner: { script: 'จอดตรงนี้หรือข้างหน้าครับ?', spoken: 'jɔ̀ɔt dtrong níi rǒe khâang-nâa kháp?', meaning: 'Pull over right here or up ahead?', tts: 'จอดตรงนี้หรือข้างหน้าครับ' },
           user: { script: 'จอดตรงนี้ค่ะ', spoken: 'jɔ̀ɔt dtrong níi khâ', meaning: 'Pull over right here, please.', tts: 'จอดตรงนี้ค่ะ' }
         },
         harder: {
@@ -9492,6 +9935,317 @@
         overdrive: {
           partner: { script: 'ข้างหน้ามีป้ายรถเมล์กับหน้าคอนโด จอดตรงไหนสะดวกสุดครับ?', spoken: 'khâang-nâa mii bpâai rót-mee gàp nâa khɔn-doo, jɔ̀ɔt dtrong nǎi sà-dùak sùt kháp?', meaning: 'Ahead is a bus stop and condo front — where is most convenient to stop?', tts: 'ข้างหน้ามีป้ายรถเมล์กับหน้าคอนโด จอดตรงไหนสะดวกสุดครับ' },
           user: { script: 'จอดตรงนี้เลยค่ะพี่ เลยป้ายรถเมล์ไปนิดนึง ชิดซ้ายหน้าตึกได้เลยค่ะ', spoken: 'jɔ̀ɔt dtrong níi loei khâ phîi, ləəi bpâai rót-mee bpai nít-nɯng, chít sáai nâa dtɯ̀k dâi loei khâ', meaning: 'Stop right here driver, just past the bus stop, pull left in front of the building!', tts: 'จอดตรงนี้เลยค่ะพี่ เลยป้ายรถเมล์ไปนิดนึง ชิดซ้ายหน้าตึกได้เลยค่ะ' }
+        }
+      },
+      ST_khaang_naa: {
+        easier: {
+          partner: { script: 'จอดตรงนี้ไหมครับ?', spoken: 'jɔ̀ɔt dtrong níi mǎi kháp?', meaning: 'Stop right here?', tts: 'จอดตรงนี้ไหมครับ' },
+          user: { script: 'จอดข้างหน้าค่ะ', spoken: 'jɔ̀ɔt khâang-nâa khâ', meaning: 'Stop just up ahead.', tts: 'จอดข้างหน้าค่ะ' }
+        },
+        standard: {
+          partner: { script: 'จอดตรงนี้หรือข้างหน้าครับ?', spoken: 'jɔ̀ɔt dtrong níi rǒe khâang-nâa kháp?', meaning: 'Stop right here or just up ahead?', tts: 'จอดตรงนี้หรือข้างหน้าครับ' },
+          user: { script: 'จอดข้างหน้าค่ะ', spoken: 'jɔ̀ɔt khâang-nâa khâ', meaning: 'Stop just up ahead.', tts: 'จอดข้างหน้าค่ะ' }
+        }
+      },
+      ST_soi_nii: {
+        easier: {
+          partner: { script: 'ซอยนี้ไหมครับ?', spoken: 'sɔɔi níi mǎi kháp?', meaning: 'This alley?', tts: 'ซอยนี้ไหมครับ' },
+          user: { script: 'เข้าซอยนี้ค่ะ', spoken: 'khâo sɔɔi níi khâ', meaning: 'Turn into this alley (soi), please.', tts: 'เข้าซอยนี้ค่ะ' }
+        },
+        standard: {
+          partner: { script: 'พี่ครับ ซอยนี้ใช่ไหมครับ?', spoken: 'phîi kháp, sɔɔi níi châi mǎi kháp?', meaning: 'Excuse me, is it this alley (soi)?', tts: 'พี่ครับ ซอยนี้ใช่ไหมครับ' },
+          user: { script: 'เข้าซอยนี้ค่ะ', spoken: 'khâo sɔɔi níi khâ', meaning: 'Turn into this alley (soi), please.', tts: 'เข้าซอยนี้ค่ะ' }
+        }
+      },
+      ST_song_thii_nii: {
+        easier: {
+          partner: { script: 'ส่งที่นี่ไหมครับ?', spoken: 'sòng thîi-nîi mǎi kháp?', meaning: 'Drop you here?', tts: 'ส่งที่นี่ไหมครับ' },
+          user: { script: 'ส่งที่นี่ค่ะ', spoken: 'sòng thîi-nîi khâ', meaning: 'Drop me off right here, please.', tts: 'ส่งที่นี่ค่ะ' }
+        },
+        standard: {
+          partner: { script: 'ส่งตรงนี้หรือข้างหน้าครับ?', spoken: 'sòng dtrong níi rǒe khâang-nâa kháp?', meaning: 'Drop you right here or up ahead?', tts: 'ส่งตรงนี้หรือข้างหน้าครับ' },
+          user: { script: 'ส่งที่นี่ค่ะ', spoken: 'sòng thîi-nîi khâ', meaning: 'Drop me off right here, please.', tts: 'ส่งที่นี่ค่ะ' }
+        }
+      },
+      // UNIT 4–6 Lv.1 (easier) & Lv.2 (standard) i+1 adaptations for dense social banter turns
+      ST_arai: {
+        easier: {
+          partner: { script: 'กินอะไรครับ?', spoken: 'gin à-lai kháp?', meaning: 'What are you eating?', tts: 'กินอะไรครับ' },
+          user: { script: 'กินอะไรดี?', spoken: 'gin à-lai dii?', meaning: 'What should we eat?', tts: 'กินอะไรดี' }
+        },
+        standard: {
+          partner: { script: 'วันนี้กินอะไรดีครับ?', spoken: 'wan-níi gin à-lai dii kháp?', meaning: 'What should we eat today?', tts: 'วันนี้กินอะไรดีครับ' },
+          user: { script: 'กินอะไรดี?', spoken: 'gin à-lai dii?', meaning: 'What should we eat?', tts: 'กินอะไรดี' }
+        }
+      },
+      ST_khrap: {
+        easier: {
+          partner: { script: 'ได้แล้วครับ!', spoken: 'dâi láaeo kháp!', meaning: 'All ready!', tts: 'ได้แล้วครับ' },
+          user: { script: 'ขอบคุณครับ', spoken: 'khɔ̀ɔp-khun kháp', meaning: 'Thank you!', tts: 'ขอบคุณครับ' }
+        },
+        standard: {
+          partner: { script: 'ได้แล้วครับ ห้าสิบบาทครับ!', spoken: 'dâi láaeo kháp, hâa-sìp bàat kháp!', meaning: 'All ready! Fifty baht!', tts: 'ได้แล้วครับ ห้าสิบบาทครับ' },
+          user: { script: 'ขอบคุณครับ', spoken: 'khɔ̀ɔp-khun kháp', meaning: 'Thank you!', tts: 'ขอบคุณครับ' }
+        }
+      },
+      ST_aroi_aloi: {
+        easier: {
+          partner: { script: 'อร่อยไหมคะ?', spoken: 'à-lɔ̀i mǎi khá?', meaning: 'Is it delicious?', tts: 'อร่อยไหมคะ' },
+          user: { script: 'อร่อยมากค่ะ!', spoken: 'à-lɔ̀i mâak khâ!', meaning: 'Super delicious!', tts: 'อร่อยมากค่ะ' }
+        },
+        standard: {
+          partner: { script: 'กินแล้วอร่อยไหมคะ?', spoken: 'gin láaeo à-lɔ̀i mǎi khá?', meaning: 'Is it delicious?', tts: 'กินแล้วอร่อยไหมคะ' },
+          user: { script: 'อร่อยมากค่ะ!', spoken: 'à-lɔ̀i mâak khâ!', meaning: 'Super delicious!', tts: 'อร่อยมากค่ะ' }
+        }
+      },
+      ST_reu_plao: {
+        easier: {
+          partner: { script: 'กินข้าวเปล่า?', spoken: 'gin khâao bpào?', meaning: 'Eating or not?', tts: 'กินข้าวเปล่า' },
+          user: { script: 'ว่างเปล่า? ไปกินกัน!', spoken: 'wâang bpào? bpai gin gan!', meaning: 'Are you free or not? Let’s go eat!', tts: 'ว่างเปล่า ไปกินกัน' }
+        },
+        standard: {
+          partner: { script: 'วันนี้ว่างเปล่า?', spoken: 'wan-níi wâang bpào?', meaning: 'Are you free today or not?', tts: 'วันนี้ว่างเปล่า' },
+          user: { script: 'ว่างเปล่า? ไปกินกัน!', spoken: 'wâang bpào? bpai gin gan!', meaning: 'Are you free or not? Let’s go eat!', tts: 'ว่างเปล่า ไปกินกัน' }
+        }
+      },
+      ST_yang_nii: {
+        easier: {
+          partner: { script: 'ทำไงอ่ะ?', spoken: 'tham ngai à?', meaning: 'How do you do it?', tts: 'ทำไงอ่ะ' },
+          user: { script: 'ทำงี้สิ!', spoken: 'tham ngíi sì!', meaning: 'Do it like this!', tts: 'ทำงี้สิ' }
+        },
+        standard: {
+          partner: { script: 'อันนี้ทำไงอ่ะ?', spoken: 'an níi tham ngai à?', meaning: 'How do you do this one?', tts: 'อันนี้ทำไงอ่ะ' },
+          user: { script: 'ทำงี้สิ!', spoken: 'tham ngíi sì!', meaning: 'Do it like this!', tts: 'ทำงี้สิ' }
+        }
+      },
+      ST_yang_nan: {
+        easier: {
+          partner: { script: 'ฝนตกแล้ว เดินไปไม่ไหว!', spoken: 'fǒn dtòk láaeo, dəən bpai mâi wǎi!', meaning: 'It’s raining — we can’t walk!', tts: 'ฝนตกแล้ว เดินไปไม่ไหว' },
+          user: { script: 'งั้นไปคาเฟ่กัน!', spoken: 'ngán bpai khaa-fêe gan!', meaning: 'In that case, let’s go to the café!', tts: 'งั้นไปคาเฟ่กัน' }
+        },
+        standard: {
+          partner: { script: 'ฝนตกแล้ว ไปไม่ได้!', spoken: 'fǒn dtòk láaeo, bpai mâi dâi!', meaning: 'It’s raining — we can’t go!', tts: 'ฝนตกแล้ว ไปไม่ได้' },
+          user: { script: 'งั้นเราไปคาเฟ่กันเลย!', spoken: 'ngán rao bpai khaa-fêe gan loei!', meaning: 'In that case, let’s go to the café right now!', tts: 'งั้นเราไปคาเฟ่กันเลย' }
+        }
+      },
+      ST_baep_nueng: {
+        easier: {
+          partner: { script: 'มาหรือยัง?', spoken: 'maa rǒe yang?', meaning: 'Here yet?', tts: 'มาหรือยัง' },
+          user: { script: 'แป๊บนึงนะ!', spoken: 'bpáep-nɯng ná!', meaning: 'Just one second!', tts: 'แป๊บนึงนะ' }
+        },
+        standard: {
+          partner: { script: 'รถมาแล้ว เสร็จยัง?', spoken: 'rót maa láaeo, sèt yang?', meaning: 'The car is here — ready yet?', tts: 'รถมาแล้ว เสร็จยัง' },
+          user: { script: 'แป๊บนึงนะ!', spoken: 'bpáep-nɯng ná!', meaning: 'Just one second!', tts: 'แป๊บนึงนะ' }
+        }
+      },
+      ST_tham_mai: {
+        easier: {
+          partner: { script: 'วันนี้ไม่กินนะ!', spoken: 'wan-níi mâi gin ná!', meaning: 'Not eating today!', tts: 'วันนี้ไม่กินนะ' },
+          user: { script: 'ทำไมอ่ะ?', spoken: 'tham-mai à?', meaning: 'Why is that?', tts: 'ทำไมอ่ะ' }
+        },
+        standard: {
+          partner: { script: 'วันนี้ไม่กินก๋วยเตี๋ยวนะ!', spoken: 'wan-níi mâi gin gǔai-dtǐao ná!', meaning: 'Not eating noodles today!', tts: 'วันนี้ไม่กินก๋วยเตี๋ยวนะ' },
+          user: { script: 'ทำไมอ่ะ?', spoken: 'tham-mai à?', meaning: 'Why is that?', tts: 'ทำไมอ่ะ' }
+        }
+      },
+      ST_chai_pa: {
+        easier: {
+          partner: { script: 'ร้านนี้ใช่ป่ะ?', spoken: 'ráan níi châi bpà?', meaning: 'This shop, right?', tts: 'ร้านนี้ใช่ป่ะ' },
+          user: { script: 'ใช่ป่ะ? ไปดูกัน!', spoken: 'châi bpà? bpai duu gan!', meaning: 'Right?! Let’s go check it out!', tts: 'ใช่ป่ะ ไปดูกัน' }
+        },
+        standard: {
+          partner: { script: 'ร้านนี้อร่อยใช่ป่ะ?', spoken: 'ráan níi à-lɔ̀i châi bpà?', meaning: 'This shop is delicious, right?', tts: 'ร้านนี้อร่อยใช่ป่ะ' },
+          user: { script: 'ใช่ป่ะ? ไปดูกัน!', spoken: 'châi bpà? bpai duu gan!', meaning: 'Right?! Let’s go check it out!', tts: 'ใช่ป่ะ ไปดูกัน' }
+        }
+      },
+      ST_nia: {
+        easier: {
+          partner: { script: 'วันนี้รถติดมากเนี่ย!', spoken: 'wan-níi rót dtìt mâak nîa!', meaning: 'Traffic is so jammed today!', tts: 'วันนี้รถติดมากเนี่ย' },
+          user: { script: 'ร้อนมากเนี่ย!', spoken: 'rɔ́ɔn mâak nîa!', meaning: 'And it’s so hot right now!', tts: 'ร้อนมากเนี่ย' }
+        },
+        standard: {
+          partner: { script: 'วันนี้รถติดมากเนี่ย!', spoken: 'wan-níi rót dtìt mâak nîa!', meaning: 'Traffic is so jammed today!', tts: 'วันนี้รถติดมากเนี่ย' },
+          user: { script: 'ร้อนมากเนี่ย!', spoken: 'rɔ́ɔn mâak nîa!', meaning: 'And it’s so hot right now!', tts: 'ร้อนมากเนี่ย' }
+        }
+      },
+      ST_nor: {
+        easier: {
+          partner: { script: 'อร่อยเนาะ!', spoken: 'à-rɔ̀i nɔ́ɔ!', meaning: 'Delicious, isn’t it!', tts: 'อร่อยเนาะ' },
+          user: { script: 'ดีเนาะ! ชอบมากเลย', spoken: 'dii nɔ́ɔ! chɔ̂ɔp mâak loei', meaning: 'So nice, right! Love it.', tts: 'ดีเนาะ ชอบมากเลย' }
+        },
+        standard: {
+          partner: { script: 'ร้านนี้อร่อยเนาะ!', spoken: 'ráan níi à-rɔ̀i nɔ́ɔ!', meaning: 'This shop is delicious, isn’t it!', tts: 'ร้านนี้อร่อยเนาะ' },
+          user: { script: 'ดีเนาะ! ชอบมากเลย', spoken: 'dii nɔ́ɔ! chɔ̂ɔp mâak loei', meaning: 'So nice, right! Love it.', tts: 'ดีเนาะ ชอบมากเลย' }
+        }
+      },
+      ST_a: {
+        easier: {
+          partner: { script: 'เย็นนี้ไปกินข้าวกันไหมอ่ะ?', spoken: 'yen níi bpai gin khâao gan mǎi à?', meaning: 'Want to eat together this evening?', tts: 'เย็นนี้ไปกินข้าวกันไหมอ่ะ' },
+          user: { script: 'ก็ดีอ่ะ ไปกัน!', spoken: 'gɔ̂ɔ dii à, bpai gan!', meaning: 'Sounds good, let’s go!', tts: 'ก็ดีอ่ะ ไปกัน' }
+        },
+        standard: {
+          partner: { script: 'วันนี้ไปกินข้าวกันไหมอ่ะ?', spoken: 'wan-níi bpai gin khâao gan mǎi à?', meaning: 'Want to eat together today?', tts: 'วันนี้ไปกินข้าวกันไหมอ่ะ' },
+          user: { script: 'ก็ดีอ่ะ ไปกัน!', spoken: 'gɔ̂ɔ dii à, bpai gan!', meaning: 'Sounds good, let’s go!', tts: 'ก็ดีอ่ะ ไปกัน' }
+        }
+      },
+      ST_loei: {
+        easier: {
+          partner: { script: 'ไปกันไหม?', spoken: 'bpai gan mǎi?', meaning: 'Shall we go?', tts: 'ไปกันไหม' },
+          user: { script: 'ไปเลย!', spoken: 'bpai loei!', meaning: 'Let’s go right now!', tts: 'ไปเลย' }
+        },
+        standard: {
+          partner: { script: 'กินกันเลยไหม?', spoken: 'gin gan loei mǎi?', meaning: 'Should we eat right now?', tts: 'กินกันเลยไหม' },
+          user: { script: 'ไปเลย!', spoken: 'bpai loei!', meaning: 'Let’s go right now!', tts: 'ไปเลย' }
+        }
+      },
+      ST_roe: {
+        easier: {
+          partner: { script: 'วันนี้ฟรีนะ!', spoken: 'wan-níi frii ná!', meaning: 'Today it’s free!', tts: 'วันนี้ฟรีนะ' },
+          user: { script: 'จริงเหรอ?!', spoken: 'jing rǒe?!', meaning: 'Really?!', tts: 'จริงเหรอ' }
+        },
+        standard: {
+          partner: { script: 'วันนี้ร้านก๋วยเตี๋ยวฟรีนะ!', spoken: 'wan-níi ráan gǔai-dtǐao frii ná!', meaning: 'Today the noodle shop is free!', tts: 'วันนี้ร้านก๋วยเตี๋ยวฟรีนะ' },
+          user: { script: 'จริงเหรอ?!', spoken: 'jing rǒe?!', meaning: 'Really?!', tts: 'จริงเหรอ' }
+        }
+      },
+      ST_si: {
+        easier: {
+          partner: { script: 'หมูปิ้งอร่อยมาก ลองชิมไหม?', spoken: 'mǔu-bpîng à-rɔ̀i mâak, lɔɔng chim mǎi?', meaning: 'The grilled pork is super tasty — want to try?', tts: 'หมูปิ้งอร่อยมาก ลองชิมไหม' },
+          user: { script: 'กินสิ! เอาอันนึง', spoken: 'gin sì! ao an nɯng', meaning: 'Of course! Give me one.', tts: 'กินสิ เอาอันนึง' }
+        },
+        standard: {
+          partner: { script: 'หมูอร่อยมาก กินไหม?', spoken: 'mǔu à-rɔ̀i mâak, gin mǎi?', meaning: 'The pork is super tasty — want some?', tts: 'หมูอร่อยมาก กินไหม' },
+          user: { script: 'กินสิ! เอาอันนึง', spoken: 'gin sì! ao an nɯng', meaning: 'Of course! Give me one.', tts: 'กินสิ เอาอันนึง' }
+        }
+      },
+      ST_na: {
+        easier: {
+          partner: { script: 'รอตรงนี้นะ!', spoken: 'rɔɔ dtrong níi ná!', meaning: 'Wait right here, okay?', tts: 'รอตรงนี้นะ' },
+          user: { script: 'โอเคนะ รอตรงนี้นะ!', spoken: 'oo-khee ná, rɔɔ dtrong níi ná!', meaning: 'Okay! I’ll wait right here!', tts: 'โอเคนะ รอตรงนี้นะ' }
+        },
+        standard: {
+          partner: { script: 'ไปซื้อน้ำนะ รอตรงนี้นะ!', spoken: 'bpai sɯ́ɯ nám ná, rɔɔ dtrong níi ná!', meaning: 'Going to buy water — wait right here, okay?', tts: 'ไปซื้อน้ำนะ รอตรงนี้นะ' },
+          user: { script: 'โอเคนะ รอตรงนี้นะ!', spoken: 'oo-khee ná, rɔɔ dtrong níi ná!', meaning: 'Okay! I’ll wait right here!', tts: 'โอเคนะ รอตรงนี้นะ' }
+        }
+      },
+      ST_la: {
+        easier: {
+          partner: { script: 'เอาหวานน้อย แล้วเธอล่ะ?', spoken: 'ao wǎan nɔ́ɔi, láaeo thoe lâ?', meaning: 'I’ll take less sweet — and what about you?', tts: 'เอาหวานน้อย แล้วเธอล่ะ' },
+          user: { script: 'เราเอาไม่หวาน!', spoken: 'rao ao mâi wǎan!', meaning: 'I’ll take unsweetened!', tts: 'เราเอาไม่หวาน' }
+        },
+        standard: {
+          partner: { script: 'เราเอาชาไทยหวานน้อย แล้วเธอล่ะ?', spoken: 'rao ao chaa thai wǎan nɔ́ɔi, láaeo thoe lâ?', meaning: 'I’ll take less-sweet Thai tea — and what about you?', tts: 'เราเอาชาไทยหวานน้อย แล้วเธอล่ะ' },
+          user: { script: 'เราเอาไม่หวาน! แล้วขนมล่ะ?', spoken: 'rao ao mâi wǎan! láaeo khà-nǒm lâ?', meaning: 'I’ll take unsweetened! And what about dessert?', tts: 'เราเอาไม่หวาน แล้วขนมล่ะ' }
+        }
+      },
+      ST_rao: {
+        easier: {
+          partner: { script: 'กินอะไรดี?', spoken: 'gin à-rai dii?', meaning: 'What should we eat?', tts: 'กินอะไรดี' },
+          user: { script: 'เราอยากกินส้มตำ!', spoken: 'rao yàak gin sôm-dtam!', meaning: 'I want to eat papaya salad!', tts: 'เราอยากกินส้มตำ' }
+        },
+        standard: {
+          partner: { script: 'วันนี้ใครอยากกินอะไร?', spoken: 'wan-níi khrai yàak gin à-rai?', meaning: 'Who wants to eat what today?', tts: 'วันนี้ใครอยากกินอะไร' },
+          user: { script: 'เราอยากกินส้มตำ!', spoken: 'rao yàak gin sôm-dtam!', meaning: 'I want to eat papaya salad!', tts: 'เราอยากกินส้มตำ' }
+        }
+      },
+      ST_khao: {
+        easier: {
+          partner: { script: 'ไปไหม?', spoken: 'bpai mǎi?', meaning: 'Are you going?', tts: 'ไปไหม' },
+          user: { script: 'เค้าไม่ไปนะ', spoken: 'kháo mâi bpai ná', meaning: "I'm not going.", tts: 'เค้าไม่ไปนะ' }
+        },
+        standard: {
+          partner: { script: 'คืนนี้ไปไหม?', spoken: 'khɯɯn níi bpai mǎi?', meaning: 'Are you going tonight?', tts: 'คืนนี้ไปไหม' },
+          user: { script: 'เค้าไม่ไปนะ วันนี้ง่วงมาก', spoken: 'kháo mâi bpai ná, wan-níi ngûang mâak', meaning: "I'm not going, super sleepy today.", tts: 'เค้าไม่ไปนะ วันนี้ง่วงมาก' }
+        }
+      },
+      ST_dtua_eeng: {
+        easier: {
+          partner: { script: 'ตัวเองกินอะไรดี?', spoken: 'dtua-eeng gin à-rai dii?', meaning: 'What should you eat?', tts: 'ตัวเองกินอะไรดี' },
+          user: { script: 'ตัวเองเอาอะไร เค้าเอาด้วย!', spoken: 'dtua-eeng ao à-rai, kháo ao dûai!', meaning: 'Whatever you get, I’ll get too!', tts: 'ตัวเองเอาอะไร เค้าเอาด้วย' }
+        },
+        standard: {
+          partner: { script: 'มาแล้ว ตัวเองเอาอะไรดี?', spoken: 'maa láaeo, dtua-eeng ao à-rai dii?', meaning: 'We’re here — what do you want?', tts: 'มาแล้ว ตัวเองเอาอะไรดี' },
+          user: { script: 'ตัวเองเอาอะไร เค้าเอาด้วย!', spoken: 'dtua-eeng ao à-rai, kháo ao dûai!', meaning: 'Whatever you get, I’ll get too!', tts: 'ตัวเองเอาอะไร เค้าเอาด้วย' }
+        }
+      },
+      ST_jing_roe: {
+        easier: {
+          partner: { script: 'วันนี้ร้านนี้ฟรีนะ!', spoken: 'wan-níi ráan níi frii ná!', meaning: 'Today this shop is free!', tts: 'วันนี้ร้านนี้ฟรีนะ' },
+          user: { script: 'จริงดิ?!', spoken: 'jing dì?!', meaning: 'For real?!', tts: 'จริงดิ' }
+        },
+        standard: {
+          partner: { script: 'วันนี้ร้านนี้ฟรีนะ!', spoken: 'wan-níi ráan níi frii ná!', meaning: 'Today this shop is free!', tts: 'วันนี้ร้านนี้ฟรีนะ' },
+          user: { script: 'จริงดิ?! เลี้ยงข้าวเลย!', spoken: 'jing dì?! líang khâao loei!', meaning: 'For real?! Treat me to a meal!', tts: 'จริงดิ เลี้ยงข้าวเลย' }
+        }
+      },
+      ST_mai_pen_rai: {
+        easier: {
+          partner: { script: 'ขอโทษค่ะ!', spoken: 'khɔ̌ɔ-thôot khâ!', meaning: 'Sorry!', tts: 'ขอโทษค่ะ' },
+          user: { script: 'ไม่เป็นไรค่ะ', spoken: 'mâi bpen rai khâ', meaning: 'No worries!', tts: 'ไม่เป็นไรค่ะ' }
+        },
+        standard: {
+          partner: { script: 'อุ๊ย ขอโทษค่ะ เจ็บไหมคะ?', spoken: 'úi khɔ̌ɔ-thôot khâ, jèp mǎi khá?', meaning: 'Oops sorry! Are you hurt?', tts: 'อุ๊ย ขอโทษค่ะ เจ็บไหมคะ' },
+          user: { script: 'ไม่เป็นไรค่ะ สบายมาก!', spoken: 'mâi bpen rai khâ, sà-baai mâak!', meaning: 'No worries at all! Totally fine!', tts: 'ไม่เป็นไรค่ะ สบายมาก' }
+        }
+      },
+      ST_ao_di: {
+        easier: {
+          partner: { script: 'กินข้าวเสร็จ ไปกินไอติมไหม?', spoken: 'gin khâao sèt, bpai gin ai-dtim mǎi?', meaning: 'After eating, want to get ice cream?', tts: 'กินข้าวเสร็จ ไปกินไอติมไหม' },
+          user: { script: 'เอาดิ! ไปเลย', spoken: 'ao dì! bpai loei', meaning: 'I’m down! Let’s go!', tts: 'เอาดิ ไปเลย' }
+        },
+        standard: {
+          partner: { script: 'ไปกินไอติมกันไหม?', spoken: 'bpai gin ai-dtim gan mǎi?', meaning: 'Want to go get ice cream?', tts: 'ไปกินไอติมกันไหม' },
+          user: { script: 'เอาดิ! ไปเลย', spoken: 'ao dì! bpai loei', meaning: 'I’m down! Let’s go!', tts: 'เอาดิ ไปเลย' }
+        }
+      },
+      ST_ngong_maak: {
+        easier: {
+          partner: { script: 'เอาอันนี้หรืออันนั้นดีเนี่ย?', spoken: 'ao an níi rǔue an nán dii nîa?', meaning: 'Should we get this one or that one?', tts: 'เอาอันนี้หรืออันนั้นดีเนี่ย' },
+          user: { script: 'งงมากค่ะ ไม่รู้เลย!', spoken: 'ngong mâak khâ, mâi rúu loei!', meaning: 'Totally confused! No idea!', tts: 'งงมากค่ะ ไม่รู้เลย' }
+        },
+        standard: {
+          partner: { script: 'เอาอันนี้หรืออันนั้นดีเนี่ย?', spoken: 'ao an níi rǔue an nán dii nîa?', meaning: 'Should we get this one or that one?', tts: 'เอาอันนี้หรืออันนั้นดีเนี่ย' },
+          user: { script: 'งงมากค่ะ ไม่รู้เลย!', spoken: 'ngong mâak khâ, mâi rúu loei!', meaning: 'Totally confused! No idea!', tts: 'งงมากค่ะ ไม่รู้เลย' }
+        }
+      },
+      ST_khoot_dii: {
+        easier: {
+          partner: { script: 'ร้านนี้เป็นไงบ้าง?', spoken: 'ráan níi bpen ngai bâang?', meaning: 'How is this place?', tts: 'ร้านนี้เป็นไงบ้าง' },
+          user: { script: 'โคตรดี!', spoken: 'khôot dii!', meaning: 'Insanely good!', tts: 'โคตรดี' }
+        },
+        standard: {
+          partner: { script: 'ร้านนี้เป็นไงบ้าง?', spoken: 'ráan níi bpen ngai bâang?', meaning: 'How is this place?', tts: 'ร้านนี้เป็นไงบ้าง' },
+          user: { script: 'โคตรดี! ลมเย็นสุดๆ', spoken: 'khôot dii! lom yen sùt-sùt', meaning: 'Insanely good! The breeze is amazing.', tts: 'โคตรดี ลมเย็นสุดๆ' }
+        }
+      },
+      ST_sut_yoot: {
+        easier: {
+          partner: { script: 'ลองชิมดูครับ อร่อยไหม?', spoken: 'lɔɔng chim duu kháp, à-rɔ̀i mǎi?', meaning: 'Try a taste — is it good?', tts: 'ลองชิมดูครับ อร่อยไหม' },
+          user: { script: 'สุดยอด! อร่อยมากค่ะ', spoken: 'sùt yɔ̂ɔt! à-rɔ̀i mâak khâ', meaning: 'Awesome! So delicious!', tts: 'สุดยอด อร่อยมากค่ะ' }
+        },
+        standard: {
+          partner: { script: 'ลองชิมดูครับ อร่อยไหม?', spoken: 'lɔɔng chim duu kháp, à-rɔ̀i mǎi?', meaning: 'Try a taste — is it good?', tts: 'ลองชิมดูครับ อร่อยไหม' },
+          user: { script: 'สุดยอด! อร่อยมากค่ะ', spoken: 'sùt yɔ̂ɔt! à-rɔ̀i mâak khâ', meaning: 'Awesome! So delicious!', tts: 'สุดยอด อร่อยมากค่ะ' }
+        }
+      },
+      ST_chill_chill: {
+        easier: {
+          partner: { script: 'วันนี้ไปไหนไหม?', spoken: 'wan-níi bpai nǎi mǎi?', meaning: 'Going anywhere today?', tts: 'วันนี้ไปไหนไหม' },
+          user: { script: 'อยู่บ้านชิลๆ ค่ะ', spoken: 'yùu bâan chil-chil khâ', meaning: 'Just staying home chilling.', tts: 'อยู่บ้านชิลชิลค่ะ' }
+        },
+        standard: {
+          partner: { script: 'วันนี้ไปเที่ยวไหนไหม?', spoken: 'wan-níi bpai thîao nǎi mǎi?', meaning: 'Going out anywhere today?', tts: 'วันนี้ไปเที่ยวไหนไหม' },
+          user: { script: 'อยู่บ้านชิลๆ ค่ะ', spoken: 'yùu bâan chil-chil khâ', meaning: 'Just staying home chilling.', tts: 'อยู่บ้านชิลชิลค่ะ' }
+        }
+      },
+      ST_ao_ngai_dii: {
+        easier: {
+          partner: { script: 'ร้านปิดแล้ว! เอาไงดี?', spoken: 'ráan bpìt láaeo! ao ngai dii?', meaning: 'The shop is closed! What should we do?', tts: 'ร้านปิดแล้ว เอาไงดี' },
+          user: { script: 'เอาไงดี? ไปกินหมี่แห้งไหม?', spoken: 'ao ngai dii? bpai gin mìi hâeng mǎi?', meaning: 'What’s the plan? Wanna eat dry egg noodles?', tts: 'เอาไงดี ไปกินหมี่แห้งไหม' }
+        },
+        standard: {
+          partner: { script: 'อ้าว ร้านปิดแล้ว! เอาไงดี?', spoken: 'âao, ráan bpìt láaeo! ao ngai dii?', meaning: 'Whoa, the shop is closed! What should we do?', tts: 'อ้าว ร้านปิดแล้ว เอาไงดี' },
+          user: { script: 'เอาไงดี? ไปกินหมี่แห้งไหม?', spoken: 'ao ngai dii? bpai gin mìi hâeng mǎi?', meaning: 'What’s the plan? Wanna eat dry egg noodles?', tts: 'เอาไงดี ไปกินหมี่แห้งไหม' }
         }
       }
     };
@@ -9609,8 +10363,8 @@
 
     const COMPOUND_DOMAINS = [
       new Set(['ST_lek', 'ST_yaak_nam', 'ST_mhii_haeng', 'ST_mai_chin_mai_ngok', 'ST_noodle_shorthand', 'ST_phet_noi', 'ST_mai_sai_phrik', 'ST_mai_sai_phakchii', 'ST_mai_sai_phongchurot', 'ST_kin_nii_hor', 'ST_sai_hor', 'ST_phiseet', 'W_nam', 'W_sai_clear', 'W_yai', 'W_muu', 'W_kai', 'W_haeng', 'W_bami', 'W_sen_lek', 'W_luk_chin', 'W_thua_ngok', 'W_pet', 'W_order_1', 'W_order_2', 'W_shorthand']),
-      new Set(['ST_waan_noi', 'ST_mai_waan', 'ST_nam_kheng_plao', 'ST_waan_pokati', 'ST_mai_ao_thung', 'ST_mii_hlort', 'ST_wen_dai_mai']),
-      new Set(['ST_trong_bpai', 'ST_liao_sai', 'ST_liao_kwaa', 'ST_yut_trong_nii', 'ST_khaang_naa', 'ST_soi_nii', 'ST_song_thii_nii'])
+      new Set(['ST_waan_noi', 'ST_mai_waan', 'ST_nam_kheng_plao', 'ST_waan_pokati', 'ST_mai_ao_thung', 'ST_mii_hlort', 'ST_wen_dai_mai', 'ST_nong_staff', 'ST_gep_dtang', 'ST_thao_rai', 'ST_scan_dai_mai']),
+      new Set(['ST_phii_driver', 'ST_poet_meter', 'ST_trong_bpai', 'ST_liao_sai', 'ST_liao_kwaa', 'ST_yut_trong_nii', 'ST_khaang_naa', 'ST_soi_nii', 'ST_song_thii_nii'])
     ];
     const COMPOUND_CONFLICTS = [
       new Set(['ST_kin_nii_hor', 'ST_sai_hor']),
@@ -9741,15 +10495,33 @@
       };
     }
 
+    // Checks whether an item's situational domain is appropriate for the conversation scene
+    function isItemDomainCompatibleWithNode(itemId, nodeId) {
+      if (!itemId || !nodeId) return true;
+      const isS1 = nodeId.startsWith('s1');
+      const isS2 = nodeId.startsWith('s2');
+      const isS3 = nodeId.startsWith('s3');
+      if (!isS1 && !isS2 && !isS3) return true;
+      const itemObj = typeof STREET_DB !== 'undefined' ? STREET_DB.find(s => s.id === itemId) : null;
+      if (!itemObj) return true;
+      const u = itemObj.unit;
+      if (!u) return true;
+      if (isS1) return u === 1 || u >= 4;
+      if (isS2) return u === 2 || u >= 4;
+      if (isS3) return u === 3 || u >= 4;
+      return true;
+    }
+
     // Collects Past/Known items across both Street & Reading tracks for Spiral Weaving
     function getKnownPoolForConversation(node, newItems) {
       const newIds = new Set((newItems || []).map(i => i.id));
       const known = [];
+      const nodeId = node?.id || '';
 
       // 1. From Street curriculum preceding nodes
       const pastStreet = getPastLearnedStreetItems(node);
       pastStreet.forEach(s => {
-        if (!newIds.has(s.id) && !known.some(k => k.id === s.id)) {
+        if (!newIds.has(s.id) && !known.some(k => k.id === s.id) && isItemDomainCompatibleWithNode(s.id, nodeId)) {
           known.push(s);
         }
       });
@@ -9760,7 +10532,9 @@
         if (!newIds.has(w.id) && !known.some(k => k.id === w.id)) {
           const st = appState?.itemStats?.[w.id];
           if ((st && st.exposures > 0) || (node.unit && w.unit && w.unit < node.unit)) {
-            known.push(w);
+            if (isItemDomainCompatibleWithNode(w.id, nodeId)) {
+              known.push(w);
+            }
           }
         }
       });
@@ -9768,7 +10542,7 @@
       // 3. Any Street item with exposures > 0
       if (typeof STREET_DB !== 'undefined') {
         STREET_DB.forEach(s => {
-          if (!newIds.has(s.id) && !known.some(k => k.id === s.id)) {
+          if (!newIds.has(s.id) && !known.some(k => k.id === s.id) && isItemDomainCompatibleWithNode(s.id, nodeId)) {
             const st = appState?.itemStats?.[s.id];
             if (st && st.exposures > 0) known.push(s);
           }
@@ -9854,6 +10628,7 @@
       ST_sai_hor: ['ST_kin_nii_hor'],
 
       // Unit 2: Cafes, 7-Eleven & Paying
+      ST_nong_staff: ['ST_gep_dtang', 'ST_thao_rai', 'ST_scan_dai_mai', 'ST_waan_noi'],
       ST_waan_noi: ['ST_mai_waan', 'ST_waan_pokati'],
       ST_mai_waan: ['ST_waan_noi', 'ST_waan_pokati', 'W_mai_not'],
       ST_waan_pokati: ['ST_waan_noi', 'ST_mai_waan'],
@@ -9863,6 +10638,8 @@
       ST_mii_hlort: ['ST_mai_ao_thung', 'ST_scan_dai_mai', 'ST_nam_kheng_plao'],
 
       // Unit 3: Taxis & Navigation
+      ST_phii_driver: ['ST_poet_meter', 'ST_trong_bpai'],
+      ST_poet_meter: ['ST_phii_driver', 'ST_trong_bpai'],
       ST_trong_bpai: ['ST_liao_sai', 'ST_liao_kwaa', 'ST_yut_trong_nii', 'ST_khaang_naa', 'ST_song_thii_nii'],
       ST_liao_sai: ['ST_liao_kwaa', 'ST_trong_bpai'],
       ST_liao_kwaa: ['ST_liao_sai', 'ST_trong_bpai', 'ST_yut_trong_nii', 'ST_khaang_naa', 'ST_soi_nii', 'ST_song_thii_nii'],
@@ -10343,6 +11120,8 @@
       if (typeof step.showRoman !== 'boolean') step.showRoman = true;
       if (typeof step.showEnglish !== 'boolean') step.showEnglish = false;
       if (typeof step.repeatLine !== 'boolean') step.repeatLine = false;
+      if (typeof step.showWordHints !== 'boolean') step.showWordHints = !isHardConvo(step);
+      if (typeof step.showNewWordsPreview !== 'boolean') step.showNewWordsPreview = false;
       const base = getConvoBaseReveal(step.difficulty);
       lines.forEach((l, i) => {
         l.lineIdx = i;
@@ -10483,7 +11262,7 @@
 
     function convoToggleView(key) {
       const step = getActiveConvoStep();
-      if (!step || !['showText', 'showRoman', 'showEnglish'].includes(key)) return;
+      if (!step || !['showText', 'showRoman', 'showEnglish', 'showWordHints', 'showNewWordsPreview'].includes(key)) return;
       step[key] = !step[key];
       rerenderLiveConvo(step);
     }
@@ -10697,8 +11476,60 @@
       if (!step) return;
       const w = step.dialogueLines?.[lineIdx]?.usedWords?.[wordIdx];
       if (!w) return;
-      playConvoAudioThen(w.script, getConvoRate(step), null);
-      showToast(`${w.script} · ${w.spoken} = ${w.meaning}`);
+      showConvoTokenGloss(w.script, 'target', null, w.spoken, w.meaning);
+    }
+
+    function showConvoTokenGloss(script, kind = 'new', futureUnit = null, fallbackSpoken = '', fallbackMeaning = '') {
+      const step = getActiveConvoStep();
+      if (!step || !script) return;
+      playConvoAudioThen(script, getConvoRate(step), null);
+      const knowledge = getConvoCurriculumKnowledge(step.nodeId);
+      const info = knowledge.dictInfoMap.get(script) || {};
+      step.activeGloss = {
+        script,
+        spoken: info.spoken || fallbackSpoken || '',
+        meaning: info.meaning || fallbackMeaning || 'Tap ✨ on the bubble to ask AI Coach',
+        kind: kind || 'new',
+        futureUnit: futureUnit || null
+      };
+      const slot = document.getElementById('convo-gloss-slot');
+      if (slot) {
+        slot.innerHTML = renderConvoGlossCard(step);
+      } else {
+        rerenderLiveConvo(step);
+      }
+    }
+
+    function closeConvoGlossCard() {
+      const step = getActiveConvoStep();
+      if (!step) return;
+      step.activeGloss = null;
+      const slot = document.getElementById('convo-gloss-slot');
+      if (slot) slot.innerHTML = '';
+    }
+
+    function saveConvoWordToCustom(script) {
+      if (!script) return;
+      const step = getActiveConvoStep();
+      const knowledge = getConvoCurriculumKnowledge(step?.nodeId);
+      const info = knowledge.dictInfoMap.get(script) || {};
+      const existing = (appState.customWords || []).some(w => w.thai === script);
+      if (!existing) {
+        appState.customWords.push({
+          id: 'C_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6),
+          thai: script,
+          roman: info.spoken || '',
+          meaning: info.meaning || script,
+          unit: 1,
+          custom: true
+        });
+        saveState();
+      }
+      if (step && step.activeGloss && step.activeGloss.script === script) {
+        step.activeGloss.kind = 'known';
+      }
+      showToast(`✓ Saved "${script}" to My Words`);
+      if (step) rerenderLiveConvo(step);
     }
 
     // Legacy hooks (kept for compatibility with older saved steps / buttons)
@@ -10753,20 +11584,265 @@
       return String(s || '').replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
     }
 
-    // Underlines the lesson words inside a line; tapping one plays it + shows its meaning
-    function highlightConvoLineWords(line, idx) {
-      const full = line.script || '';
-      let html = full;
-      (line.usedWords || []).forEach((w, wIdx) => {
-        const s = (w.script || '').trim();
-        if (!s || s.length > full.length * 0.8) return;
-        const pos = html.indexOf(s);
-        if (pos === -1) return;
-        html = html.slice(0, pos)
-          + `<span onclick="event.stopPropagation(); showConvoWordGloss(${idx}, ${wIdx})" class="underline decoration-dotted decoration-sky-400/80 underline-offset-[6px] cursor-help" title="${escapeConvoAttr(w.meaning)}">${s}</span>`
-          + html.slice(pos + s.length);
+    function escapeConvoJs(s) {
+      return String(s || '').replace(/\\/g, '\\\\').replace(/'/g, "\\'");
+    }
+
+    const _convoThaiSeg = (typeof Intl !== 'undefined' && typeof Intl.Segmenter === 'function')
+      ? new Intl.Segmenter('th', { granularity: 'word' })
+      : null;
+
+    // Builds curriculum-aware sets: what the learner already knows at `nodeId`, what comes later, and full dictionary glosses.
+    function getConvoCurriculumKnowledge(nodeId) {
+      const knownSet = new Set();
+      const futureMap = new Map();
+      const dictInfoMap = new Map();
+
+      if (typeof THAI_CONVO_GLOSSARY !== 'undefined') {
+        Object.entries(THAI_CONVO_GLOSSARY).forEach(([th, arr]) => {
+          dictInfoMap.set(th, { spoken: arr[0] || '', meaning: arr[1] || '', isCore: arr[2] === 'c' });
+        });
+      }
+
+      const addWordInfo = (th, spoken, meaning) => {
+        if (!th || dictInfoMap.has(th)) return;
+        dictInfoMap.set(th, { spoken: spoken || '', meaning: meaning || '', isCore: false });
+      };
+
+      const addStreetItem = (it, targetSet, futureUnit = null) => {
+        if (!it) return;
+        const phrases = [];
+        if (it.thai) {
+          it.thai.split('/').forEach(part => {
+            const clean = part.replace(/\s+/g, '').replace(/[?!.,]/g, '').trim();
+            if (clean) phrases.push(clean);
+          });
+        }
+        (it.words || []).forEach(w => {
+          if (w.th) {
+            const clean = w.th.replace(/\s+/g, '').replace(/[?!.,]/g, '').trim();
+            if (clean) {
+              phrases.push(clean);
+              addWordInfo(clean, w.ro || it.spoken || '', w.en || it.meaning || '');
+            }
+          }
+        });
+        phrases.forEach(p => {
+          addWordInfo(p, it.spoken || it.roman || '', it.meaning || '');
+          if (targetSet) targetSet.add(p);
+          else if (futureUnit && !futureMap.has(p)) {
+            futureMap.set(p, { unit: futureUnit, spoken: it.spoken || '', meaning: it.meaning || '' });
+          }
+        });
+      };
+
+      // Find current node's unit & position in STREET_CURRICULUM
+      let currentUnitNum = 1;
+      let reachedCurrent = !nodeId;
+      if (typeof STREET_CURRICULUM !== 'undefined') {
+        STREET_CURRICULUM.forEach(u => {
+          (u.nodes || []).forEach(n => {
+            if (n.id === nodeId) {
+              currentUnitNum = u.unit || 1;
+              reachedCurrent = true;
+              (n.itemIds || []).forEach(id => {
+                const it = typeof STREET_DB !== 'undefined' ? STREET_DB.find(s => s.id === id) : null;
+                addStreetItem(it, knownSet);
+              });
+              return;
+            }
+            const isDone = (appState.completedNodes || []).includes(n.id);
+            (n.itemIds || []).forEach(id => {
+              const it = typeof STREET_DB !== 'undefined' ? STREET_DB.find(s => s.id === id) : null;
+              if (!it) return;
+              const exposed = (appState.itemStats?.[it.id]?.exposures || 0) > 0;
+              if (!reachedCurrent || isDone || exposed) {
+                addStreetItem(it, knownSet);
+              } else {
+                addStreetItem(it, null, u.unit || it.unit || 1);
+              }
+            });
+          });
+        });
+      }
+
+      // Include Reading WORDS_DB up to currentUnitNum or practiced, plus customWords
+      if (typeof WORDS_DB !== 'undefined') {
+        WORDS_DB.forEach(w => {
+          if (!w.thai) return;
+          addWordInfo(w.thai, w.roman || '', w.meaning || '');
+          const exposed = (appState.itemStats?.[w.id]?.exposures || 0) > 0;
+          if ((w.unit || 1) <= currentUnitNum || exposed) knownSet.add(w.thai);
+          else if (!futureMap.has(w.thai)) futureMap.set(w.thai, { unit: w.unit || 1, spoken: w.roman || '', meaning: w.meaning || '' });
+        });
+      }
+      (appState.customWords || []).forEach(w => {
+        if (w.thai) {
+          knownSet.add(w.thai);
+          addWordInfo(w.thai, w.roman || '', w.meaning || '');
+        }
       });
-      return html;
+
+      return { knownSet, futureMap, dictInfoMap };
+    }
+
+    // Dictionary-DP Thai word segmenter with Intl.Segmenter fallback (avoids partial-syllable substring bugs)
+    function segmentConvoThaiRun(run, dictSet) {
+      const n = run.length;
+      if (n === 0) return [];
+      const dp = new Array(n + 1).fill(null);
+      dp[0] = { cost: 0, toks: [] };
+      for (let i = 0; i < n; i++) {
+        if (!dp[i]) continue;
+        for (let len = Math.min(18, n - i); len >= 2; len--) {
+          const sub = run.slice(i, i + len);
+          if (dictSet.has(sub)) {
+            const nextCost = dp[i].cost + 1;
+            if (!dp[i + len] || nextCost < dp[i + len].cost) {
+              dp[i + len] = { cost: nextCost, toks: [...dp[i].toks, { w: sub, dict: true }] };
+            }
+          }
+        }
+        const ch = run[i];
+        const stepCost = dp[i].cost + (dictSet.has(ch) ? 2 : 10);
+        if (!dp[i + 1] || stepCost < dp[i + 1].cost) {
+          dp[i + 1] = { cost: stepCost, toks: [...dp[i].toks, { w: ch, dict: dictSet.has(ch) }] };
+        }
+      }
+      const out = [];
+      let unkBuf = '';
+      const flushUnk = () => {
+        if (!unkBuf) return;
+        if (_convoThaiSeg) {
+          for (const s of _convoThaiSeg.segment(unkBuf)) {
+            if (s.segment) out.push(s.segment);
+          }
+        } else {
+          out.push(unkBuf);
+        }
+        unkBuf = '';
+      };
+      for (const t of dp[n].toks) {
+        if (t.dict) { flushUnk(); out.push(t.w); }
+        else unkBuf += t.w;
+      }
+      flushUnk();
+      return out;
+    }
+
+    function analyzeConvoLineTokens(step, line) {
+      const text = line?.script || '';
+      const knowledge = getConvoCurriculumKnowledge(step?.nodeId);
+      const targetMap = new Map();
+      (line?.usedWords || []).forEach((w, wIdx) => {
+        const s = (w.script || '').replace(/\s+/g, '').trim();
+        if (s) targetMap.set(s, { ...w, wIdx });
+      });
+
+      const dictSet = new Set([...knowledge.dictInfoMap.keys(), ...knowledge.knownSet, ...targetMap.keys()]);
+      const tokens = [];
+      const parts = text.split(/([\u0E00-\u0E7F]+)/);
+      parts.forEach(part => {
+        if (!part) return;
+        if (!/[\u0E00-\u0E7F]/.test(part)) {
+          tokens.push({ text: part, isThai: false });
+          return;
+        }
+        segmentConvoThaiRun(part, dictSet).forEach(w => {
+          if (targetMap.has(w)) {
+            const tw = targetMap.get(w);
+            tokens.push({ text: w, isThai: true, kind: 'target', spoken: tw.spoken || '', meaning: tw.meaning || '', wIdx: tw.wIdx });
+            return;
+          }
+          const info = knowledge.dictInfoMap.get(w);
+          const fut = knowledge.futureMap.get(w);
+          if (knowledge.knownSet.has(w) || (info && info.isCore)) {
+            tokens.push({ text: w, isThai: true, kind: 'known', spoken: info?.spoken || '', meaning: info?.meaning || '' });
+          } else if (fut) {
+            tokens.push({ text: w, isThai: true, kind: 'preview', futureUnit: fut.unit, spoken: info?.spoken || fut.spoken || '', meaning: info?.meaning || fut.meaning || '' });
+          } else {
+            tokens.push({ text: w, isThai: true, kind: 'new', spoken: info?.spoken || '', meaning: info?.meaning || '' });
+          }
+        });
+      });
+      return tokens;
+    }
+
+    function collectConvoNewWords(step) {
+      const seen = new Set();
+      const list = [];
+      (step?.dialogueLines || []).forEach((line, li) => {
+        analyzeConvoLineTokens(step, line).forEach(tok => {
+          if (!tok.isThai || (tok.kind !== 'new' && tok.kind !== 'preview')) return;
+          if (seen.has(tok.text)) return;
+          seen.add(tok.text);
+          list.push({
+            script: tok.text,
+            spoken: tok.spoken,
+            meaning: tok.meaning,
+            kind: tok.kind,
+            futureUnit: tok.futureUnit || null,
+            lineIdx: li
+          });
+        });
+      });
+      return list;
+    }
+
+    function renderConvoGlossCard(step) {
+      const g = step?.activeGloss;
+      if (!g) return '';
+      const knowledge = getConvoCurriculumKnowledge(step.nodeId);
+      const isSaved = knowledge.knownSet.has(g.script) || (appState.customWords || []).some(w => w.thai === g.script);
+      const badge = g.kind === 'target'
+        ? '<span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-sky-500/15 text-sky-300 border border-sky-400/30">Lesson Target</span>'
+        : g.kind === 'preview'
+        ? `<span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-teal-500/15 text-teal-300 border border-teal-400/30">Preview · Unit ${g.futureUnit || '?'}</span>`
+        : g.kind === 'known'
+        ? '<span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-300 border border-emerald-400/30">Known</span>'
+        : '<span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-500/15 text-amber-300 border border-amber-400/30">New Word</span>';
+
+      return `
+        <div class="rounded-2xl border border-amber-400/35 bg-[#161b29] p-3 flex items-center justify-between gap-3 shadow-lg">
+          <div class="min-w-0 flex-1">
+            <div class="flex items-center gap-2 flex-wrap">
+              <span class="font-thai text-lg font-bold text-amber-200">${g.script}</span>
+              ${g.spoken ? `<span class="font-mono text-xs text-slate-300">${g.spoken}</span>` : ''}
+              ${badge}
+            </div>
+            <div class="text-xs text-slate-300 mt-0.5">${g.meaning}</div>
+          </div>
+          <div class="flex items-center gap-1.5 shrink-0">
+            <button type="button" onclick="playConvoAudioThen('${escapeConvoJs(g.script)}', getConvoRate(getActiveConvoStep()), null)"
+                    class="w-8 h-8 rounded-xl bg-white/5 hover:bg-white/10 text-xs flex items-center justify-center cursor-pointer" title="Hear word">🔊</button>
+            ${!isSaved ? `<button type="button" onclick="saveConvoWordToCustom('${escapeConvoJs(g.script)}')"
+                    class="h-8 px-2.5 rounded-xl bg-emerald-500/15 hover:bg-emerald-500/25 border border-emerald-400/40 text-emerald-200 text-[11px] font-bold cursor-pointer">+ Save</button>` : ''}
+            <button type="button" onclick="closeConvoGlossCard()"
+                    class="w-7 h-7 rounded-lg text-slate-400 hover:text-white hover:bg-white/5 text-xs flex items-center justify-center cursor-pointer" title="Close">✕</button>
+          </div>
+        </div>`;
+    }
+
+    // Underlines target words (sky), upcoming preview words (teal), and untaught words (amber); every Thai word is tappable
+    function highlightConvoLineWords(line, idx) {
+      const step = getActiveConvoStep();
+      const showHints = step ? step.showWordHints !== false : true;
+      const tokens = analyzeConvoLineTokens(step, line);
+      return tokens.map(tok => {
+        if (!tok.isThai) return tok.text;
+        const jsWord = escapeConvoJs(tok.text);
+        const jsMean = escapeConvoAttr(tok.meaning ? `${tok.spoken ? tok.spoken + ' — ' : ''}${tok.meaning}` : 'Tap for meaning');
+        let cls = 'cursor-pointer hover:text-white transition-colors';
+        if (tok.kind === 'target') {
+          cls = 'underline decoration-dotted decoration-sky-400/80 underline-offset-[6px] cursor-help hover:text-white';
+        } else if (showHints && tok.kind === 'preview') {
+          cls = 'underline decoration-dotted decoration-teal-400/75 underline-offset-[6px] cursor-help hover:text-teal-200';
+        } else if (showHints && tok.kind === 'new') {
+          cls = 'underline decoration-dotted decoration-amber-400/75 underline-offset-[6px] cursor-help hover:text-amber-100';
+        }
+        const futArg = tok.futureUnit ? tok.futureUnit : 'null';
+        return `<span onclick="event.stopPropagation(); showConvoTokenGloss('${jsWord}', '${tok.kind}', ${futArg}, '${escapeConvoJs(tok.spoken)}', '${escapeConvoJs(tok.meaning)}')" class="${cls}" title="${jsMean}">${tok.text}</span>`;
+      }).join('');
     }
 
     // Length-proportional pseudo waveform for audio-only bubbles
@@ -11154,18 +12230,42 @@
         });
       }).join('');
 
+      const newWords = collectConvoNewWords(step);
+      const previewStrip = newWords.length ? `
+        <div class="rounded-2xl border border-amber-400/20 bg-amber-500/[0.04] px-3 py-2">
+          <button type="button" onclick="convoToggleView('showNewWordsPreview')"
+                  class="w-full flex items-center justify-between gap-2 text-left cursor-pointer">
+            <span class="text-[11px] font-semibold text-amber-200/90">✨ ${newWords.length} new word${newWords.length > 1 ? 's' : ''} in this scene <span class="text-slate-400 font-normal">· tap any underlined word or preview here</span></span>
+            <span class="text-[11px] font-bold text-amber-300 shrink-0">${step.showNewWordsPreview ? 'Hide ▲' : 'Preview ▼'}</span>
+          </button>
+          ${step.showNewWordsPreview ? `
+            <div class="mt-2 pt-2 border-t border-white/5 flex flex-wrap gap-1.5">
+              ${newWords.map(nw => `
+                <button type="button" onclick="showConvoTokenGloss('${escapeConvoJs(nw.script)}', '${nw.kind}', ${nw.futureUnit || 'null'}, '${escapeConvoJs(nw.spoken)}', '${escapeConvoJs(nw.meaning)}')"
+                        class="px-2.5 py-1 rounded-xl border text-left cursor-pointer transition-all hover:brightness-125 ${nw.kind === 'preview' ? 'bg-teal-500/10 border-teal-400/30 text-teal-200' : 'bg-amber-500/10 border-amber-400/30 text-amber-200'}">
+                  <span class="font-thai font-bold text-xs">${nw.script}</span>
+                  <span class="text-[10px] text-slate-400 ml-1">${nw.meaning || nw.spoken}</span>
+                </button>`).join('')}
+            </div>` : ''}
+        </div>` : '';
+
       const btn = 'h-9 w-9 rounded-xl bg-[#1d2231] hover:bg-[#262c3f] border border-[#2a3147] text-slate-200 text-sm flex items-center justify-center cursor-pointer transition-all active:scale-95';
       return `
-        <div class="flex items-center justify-between gap-2">
+        <div class="flex items-center justify-between gap-2 flex-wrap">
           <span class="text-[11px] text-slate-400">${step.listenedOnce ? '✓ Heard it all — replay any line, or start practice' : 'Listen to the whole conversation first'}</span>
           <div class="flex items-center gap-1">
             ${convoChip('Thai', step.showText, "convoToggleView('showText')", 'Show the script')}
             ${convoChip('Sound', step.showRoman, "convoToggleView('showRoman')", 'Show pronunciation')}
             ${convoChip('EN', step.showEnglish, "convoToggleView('showEnglish')", 'Show English')}
+            ${convoChip('Hints', step.showWordHints, "convoToggleView('showWordHints')", 'Underline untaught words (teal = coming later, amber = new)')}
           </div>
         </div>
 
+        ${previewStrip}
+
         <div class="space-y-2.5" id="live-convo-thread">${bubbles}</div>
+
+        <div id="convo-gloss-slot">${renderConvoGlossCard(step)}</div>
 
         <div class="sticky bottom-0 z-10 -mx-2 px-2 pt-3 pb-1 bg-gradient-to-t from-[#12141c] via-[#12141c] to-transparent">
           <div class="rounded-2xl bg-[#161a26] border border-[#262d42] p-2 space-y-2 shadow-xl">
@@ -11274,6 +12374,7 @@
           </div>
         </div>
         <div class="space-y-3" id="live-convo-thread">${items.join('')}</div>
+        <div id="convo-gloss-slot">${renderConvoGlossCard(step)}</div>
         ${remainingEx > 0 ? `<div class="text-center text-[11px] text-slate-600">· · · ${remainingEx} more exchange${remainingEx > 1 ? 's' : ''}</div>` : ''}
         <div class="flex items-center gap-1.5 pt-3 border-t border-white/5">
           <button type="button" onclick="replayCurrentConvoPartnerAudio()" title="Replay (Space)"
@@ -11299,6 +12400,9 @@
         }
       }));
 
+      const newWords = collectConvoNewWords(step);
+      const knowledge = getConvoCurriculumKnowledge(step.nodeId);
+
       return `
         <div class="rounded-2xl border ${perfect ? 'border-emerald-400/40 bg-emerald-500/[0.07]' : 'border-amber-400/40 bg-amber-500/[0.07]'} p-3 flex items-center justify-between gap-3">
           <div class="min-w-0">
@@ -11313,20 +12417,48 @@
           </div>
         </div>
 
+        <div id="convo-gloss-slot">${renderConvoGlossCard(step)}</div>
+
         ${words.length ? `
           <div class="space-y-1.5">
-            <div class="text-[10px] font-bold uppercase tracking-wider text-slate-500">Words in this conversation</div>
+            <div class="text-[10px] font-bold uppercase tracking-wider text-slate-500">Lesson target words</div>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
               ${words.map(w => `
                 <button type="button" onclick="showConvoWordGloss(${w.li}, ${w.wi})"
                         class="text-left p-2.5 rounded-xl bg-[#0f121b] border border-[#242b3d] hover:border-sky-400/50 transition-all cursor-pointer">
                   <div class="flex items-center justify-between gap-2">
                     <span  class="font-thai text-amber-300 font-bold text-sm sm:text-base">${w.script}</span>
-                    <span class="text-[9px] font-bold px-1.5 py-0.5 rounded-full ${w.isSpiral ? 'bg-sky-500/15 text-sky-300' : 'bg-amber-500/15 text-amber-300'}">${w.isSpiral ? 'REVIEW' : 'NEW'}</span>
+                    <span class="text-[9px] font-bold px-1.5 py-0.5 rounded-full ${w.isSpiral ? 'bg-sky-500/15 text-sky-300' : 'bg-amber-500/15 text-amber-300'}">${w.isSpiral ? 'REVIEW' : 'TARGET'}</span>
                   </div>
                   <div class="text-[11px] font-mono text-slate-400">${w.spoken || ''}</div>
                   <div class="text-xs text-slate-300">${w.meaning || ''}</div>
                 </button>`).join('')}
+            </div>
+          </div>` : ''}
+
+        ${newWords.length ? `
+          <div class="space-y-1.5">
+            <div class="text-[10px] font-bold uppercase tracking-wider text-slate-500">New words you met (${newWords.length})</div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
+              ${newWords.map(nw => {
+                const isSaved = knowledge.knownSet.has(nw.script) || (appState.customWords || []).some(cw => cw.thai === nw.script);
+                return `
+                <div class="p-2.5 rounded-xl bg-[#0f121b] border border-[#242b3d] flex items-start justify-between gap-2">
+                  <button type="button" onclick="showConvoTokenGloss('${escapeConvoJs(nw.script)}', '${nw.kind}', ${nw.futureUnit || 'null'}, '${escapeConvoJs(nw.spoken)}', '${escapeConvoJs(nw.meaning)}')"
+                          class="text-left min-w-0 flex-1 cursor-pointer">
+                    <div class="flex items-center gap-1.5 flex-wrap">
+                      <span class="font-thai text-amber-200 font-bold text-sm">${nw.script}</span>
+                      <span class="text-[9px] font-bold px-1.5 py-0.5 rounded-full ${nw.kind === 'preview' ? 'bg-teal-500/15 text-teal-300' : 'bg-amber-500/15 text-amber-300'}">${nw.kind === 'preview' ? `UNIT ${nw.futureUnit}` : 'NEW'}</span>
+                    </div>
+                    <div class="text-[11px] font-mono text-slate-400">${nw.spoken || ''}</div>
+                    <div class="text-xs text-slate-300 truncate">${nw.meaning || ''}</div>
+                  </button>
+                  ${isSaved
+                    ? `<span class="text-[10px] text-emerald-400 font-semibold shrink-0 mt-0.5">✓ Saved</span>`
+                    : `<button type="button" onclick="saveConvoWordToCustom('${escapeConvoJs(nw.script)}')"
+                               class="px-2 py-1 rounded-lg bg-emerald-500/15 hover:bg-emerald-500/25 border border-emerald-400/35 text-emerald-200 text-[10px] font-bold shrink-0 cursor-pointer">+ Save</button>`}
+                </div>`;
+              }).join('')}
             </div>
           </div>` : ''}
 
@@ -12804,7 +13936,7 @@ Examples:
         playHebrewAudio(clean);
       } else if ('speechSynthesis' in window) {
         const utter = new SpeechSynthesisUtterance(clean);
-        utter.lang = lang === 'th' ? 'th-TH' : 'he-IL';
+        applyVoice(utter, lang === 'th' ? pickPreferredVoice(['th']) : pickPreferredVoice(['he', 'iw']), lang === 'th' ? 'th-TH' : 'he-IL');
         window.speechSynthesis.speak(utter);
       }
 
