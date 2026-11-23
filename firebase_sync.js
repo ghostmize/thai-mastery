@@ -36,6 +36,8 @@
       this.isPushing = false;
       this.pushTimer = null;
       this.unsubscribeSnapshot = null;
+      this.lastSyncError = null;
+      this.lastSyncedAt = null;
     }
 
     // Dynamic loader for Firebase SDK
@@ -169,12 +171,15 @@
             <div id="user-modal-avatar" class="w-10 h-10 rounded-xl bg-gradient-to-tr from-sky-500 to-indigo-600 text-white font-bold text-base flex items-center justify-center shrink-0">U</div>
             <div class="truncate">
               <div id="user-modal-name" class="text-sm font-bold text-white truncate">Learner</div>
+              <div id="user-modal-email" class="text-[11px] text-slate-400 truncate"></div>
               <div id="user-modal-status" class="text-[11px] text-emerald-400 flex items-center gap-1 mt-0.5">
                 <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
                 <span>Active Cloud Sync</span>
               </div>
             </div>
           </div>
+
+          <div id="user-modal-sync-detail" class="text-[11px] text-slate-400 bg-[#090a0e] border border-[#222634] rounded-xl px-3 py-2 hidden"></div>
 
           <div class="pt-1 flex gap-2">
             <button onclick="window.masteryAuth.forceSyncNow()" class="flex-1 py-2 px-3 rounded-xl bg-sky-500/20 hover:bg-sky-500/30 border border-sky-400/30 text-sky-300 text-xs font-semibold cursor-pointer transition">
@@ -302,8 +307,36 @@
       const name = this.getUserDisplayName();
       document.getElementById('user-modal-name').textContent = name;
       document.getElementById('user-modal-avatar').textContent = name.charAt(0).toUpperCase();
+      const emailEl = document.getElementById('user-modal-email');
+      if (emailEl) emailEl.textContent = `${this.currentUser.email || ''} • ${this.appName}`;
+      this.updateModalSyncStatus();
       m.classList.remove('hidden');
       m.classList.add('flex');
+    }
+
+    updateModalSyncStatus() {
+      const statusEl = document.getElementById('user-modal-status');
+      const detailEl = document.getElementById('user-modal-sync-detail');
+      if (statusEl) {
+        if (this.lastSyncError) {
+          statusEl.className = 'text-[11px] text-rose-400 flex items-center gap-1 mt-0.5';
+          statusEl.innerHTML = `<span class="w-2 h-2 rounded-full bg-rose-400"></span><span>Sync Error</span>`;
+        } else {
+          statusEl.className = 'text-[11px] text-emerald-400 flex items-center gap-1 mt-0.5';
+          statusEl.innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-400"></span><span>Active Cloud Sync</span>`;
+        }
+      }
+      if (detailEl) {
+        if (this.lastSyncError) {
+          detailEl.textContent = `Error: ${this.lastSyncError}`;
+          detailEl.classList.remove('hidden');
+        } else if (this.lastSyncedAt) {
+          detailEl.textContent = `Last synced: ${new Date(this.lastSyncedAt).toLocaleTimeString()}`;
+          detailEl.classList.remove('hidden');
+        } else {
+          detailEl.classList.add('hidden');
+        }
+      }
     }
 
     closeUserModal() {
@@ -312,6 +345,38 @@
         m.classList.add('hidden');
         m.classList.remove('flex');
       }
+    }
+
+    applyRemoteData(remoteData, showToastOnMerge = true) {
+      if (!remoteData || !window.appState || typeof window.mergeCloudState !== 'function') return false;
+      const hasChanges = window.mergeCloudState(window.appState, remoteData);
+      if (hasChanges) {
+        if (typeof window.saveState === 'function') window.saveState(true);
+        if (typeof window.updateTrackUI === 'function') window.updateTrackUI();
+        if (typeof window.renderSkillTree === 'function') window.renderSkillTree();
+        if (typeof window.renderBank === 'function') window.renderBank();
+        if (typeof window.updateTopMetricsUI === 'function') window.updateTopMetricsUI();
+        if (showToastOnMerge) {
+          this.notifyToast(`☁️ Cloud progress synced (${this.getUserDisplayName()})`);
+        }
+      }
+      return hasChanges;
+    }
+
+    localHasAheadProgress(remoteData) {
+      if (!window.appState || !remoteData) return false;
+      const local = window.appState;
+      if ((local.xp || 0) > (remoteData.xp || 0)) return true;
+      const remoteNodes = Array.isArray(remoteData.completedNodes) ? remoteData.completedNodes : [];
+      if ((local.completedNodes || []).some(n => !remoteNodes.includes(n))) return true;
+      const remoteStats = remoteData.itemStats || {};
+      const localStats = local.itemStats || {};
+      for (const id of Object.keys(localStats)) {
+        const ls = localStats[id];
+        const rs = remoteStats[id];
+        if ((ls.exposures || 0) > (rs?.exposures || 0)) return true;
+      }
+      return false;
     }
 
     // Real-Time Firestore Sync per user
@@ -323,19 +388,15 @@
 
       this.unsubscribeSnapshot = docRef.onSnapshot((docSnap) => {
         if (this.isPushing) return;
+        this.lastSyncError = null;
+        this.lastSyncedAt = Date.now();
+        this.updateModalSyncStatus();
 
         if (docSnap.exists) {
           const remoteData = docSnap.data();
-          if (remoteData && window.appState && typeof window.mergeCloudState === 'function') {
-            const hasChanges = window.mergeCloudState(window.appState, remoteData);
-            if (hasChanges) {
-              if (typeof window.saveState === 'function') window.saveState(true);
-              if (typeof window.updateTrackUI === 'function') window.updateTrackUI();
-              if (typeof window.renderSkillTree === 'function') window.renderSkillTree();
-              if (typeof window.renderBank === 'function') window.renderBank();
-              if (typeof window.updateTopMetricsUI === 'function') window.updateTopMetricsUI();
-              this.notifyToast(`☁️ Cloud progress synced (${this.getUserDisplayName()})`);
-            }
+          this.applyRemoteData(remoteData, true);
+          if (this.localHasAheadProgress(remoteData)) {
+            this.pushToCloud(true);
           }
         } else {
           // First time this user logs in: upload local progress to their cloud database
@@ -343,7 +404,33 @@
         }
       }, (err) => {
         console.warn('[Sync Error]', err);
+        this.lastSyncError = err.message || String(err);
+        this.updateModalSyncStatus();
       });
+    }
+
+    async pullFromServer(showToastOnMerge = true) {
+      if (!this.isInitialized || !this.currentUser || !this.db) return false;
+      try {
+        const docRef = this.db.collection('users').doc(this.currentUser.uid).collection('progress').doc(this.appName);
+        const docSnap = await docRef.get({ source: 'server' });
+        this.lastSyncError = null;
+        this.lastSyncedAt = Date.now();
+        this.updateModalSyncStatus();
+        if (docSnap.exists) {
+          const remoteData = docSnap.data();
+          this.applyRemoteData(remoteData, showToastOnMerge);
+          if (this.localHasAheadProgress(remoteData)) {
+            await this.pushToCloud(true);
+          }
+        }
+        return true;
+      } catch (err) {
+        console.warn('[Sync Pull Error]', err);
+        this.lastSyncError = err.message || String(err);
+        this.updateModalSyncStatus();
+        return false;
+      }
     }
 
     schedulePush() {
@@ -355,7 +442,7 @@
     }
 
     async pushToCloud(immediate = false) {
-      if (!this.isInitialized || !this.currentUser || !this.db || !window.appState) return;
+      if (!this.isInitialized || !this.currentUser || !this.db || !window.appState) return false;
 
       this.isPushing = true;
       try {
@@ -365,17 +452,32 @@
         payload.username = this.getUserDisplayName();
 
         await docRef.set(payload, { merge: true });
+        this.lastSyncError = null;
+        this.lastSyncedAt = Date.now();
+        this.updateModalSyncStatus();
+        return true;
       } catch (err) {
         console.error('[Sync Push Error]', err);
+        this.lastSyncError = err.message || String(err);
+        this.updateModalSyncStatus();
+        return false;
       } finally {
         this.isPushing = false;
       }
     }
 
     async forceSyncNow() {
-      if (!this.currentUser) return;
-      await this.pushToCloud(true);
-      this.notifyToast('☁️ Progress saved to cloud!');
+      if (!this.currentUser) {
+        this.notifyToast('Please sign in first to sync');
+        return;
+      }
+      await this.pullFromServer(false);
+      const ok = await this.pushToCloud(true);
+      if (ok) {
+        this.notifyToast('☁️ Progress synced with cloud!');
+      } else {
+        this.notifyToast(`⚠️ Sync failed: ${this.lastSyncError || 'Check connection'}`);
+      }
     }
 
     notifyToast(msg) {
@@ -393,7 +495,7 @@
     window.masteryAuth.init();
   }
 
-  // Hook into saveState
+  // Hook into saveState and re-pull when tab/PWA becomes visible
   window.addEventListener('load', () => {
     if (typeof window.saveState === 'function') {
       const orig = window.saveState;
@@ -403,6 +505,12 @@
           window.masteryAuth.schedulePush();
         }
       };
+    }
+  });
+
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible' && window.masteryAuth && window.masteryAuth.currentUser) {
+      window.masteryAuth.pullFromServer(true);
     }
   });
 
