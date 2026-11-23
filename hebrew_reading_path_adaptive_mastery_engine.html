@@ -6535,8 +6535,11 @@
       const overlay = document.getElementById('lesson-overlay');
       if (overlay && !overlay.classList.contains('hidden')) {
         // 2-Person Convo: player keys (Space play/pause, arrows, Enter, 1-5 replies)
-        const typingTarget = e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA');
-        if (!typingTarget && typeof handleConvoKeydown === 'function' && handleConvoKeydown(e)) return;
+        const typingTarget = e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'SELECT' || e.target.isContentEditable);
+        if (typingTarget || (e.target && e.target.closest && e.target.closest('#gemini-panel'))) return;
+        const geminiPanel = document.getElementById('gemini-panel');
+        if (e.key === 'Escape' && geminiPanel && !geminiPanel.classList.contains('translate-x-full')) return;
+        if (typeof handleConvoKeydown === 'function' && handleConvoKeydown(e)) return;
         if (e.key === 'ArrowLeft') {
           handleLessonPrev();
         } else if (e.key === 'ArrowRight') {
@@ -13657,6 +13660,7 @@ Examples:
     function handleGeminiInputKeydown(e) {
       if (e.key === 'Enter' && !e.shiftKey) {
         e.preventDefault();
+        e.stopPropagation();
         handleGeminiSubmit(e);
       }
     }

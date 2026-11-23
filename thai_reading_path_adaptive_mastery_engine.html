@@ -4924,10 +4924,13 @@
       const overlay = document.getElementById('lesson-overlay');
       if (overlay && !overlay.classList.contains('hidden')) {
         // 2-Person Convo: player keys (Space play/pause, arrows, Enter, 1-5 replies)
-        const typingTarget = e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA');
-        if (!typingTarget && typeof handleConvoKeydown === 'function' && handleConvoKeydown(e)) return;
+        const typingTarget = e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'SELECT' || e.target.isContentEditable);
+        if (typingTarget || (e.target && e.target.closest && e.target.closest('#gemini-panel'))) return;
+        const geminiPanel = document.getElementById('gemini-panel');
+        if (e.key === 'Escape' && geminiPanel && !geminiPanel.classList.contains('translate-x-full')) return;
+        if (typeof handleConvoKeydown === 'function' && handleConvoKeydown(e)) return;
         const curStepForKey = activeSession?.steps?.[activeSession.currentIndex];
-        if (!typingTarget && curStepForKey && curStepForKey.type === 'word_reading_finale') {
+        if (curStepForKey && curStepForKey.type === 'word_reading_finale') {
           const curQ = curStepForKey.questions?.[curStepForKey.cursor || 0];
           if (/^[1-4]$/.test(e.key) && curQ && !curQ.answered) {
             const opt = curQ.options?.[Number(e.key) - 1];
@@ -5902,14 +5905,15 @@
 
       if (node.type === 'street' || node.itemIds) {
         const currentIds = new Set(node.itemIds || []);
+        const openerIds = new Set(['ST_lek', 'ST_nong_staff', 'ST_phii_driver']);
         const unit = STREET_CURRICULUM.find(u => u.nodes.some(n => n.id === node.id));
         const unitItemIds = unit ? unit.nodes.flatMap(n => n.itemIds || []) : [];
         let candidates = unitItemIds
-          .filter(id => !currentIds.has(id))
+          .filter(id => !currentIds.has(id) && !openerIds.has(id))
           .map(id => STREET_DB.find(s => s.id === id))
           .filter(Boolean);
         if (candidates.length < countNeeded) {
-          const extra = STREET_DB.filter(s => !currentIds.has(s.id) && !candidates.some(c => c.id === s.id));
+          const extra = STREET_DB.filter(s => !currentIds.has(s.id) && !openerIds.has(s.id) && !candidates.some(c => c.id === s.id) && isItemDomainCompatibleWithNode(s.id, node.id));
           candidates = [...candidates, ...extra];
         }
         return candidates.slice(0, countNeeded);
@@ -9121,81 +9125,81 @@
         earDistractors: ['Do you want your sandwich warmed in the microwave?', 'Why is the traffic so heavy today?', 'Can I have a plastic straw please?']
       },
 
-      // UNIT 2: CAFES, 7-ELEVEN & PAYING
+      // UNIT 2: CAFES, 7-ELEVEN & PAYING (Speaker A: Barista/Cashier, Speaker B: Ton)
       ST_waan_noi: {
         role: '🧋 Cafe Barista',
         partner: { script: 'ชาไทยเย็นแก้วนึงนะคะ เอาหวานปกติไหมคะ?', spoken: 'chaa thai yen gâaeo nɯng ná khá, ao wǎan bpòk-gà-dtì mǎi khá?', meaning: 'One iced Thai tea — do you want normal sweetness?', tts: 'ชาไทยเย็นแก้วนึงนะคะ เอาหวานปกติไหมคะ' },
-        user: { script: 'เอาหวานน้อยค่ะ', spoken: 'ao wǎan nɔ́ɔi khâ', meaning: 'Less sweet (50% sugar), please.', tts: 'เอาหวานน้อยค่ะ' },
+        user: { script: 'เอาหวานน้อยครับ', spoken: 'ao wǎan nɔ́ɔi kháp', meaning: 'Less sweet (50% sugar), please.', tts: 'เอาหวานน้อยครับ' },
         intentCue: '🧋 Ask for less sweet / half sugar (หวานน้อย)',
         earDistractors: ['Do you want meatballs and bean sprouts in your soup?', 'Should I turn right at the intersection?', 'Are you eating here at the table?']
       },
       ST_mai_waan: {
         role: '🧋 Cafe Barista',
-        partner: { script: 'อเมริกาโน่เย็น ใส่น้ำเชื่อมไหมครับ?', spoken: 'à-mee-rí-gaa-nôo yen, sài nám-chɯ̂am mǎi kháp?', meaning: 'Iced Americano — should I add syrup/sweetener?', tts: 'อเมริกาโน่เย็น ใส่น้ำเชื่อมไหมครับ' },
-        user: { script: 'ไม่หวานค่ะ', spoken: 'mâi wǎan khâ', meaning: 'Unsweetened / zero sugar, please.', tts: 'ไม่หวานค่ะ' },
+        partner: { script: 'อเมริกาโน่เย็น ใส่น้ำเชื่อมไหมคะ?', spoken: 'à-mee-rí-gaa-nôo yen, sài nám-chɯ̂am mǎi khá?', meaning: 'Iced Americano — should I add syrup/sweetener?', tts: 'อเมริกาโน่เย็น ใส่น้ำเชื่อมไหมคะ' },
+        user: { script: 'ไม่หวานครับ', spoken: 'mâi wǎan kháp', meaning: 'Unsweetened / zero sugar, please.', tts: 'ไม่หวานครับ' },
         intentCue: '☕ Request zero sugar / completely unsweetened',
         earDistractors: ['Do you want the broth packed in a separate bag?', 'How much does this shirt cost?', 'Drop me off at the corner up ahead']
       },
       ST_nam_kheng_plao: {
         role: '👩‍🍳 Drink Stall Server',
-        partner: { script: 'รับเครื่องดื่มหรือแก้วน้ำแข็งเพิ่มไหมคะ?', spoken: 'ráp khrɯ̂ang-dɯ̀ɯm rǒe gâaeo nám-khɛ̌ng phôem mǎi khá?', meaning: 'Would you like a drink or a cup of ice?', tts: 'รับเครื่องดื่มหรือแก้วน้ำแข็งเพิ่มไหมคะ' },
-        user: { script: 'ขอน้ำแข็งเปล่าค่ะ', spoken: 'khɔ̌ɔ nám-khɛ̌ng bplào khâ', meaning: 'May I have a cup of plain ice, please.', tts: 'ขอน้ำแข็งเปล่าค่ะ' },
+        partner: { script: 'รับน้ำเปล่าหรือแก้วน้ำแข็งเพิ่มไหมคะ?', spoken: 'ráp nám bplào rǒe gâaeo nám-khɛ̌ng phôem mǎi khá?', meaning: 'Would you like bottled water or a cup of ice?', tts: 'รับน้ำเปล่าหรือแก้วน้ำแข็งเพิ่มไหมคะ' },
+        user: { script: 'ขอน้ำแข็งเปล่าครับ', spoken: 'khɔ̌ɔ nám-khɛ̌ng bplào kháp', meaning: 'May I have a cup of plain ice, please.', tts: 'ขอน้ำแข็งเปล่าครับ' },
         intentCue: '🧊 Ask for a cup of plain crushed ice',
         earDistractors: ['Order thin rice noodles with no cilantro', 'Tell the driver to go straight ahead', 'Say you are totally confused by the menu']
       },
       ST_waan_pokati: {
         role: '🧋 Cafe Barista',
-        partner: { script: 'หวานระดับไหนดีคะ หวานน้อยหรือหวานปกติ?', spoken: 'wǎan rá-dàp nǎi dii khá, wǎan nɔ́ɔi rǒe wǎan bpòk-gà-dtì?', meaning: 'What sweetness level would you like — less sweet or normal sweet?', tts: 'หวานระดับไหนดีคะ หวานน้อยหรือหวานปกติ' },
-        user: { script: 'หวานปกติค่ะ', spoken: 'wǎan bpòk-gà-dtì khâ', meaning: 'Normal sweetness, please.', tts: 'หวานปกติค่ะ' },
+        partner: { script: 'อีกแก้วเอาหวานระดับไหนดีคะ หวานน้อยหรือหวานปกติ?', spoken: 'ìik gâaeo ao wǎan rá-dàp nǎi dii khá, wǎan nɔ́ɔi rǒe wǎan bpòk-gà-dtì?', meaning: 'For the other drink, what sweetness level — less sweet or normal sweet?', tts: 'อีกแก้วเอาหวานระดับไหนดีคะ หวานน้อยหรือหวานปกติ' },
+        user: { script: 'หวานปกติครับ', spoken: 'wǎan bpòk-gà-dtì kháp', meaning: 'Normal sweetness, please.', tts: 'หวานปกติครับ' },
         intentCue: '🍬 Confirm regular / normal Thai sweetness',
         earDistractors: ['Where is the nearest BTS skytrain station?', 'Do you want chilies and MSG in your salad?', 'Can you wait one second while I check?']
       },
       ST_nong_staff: {
         role: '🧑‍🍳 Young Cafe Server',
         partner: { script: 'สวัสดีค่ะ นั่งโต๊ะไหนดีคะ เรียกได้เลยนะคะ!', spoken: 'sà-wàt-dii khâ, nâng dtó nǎi dii khá, rîak dâi loei ná khá!', meaning: 'Hello! Pick any table, just call me when you are ready!', tts: 'สวัสดีค่ะ นั่งโต๊ะไหนดีคะ เรียกได้เลยนะคะ' },
-        user: { script: 'น้องคะ สั่งอาหารหน่อยค่ะ', spoken: 'nɔ́ɔng khá, sàng aa-hǎan nɔ̀ɔi khâ', meaning: 'Younger sibling/server, could I order please.', tts: 'น้องคะ สั่งอาหารหน่อยค่ะ' },
+        user: { script: 'น้องครับ สั่งอาหารหน่อยครับ', spoken: 'nɔ́ɔng kháp, sàng aa-hǎan nɔ̀ɔi kháp', meaning: 'Excuse me server, could I order please.', tts: 'น้องครับ สั่งอาหารหน่อยครับ' },
         intentCue: '🙋 Call over the younger server politely using น้อง (nɔ́ɔng)',
         earDistractors: ['Tell the driver to pull over right here', 'Ask for no MSG in the papaya salad', 'Say that the movie was insanely good']
       },
       ST_gep_dtang: {
-        role: '👨‍🍳 Night Market Waiter',
-        partner: { script: 'อิ่มแล้วใช่ไหมครับ รับอะไรเพิ่มไหมครับ?', spoken: 'ìm láaeo châi mǎi kháp, ráp à-rai phôem mǎi kháp?', meaning: 'All full now, right? Would you like anything else?', tts: 'อิ่มแล้วใช่ไหมครับ รับอะไรเพิ่มไหมครับ' },
-        user: { script: 'เก็บตังค์ด้วยค่ะ!', spoken: 'gèp dtang dûai khâ!', meaning: 'Check / bill please!', tts: 'เก็บตังค์ด้วยค่ะ' },
+        role: '🧑‍🍳 Cafe Server',
+        partner: { script: 'ทานเสร็จแล้วใช่ไหมคะ รับอะไรเพิ่มไหมคะ?', spoken: 'thaan sèt láaeo châi mǎi khá, ráp à-rai phôem mǎi khá?', meaning: 'All finished now, right? Would you like anything else?', tts: 'ทานเสร็จแล้วใช่ไหมคะ รับอะไรเพิ่มไหมคะ' },
+        user: { script: 'เก็บตังค์ด้วยครับ!', spoken: 'gèp dtang dûai kháp!', meaning: 'Check / bill please!', tts: 'เก็บตังค์ด้วยครับ' },
         intentCue: '💸 Call for the bill / check using natural street Thai',
         earDistractors: ['Do you want thin rice noodles or wide noodles?', 'Should I turn left into this small alley?', 'Do you want your toastie microwaved?']
       },
       ST_thao_rai: {
-        role: '🥥 Fruit Cart Vendor',
-        partner: { script: 'มะพร้าวน้ำหอมเย็นๆ เลยจ้ะ เอาลูกไหนดี?', spoken: 'má-phráao nám-hɔ̌ɔm yen-yen loei jâ, ao lûuk nǎi dii?', meaning: 'Ice-cold fragrant coconuts right here! Which one would you like?', tts: 'มะพร้าวน้ำหอมเย็นๆ เลยจ้ะ เอาลูกไหนดี' },
-        user: { script: 'อันนี้เท่าไหร่คะ?', spoken: 'an-níi thâo-lài khá?', meaning: 'How much is this one?', tts: 'อันนี้เท่าไหร่คะ' },
-        intentCue: '🏷️ Ask the vendor how much it costs',
+        role: '🧑‍🍳 Cafe Server',
+        partner: { script: 'มีเค้กมะพร้าวทำใหม่ด้วยนะคะ สนใจไหมคะ?', spoken: 'mii khéek má-phráao tham mài dûai ná khá, sǒn-jai mǎi khá?', meaning: 'We also have fresh coconut cake today — interested?', tts: 'มีเค้กมะพร้าวทำใหม่ด้วยนะคะ สนใจไหมคะ' },
+        user: { script: 'อันนี้เท่าไหร่ครับ?', spoken: 'an-níi thâo-lài kháp?', meaning: 'How much is this one?', tts: 'อันนี้เท่าไหร่ครับ' },
+        intentCue: '🏷️ Ask the server how much it costs',
         earDistractors: ['Tell the cook not to put bean sprouts', 'Ask the cashier for a plastic straw', 'Tell your friend to hurry up and go right now']
       },
       ST_scan_dai_mai: {
-        role: '👨‍🍳 Street Stall Vendor',
-        partner: { script: 'ทั้งหมดหกสิบบาทครับ จ่ายสดหรือสแกนครับ?', spoken: 'tháng-mòt hòk-sìp bàat kháp, jàai sòt rǒe sà-gaaen kháp?', meaning: 'That is 60 baht total — paying cash or scanning QR?', tts: 'ทั้งหมดหกสิบบาทครับ จ่ายสดหรือสแกนครับ' },
-        user: { script: 'สแกนได้ไหมคะ?', spoken: 'sà-gaaen dâi mǎi khá?', meaning: 'Can I scan QR (PromptPay) to pay?', tts: 'สแกนได้ไหมคะ' },
+        role: '🧑‍🍳 Cafe Cashier',
+        partner: { script: 'ทั้งหมดหกสิบบาทค่ะ จ่ายสดหรือสแกนคะ?', spoken: 'tháng-mòt hòk-sìp bàat khâ, jàai sòt rǒe sà-gaaen khá?', meaning: 'That is 60 baht total — paying cash or scanning QR?', tts: 'ทั้งหมดหกสิบบาทค่ะ จ่ายสดหรือสแกนคะ' },
+        user: { script: 'สแกนได้ไหมครับ?', spoken: 'sà-gaaen dâi mǎi kháp?', meaning: 'Can I scan QR (PromptPay) to pay?', tts: 'สแกนได้ไหมครับ' },
         intentCue: '📱 Ask if you can pay by scanning PromptPay QR',
         earDistractors: ['How spicy would you like your papaya salad?', 'Where should I pull over the taxi?', 'Do you want dry egg noodles or soup?']
       },
       ST_mai_ao_thung: {
         role: '🏪 7-Eleven Cashier',
         partner: { script: 'ทั้งหมดสี่สิบห้าบาทค่ะ รับถุงไหมคะ?', spoken: 'tháng-mòt sìi-sìp-hâa bàat khâ, ráp thǔng mǎi khá?', meaning: 'Total is 45 baht — would you like a plastic bag?', tts: 'ทั้งหมดสี่สิบห้าบาทค่ะ รับถุงไหมคะ' },
-        user: { script: 'ไม่เอาถุงค่ะ', spoken: 'mâi ao thǔng khâ', meaning: 'No plastic bag, thanks.', tts: 'ไม่เอาถุงค่ะ' },
+        user: { script: 'ไม่เอาถุงครับ', spoken: 'mâi ao thǔng kháp', meaning: 'No plastic bag, thanks.', tts: 'ไม่เอาถุงครับ' },
         intentCue: '🛍️ Politely decline the plastic bag',
         earDistractors: ['Do you want meatballs in your noodle soup?', 'What sweetness level do you want for your tea?', 'Should I turn right at the traffic light?']
       },
       ST_mii_hlort: {
         role: '🏪 Corner Shop Cashier',
         partner: { script: 'น้ำอัดลมหนึ่งขวดนะคะ เอาอะไรเพิ่มไหมคะ?', spoken: 'nám-àt-lom nɯ̀ng khùat ná khá, ao à-rai phôem mǎi khá?', meaning: 'One bottle of soda — do you need anything else with that?', tts: 'น้ำอัดลมหนึ่งขวดนะคะ เอาอะไรเพิ่มไหมคะ' },
-        user: { script: 'ขอหลอดด้วยค่ะ', spoken: 'khɔ̌ɔ lɔ̀ɔt dûai khâ', meaning: 'May I have a straw too, please.', tts: 'ขอหลอดด้วยค่ะ' },
-        intentCue: '🥤 Ask the cashier for a drinking straw',
+        user: { script: 'มีหลอดไหมครับ?', spoken: 'mii lɔ̀ɔt mǎi kháp?', meaning: 'Do you have a straw?', tts: 'มีหลอดไหมครับ' },
+        intentCue: '🥤 Ask the cashier if they have a drinking straw',
         earDistractors: ['Tell the cook no chilies and no cilantro', 'Tell the taxi driver to go straight ahead', 'Ask your friend what the plan is']
       },
       ST_wen_dai_mai: {
         role: '🏪 7-Eleven Cashier',
         partner: { script: 'ขนมปังแฮมชีสอันนี้ รับเลยหรืออุ่นร้อนคะ?', spoken: 'khà-nǒm-bpang haaem-chiis an-níi, ráp loei rǒe ùn rɔ́ɔn khá?', meaning: 'This ham & cheese toastie — taking it cold or warming it up?', tts: 'ขนมปังแฮมชีสอันนี้ รับเลยหรืออุ่นร้อนคะ' },
-        user: { script: 'เวฟได้ไหมคะ?', spoken: 'wéep dâi mǎi khá?', meaning: 'Can you microwave / heat it up, please?', tts: 'เวฟได้ไหมคะ' },
+        user: { script: 'เวฟได้ไหมครับ?', spoken: 'wéep dâi mǎi kháp?', meaning: 'Can you microwave / heat it up, please?', tts: 'เวฟได้ไหมครับ' },
         intentCue: '🔥 Ask the cashier to heat/microwave it up (เวฟ)',
         earDistractors: ['Do you want the soup broth packed separately?', 'How much is the taxi fare to the hotel?', 'Do you want extra meatballs?']
       },
@@ -9265,45 +9269,45 @@
         earDistractors: ['Do you want meatballs in your noodle soup?', 'Can you warm this up in the microwave?', 'How much does this coconut cost?']
       },
 
-      // UNIT 4: SPOKEN SHIFTS & CONTRACTIONS
+      // UNIT 4: SPOKEN SHIFTS & CONTRACTIONS (Speaker A: Ton, Speaker B: Ploy)
       ST_arai: {
         role: '🙋 Thai Friend',
-        partner: { script: 'เมื่อกี้เสียงดังมาก เธอพูดว่าอะไรนะ?', spoken: 'mɯ̂a-gíi sǐang dang mâak, thoe phûut wâa à-lai ná?', meaning: 'It was so loud just now — what did you say?', tts: 'เมื่อกี้เสียงดังมาก เธอพูดว่าอะไรนะ' },
-        user: { script: 'กินอะไรดี?', spoken: 'gin à-lai dii?', meaning: 'What should we eat? (natural ร→ล shift)', tts: 'กินอะไรดี' },
+        partner: { script: 'เที่ยงแล้ว หิวมากเลย!', spoken: 'thîang láaeo, hǐu mâak loei!', meaning: 'It is noon already — I am so hungry!', tts: 'เที่ยงแล้ว หิวมากเลย' },
+        user: { script: 'วันนี้กินอะไรดี?', spoken: 'wan-níi gin à-lai dii?', meaning: 'What should we eat today? (natural ร→ล shift)', tts: 'วันนี้กินอะไรดี' },
         intentCue: '🗣️ Ask "What should we eat?" using natural spoken à-lai (อะไร)',
         earDistractors: ['Where did you park the car?', 'How much is the bill for the coffee?', 'Should we turn left at the corner?']
       },
       ST_khrap: {
-        role: '👨‍🍳 Street Vendor',
-        partner: { script: 'ได้แล้วครับ ทั้งหมดห้าสิบบาทคับ!', spoken: 'dâi láaeo kháp, tháng-mòt hâa-sìp bàat kháp!', meaning: 'All ready! That is 50 baht total, sir (spoken kháp)!', tts: 'ได้แล้วครับ ทั้งหมดห้าสิบบาทครับ' },
-        user: { script: 'ขอบคุณครับ', spoken: 'khɔ̀ɔp-khun kháp', meaning: 'Thank you! (relaxed spoken kháp)', tts: 'ขอบคุณครับ' },
-        intentCue: '🙏 Thank the vendor using relaxed everyday ครับ (kháp)',
+        role: '🙋 Thai Friend',
+        partner: { script: 'ร้านก๋วยเตี๋ยวตรงนั้นเด็ดมากครับ ไปสั่งเลยไหม?', spoken: 'ráan gǔai-dtǐao dtrong nán dèt mâak kháp, bpai sàng loei mǎi?', meaning: 'That noodle shop over there is awesome — shall we go order?', tts: 'ร้านก๋วยเตี๋ยวตรงนั้นเด็ดมากครับ ไปสั่งเลยไหม' },
+        user: { script: 'ไปสิ! สั่งเลยค่ะ', spoken: 'bpai sì! sàng loei khâ', meaning: 'Let’s go! Order away.', tts: 'ไปสิ สั่งเลยค่ะ' },
+        intentCue: '🙏 Hear relaxed everyday ครับ (kháp) and reply to go order',
         earDistractors: ['Tell the cook you want no bean sprouts', 'Ask the driver to turn right', 'Say that you do not want a plastic bag']
       },
       ST_aroi_aloi: {
-        role: '👩‍🍳 Mango Sticky Rice Vendor',
-        partner: { script: 'ชิมดูสิคะ มะม่วงหวานไหม อะหล่อยไหมคะ?', spoken: 'chim duu sì khá, má-mûang wǎan mǎi, à-lɔ̀i mǎi khá?', meaning: 'Have a taste! Is the mango sweet — is it delicious (à-lòi)?', tts: 'ชิมดูสิคะ มะม่วงหวานไหม อร่อยไหมคะ' },
-        user: { script: 'อร่อยมากค่ะ!', spoken: 'à-lɔ̀i mâak khâ!', meaning: 'Super delicious! (natural spoken à-lòi)', tts: 'อร่อยมากค่ะ' },
-        intentCue: '🥭 Praise the food: "Very delicious!" (อร่อยมาก / à-lòi mâak)',
+        role: '🙋 Thai Friend',
+        partner: { script: 'ชิมดูสิ ก๋วยเตี๋ยวร้านนี้เป็นไงบ้าง?', spoken: 'chim duu sì, gǔai-dtǐao ráan níi bpen ngai bâang?', meaning: 'Have a taste — how are the noodles at this shop?', tts: 'ชิมดูสิ ก๋วยเตี๋ยวร้านนี้เป็นไงบ้าง' },
+        user: { script: 'อร่อยมากเลย!', spoken: 'à-lɔ̀i mâak loei!', meaning: 'Super delicious! (natural spoken à-lòi)', tts: 'อร่อยมากเลย' },
+        intentCue: '🍜 Praise the food: "Very delicious!" (อร่อยมาก / à-lòi mâak)',
         earDistractors: ['Ask for the soup broth on the side', 'Tell the barista you want zero sugar', 'Tell the taxi to stop up ahead']
       },
       ST_reu_plao: {
         role: '🙋 Thai Friend',
-        partner: { script: 'ร้านนี้คนเยอะมาก เธอหิวเปล่า?', spoken: 'ráan níi khon yóe mâak, thoe hǐu bpào?', meaning: 'This shop is packed — are you hungry or not (หิวเปล่า)?', tts: 'ร้านนี้คนเยอะมาก เธอหิวเปล่า' },
-        user: { script: 'ว่างเปล่า? ไปกินกัน!', spoken: 'wâang bpào? bpai gin gan!', meaning: 'Are you free or not? Let’s go eat!', tts: 'ว่างเปล่า ไปกินกัน' },
-        intentCue: '⚡ Use the rapid street contraction เปล่า (bpào — "...or not?")',
+        partner: { script: 'เย็นนี้เธอว่างเปล่า?', spoken: 'yen níi thoe wâang bpào?', meaning: 'Are you free this evening or not (เปล่า)?', tts: 'เย็นนี้เธอว่างเปล่า' },
+        user: { script: 'ว่างสิ! ไปตลาดกันไหม?', spoken: 'wâang sì! bpai dtà-làat gan mǎi?', meaning: 'I’m free! Wanna go to the market?', tts: 'ว่างสิ ไปตลาดกันไหม' },
+        intentCue: '⚡ Answer the rapid street contraction เปล่า (bpào — "...or not?")',
         earDistractors: ['Ask the cashier to heat up your toastie', 'Order thin rice noodles with extra pork', 'Tell the driver to enter this alley']
       },
       ST_yang_nii: {
-        role: '🙋 Thai Colleague',
-        partner: { script: 'แกะถุงน้ำจิ้มไม่ออก ต้องทำยังไงอ่ะ?', spoken: 'gàe thǔng nám-jîm mâi ɔ̀ɔk, dtɔ̂ng tham yang-ngai à?', meaning: 'I cannot open the dipping sauce bag — how do you do it?', tts: 'แกะถุงน้ำจิ้มไม่ออก ต้องทำยังไงอ่ะ' },
-        user: { script: 'ทำงี้สิ!', spoken: 'tham ngíi sì!', meaning: 'Do it like this! (งี้ = อย่างนี้)', tts: 'ทำงี้สิ' },
+        role: '🙋 Thai Friend',
+        partner: { script: 'แกะถุงน้ำจิ้มไม่ออก ทำยังไงอ่ะ?', spoken: 'gàe thǔng nám-jîm mâi ɔ̀ɔk, tham yang-ngai à?', meaning: 'I cannot open the dipping sauce bag — how do you do it?', tts: 'แกะถุงน้ำจิ้มไม่ออก ทำยังไงอ่ะ' },
+        user: { script: 'ทำงี้สิ! ง่ายมาก', spoken: 'tham ngíi sì! ngâai mâak', meaning: 'Do it like this! Super easy (งี้ = อย่างนี้)', tts: 'ทำงี้สิ ง่ายมาก' },
         intentCue: '👉 Show them: "Do it like this!" (ทำงี้สิ!)',
         earDistractors: ['Ask how much the ticket costs', 'Say no chilies and no cilantro', 'Ask to scan the QR code']
       },
       ST_yang_nan: {
         role: '🙋 Thai Friend',
-        partner: { script: 'ฝนเริ่มตกหนักแล้ว เดินไปตลาดไม่ไหวแน่เลย!', spoken: 'fǒn rôem dtòk nàk láaeo, doen bpai dtà-làat mâi wǎi nâae loei!', meaning: 'It is starting to rain hard — we definitely cannot walk to the market!', tts: 'ฝนเริ่มตกหนักแล้ว เดินไปตลาดไม่ไหวแน่เลย' },
+        partner: { script: 'อ้าว ฝนเริ่มตกหนักแล้ว เดินไปตลาดไม่ไหวแน่!', spoken: 'âao, fǒn rôem dtòk nàk láaeo, doen bpai dtà-làat mâi wǎi nâae!', meaning: 'Oh no, it is starting to rain hard — we cannot walk to the market!', tts: 'อ้าว ฝนเริ่มตกหนักแล้ว เดินไปตลาดไม่ไหวแน่' },
         user: { script: 'งั้นเราไปคาเฟ่กันเลย!', spoken: 'ngán rao bpai khaa-fêe gan loei!', meaning: 'In that case (งั้น), let’s go to the cafe right now!', tts: 'งั้นเราไปคาเฟ่กันเลย' },
         intentCue: '💡 Pivot plans using งั้น (ngán — "In that case / then...")',
         earDistractors: ['Order dry egg noodles to take home', 'Ask for a cup of plain crushed ice', 'Tell the driver to turn left']
@@ -9311,22 +9315,22 @@
       ST_baep_nueng: {
         role: '🙋 Thai Friend',
         partner: { script: 'รถแท็กซี่มาจอดรอหน้าคอนโดแล้ว เสร็จยัง?', spoken: 'rót tháek-sîi maa jɔ̀ɔt rɔɔ nâa khɔn-doo láaeo, sèt yang?', meaning: 'The taxi is waiting in front of the condo — are you ready yet?', tts: 'รถแท็กซี่มาจอดรอหน้าคอนโดแล้ว เสร็จยัง' },
-        user: { script: 'แป๊บนึงนะ!', spoken: 'bpáep-nɯng ná!', meaning: 'Just one second! Hang on a sec!', tts: 'แป๊บนึงนะ' },
+        user: { script: 'แป๊บนึงนะ! กำลังลงไป', spoken: 'bpáep-nɯng ná! gam-lang long bpai', meaning: 'Just one second! Coming down now.', tts: 'แป๊บนึงนะ กำลังลงไป' },
         intentCue: '⏱️ Tell your friend: "Just one second!" (แป๊บนึงนะ)',
         earDistractors: ['Ask the waiter for the check', 'Tell the vendor you want mild spice', 'Decline the plastic bag at 7-Eleven']
       },
       ST_tham_mai: {
         role: '🙋 Thai Friend',
         partner: { script: 'วันนี้เราไม่กินก๋วยเตี๋ยวร้านนั้นนะ!', spoken: 'wan-níi rao mâi gin gǔai-dtǐao ráan nán ná!', meaning: 'Today we are not eating noodles at that shop!', tts: 'วันนี้เราไม่กินก๋วยเตี๋ยวร้านนั้นนะ' },
-        user: { script: 'ทำไมอ่ะ?', spoken: 'tham-mai à?', meaning: 'Why is that? (casual street inflection)', tts: 'ทำไมอ่ะ' },
+        user: { script: 'ทำไมอ่ะ? ร้านปิดเหรอ?', spoken: 'tham-mai à? ráan bpìt rǒe?', meaning: 'Why is that? Is the shop closed?', tts: 'ทำไมอ่ะ ร้านปิดเหรอ' },
         intentCue: '❓ Ask casually: "Why?" (ทำไมอ่ะ?)',
         earDistractors: ['Tell the cook no meatballs and no sprouts', 'Ask the cashier for a straw', 'Tell the driver to go straight']
       },
       ST_chai_pa: {
         role: '🙋 Thai Friend',
-        partner: { script: 'ร้านกาแฟเปิดใหม่อยู่ปากซอยนี้ใช่ป่ะ?', spoken: 'ráan gaa-faae bpòet mài yùu bpàak sɔɔi níi châi bpà?', meaning: 'The new coffee shop is at the mouth of this alley, right (ใช่ป่ะ)?', tts: 'ร้านกาแฟเปิดใหม่อยู่ปากซอยนี้ใช่ป่ะ' },
-        user: { script: 'ใช่ป่ะ? ไปดูกัน!', spoken: 'châi bpà? bpai duu gan!', meaning: 'Right?! Let’s go check it out!', tts: 'ใช่ป่ะ ไปดูกัน' },
-        intentCue: '🤝 Confirm with the casual tag question ใช่ป่ะ (châi bpà — "right?!")',
+        partner: { script: 'คาเฟ่เปิดใหม่อยู่ปากซอยนี้ใช่ป่ะ?', spoken: 'khaa-fêe bpòet mài yùu bpàak sɔɔi níi châi bpà?', meaning: 'The new cafe is at the mouth of this alley, right (ใช่ป่ะ)?', tts: 'คาเฟ่เปิดใหม่อยู่ปากซอยนี้ใช่ป่ะ' },
+        user: { script: 'ใช่เลย! ไปดูกัน', spoken: 'châi loei! bpai duu gan', meaning: 'Right! Let’s go check it out!', tts: 'ใช่เลย ไปดูกัน' },
+        intentCue: '🤝 Confirm the casual tag question ใช่ป่ะ (châi bpà — "right?!")',
         earDistractors: ['Ask for the broth on the side', 'Request 50% sugar in your tea', 'Ask how much the fare is']
       },
 
@@ -9376,7 +9380,7 @@
       ST_na: {
         role: '🙋 Thai Friend',
         partner: { script: 'เดี๋ยวเราไปซื้อน้ำที่เซเว่น รอตรงนี้นะ!', spoken: 'dǐao rao bpai sɯ́ɯ nám thîi see-wêen, rɔɔ dtrong níi ná!', meaning: 'I’ll go buy water at 7-Eleven — wait right here, okay (นะ)?', tts: 'เดี๋ยวเราไปซื้อน้ำที่เซเว่น รอตรงนี้นะ' },
-        user: { script: 'โอเคนะ รอตรงนี้นะ!', spoken: 'oo-khee ná, rɔɔ dtrong níi ná!', meaning: 'Okay! I’ll wait right here (warm softener นะ)!', tts: 'โอเคนะ รอตรงนี้นะ' },
+        user: { script: 'โอเคนะ รีบมานะ!', spoken: 'oo-khee ná, rîip maa ná!', meaning: 'Okay! Hurry back, okay? (warm softener นะ)', tts: 'โอเคนะ รีบมานะ' },
         intentCue: '🌸 Reassure your friend warmly using นะ (ná)',
         earDistractors: ['Order special extra-large dry noodles', 'Tell the cook no chilies at all', 'Ask to scan the PromptPay QR']
       },
@@ -9418,10 +9422,10 @@
         earDistractors: ['Tell the barista you want 50% sugar', 'Ask for no meatballs in your soup', 'Tell the driver to turn left']
       },
       ST_mai_pen_rai: {
-        role: '🙋 Passerby at Market',
-        partner: { script: 'อุ๊ย ขอโทษทีค่ะ เดินชนนิดนึง เจ็บไหมคะ?', spoken: 'úi khɔ̌ɔ-thôot thii khâ, doen chon nít-nɯng, jèp mǎi khá?', meaning: 'Oops, so sorry I bumped into you a bit — are you hurt?', tts: 'อุ๊ย ขอโทษทีค่ะ เดินชนนิดนึง เจ็บไหมคะ' },
-        user: { script: 'ไม่เป็นไรค่ะ สบายมาก!', spoken: 'mâi bpen rai khâ, sà-baai mâak!', meaning: 'No worries at all! Totally fine!', tts: 'ไม่เป็นไรค่ะ สบายมาก' },
-        intentCue: '🙏 Smile and say "No worries / It’s all good!" (ไม่เป็นไรค่ะ)',
+        role: '🙋 Thai Friend',
+        partner: { script: 'อุ๊ย ขอโทษนะ เดินชนนิดนึง เจ็บไหม?', spoken: 'úi khɔ̌ɔ-thôot ná, doen chon nít-nɯng, jèp mǎi?', meaning: 'Oops, sorry I bumped into you a bit — are you hurt?', tts: 'อุ๊ย ขอโทษนะ เดินชนนิดนึง เจ็บไหม' },
+        user: { script: 'ไม่เป็นไรเลย สบายมาก!', spoken: 'mâi bpen rai loei, sà-baai mâak!', meaning: 'No worries at all! Totally fine!', tts: 'ไม่เป็นไรเลย สบายมาก' },
+        intentCue: '🙏 Smile and say "No worries / It’s all good!" (ไม่เป็นไร)',
         earDistractors: ['Ask the vendor to wrap the food to go', 'Ask if you can scan PromptPay QR', 'Order dry egg noodles']
       },
       ST_ao_di: {
@@ -9434,7 +9438,7 @@
       ST_ngong_maak: {
         role: '🙋 Thai Friend',
         partner: { script: 'ตกลงต้องกดบัตรคิวสีฟ้าหรือสีเหลืองก่อนเนี่ย?', spoken: 'dtòk-long dtɔ̂ng gòt bàt khiu sǐi fáa rǒe sǐi lɯ̌ang gɔ̀ɔn nîa?', meaning: 'Wait, do we press the blue queue ticket or yellow queue ticket first?', tts: 'ตกลงต้องกดบัตรคิวสีฟ้าหรือสีเหลืองก่อนเนี่ย' },
-        user: { script: 'งงมากค่ะ ไม่รู้เลย!', spoken: 'ngong mâak khâ, mâi rúu loei!', meaning: 'Totally baffled / so confused (งงมาก)! No idea!', tts: 'งงมากค่ะ ไม่รู้เลย' },
+        user: { script: 'งงมาก ไม่รู้เลย!', spoken: 'ngong mâak, mâi rúu loei!', meaning: 'Totally baffled / so confused (งงมาก)! No idea!', tts: 'งงมาก ไม่รู้เลย' },
         intentCue: '😵 Admit you are totally baffled / confused (งงมาก)',
         earDistractors: ['Order thin rice noodles in clear soup', 'Ask for a cup of crushed ice', 'Tell the taxi to go straight ahead']
       },
@@ -9446,24 +9450,24 @@
         earDistractors: ['Ask the vendor to pack broth separately', 'Decline the plastic bag at checkout', 'Ask how much the coconut is']
       },
       ST_sut_yoot: {
-        role: '👨‍🍳 Wok Master Chef',
-        partner: { script: 'ผัดไฟลุกหอมกระทะเลยครับ ลองชิมดูครับ!', spoken: 'phàt fai lúk hɔ̌ɔm grà-thá loei kháp, lɔɔng chim duu kháp!', meaning: 'Stir-fried over roaring flames with wok aroma — give it a taste!', tts: 'ผัดไฟลุกหอมกระทะเลยครับ ลองชิมดูครับ' },
-        user: { script: 'สุดยอด! อร่อยมากค่ะ', spoken: 'sùt yɔ̂ɔt! à-lɔ̀i mâak khâ', meaning: 'Awesome / top-tier (สุดยอด)! So delicious!', tts: 'สุดยอด อร่อยมากค่ะ' },
+        role: '🙋 Thai Friend',
+        partner: { script: 'จานนี้หอมมาก ลองชิมดูสิ อร่อยไหม?', spoken: 'jaan níi hɔ̌ɔm mâak, lɔɔng chim duu sì, à-rɔ̀i mǎi?', meaning: 'This dish smells amazing — try a taste, is it good?', tts: 'จานนี้หอมมาก ลองชิมดูสิ อร่อยไหม' },
+        user: { script: 'สุดยอด! อร่อยมากเลย', spoken: 'sùt yɔ̂ɔt! à-rɔ̀i mâak loei', meaning: 'Awesome / top-tier (สุดยอด)! So delicious!', tts: 'สุดยอด อร่อยมากเลย' },
         intentCue: '🏆 Give highest praise: "Awesome / Top tier!" (สุดยอด!)',
         earDistractors: ['Tell the driver to turn left at the alley', 'Request unsweetened black coffee', 'Ask the waiter for the bill']
       },
       ST_chill_chill: {
         role: '🙋 Thai Friend',
         partner: { script: 'วันอาทิตย์นี้มีแผนไปเที่ยวไหนหรือเปล่า?', spoken: 'wan aa-thít níi mii phǎaen bpai thîao nǎi rǒe-bpào?', meaning: 'Do you have any plans to go out this Sunday or not?', tts: 'วันอาทิตย์นี้มีแผนไปเที่ยวไหนหรือเปล่า' },
-        user: { script: 'อยู่บ้านชิลๆ ค่ะ', spoken: 'yùu bâan chil-chil khâ', meaning: 'Just staying home chilling / taking it easy (ชิลๆ).', tts: 'อยู่บ้านชิลชิลค่ะ' },
+        user: { script: 'อยู่บ้านชิลๆ น่ะ', spoken: 'yùu bâan chil-chil nâ', meaning: 'Just staying home chilling / taking it easy (ชิลๆ).', tts: 'อยู่บ้านชิลชิลน่ะ' },
         intentCue: '😎 Say you are taking it easy / relaxing (ชิลๆ — chil-chil)',
         earDistractors: ['Order special extra-large noodles', 'Tell the cook no cilantro', 'Ask to warm the sandwich in the microwave']
       },
       ST_ao_ngai_dii: {
         role: '🙋 Thai Friend',
         partner: { script: 'อ้าว ร้านปิดปรับปรุงเฉยเลย! พวกเราเอาไงดี?', spoken: 'âao, ráan bpìt bpràp-bprung chǒei loei! phûak rao ao ngai dii?', meaning: 'Whoa, the shop is closed for renovation! What should we do now (เอาไงดี)?', tts: 'อ้าว ร้านปิดปรับปรุงเฉยเลย พวกเราเอาไงดี' },
-        user: { script: 'เอาไงดี? ไปกินหมี่แห้งไหม?', spoken: 'ao ngai dii? bpai gin mìi hâeng mǎi?', meaning: 'What’s the move (เอาไงดี)? Wanna go eat dry egg noodles?', tts: 'เอาไงดี ไปกินหมี่แห้งไหม' },
-        intentCue: '🤔 Ask "What should we do now? / What’s the plan?" (เอาไงดี?)',
+        user: { script: 'ไปกินหมี่แห้งร้านข้างๆ ไหม?', spoken: 'bpai gin mìi hâeng ráan khâang-khâang mǎi?', meaning: 'Wanna go eat dry egg noodles at the shop next door?', tts: 'ไปกินหมี่แห้งร้านข้างๆ ไหม' },
+        intentCue: '🤔 Suggest a backup plan when your friend asks "What should we do?" (เอาไงดี?)',
         earDistractors: ['Tell the cashier you do not need a bag', 'Tell the driver to drop you off right here', 'Ask for less ice in your drink']
       },
 
@@ -9766,91 +9770,91 @@
       ST_waan_noi: {
         easier: {
           partner: { script: 'หวานน้อยไหมคะ?', spoken: 'wǎan nɔ́ɔi mǎi khá?', meaning: 'Less sweet?', tts: 'หวานน้อยไหมคะ' },
-          user: { script: 'หวานน้อยค่ะ', spoken: 'wǎan nɔ́ɔi khâ', meaning: 'Less sweet, please.', tts: 'หวานน้อยค่ะ' }
+          user: { script: 'หวานน้อยครับ', spoken: 'wǎan nɔ́ɔi kháp', meaning: 'Less sweet, please.', tts: 'หวานน้อยครับ' }
         },
         standard: {
           partner: { script: 'ชาไทยเย็นแก้วนึงนะคะ เอาหวานปกติไหมคะ?', spoken: 'chaa thai yen gâaeo nɯng ná khá, ao wǎan bpòk-gà-dtì mǎi khá?', meaning: 'One iced Thai tea — do you want normal sweetness?', tts: 'ชาไทยเย็นแก้วนึงนะคะ เอาหวานปกติไหมคะ' },
-          user: { script: 'เอาหวานน้อยค่ะ', spoken: 'ao wǎan nɔ́ɔi khâ', meaning: 'Less sweet (50% sugar), please.', tts: 'เอาหวานน้อยค่ะ' }
+          user: { script: 'เอาหวานน้อยครับ', spoken: 'ao wǎan nɔ́ɔi kháp', meaning: 'Less sweet (50% sugar), please.', tts: 'เอาหวานน้อยครับ' }
         },
         harder: {
           partner: { script: 'ชาไทยเย็นนะคะ รับความหวานกี่เปอร์เซ็นต์ดีคะ?', spoken: 'chaa thai yen ná khá, ráp khwaam-wǎan gîi bpəə-sen dii khá?', meaning: 'Iced Thai tea — what sweetness percentage would you like?', tts: 'ชาไทยเย็นนะคะ รับความหวานกี่เปอร์เซ็นต์ดีคะ' },
-          user: { script: 'เอาหวานน้อยยี่สิบห้าเปอร์เซ็นต์ ใส่ถุงกลับบ้านค่ะ', spoken: 'ao wǎan nɔ́ɔi yîi-sìp hâa bpəə-sen, sài thǔng glàp bâan khâ', meaning: 'Less sweet 25% sugar, and pack it to-go please.', tts: 'เอาหวานน้อยยี่สิบห้าเปอร์เซ็นต์ ใส่ถุงกลับบ้านค่ะ' }
+          user: { script: 'เอาหวานน้อยยี่สิบห้าเปอร์เซ็นต์ ใส่ถุงกลับบ้านครับ', spoken: 'ao wǎan nɔ́ɔi yîi-sìp hâa bpəə-sen, sài thǔng glàp bâan kháp', meaning: 'Less sweet 25% sugar, and pack it to-go please.', tts: 'เอาหวานน้อยยี่สิบห้าเปอร์เซ็นต์ ใส่ถุงกลับบ้านครับ' }
         },
         overdrive: {
-          partner: { script: 'สวัสดีค่ะ สั่งเครื่องดื่มอะไรดีคะ หวานมากหวานน้อยสั่งได้เลยนะคะ', spoken: 'sà-wàt-dii khá, sàng khrɯ̂ang-dɯ̀ɯm à-rai dii khá, wǎan mâak wǎan nɔ́ɔi sàng dâi loei ná khá', meaning: 'Hello! What drink can I get you? Extra sweet or less sweet, just let me know!', tts: 'สวัสดีค่ะ สั่งเครื่องดื่มอะไรดีคะ หวานมากหวานน้อยสั่งได้เลยนะคะ' },
-          user: { script: 'ขอชาไทยเย็นหวานน้อย ใส่ถุงแยกน้ำแข็ง แล้วขอหลอดดูดด้วยนะคะ', spoken: 'khɔ̌ɔ chaa thai yen wǎan nɔ́ɔi, sài thǔng yâek nám-khɛ̌ng, láaeo khɔ̌ɔ lɔ̀ɔt-dùut dûai ná khá', meaning: 'Iced Thai tea less sweet, bagged with ice separated, and a straw too please!', tts: 'ขอชาไทยเย็นหวานน้อย ใส่ถุงแยกน้ำแข็ง แล้วขอหลอดดูดด้วยนะคะ' }
+          partner: { script: 'รับเครื่องดื่มอะไรดีคะ หวานมากหวานน้อยสั่งได้เลยนะคะ', spoken: 'ráp khrɯ̂ang-dɯ̀ɯm à-rai dii khá, wǎan mâak wǎan nɔ́ɔi sàng dâi loei ná khá', meaning: 'What drink can I get you? Extra sweet or less sweet, just let me know!', tts: 'รับเครื่องดื่มอะไรดีคะ หวานมากหวานน้อยสั่งได้เลยนะคะ' },
+          user: { script: 'ขอชาไทยเย็นหวานน้อย ใส่ถุงแยกน้ำแข็ง แล้วขอหลอดดูดด้วยนะครับ', spoken: 'khɔ̌ɔ chaa thai yen wǎan nɔ́ɔi, sài thǔng yâek nám-khɛ̌ng, láaeo khɔ̌ɔ lɔ̀ɔt-dùut dûai ná kháp', meaning: 'Iced Thai tea less sweet, bagged with ice separated, and a straw too please!', tts: 'ขอชาไทยเย็นหวานน้อย ใส่ถุงแยกน้ำแข็ง แล้วขอหลอดดูดด้วยนะครับ' }
         }
       },
       ST_mai_waan: {
         easier: {
-          partner: { script: 'ใส่น้ำตาลไหมครับ?', spoken: 'sài nám-dtaan mǎi kháp?', meaning: 'Add sugar?', tts: 'ใส่น้ำตาลไหมครับ' },
-          user: { script: 'ไม่หวานค่ะ', spoken: 'mâi wǎan khâ', meaning: 'Unsweetened, please.', tts: 'ไม่หวานค่ะ' }
+          partner: { script: 'ใส่น้ำตาลไหมคะ?', spoken: 'sài nám-dtaan mǎi khá?', meaning: 'Add sugar?', tts: 'ใส่น้ำตาลไหมคะ' },
+          user: { script: 'ไม่หวานครับ', spoken: 'mâi wǎan kháp', meaning: 'Unsweetened, please.', tts: 'ไม่หวานครับ' }
         },
         standard: {
-          partner: { script: 'อเมริกาโน่เย็น ใส่น้ำเชื่อมไหมครับ?', spoken: 'à-mee-rí-gaa-nôo yen, sài nám-chɯ̂am mǎi kháp?', meaning: 'Iced Americano — should I add syrup/sweetener?', tts: 'อเมริกาโน่เย็น ใส่น้ำเชื่อมไหมครับ' },
-          user: { script: 'ไม่หวานค่ะ', spoken: 'mâi wǎan khâ', meaning: 'Unsweetened / zero sugar, please.', tts: 'ไม่หวานค่ะ' }
+          partner: { script: 'อเมริกาโน่เย็น ใส่น้ำเชื่อมไหมคะ?', spoken: 'à-mee-rí-gaa-nôo yen, sài nám-chɯ̂am mǎi khá?', meaning: 'Iced Americano — should I add syrup/sweetener?', tts: 'อเมริกาโน่เย็น ใส่น้ำเชื่อมไหมคะ' },
+          user: { script: 'ไม่หวานครับ', spoken: 'mâi wǎan kháp', meaning: 'Unsweetened / zero sugar, please.', tts: 'ไม่หวานครับ' }
         },
         harder: {
-          partner: { script: 'อเมริกาโน่เย็น ไม่ใส่น้ำเชื่อมเลยใช่ไหมครับ?', spoken: 'à-mee-rí-gaa-nôo yen, mâi sài nám-chɯ̂am loei châi mǎi kháp?', meaning: 'Iced Americano — zero syrup added, correct?', tts: 'อเมริกาโน่เย็น ไม่ใส่น้ำเชื่อมเลยใช่ไหมครับ' },
-          user: { script: 'ไม่หวานเลยค่ะ ไม่ใส่น้ำเชื่อมศูนย์เปอร์เซ็นต์นะคะ', spoken: 'mâi wǎan loei khâ, mâi sài nám-chɯ̂am sǔun bpəə-sen ná khá', meaning: 'Zero sweetness, no syrup 0% sugar please.', tts: 'ไม่หวานเลยค่ะ ไม่ใส่น้ำเชื่อมศูนย์เปอร์เซ็นต์นะคะ' }
+          partner: { script: 'อเมริกาโน่เย็น ไม่ใส่น้ำเชื่อมเลยใช่ไหมคะ?', spoken: 'à-mee-rí-gaa-nôo yen, mâi sài nám-chɯ̂am loei châi mǎi khá?', meaning: 'Iced Americano — zero syrup added, correct?', tts: 'อเมริกาโน่เย็น ไม่ใส่น้ำเชื่อมเลยใช่ไหมคะ' },
+          user: { script: 'ไม่หวานเลยครับ ไม่ใส่น้ำเชื่อมศูนย์เปอร์เซ็นต์นะครับ', spoken: 'mâi wǎan loei kháp, mâi sài nám-chɯ̂am sǔun bpəə-sen ná kháp', meaning: 'Zero sweetness, no syrup 0% sugar please.', tts: 'ไม่หวานเลยครับ ไม่ใส่น้ำเชื่อมศูนย์เปอร์เซ็นต์นะครับ' }
         },
         overdrive: {
-          partner: { script: 'กาแฟดำเย็น รับแบบไม่หวานเลยหรือหวานนิดนึงดีครับ?', spoken: 'gaa-faae dam yen, ráp bàaep mâi wǎan loei rǒe wǎan nít-nɯng dii kháp?', meaning: 'Iced black coffee — completely unsweetened or a tiny bit sweet?', tts: 'กาแฟดำเย็น รับแบบไม่หวานเลยหรือหวานนิดนึงดีครับ' },
-          user: { script: 'ไม่หวานเลยค่ะ ศูนย์เปอร์เซ็นต์ ไม่ใส่น้ำเชื่อมเด็ดขาดค่ะ', spoken: 'mâi wǎan loei khâ, sǔun bpəə-sen, mâi sài nám-chɯ̂am dèt-khàat khâ', meaning: 'Zero sweetness, 0%, strictly no syrup please!', tts: 'ไม่หวานเลยค่ะ ศูนย์เปอร์เซ็นต์ ไม่ใส่น้ำเชื่อมเด็ดขาดค่ะ' }
+          partner: { script: 'กาแฟดำเย็น รับแบบไม่หวานเลยหรือหวานนิดนึงดีคะ?', spoken: 'gaa-faae dam yen, ráp bàaep mâi wǎan loei rǒe wǎan nít-nɯng dii khá?', meaning: 'Iced black coffee — completely unsweetened or a tiny bit sweet?', tts: 'กาแฟดำเย็น รับแบบไม่หวานเลยหรือหวานนิดนึงดีคะ' },
+          user: { script: 'ไม่หวานเลยครับ ศูนย์เปอร์เซ็นต์ ไม่ใส่น้ำเชื่อมเด็ดขาดครับ', spoken: 'mâi wǎan loei kháp, sǔun bpəə-sen, mâi sài nám-chɯ̂am dèt-khàat kháp', meaning: 'Zero sweetness, 0%, strictly no syrup please!', tts: 'ไม่หวานเลยครับ ศูนย์เปอร์เซ็นต์ ไม่ใส่น้ำเชื่อมเด็ดขาดครับ' }
         }
       },
       ST_mai_ao_thung: {
         easier: {
           partner: { script: 'รับถุงไหมคะ?', spoken: 'ráp thǔng mǎi khá?', meaning: 'Want a plastic bag?', tts: 'รับถุงไหมคะ' },
-          user: { script: 'ไม่เอาถุงค่ะ', spoken: 'mâi ao thǔng khâ', meaning: 'No bag, thanks.', tts: 'ไม่เอาถุงค่ะ' }
+          user: { script: 'ไม่เอาถุงครับ', spoken: 'mâi ao thǔng kháp', meaning: 'No bag, thanks.', tts: 'ไม่เอาถุงครับ' }
         },
         standard: {
           partner: { script: 'ทั้งหมดสี่สิบห้าบาทค่ะ รับถุงไหมคะ?', spoken: 'tháng-mòt sìi-sìp-hâa bàat khâ, ráp thǔng mǎi khá?', meaning: 'Total is 45 baht — would you like a plastic bag?', tts: 'ทั้งหมดสี่สิบห้าบาทค่ะ รับถุงไหมคะ' },
-          user: { script: 'ไม่เอาถุงค่ะ', spoken: 'mâi ao thǔng khâ', meaning: 'No plastic bag, thanks.', tts: 'ไม่เอาถุงค่ะ' }
+          user: { script: 'ไม่เอาถุงครับ', spoken: 'mâi ao thǔng kháp', meaning: 'No plastic bag, thanks.', tts: 'ไม่เอาถุงครับ' }
         },
         harder: {
           partner: { script: 'ซื้อของสองชิ้น รับถุงพลาสติกเพิ่มไหมคะ?', spoken: 'sɯ́ɯ khɔ̌ɔng sɔ̌ɔng chín, ráp thǔng phláat-dtìk phôem mǎi khá?', meaning: 'Two items purchased — would you like a plastic bag?', tts: 'ซื้อของสองชิ้น รับถุงพลาสติกเพิ่มไหมคะ' },
-          user: { script: 'ไม่รับถุงพลาสติกค่ะ ถือไปเองได้ ขอบคุณค่ะ', spoken: 'mâi ráp thǔng phláat-dtìk khâ, thɯ̌ɯ bpai eeng dâi, khɔ̀ɔp-khun khâ', meaning: 'No plastic bag please, I can carry them by hand, thank you.', tts: 'ไม่รับถุงพลาสติกค่ะ ถือไปเองได้ ขอบคุณค่ะ' }
+          user: { script: 'ไม่รับถุงพลาสติกครับ ถือไปเองได้ ขอบคุณครับ', spoken: 'mâi ráp thǔng phláat-dtìk kháp, thɯ̌ɯ bpai eeng dâi, khɔ̀ɔp-khun kháp', meaning: 'No plastic bag please, I can carry them by hand, thank you.', tts: 'ไม่รับถุงพลาสติกครับ ถือไปเองได้ ขอบคุณครับ' }
         },
         overdrive: {
           partner: { script: 'ทั้งหมดเจ็ดสิบบาทค่ะ มีถุงผ้ามาไหม รับถุงเพิ่มหนึ่งบาทไหมคะ?', spoken: 'tháng-mòt jèt-sìp bàat khâ, mii thǔng phâa maa mǎi, ráp thǔng phôem nɯ̀ng bàat mǎi khá?', meaning: 'Total 70 baht — did you bring a cloth bag, or buy a bag for 1 baht?', tts: 'ทั้งหมดเจ็ดสิบบาทค่ะ มีถุงผ้ามาไหม รับถุงเพิ่มหนึ่งบาทไหมคะ' },
-          user: { script: 'ไม่เอาถุงค่ะ มีถุงผ้ามาเองแล้ว สแกนจ่ายได้เลยนะคะ', spoken: 'mâi ao thǔng khâ, mii thǔng phâa maa eeng láaeo, sà-gaaen jàai dâi loei ná khá', meaning: 'No bag thanks, I brought my own tote bag — can I QR-scan right away?', tts: 'ไม่เอาถุงค่ะ มีถุงผ้ามาเองแล้ว สแกนจ่ายได้เลยนะคะ' }
+          user: { script: 'ไม่เอาถุงครับ มีถุงผ้ามาเองแล้ว สแกนจ่ายได้เลยนะครับ', spoken: 'mâi ao thǔng kháp, mii thǔng phâa maa eeng láaeo, sà-gaaen jàai dâi loei ná kháp', meaning: 'No bag thanks, I brought my own tote bag — can I QR-scan right away?', tts: 'ไม่เอาถุงครับ มีถุงผ้ามาเองแล้ว สแกนจ่ายได้เลยนะครับ' }
         }
       },
       ST_scan_dai_mai: {
         easier: {
-          partner: { script: 'จ่ายสดหรือสแกนครับ?', spoken: 'jàai sòt rǒe sà-gaaen kháp?', meaning: 'Pay cash or QR scan?', tts: 'จ่ายสดหรือสแกนครับ' },
-          user: { script: 'สแกนได้ไหมคะ?', spoken: 'sà-gaaen dâi mǎi khá?', meaning: 'Can I scan QR?', tts: 'สแกนได้ไหมคะ' }
+          partner: { script: 'จ่ายสดหรือสแกนคะ?', spoken: 'jàai sòt rǒe sà-gaaen khá?', meaning: 'Pay cash or QR scan?', tts: 'จ่ายสดหรือสแกนคะ' },
+          user: { script: 'สแกนได้ไหมครับ?', spoken: 'sà-gaaen dâi mǎi kháp?', meaning: 'Can I scan QR?', tts: 'สแกนได้ไหมครับ' }
         },
         standard: {
-          partner: { script: 'ทั้งหมดหกสิบบาทครับ จ่ายสดหรือสแกนครับ?', spoken: 'tháng-mòt hòk-sìp bàat kháp, jàai sòt rǒe sà-gaaen kháp?', meaning: 'That is 60 baht total — paying cash or scanning QR?', tts: 'ทั้งหมดหกสิบบาทครับ จ่ายสดหรือสแกนครับ' },
-          user: { script: 'สแกนได้ไหมคะ?', spoken: 'sà-gaaen dâi mǎi khá?', meaning: 'Can I scan QR (PromptPay) to pay?', tts: 'สแกนได้ไหมคะ' }
+          partner: { script: 'ทั้งหมดหกสิบบาทค่ะ จ่ายสดหรือสแกนคะ?', spoken: 'tháng-mòt hòk-sìp bàat khâ, jàai sòt rǒe sà-gaaen khá?', meaning: 'That is 60 baht total — paying cash or scanning QR?', tts: 'ทั้งหมดหกสิบบาทค่ะ จ่ายสดหรือสแกนคะ' },
+          user: { script: 'สแกนได้ไหมครับ?', spoken: 'sà-gaaen dâi mǎi kháp?', meaning: 'Can I scan QR (PromptPay) to pay?', tts: 'สแกนได้ไหมครับ' }
         },
         harder: {
-          partner: { script: 'ยอดรวมแปดสิบบาทครับ ชำระเงินสดหรือโอนจ่ายดีครับ?', spoken: 'yɔ̂ɔt ruam bpàaet-sìp bàat kháp, cham-rá ngən sòt rǒe oon jàai dii kháp?', meaning: 'Total is 80 baht — paying cash or bank transfer?', tts: 'ยอดรวมแปดสิบบาทครับ ชำระเงินสดหรือโอนจ่ายดีครับ' },
-          user: { script: 'สแกนจ่ายคิวอาร์โค้ดได้ไหมคะ มีพร้อมเพย์ไหมคะ?', spoken: 'sà-gaaen jàai khiu-aa khôot dâi mǎi khá, mii phrɔ́ɔm-phee mǎi khá?', meaning: 'Can I pay via QR scan, do you have PromptPay?', tts: 'สแกนจ่ายคิวอาร์โค้ดได้ไหมคะ มีพร้อมเพย์ไหมคะ' }
+          partner: { script: 'ยอดรวมแปดสิบบาทค่ะ ชำระเงินสดหรือโอนจ่ายดีคะ?', spoken: 'yɔ̂ɔt ruam bpàaet-sìp bàat khâ, cham-rá ngən sòt rǒe oon jàai dii khá?', meaning: 'Total is 80 baht — paying cash or bank transfer?', tts: 'ยอดรวมแปดสิบบาทค่ะ ชำระเงินสดหรือโอนจ่ายดีคะ' },
+          user: { script: 'สแกนจ่ายคิวอาร์โค้ดได้ไหมครับ มีพร้อมเพย์ไหมครับ?', spoken: 'sà-gaaen jàai khiu-aa khôot dâi mǎi kháp, mii phrɔ́ɔm-phee mǎi kháp?', meaning: 'Can I pay via QR scan, do you have PromptPay?', tts: 'สแกนจ่ายคิวอาร์โค้ดได้ไหมครับ มีพร้อมเพย์ไหมครับ' }
         },
         overdrive: {
-          partner: { script: 'ทั้งหมดร้อยยี่สิบบาทครับพี่ เงินสดหรือสแกนจ่ายสะดวกกว่ากันครับ?', spoken: 'tháng-mòt rɔ́ɔi yîi-sìp bàat kháp phîi, ngən sòt rǒe sà-gaaen jàai sà-dùak gwàa gan kháp?', meaning: '120 baht total! Is cash or QR scan more convenient for you?', tts: 'ทั้งหมดร้อยยี่สิบบาทครับพี่ เงินสดหรือสแกนจ่ายสะดวกกว่ากันครับ' },
-          user: { script: 'ขอสแกนพร้อมเพย์เลยค่ะ รบกวนเปิดคิวอาร์โค้ดให้หน่อยนะคะ', spoken: 'khɔ̌ɔ sà-gaaen phrɔ́ɔm-phee loei khâ, róp-guan bpə̀ət khiu-aa khôot hâi nɔ̀ɔi ná khá', meaning: 'PromptPay QR scan please, could you show me your QR code?', tts: 'ขอสแกนพร้อมเพย์เลยค่ะ รบกวนเปิดคิวอาร์โค้ดให้หน่อยนะคะ' }
+          partner: { script: 'ทั้งหมดร้อยยี่สิบบาทค่ะ เงินสดหรือสแกนจ่ายสะดวกกว่ากันคะ?', spoken: 'tháng-mòt rɔ́ɔi yîi-sìp bàat khâ, ngən sòt rǒe sà-gaaen jàai sà-dùak gwàa gan khá?', meaning: '120 baht total! Is cash or QR scan more convenient for you?', tts: 'ทั้งหมดร้อยยี่สิบบาทค่ะ เงินสดหรือสแกนจ่ายสะดวกกว่ากันคะ' },
+          user: { script: 'ขอสแกนพร้อมเพย์เลยครับ รบกวนเปิดคิวอาร์โค้ดให้หน่อยนะครับ', spoken: 'khɔ̌ɔ sà-gaaen phrɔ́ɔm-phee loei kháp, róp-guan bpə̀ət khiu-aa khôot hâi nɔ̀ɔi ná kháp', meaning: 'PromptPay QR scan please, could you show me your QR code?', tts: 'ขอสแกนพร้อมเพย์เลยครับ รบกวนเปิดคิวอาร์โค้ดให้หน่อยนะครับ' }
         }
       },
       ST_nong_staff: {
         easier: {
           partner: { script: 'รับอะไรดีคะ?', spoken: 'ráp à-rai dii khá?', meaning: 'What would you like to order?', tts: 'รับอะไรดีคะ' },
-          user: { script: 'น้องคะ สั่งอาหารหน่อยค่ะ', spoken: 'nɔ́ɔng khá, sàng aa-hǎan nɔ̀ɔi khâ', meaning: 'Excuse me server, could I order please.', tts: 'น้องคะ สั่งอาหารหน่อยค่ะ' }
+          user: { script: 'น้องครับ สั่งอาหารหน่อยครับ', spoken: 'nɔ́ɔng kháp, sàng aa-hǎan nɔ̀ɔi kháp', meaning: 'Excuse me server, could I order please.', tts: 'น้องครับ สั่งอาหารหน่อยครับ' }
         },
         standard: {
           partner: { script: 'สวัสดีค่ะ นั่งโต๊ะไหนดีคะ เรียกได้เลยนะคะ!', spoken: 'sà-wàt-dii khâ, nâng dtó nǎi dii khá, rîak dâi loei ná khá!', meaning: 'Hello! Pick any table, just call me when you are ready!', tts: 'สวัสดีค่ะ นั่งโต๊ะไหนดีคะ เรียกได้เลยนะคะ' },
-          user: { script: 'น้องคะ สั่งอาหารหน่อยค่ะ', spoken: 'nɔ́ɔng khá, sàng aa-hǎan nɔ̀ɔi khâ', meaning: 'Younger sibling/server, could I order please.', tts: 'น้องคะ สั่งอาหารหน่อยค่ะ' }
+          user: { script: 'น้องครับ สั่งอาหารหน่อยครับ', spoken: 'nɔ́ɔng kháp, sàng aa-hǎan nɔ̀ɔi kháp', meaning: 'Excuse me server, could I order please.', tts: 'น้องครับ สั่งอาหารหน่อยครับ' }
         },
         harder: {
           partner: { script: 'สวัสดีค่ะคุณลูกค้า เมนูวางอยู่บนโต๊ะแล้วนะคะ พร้อมแล้วเรียกได้เลยค่ะ', spoken: 'sà-wàt-dii khâ khun lûuk-kháa, mee-nuu waang yùu bon dtó láaeo ná khá, phrɔ́ɔm láaeo rîak dâi loei khâ', meaning: 'Welcome! The menus are on the table, feel free to call when ready.', tts: 'สวัสดีค่ะคุณลูกค้า เมนูวางอยู่บนโต๊ะแล้วนะคะ พร้อมแล้วเรียกได้เลยค่ะ' },
-          user: { script: 'น้องคะ รบกวนสั่งอาหารหน่อยค่ะ ขอชาไทยหวานน้อยหนึ่งแก้วด้วยค่ะ', spoken: 'nɔ́ɔng khá, róp-guan sàng aa-hǎan nɔ̀ɔi khâ, khɔ̌ɔ chaa-thai wǎan nɔ́ɔi nɯ̀ng gâaeo dûai khâ', meaning: 'Excuse me server! Could I order please, one iced Thai tea less sweet as well.', tts: 'น้องคะ รบกวนสั่งอาหารหน่อยค่ะ ขอชาไทยหวานน้อยหนึ่งแก้วด้วยค่ะ' }
+          user: { script: 'น้องครับ รบกวนสั่งอาหารหน่อยครับ ขอชาไทยหวานน้อยหนึ่งแก้วด้วยครับ', spoken: 'nɔ́ɔng kháp, róp-guan sàng aa-hǎan nɔ̀ɔi kháp, khɔ̌ɔ chaa-thai wǎan nɔ́ɔi nɯ̀ng gâaeo dûai kháp', meaning: 'Excuse me server! Could I order please, one iced Thai tea less sweet as well.', tts: 'น้องครับ รบกวนสั่งอาหารหน่อยครับ ขอชาไทยหวานน้อยหนึ่งแก้วด้วยครับ' }
         },
         overdrive: {
           partner: { script: 'สวัสดีค่ะ วันนี้มีโต๊ะว่างริมกระจก นั่งตรงนั้นได้เลยนะคะ!', spoken: 'sà-wàt-dii khâ, wan-níi mii dtó wâang rim grà-jòk, nâng dtrong nán dâi loei ná khá', meaning: 'Hello! We have an open table by the window today, you can sit right there!', tts: 'สวัสดีค่ะ วันนี้มีโต๊ะว่างริมกระจก นั่งตรงนั้นได้เลยนะคะ' },
-          user: { script: 'น้องคะ ขอสั่งอาหารกับเครื่องดื่มก่อนเลยนะคะ หิวน้ำมากค่ะ', spoken: 'nɔ́ɔng khá, khɔ̌ɔ sàng aa-hǎan gàp khrɯ̂ang-dɯ̀əm gɔ̀ɔn loei ná khá, hǐu nám mâak khâ', meaning: 'Excuse me server! Let me order the food and drinks right away please, I am so thirsty!', tts: 'น้องคะ ขอสั่งอาหารกับเครื่องดื่มก่อนเลยนะคะ หิวน้ำมากค่ะ' }
+          user: { script: 'น้องครับ ขอสั่งอาหารกับเครื่องดื่มก่อนเลยนะครับ หิวน้ำมากครับ', spoken: 'nɔ́ɔng kháp, khɔ̌ɔ sàng aa-hǎan gàp khrɯ̂ang-dɯ̀əm gɔ̀ɔn loei ná kháp, hǐu nám mâak kháp', meaning: 'Excuse me server! Let me order the food and drinks right away please, I am so thirsty!', tts: 'น้องครับ ขอสั่งอาหารกับเครื่องดื่มก่อนเลยนะครับ หิวน้ำมากครับ' }
         }
       },
       ST_phii_driver: {
@@ -9939,11 +9943,11 @@
       },
       ST_khaang_naa: {
         easier: {
-          partner: { script: 'จอดตรงนี้ไหมครับ?', spoken: 'jɔ̀ɔt dtrong níi mǎi kháp?', meaning: 'Stop right here?', tts: 'จอดตรงนี้ไหมครับ' },
+          partner: { script: 'จอดหน้าตึกนี้ไหมครับ?', spoken: 'jɔ̀ɔt nâa dtɯ̀k níi mǎi kháp?', meaning: 'Stop in front of this building?', tts: 'จอดหน้าตึกนี้ไหมครับ' },
           user: { script: 'จอดข้างหน้าค่ะ', spoken: 'jɔ̀ɔt khâang-nâa khâ', meaning: 'Stop just up ahead.', tts: 'จอดข้างหน้าค่ะ' }
         },
         standard: {
-          partner: { script: 'จอดตรงนี้หรือข้างหน้าครับ?', spoken: 'jɔ̀ɔt dtrong níi rǒe khâang-nâa kháp?', meaning: 'Stop right here or just up ahead?', tts: 'จอดตรงนี้หรือข้างหน้าครับ' },
+          partner: { script: 'จอดหน้าตึกนี้เลย หรือไปอีกหน่อยครับ?', spoken: 'jɔ̀ɔt nâa dtɯ̀k níi loei, rǒe bpai ìik nɔ̀ɔi kháp?', meaning: 'Stop in front of this building, or a little further up?', tts: 'จอดหน้าตึกนี้เลย หรือไปอีกหน่อยครับ' },
           user: { script: 'จอดข้างหน้าค่ะ', spoken: 'jɔ̀ɔt khâang-nâa khâ', meaning: 'Stop just up ahead.', tts: 'จอดข้างหน้าค่ะ' }
         }
       },
@@ -9953,7 +9957,7 @@
           user: { script: 'เข้าซอยนี้ค่ะ', spoken: 'khâo sɔɔi níi khâ', meaning: 'Turn into this alley (soi), please.', tts: 'เข้าซอยนี้ค่ะ' }
         },
         standard: {
-          partner: { script: 'พี่ครับ ซอยนี้ใช่ไหมครับ?', spoken: 'phîi kháp, sɔɔi níi châi mǎi kháp?', meaning: 'Excuse me, is it this alley (soi)?', tts: 'พี่ครับ ซอยนี้ใช่ไหมครับ' },
+          partner: { script: 'ซอยนี้ใช่ไหมครับ?', spoken: 'sɔɔi níi châi mǎi kháp?', meaning: 'Is it this alley (soi)?', tts: 'ซอยนี้ใช่ไหมครับ' },
           user: { script: 'เข้าซอยนี้ค่ะ', spoken: 'khâo sɔɔi níi khâ', meaning: 'Turn into this alley (soi), please.', tts: 'เข้าซอยนี้ค่ะ' }
         }
       },
@@ -9970,52 +9974,52 @@
       // UNIT 4–6 Lv.1 (easier) & Lv.2 (standard) i+1 adaptations for dense social banter turns
       ST_arai: {
         easier: {
-          partner: { script: 'กินอะไรครับ?', spoken: 'gin à-lai kháp?', meaning: 'What are you eating?', tts: 'กินอะไรครับ' },
+          partner: { script: 'เที่ยงแล้ว หิวจัง!', spoken: 'thîang láaeo, hǐu jang!', meaning: 'It is noon, I am starving!', tts: 'เที่ยงแล้ว หิวจัง' },
           user: { script: 'กินอะไรดี?', spoken: 'gin à-lai dii?', meaning: 'What should we eat?', tts: 'กินอะไรดี' }
         },
         standard: {
-          partner: { script: 'วันนี้กินอะไรดีครับ?', spoken: 'wan-níi gin à-lai dii kháp?', meaning: 'What should we eat today?', tts: 'วันนี้กินอะไรดีครับ' },
-          user: { script: 'กินอะไรดี?', spoken: 'gin à-lai dii?', meaning: 'What should we eat?', tts: 'กินอะไรดี' }
+          partner: { script: 'เที่ยงแล้ว หิวมากเลย!', spoken: 'thîang láaeo, hǐu mâak loei!', meaning: 'It is noon already — I am so hungry!', tts: 'เที่ยงแล้ว หิวมากเลย' },
+          user: { script: 'วันนี้กินอะไรดี?', spoken: 'wan-níi gin à-lai dii?', meaning: 'What should we eat today?', tts: 'วันนี้กินอะไรดี' }
         }
       },
       ST_khrap: {
         easier: {
-          partner: { script: 'ได้แล้วครับ!', spoken: 'dâi láaeo kháp!', meaning: 'All ready!', tts: 'ได้แล้วครับ' },
-          user: { script: 'ขอบคุณครับ', spoken: 'khɔ̀ɔp-khun kháp', meaning: 'Thank you!', tts: 'ขอบคุณครับ' }
+          partner: { script: 'ร้านนี้เด็ดมากครับ ไปสั่งเลยไหม?', spoken: 'ráan níi dèt mâak kháp, bpai sàng loei mǎi?', meaning: 'This shop is awesome — shall we go order?', tts: 'ร้านนี้เด็ดมากครับ ไปสั่งเลยไหม' },
+          user: { script: 'ไปสิ! สั่งเลย', spoken: 'bpai sì! sàng loei', meaning: 'Let’s go! Order away.', tts: 'ไปสิ สั่งเลย' }
         },
         standard: {
-          partner: { script: 'ได้แล้วครับ ห้าสิบบาทครับ!', spoken: 'dâi láaeo kháp, hâa-sìp bàat kháp!', meaning: 'All ready! Fifty baht!', tts: 'ได้แล้วครับ ห้าสิบบาทครับ' },
-          user: { script: 'ขอบคุณครับ', spoken: 'khɔ̀ɔp-khun kháp', meaning: 'Thank you!', tts: 'ขอบคุณครับ' }
+          partner: { script: 'ร้านก๋วยเตี๋ยวตรงนั้นเด็ดมากครับ ไปสั่งเลยไหม?', spoken: 'ráan gǔai-dtǐao dtrong nán dèt mâak kháp, bpai sàng loei mǎi?', meaning: 'That noodle shop over there is awesome — shall we go order?', tts: 'ร้านก๋วยเตี๋ยวตรงนั้นเด็ดมากครับ ไปสั่งเลยไหม' },
+          user: { script: 'ไปสิ! สั่งเลยค่ะ', spoken: 'bpai sì! sàng loei khâ', meaning: 'Let’s go! Order away.', tts: 'ไปสิ สั่งเลยค่ะ' }
         }
       },
       ST_aroi_aloi: {
         easier: {
-          partner: { script: 'อร่อยไหมคะ?', spoken: 'à-lɔ̀i mǎi khá?', meaning: 'Is it delicious?', tts: 'อร่อยไหมคะ' },
-          user: { script: 'อร่อยมากค่ะ!', spoken: 'à-lɔ̀i mâak khâ!', meaning: 'Super delicious!', tts: 'อร่อยมากค่ะ' }
+          partner: { script: 'ชามนี้เป็นไงบ้าง?', spoken: 'chaam níi bpen ngai bâang?', meaning: 'How is this bowl?', tts: 'ชามนี้เป็นไงบ้าง' },
+          user: { script: 'อร่อยมาก!', spoken: 'à-lɔ̀i mâak!', meaning: 'Super delicious!', tts: 'อร่อยมาก' }
         },
         standard: {
-          partner: { script: 'กินแล้วอร่อยไหมคะ?', spoken: 'gin láaeo à-lɔ̀i mǎi khá?', meaning: 'Is it delicious?', tts: 'กินแล้วอร่อยไหมคะ' },
-          user: { script: 'อร่อยมากค่ะ!', spoken: 'à-lɔ̀i mâak khâ!', meaning: 'Super delicious!', tts: 'อร่อยมากค่ะ' }
+          partner: { script: 'ชิมดูสิ ก๋วยเตี๋ยวร้านนี้เป็นไงบ้าง?', spoken: 'chim duu sì, gǔai-dtǐao ráan níi bpen ngai bâang?', meaning: 'Have a taste — how are the noodles at this shop?', tts: 'ชิมดูสิ ก๋วยเตี๋ยวร้านนี้เป็นไงบ้าง' },
+          user: { script: 'อร่อยมากเลย!', spoken: 'à-lɔ̀i mâak loei!', meaning: 'Super delicious!', tts: 'อร่อยมากเลย' }
         }
       },
       ST_reu_plao: {
         easier: {
-          partner: { script: 'กินข้าวเปล่า?', spoken: 'gin khâao bpào?', meaning: 'Eating or not?', tts: 'กินข้าวเปล่า' },
-          user: { script: 'ว่างเปล่า? ไปกินกัน!', spoken: 'wâang bpào? bpai gin gan!', meaning: 'Are you free or not? Let’s go eat!', tts: 'ว่างเปล่า ไปกินกัน' }
+          partner: { script: 'วันนี้ว่างเปล่า?', spoken: 'wan-níi wâang bpào?', meaning: 'Are you free today or not?', tts: 'วันนี้ว่างเปล่า' },
+          user: { script: 'ว่างสิ! ไปกินข้าวกัน', spoken: 'wâang sì! bpai gin khâao gan', meaning: 'I’m free! Let’s go eat.', tts: 'ว่างสิ ไปกินข้าวกัน' }
         },
         standard: {
-          partner: { script: 'วันนี้ว่างเปล่า?', spoken: 'wan-níi wâang bpào?', meaning: 'Are you free today or not?', tts: 'วันนี้ว่างเปล่า' },
-          user: { script: 'ว่างเปล่า? ไปกินกัน!', spoken: 'wâang bpào? bpai gin gan!', meaning: 'Are you free or not? Let’s go eat!', tts: 'ว่างเปล่า ไปกินกัน' }
+          partner: { script: 'เย็นนี้เธอว่างเปล่า?', spoken: 'yen níi thoe wâang bpào?', meaning: 'Are you free this evening or not?', tts: 'เย็นนี้เธอว่างเปล่า' },
+          user: { script: 'ว่างสิ! ไปตลาดกันไหม?', spoken: 'wâang sì! bpai dtà-làat gan mǎi?', meaning: 'I’m free! Wanna go to the market?', tts: 'ว่างสิ ไปตลาดกันไหม' }
         }
       },
       ST_yang_nii: {
         easier: {
-          partner: { script: 'ทำไงอ่ะ?', spoken: 'tham ngai à?', meaning: 'How do you do it?', tts: 'ทำไงอ่ะ' },
+          partner: { script: 'อันนี้ทำไงอ่ะ?', spoken: 'an níi tham ngai à?', meaning: 'How do you do this?', tts: 'อันนี้ทำไงอ่ะ' },
           user: { script: 'ทำงี้สิ!', spoken: 'tham ngíi sì!', meaning: 'Do it like this!', tts: 'ทำงี้สิ' }
         },
         standard: {
-          partner: { script: 'อันนี้ทำไงอ่ะ?', spoken: 'an níi tham ngai à?', meaning: 'How do you do this one?', tts: 'อันนี้ทำไงอ่ะ' },
-          user: { script: 'ทำงี้สิ!', spoken: 'tham ngíi sì!', meaning: 'Do it like this!', tts: 'ทำงี้สิ' }
+          partner: { script: 'ถุงน้ำจิ้มอันนี้แกะยังไงอ่ะ?', spoken: 'thǔng nám-jîm an níi gàe yang-ngai à?', meaning: 'How do you open this dipping sauce bag?', tts: 'ถุงน้ำจิ้มอันนี้แกะยังไงอ่ะ' },
+          user: { script: 'ทำงี้สิ! ง่ายมาก', spoken: 'tham ngíi sì! ngâai mâak', meaning: 'Do it like this! Super easy.', tts: 'ทำงี้สิ ง่ายมาก' }
         }
       },
       ST_yang_nan: {
@@ -10024,38 +10028,38 @@
           user: { script: 'งั้นไปคาเฟ่กัน!', spoken: 'ngán bpai khaa-fêe gan!', meaning: 'In that case, let’s go to the café!', tts: 'งั้นไปคาเฟ่กัน' }
         },
         standard: {
-          partner: { script: 'ฝนตกแล้ว ไปไม่ได้!', spoken: 'fǒn dtòk láaeo, bpai mâi dâi!', meaning: 'It’s raining — we can’t go!', tts: 'ฝนตกแล้ว ไปไม่ได้' },
+          partner: { script: 'อ้าว ฝนตกแล้ว เดินไปตลาดไม่ได้!', spoken: 'âao, fǒn dtòk láaeo, dəən bpai dtà-làat mâi dâi!', meaning: 'Oh no, it’s raining — we can’t walk to the market!', tts: 'อ้าว ฝนตกแล้ว เดินไปตลาดไม่ได้' },
           user: { script: 'งั้นเราไปคาเฟ่กันเลย!', spoken: 'ngán rao bpai khaa-fêe gan loei!', meaning: 'In that case, let’s go to the café right now!', tts: 'งั้นเราไปคาเฟ่กันเลย' }
         }
       },
       ST_baep_nueng: {
         easier: {
-          partner: { script: 'มาหรือยัง?', spoken: 'maa rǒe yang?', meaning: 'Here yet?', tts: 'มาหรือยัง' },
+          partner: { script: 'เสร็จหรือยัง?', spoken: 'sèt rǒe yang?', meaning: 'Ready yet?', tts: 'เสร็จหรือยัง' },
           user: { script: 'แป๊บนึงนะ!', spoken: 'bpáep-nɯng ná!', meaning: 'Just one second!', tts: 'แป๊บนึงนะ' }
         },
         standard: {
           partner: { script: 'รถมาแล้ว เสร็จยัง?', spoken: 'rót maa láaeo, sèt yang?', meaning: 'The car is here — ready yet?', tts: 'รถมาแล้ว เสร็จยัง' },
-          user: { script: 'แป๊บนึงนะ!', spoken: 'bpáep-nɯng ná!', meaning: 'Just one second!', tts: 'แป๊บนึงนะ' }
+          user: { script: 'แป๊บนึงนะ! กำลังลงไป', spoken: 'bpáep-nɯng ná! gam-lang long bpai', meaning: 'Just one second! Coming down now.', tts: 'แป๊บนึงนะ กำลังลงไป' }
         }
       },
       ST_tham_mai: {
         easier: {
-          partner: { script: 'วันนี้ไม่กินนะ!', spoken: 'wan-níi mâi gin ná!', meaning: 'Not eating today!', tts: 'วันนี้ไม่กินนะ' },
+          partner: { script: 'วันนี้ไม่ไปร้านนั้นนะ!', spoken: 'wan-níi mâi bpai ráan nán ná!', meaning: 'Not going to that shop today!', tts: 'วันนี้ไม่ไปร้านนั้นนะ' },
           user: { script: 'ทำไมอ่ะ?', spoken: 'tham-mai à?', meaning: 'Why is that?', tts: 'ทำไมอ่ะ' }
         },
         standard: {
-          partner: { script: 'วันนี้ไม่กินก๋วยเตี๋ยวนะ!', spoken: 'wan-níi mâi gin gǔai-dtǐao ná!', meaning: 'Not eating noodles today!', tts: 'วันนี้ไม่กินก๋วยเตี๋ยวนะ' },
-          user: { script: 'ทำไมอ่ะ?', spoken: 'tham-mai à?', meaning: 'Why is that?', tts: 'ทำไมอ่ะ' }
+          partner: { script: 'วันนี้ไม่กินก๋วยเตี๋ยวร้านนั้นนะ!', spoken: 'wan-níi mâi gin gǔai-dtǐao ráan nán ná!', meaning: 'Not eating noodles at that shop today!', tts: 'วันนี้ไม่กินก๋วยเตี๋ยวร้านนั้นนะ' },
+          user: { script: 'ทำไมอ่ะ? ร้านปิดเหรอ?', spoken: 'tham-mai à? ráan bpìt rǒe?', meaning: 'Why is that? Is the shop closed?', tts: 'ทำไมอ่ะ ร้านปิดเหรอ' }
         }
       },
       ST_chai_pa: {
         easier: {
-          partner: { script: 'ร้านนี้ใช่ป่ะ?', spoken: 'ráan níi châi bpà?', meaning: 'This shop, right?', tts: 'ร้านนี้ใช่ป่ะ' },
-          user: { script: 'ใช่ป่ะ? ไปดูกัน!', spoken: 'châi bpà? bpai duu gan!', meaning: 'Right?! Let’s go check it out!', tts: 'ใช่ป่ะ ไปดูกัน' }
+          partner: { script: 'ร้านนี้อร่อยใช่ป่ะ?', spoken: 'ráan níi à-lɔ̀i châi bpà?', meaning: 'This shop is delicious, right?', tts: 'ร้านนี้อร่อยใช่ป่ะ' },
+          user: { script: 'ใช่เลย! ไปกินกัน', spoken: 'châi loei! bpai gin gan', meaning: 'Totally! Let’s go eat.', tts: 'ใช่เลย ไปกินกัน' }
         },
         standard: {
-          partner: { script: 'ร้านนี้อร่อยใช่ป่ะ?', spoken: 'ráan níi à-lɔ̀i châi bpà?', meaning: 'This shop is delicious, right?', tts: 'ร้านนี้อร่อยใช่ป่ะ' },
-          user: { script: 'ใช่ป่ะ? ไปดูกัน!', spoken: 'châi bpà? bpai duu gan!', meaning: 'Right?! Let’s go check it out!', tts: 'ใช่ป่ะ ไปดูกัน' }
+          partner: { script: 'คาเฟ่ใหม่อยู่ซอยนี้ใช่ป่ะ?', spoken: 'khaa-fêe mài yùu sɔɔi níi châi bpà?', meaning: 'The new café is in this alley, right?', tts: 'คาเฟ่ใหม่อยู่ซอยนี้ใช่ป่ะ' },
+          user: { script: 'ใช่เลย! ไปดูกัน', spoken: 'châi loei! bpai duu gan', meaning: 'Right! Let’s go check it out!', tts: 'ใช่เลย ไปดูกัน' }
         }
       },
       ST_nia: {
@@ -10121,11 +10125,11 @@
       ST_na: {
         easier: {
           partner: { script: 'รอตรงนี้นะ!', spoken: 'rɔɔ dtrong níi ná!', meaning: 'Wait right here, okay?', tts: 'รอตรงนี้นะ' },
-          user: { script: 'โอเคนะ รอตรงนี้นะ!', spoken: 'oo-khee ná, rɔɔ dtrong níi ná!', meaning: 'Okay! I’ll wait right here!', tts: 'โอเคนะ รอตรงนี้นะ' }
+          user: { script: 'โอเคนะ รีบมานะ!', spoken: 'oo-khee ná, rîip maa ná!', meaning: 'Okay! Hurry back, okay?', tts: 'โอเคนะ รีบมานะ' }
         },
         standard: {
           partner: { script: 'ไปซื้อน้ำนะ รอตรงนี้นะ!', spoken: 'bpai sɯ́ɯ nám ná, rɔɔ dtrong níi ná!', meaning: 'Going to buy water — wait right here, okay?', tts: 'ไปซื้อน้ำนะ รอตรงนี้นะ' },
-          user: { script: 'โอเคนะ รอตรงนี้นะ!', spoken: 'oo-khee ná, rɔɔ dtrong níi ná!', meaning: 'Okay! I’ll wait right here!', tts: 'โอเคนะ รอตรงนี้นะ' }
+          user: { script: 'โอเคนะ รีบมานะ!', spoken: 'oo-khee ná, rîip maa ná!', meaning: 'Okay! Hurry back, okay?', tts: 'โอเคนะ รีบมานะ' }
         }
       },
       ST_la: {
@@ -10180,12 +10184,12 @@
       },
       ST_mai_pen_rai: {
         easier: {
-          partner: { script: 'ขอโทษค่ะ!', spoken: 'khɔ̌ɔ-thôot khâ!', meaning: 'Sorry!', tts: 'ขอโทษค่ะ' },
-          user: { script: 'ไม่เป็นไรค่ะ', spoken: 'mâi bpen rai khâ', meaning: 'No worries!', tts: 'ไม่เป็นไรค่ะ' }
+          partner: { script: 'ขอโทษนะ!', spoken: 'khɔ̌ɔ-thôot ná!', meaning: 'Sorry!', tts: 'ขอโทษนะ' },
+          user: { script: 'ไม่เป็นไรเลย!', spoken: 'mâi bpen rai loei!', meaning: 'No worries at all!', tts: 'ไม่เป็นไรเลย' }
         },
         standard: {
-          partner: { script: 'อุ๊ย ขอโทษค่ะ เจ็บไหมคะ?', spoken: 'úi khɔ̌ɔ-thôot khâ, jèp mǎi khá?', meaning: 'Oops sorry! Are you hurt?', tts: 'อุ๊ย ขอโทษค่ะ เจ็บไหมคะ' },
-          user: { script: 'ไม่เป็นไรค่ะ สบายมาก!', spoken: 'mâi bpen rai khâ, sà-baai mâak!', meaning: 'No worries at all! Totally fine!', tts: 'ไม่เป็นไรค่ะ สบายมาก' }
+          partner: { script: 'อุ๊ย ขอโทษนะ เจ็บไหม?', spoken: 'úi khɔ̌ɔ-thôot ná, jèp mǎi?', meaning: 'Oops sorry! Are you hurt?', tts: 'อุ๊ย ขอโทษนะ เจ็บไหม' },
+          user: { script: 'ไม่เป็นไรเลย สบายมาก!', spoken: 'mâi bpen rai loei, sà-baai mâak!', meaning: 'No worries at all! Totally fine!', tts: 'ไม่เป็นไรเลย สบายมาก' }
         }
       },
       ST_ao_di: {
@@ -10201,11 +10205,11 @@
       ST_ngong_maak: {
         easier: {
           partner: { script: 'เอาอันนี้หรืออันนั้นดีเนี่ย?', spoken: 'ao an níi rǔue an nán dii nîa?', meaning: 'Should we get this one or that one?', tts: 'เอาอันนี้หรืออันนั้นดีเนี่ย' },
-          user: { script: 'งงมากค่ะ ไม่รู้เลย!', spoken: 'ngong mâak khâ, mâi rúu loei!', meaning: 'Totally confused! No idea!', tts: 'งงมากค่ะ ไม่รู้เลย' }
+          user: { script: 'งงมาก ไม่รู้เลย!', spoken: 'ngong mâak, mâi rúu loei!', meaning: 'Totally confused! No idea!', tts: 'งงมาก ไม่รู้เลย' }
         },
         standard: {
           partner: { script: 'เอาอันนี้หรืออันนั้นดีเนี่ย?', spoken: 'ao an níi rǔue an nán dii nîa?', meaning: 'Should we get this one or that one?', tts: 'เอาอันนี้หรืออันนั้นดีเนี่ย' },
-          user: { script: 'งงมากค่ะ ไม่รู้เลย!', spoken: 'ngong mâak khâ, mâi rúu loei!', meaning: 'Totally confused! No idea!', tts: 'งงมากค่ะ ไม่รู้เลย' }
+          user: { script: 'งงมาก ไม่รู้เลย!', spoken: 'ngong mâak, mâi rúu loei!', meaning: 'Totally confused! No idea!', tts: 'งงมาก ไม่รู้เลย' }
         }
       },
       ST_khoot_dii: {
@@ -10220,33 +10224,459 @@
       },
       ST_sut_yoot: {
         easier: {
-          partner: { script: 'ลองชิมดูครับ อร่อยไหม?', spoken: 'lɔɔng chim duu kháp, à-rɔ̀i mǎi?', meaning: 'Try a taste — is it good?', tts: 'ลองชิมดูครับ อร่อยไหม' },
-          user: { script: 'สุดยอด! อร่อยมากค่ะ', spoken: 'sùt yɔ̂ɔt! à-rɔ̀i mâak khâ', meaning: 'Awesome! So delicious!', tts: 'สุดยอด อร่อยมากค่ะ' }
+          partner: { script: 'ลองชิมดูสิ อร่อยไหม?', spoken: 'lɔɔng chim duu sì, à-rɔ̀i mǎi?', meaning: 'Try a taste — is it good?', tts: 'ลองชิมดูสิ อร่อยไหม' },
+          user: { script: 'สุดยอด! อร่อยมาก', spoken: 'sùt yɔ̂ɔt! à-rɔ̀i mâak', meaning: 'Awesome! So delicious!', tts: 'สุดยอด อร่อยมาก' }
         },
         standard: {
-          partner: { script: 'ลองชิมดูครับ อร่อยไหม?', spoken: 'lɔɔng chim duu kháp, à-rɔ̀i mǎi?', meaning: 'Try a taste — is it good?', tts: 'ลองชิมดูครับ อร่อยไหม' },
-          user: { script: 'สุดยอด! อร่อยมากค่ะ', spoken: 'sùt yɔ̂ɔt! à-rɔ̀i mâak khâ', meaning: 'Awesome! So delicious!', tts: 'สุดยอด อร่อยมากค่ะ' }
+          partner: { script: 'จานนี้หอมมาก ลองชิมดูสิ อร่อยไหม?', spoken: 'jaan níi hɔ̌ɔm mâak, lɔɔng chim duu sì, à-rɔ̀i mǎi?', meaning: 'This dish smells amazing — try a taste, is it good?', tts: 'จานนี้หอมมาก ลองชิมดูสิ อร่อยไหม' },
+          user: { script: 'สุดยอด! อร่อยมากเลย', spoken: 'sùt yɔ̂ɔt! à-rɔ̀i mâak loei', meaning: 'Awesome! So delicious!', tts: 'สุดยอด อร่อยมากเลย' }
         }
       },
       ST_chill_chill: {
         easier: {
           partner: { script: 'วันนี้ไปไหนไหม?', spoken: 'wan-níi bpai nǎi mǎi?', meaning: 'Going anywhere today?', tts: 'วันนี้ไปไหนไหม' },
-          user: { script: 'อยู่บ้านชิลๆ ค่ะ', spoken: 'yùu bâan chil-chil khâ', meaning: 'Just staying home chilling.', tts: 'อยู่บ้านชิลชิลค่ะ' }
+          user: { script: 'อยู่บ้านชิลๆ น่ะ', spoken: 'yùu bâan chil-chil nâ', meaning: 'Just staying home chilling.', tts: 'อยู่บ้านชิลชิลน่ะ' }
         },
         standard: {
           partner: { script: 'วันนี้ไปเที่ยวไหนไหม?', spoken: 'wan-níi bpai thîao nǎi mǎi?', meaning: 'Going out anywhere today?', tts: 'วันนี้ไปเที่ยวไหนไหม' },
-          user: { script: 'อยู่บ้านชิลๆ ค่ะ', spoken: 'yùu bâan chil-chil khâ', meaning: 'Just staying home chilling.', tts: 'อยู่บ้านชิลชิลค่ะ' }
+          user: { script: 'อยู่บ้านชิลๆ น่ะ', spoken: 'yùu bâan chil-chil nâ', meaning: 'Just staying home chilling.', tts: 'อยู่บ้านชิลชิลน่ะ' }
         }
       },
       ST_ao_ngai_dii: {
         easier: {
           partner: { script: 'ร้านปิดแล้ว! เอาไงดี?', spoken: 'ráan bpìt láaeo! ao ngai dii?', meaning: 'The shop is closed! What should we do?', tts: 'ร้านปิดแล้ว เอาไงดี' },
-          user: { script: 'เอาไงดี? ไปกินหมี่แห้งไหม?', spoken: 'ao ngai dii? bpai gin mìi hâeng mǎi?', meaning: 'What’s the plan? Wanna eat dry egg noodles?', tts: 'เอาไงดี ไปกินหมี่แห้งไหม' }
+          user: { script: 'ไปกินหมี่แห้งไหม?', spoken: 'bpai gin mìi hâeng mǎi?', meaning: 'Wanna go eat dry egg noodles instead?', tts: 'ไปกินหมี่แห้งไหม' }
         },
         standard: {
           partner: { script: 'อ้าว ร้านปิดแล้ว! เอาไงดี?', spoken: 'âao, ráan bpìt láaeo! ao ngai dii?', meaning: 'Whoa, the shop is closed! What should we do?', tts: 'อ้าว ร้านปิดแล้ว เอาไงดี' },
-          user: { script: 'เอาไงดี? ไปกินหมี่แห้งไหม?', spoken: 'ao ngai dii? bpai gin mìi hâeng mǎi?', meaning: 'What’s the plan? Wanna eat dry egg noodles?', tts: 'เอาไงดี ไปกินหมี่แห้งไหม' }
+          user: { script: 'ไปกินหมี่แห้งร้านข้างๆ ไหม?', spoken: 'bpai gin mìi hâeng ráan khâang-khâang mǎi?', meaning: 'Wanna go eat dry egg noodles at the shop next door?', tts: 'ไปกินหมี่แห้งร้านข้างๆ ไหม' }
         }
+      }
+    };
+
+    // Coherent, scene-ordered 2-person conversation scripts per Street node & difficulty tier
+    const THAI_CONVO_SCRIPTS_MAP = {
+      s1_n1: {
+        easier: [
+          { itemId: 'ST_lek', partner: { script: 'เอาเส้นอะไรครับ?', spoken: 'ao sên à-rai kháp?', meaning: 'What noodles would you like?' }, user: { script: 'เอาเล็กค่ะ', spoken: 'ao lék khâ', meaning: "I'll take thin rice noodles." } },
+          { itemId: 'ST_yaak_nam', partner: { script: 'แยกน้ำไหมครับ?', spoken: 'yâek nám mǎi kháp?', meaning: 'Broth separate?' }, user: { script: 'แยกน้ำค่ะ', spoken: 'yâek nám khâ', meaning: 'Yes, broth on the side please.' } }
+        ],
+        standard: [
+          { itemId: 'ST_lek', partner: { script: 'พี่ครับ วันนี้เอาเส้นอะไรดีครับ?', spoken: 'phîi kháp, wan-níi ao sên à-rai dii kháp?', meaning: 'What noodles would you like today?' }, user: { script: 'เอาเล็กค่ะ', spoken: 'ao lék khâ', meaning: "I'll take thin rice noodles." } },
+          { itemId: 'ST_mai_chin_mai_ngok', partner: { script: 'ใส่ลูกชิ้นกับถั่วงอกเหมือนเดิมไหมครับ?', spoken: 'sài lûuk-chín gàp thùa-ngôok mǔean doem mǎi kháp?', meaning: 'Meatballs and bean sprouts as usual?' }, user: { script: 'ไม่ชิ้น ไม่งอกค่ะ', spoken: 'mâi chín mâi ngôok khâ', meaning: 'No meatballs and no bean sprouts!' } },
+          { itemId: 'ST_yaak_nam', partner: { script: 'สั่งกลับบ้าน แยกน้ำไหมครับ?', spoken: 'sàng glàp bâan, yâek nám mǎi kháp?', meaning: 'Ordering to go — want the broth packed separately?' }, user: { script: 'แยกน้ำค่ะ', spoken: 'yâek nám khâ', meaning: 'Yes, broth on the side please.' } }
+        ],
+        harder: [
+          { itemId: 'ST_noodle_shorthand', partner: { script: 'สวัสดีครับพี่ คิวต่อไปสั่งได้เลยครับ เอาอะไรดี?', spoken: 'sà-wàt-dii kháp phîi, khiu dtɔ̀ɔ-bpai sàng dâi loei kháp, ao à-rai dii?', meaning: 'Hello! Next in line, go ahead and call out your order!' }, user: { script: 'เล็กน้ำไม่ชิ้นไม่งอกค่ะ', spoken: 'lék nám mâi chín mâi ngôok khâ', meaning: 'Thin noodles in broth, no meatballs, no bean sprouts!' } },
+          { itemId: 'ST_mhii_haeng', partner: { script: 'อีกชามนึงรับบะหมี่แห้งหรือก๋วยเตี๋ยวน้ำดีครับ?', spoken: 'ìik chaam nɯng ráp bà-mìi hâeng rǒe gǔai-dtǐao nám dii kháp?', meaning: 'For your second bowl, dry egg noodles or noodle soup?' }, user: { script: 'เอาหมี่แห้งพิเศษ แล้วขอน้ำซุปถ้วยเล็กด้วยค่ะ', spoken: 'ao mìi hâeng phí-sèet, láaeo khɔ̌ɔ nám-súp thûai lék dûai khâ', meaning: 'Dry egg noodles special, and a small bowl of broth too please.' } },
+          { itemId: 'ST_mai_chin_mai_ngok', partner: { script: 'หมี่แห้งใส่ลูกชิ้น หมูสับ กับถั่วงอกไหมครับ?', spoken: 'mìi hâeng sài lûuk-chín, mǔu-sàp gàp thùa-ngôok mǎi kháp?', meaning: 'In the dry egg noodles, meatballs, minced pork, and bean sprouts?' }, user: { script: 'ไม่ชิ้น ไม่งอกค่ะ ใส่แค่หมูสับอย่างเดียวค่ะ', spoken: 'mâi chín mâi ngôok khâ, sài khâae mǔu-sàp yàang diao khâ', meaning: 'No meatballs, no sprouts! Put only minced pork please.' } },
+          { itemId: 'ST_yaak_nam', partner: { script: 'สั่งกลับบ้านใช่ไหมครับ จะให้แยกน้ำซุปใส่ถุงไหมครับ?', spoken: 'sàng glàp bâan châi mǎi kháp, jà hâi yâek nám-súp sài thǔng mǎi kháp?', meaning: 'Ordering to go right? Should I pack the soup broth in a separate bag?' }, user: { script: 'แยกน้ำซุปใส่ถุงด้วยค่ะ แล้วขอน้ำส้มสายชูเพิ่มนะคะ', spoken: 'yâek nám-súp sài thǔng dûai khâ, láaeo khɔ̌ɔ nám-sôm-sǎai-chuu phôem ná khá', meaning: 'Separate soup in a bag please, and please add extra chili vinegar.' } }
+        ],
+        overdrive: [
+          { itemId: 'ST_lek', partner: { script: 'คิวต่อไป สั่งได้เลยครับพี่ วันนี้เอาเส้นอะไร ต้มยำหรือน้ำใสดีครับ?', spoken: 'khiu dtɔ̀ɔ-bpai, sàng dâi loei kháp phîi! wan-níi ao sên à-rai, dtôm-yam rǒe nám sǎi dii kháp?', meaning: 'Next customer, order away! What noodles today — tom yum or clear soup?' }, user: { script: 'เอาเส้นเล็กต้มยำแห้งพิเศษ ไม่ใส่กระเทียมเจียวค่ะ', spoken: 'ao sên lék dtôm-yam hâeng phí-sèet, mâi sài grà-thiam jiao khâ', meaning: 'Dry tom yum thin noodles special, no fried garlic please!' } },
+          { itemId: 'ST_mai_chin_mai_ngok', partner: { script: 'ชามนี้เครื่องเคราเอาครบเลยไหม ลูกชิ้น ถั่วงอก ผักชี?', spoken: 'chaam níi khrɯ̂ang-khao ao khróp loei mǎi, lûuk-chín, thùa-ngôok, phàk-chii?', meaning: 'All toppings included — meatballs, bean sprouts, cilantro?' }, user: { script: 'ไม่ชิ้น ไม่งอก ไม่ผักชีเลยนะคะ ขอแค่หมูสับล้วนๆ ค่ะ', spoken: 'mâi chín, mâi ngôok, mâi phàk-chii loei ná khá, khɔ̌ɔ khâae mǔu-sàp lúan-lúan khâ', meaning: 'No meatballs, no sprouts, zero cilantro — only minced pork strictly!' } },
+          { itemId: 'ST_mhii_haeng', partner: { script: 'สั่งอีกถุงไหมครับ บะหมี่แห้งหรือน้ำตกดีครับ?', spoken: 'sàng ìik thǔng mǎi kháp, bà-mìi hâeng rǒe nám-dtòk dii kháp?', meaning: 'Ordering another bag? Dry egg noodles or boat soup?' }, user: { script: 'เอาหมี่แห้งพิเศษ ใส่หมูแดงไม่ใส่เครื่องในค่ะ', spoken: 'ao mìi hâeng phí-sèet, sài mǔu-daeng mâi sài khrɯ̂ang-nai khâ', meaning: 'Dry egg noodles special, red pork only no offal!' } },
+          { itemId: 'ST_noodle_shorthand', partner: { script: 'แล้วถุงที่สามล่ะครับ เอาอะไรดี?', spoken: 'láaeo thǔng thîi sǎam lâ kháp, ao à-rai dii?', meaning: 'And for the third bag, what would you like?' }, user: { script: 'เล็กน้ำไม่ชิ้นไม่งอกค่ะ', spoken: 'lék nám mâi chín mâi ngôok khâ', meaning: 'Thin noodles in broth, no meatballs, no bean sprouts!' } },
+          { itemId: 'ST_yaak_nam', partner: { script: 'ใส่ถุงกลับบ้านหมดเลยใช่ไหมครับ เดี๋ยวแยกน้ำซุปให้เลยไหมครับ?', spoken: 'sài thǔng glàp bâan mòt loei châi mǎi kháp, dǐao yâek nám-súp hâi loei mǎi kháp?', meaning: 'All to-go right? Should I pack the soup separately for you?' }, user: { script: 'แยกน้ำซุปใส่ถุงเลยค่ะ ขอช้อนส้อมกับพริกป่นเพิ่มด้วยนะคะ', spoken: 'yâek nám-súp sài thǔng loei khâ, khɔ̌ɔ chɔ́ɔn sɔ̂ɔm gàp phrík-bpòn phôem dûai ná khá', meaning: 'Separate broth in a bag please, plus cutlery and extra chili flakes!' } }
+        ]
+      },
+      s1_n2: {
+        easier: [
+          { itemId: 'ST_phet_noi', partner: { script: 'เผ็ดไหมครับ?', spoken: 'phèt mǎi kháp?', meaning: 'Spicy?' }, user: { script: 'เผ็ดน้อยค่ะ', spoken: 'phèt nɔ́ɔi khâ', meaning: 'Mild spice, please.' } },
+          { itemId: 'ST_mai_sai_phakchii', partner: { script: 'ใส่ผักชีไหมครับ?', spoken: 'sài phàk-chii mǎi kháp?', meaning: 'Add cilantro?' }, user: { script: 'ไม่ใส่ผักชีค่ะ', spoken: 'mâi sài phàk-chii khâ', meaning: 'No cilantro, please.' } }
+        ],
+        standard: [
+          { itemId: 'ST_phet_noi', partner: { script: 'ตำไทยวันนี้ เอาเผ็ดแค่ไหนดีครับ?', spoken: 'dtam thai wan-níi, ao phèt khâae nǎi dii kháp?', meaning: 'For your papaya salad today, how spicy would you like it?' }, user: { script: 'เอาเผ็ดน้อยค่ะ', spoken: 'ao phèt nɔ́ɔi khâ', meaning: 'Make it mild spicy, please.' } },
+          { itemId: 'ST_mai_sai_phrik', partner: { script: 'แล้วผัดกะเพราอีกจาน ใส่พริกไหมครับ?', spoken: 'láaeo phàt gà-phrao ìik jaan, sài phrík mǎi kháp?', meaning: 'And for the holy basil stir-fry, should I put chilies in?' }, user: { script: 'ไม่ใส่พริกค่ะ', spoken: 'mâi sài phrík khâ', meaning: 'No chilies at all, please.' } },
+          { itemId: 'ST_mai_sai_phakchii', partner: { script: 'ต้มจืดเสร็จแล้ว โรยผักชีด้านบนไหมครับ?', spoken: 'dtôm-jɯ̀ɯt sèt láaeo, roi phàk-chii dâan bon mǎi kháp?', meaning: 'The clear soup is done — sprinkle cilantro on top?' }, user: { script: 'ไม่ใส่ผักชีค่ะ', spoken: 'mâi sài phàk-chii khâ', meaning: 'No cilantro, please.' } },
+          { itemId: 'ST_mai_sai_phongchurot', partner: { script: 'กำลังจะปรุงรสแล้ว เอาเหมือนเดิมไหมครับ?', spoken: 'gam-lang jà bprung rót láaeo, ao mǔean doem mǎi kháp?', meaning: 'About to season it now — everything normal?' }, user: { script: 'ไม่ใส่ผงชูรสค่ะ', spoken: 'mâi sài phǒng-chuu-rót khâ', meaning: 'Please do not put MSG.' } }
+        ],
+        harder: [
+          { itemId: 'ST_phet_noi', partner: { script: 'ส้มตำจานนี้ ใส่พริกกี่เม็ดดีครับ เผ็ดปกติหรือเผ็ดน้อย?', spoken: 'sôm-dtam jaan níi, sài phrík gìi mét dii kháp, phèt bpòk-gà-dtì rǒe phèt nɔ́ɔi?', meaning: 'For this salad, how many chilies — normal spicy or mild?' }, user: { script: 'เอาเผ็ดน้อย ใส่พริกแค่เม็ดเดียวพอนะคะ', spoken: 'ao phèt nɔ́ɔi, sài phrík khâae mét diao phɔɔ ná khá', meaning: 'Make it mild spicy, just one single chili is enough please.' } },
+          { itemId: 'ST_mai_sai_phrik', partner: { script: 'ผัดกะเพราหมูสับ เผ็ดน้อยหรือใส่พริกปกติครับ?', spoken: 'phàt gà-phrao mǔu-sàp, phèt nɔ́ɔi rǒe sài phrík bpòk-gà-dtì kháp?', meaning: 'Minced pork basil — mild or normal chilies?' }, user: { script: 'ไม่ใส่พริกเลยค่ะ ทานเผ็ดไม่ได้เลยค่ะ', spoken: 'mâi sài phrík loei khâ, thaan phèt mâi dâi loei khâ', meaning: 'Zero chilies at all please, I cannot eat spicy food at all.' } },
+          { itemId: 'ST_mai_sai_phakchii', partner: { script: 'ใกล้เสร็จแล้ว โรยผักชีกับต้นหอมด้านบนไหมครับ?', spoken: 'glâi sèt láaeo, roi phàk-chii gàp dtôn-hɔ̌ɔm dâan bon mǎi kháp?', meaning: 'Almost done — sprinkle cilantro and green onion on top?' }, user: { script: 'ไม่ใส่ผักชีนะคะ ใส่แค่ต้นหอมพอค่ะ', spoken: 'mâi sài phàk-chii ná khá, sài khâae dtôn-hɔ̌ɔm phɔɔ khâ', meaning: 'No cilantro please, just green onion is fine.' } },
+          { itemId: 'ST_mai_sai_phongchurot', partner: { script: 'ตอนปรุงรส ใส่น้ำปลา กับผงชูรสปกติเลยไหมครับ?', spoken: 'dtɔɔn bprung rót, sài nám-bplaa gàp phǒng-chuu-rót bpòk-gà-dtì loei mǎi kháp?', meaning: 'When seasoning, normal fish sauce and MSG?' }, user: { script: 'ไม่ใส่ผงชูรสค่ะ ขอน้ำปลานิดเดียวพอค่ะ', spoken: 'mâi sài phǒng-chuu-rót khâ, khɔ̌ɔ nám-bplaa nít diao phɔɔ khâ', meaning: 'No MSG please, just a little fish sauce.' } }
+        ],
+        overdrive: [
+          { itemId: 'ST_phet_noi', partner: { script: 'ตำซั่วแซ่บๆ สั่งระดับความเผ็ดได้เลยครับ พริกกี่เม็ดดี?', spoken: 'dtam-sûa sɛ̂ɛp-sɛ̂ɛp, sàng rá-dàp khwaam phèt dâi loei kháp, phrík gìi mét dii?', meaning: 'Zesty salad ready! Call out your exact chili level — how many chilies?' }, user: { script: 'เอาเผ็ดน้อยมาก พริกเม็ดเดียว แล้วก็ไม่ใส่ถั่วลิสงด้วยนะคะ', spoken: 'ao phèt nɔ́ɔi mâak, phrík mét diao, láaeo gɔ̂ɔ mâi sài thùa-lí-sǒng dûai ná khá', meaning: 'Very mild spice, one chili only, and no peanuts either please!' } },
+          { itemId: 'ST_mai_sai_phrik', partner: { script: 'กะเพราจานนี้ลงกระทะแล้วนะครับ พริกกับกระเทียมใส่ปกติไหม?', spoken: 'gà-phrao jaan níi long grà-thá láaeo ná kháp, phrík gàp grà-thiam sài bpòk-gà-dtì mǎi?', meaning: 'Basil dish in the wok now! Chilies and garlic normal?' }, user: { script: 'ไม่ใส่พริกเลยนะคะ ขอกระเทียมอย่างเดียว แล้วขอไข่ดาวไม่สุกด้วยค่ะ', spoken: 'mâi sài phrík loei ná khá, khɔ̌ɔ grà-thiam yàang diao, láaeo khɔ̌ɔ khài-daao mâi sùk dûai khâ', meaning: 'Zero chilies please, garlic only, and add a runny fried egg too!' } },
+          { itemId: 'ST_mai_sai_phongchurot', partner: { script: 'ปรุงรสตามสูตรร้านเลยนะครับ ใส่ผงชูรสนิดนึงนะ?', spoken: 'bprung rót dtaam sùut ráan loei ná kháp, sài phǒng-chuu-rót nít-nɯng ná?', meaning: 'Seasoning per house recipe — a tiny pinch of MSG okay?' }, user: { script: 'ไม่ใส่ผงชูรสเลยค่ะ แพ้ผงชูรสค่ะ', spoken: 'mâi sài phǒng-chuu-rót loei khâ, pháae phǒng-chuu-rót khâ', meaning: 'No MSG at all please, I am sensitive to MSG!' } },
+          { itemId: 'ST_mai_sai_phakchii', partner: { script: 'ตักใส่ชามแล้ว โรยผักชีไหมครับ?', spoken: 'dtàk sài chaam láaeo, roi phàk-chii mǎi kháp?', meaning: 'Plated up — sprinkle cilantro?' }, user: { script: 'ไม่ใส่ผักชีเลยค่ะ', spoken: 'mâi sài phàk-chii loei khâ', meaning: 'Zero cilantro please!' } },
+          { itemId: 'ST_yaak_nam', isSpiral: true, partner: { script: 'แกงจืดสั่งกลับบ้าน แยกน้ำซุปใส่ถุงไหมครับ?', spoken: 'gaaeng jɯ̀ɯt sàng glàp bâan, yâek nám-súp sài thǔng mǎi kháp?', meaning: 'Taking the soup home — pack the broth separately?' }, user: { script: 'แยกน้ำค่ะ', spoken: 'yâek nám khâ', meaning: 'Yes, broth on the side please.' } }
+        ]
+      },
+      s1_n3: {
+        easier: [
+          { itemId: 'ST_phiseet', partner: { script: 'ธรรมดาหรือพิเศษครับ?', spoken: 'tham-má-daa rǒe phí-sèet kháp?', meaning: 'Regular or special size?' }, user: { script: 'เอาพิเศษค่ะ', spoken: 'ao phí-sèet khâ', meaning: 'Special size, please.' } },
+          { itemId: 'ST_kin_nii_hor', partner: { script: 'กินนี่หรือใส่ห่อครับ?', spoken: 'gin nîi rǒe sài hɔ̀ɔ kháp?', meaning: 'Eating here or takeaway?' }, user: { script: 'กินนี่ค่ะ', spoken: 'gin nîi khâ', meaning: 'Eating right here.' } }
+        ],
+        standard: [
+          { itemId: 'ST_phiseet', partner: { script: 'ข้าวมันไก่จานนี้ เอาธรรมดาหรือพิเศษครับ?', spoken: 'khâao man gài jaan níi, ao tham-má-daa rǒe phí-sèet kháp?', meaning: 'For this chicken rice, regular size or special extra-large?' }, user: { script: 'เอาพิเศษค่ะ', spoken: 'ao phí-sèet khâ', meaning: "I'll take the special extra-large portion." } },
+          { itemId: 'ST_kin_nii_hor', partner: { script: 'จานนี้กินนี่หรือใส่ห่อครับ?', spoken: 'jaan níi gin nîi rǒe sài hɔ̀ɔ kháp?', meaning: 'For this plate — eating here or wrapping it to go?' }, user: { script: 'กินนี่ค่ะ', spoken: 'gin nîi khâ', meaning: 'Eating right here.' } },
+          { itemId: 'ST_sai_hor', partner: { script: 'แล้วขนมจีบที่สั่งเพิ่ม กินนี่ด้วยหรือใส่ห่อกลับบ้านครับ?', spoken: 'láaeo khà-nǒm-jìip thîi sàng phôem, gin nîi dûai rǒe sài hɔ̀ɔ glàp bâan kháp?', meaning: 'And the extra dumplings — eating here too or wrap to take home?' }, user: { script: 'ใส่ห่อค่ะ', spoken: 'sài hɔ̀ɔ khâ', meaning: 'Wrap it to go / takeaway, please.' } }
+        ],
+        harder: [
+          { itemId: 'ST_phiseet', partner: { script: 'ข้าวมันไก่ต้มวันนี้ เอาธรรมดาหรือพิเศษดีครับ?', spoken: 'khâao man gài dtôm wan-níi, ao tham-má-daa rǒe phí-sèet dii kháp?', meaning: 'Steamed chicken rice today — regular or special large?' }, user: { script: 'เอาพิเศษค่ะ ขอเนื้อน่องนะคะ', spoken: 'ao phí-sèet khâ, khɔ̌ɔ nɯ́a nɔ̂ng ná khá', meaning: 'Special large please, dark thigh meat please.' } },
+          { itemId: 'ST_mai_sai_phakchii', isSpiral: true, partner: { script: 'น้ำซุปข้าวมันไก่ โรยผักชีไหมครับ?', spoken: 'nám-súp khâao man gài, roi phàk-chii mǎi kháp?', meaning: 'Sprinkle cilantro in the chicken rice soup?' }, user: { script: 'ไม่ใส่ผักชีค่ะ', spoken: 'mâi sài phàk-chii khâ', meaning: 'No cilantro, please.' } },
+          { itemId: 'ST_kin_nii_hor', partner: { script: 'นั่งทานที่ร้านเลยใช่ไหมครับ?', spoken: 'nâng thaan thîi ráan loei châi mǎi kháp?', meaning: 'Sitting down to eat here right?' }, user: { script: 'กินนี่ค่ะ', spoken: 'gin nîi khâ', meaning: 'Eating right here.' } },
+          { itemId: 'ST_sai_hor', partner: { script: 'รับขนมจีบกลับบ้านด้วยไหมครับ เดี๋ยวห่อให้เลย?', spoken: 'ráp khà-nǒm-jìip glàp bâan dûai mǎi kháp, dǐao hɔ̀ɔ hâi loei?', meaning: 'Want dumplings to take home too? I can wrap them now.' }, user: { script: 'เอาชุดนึง ใส่ห่อค่ะ', spoken: 'ao chút nɯng, sài hɔ̀ɔ khâ', meaning: 'One set, wrapped to go please.' } }
+        ],
+        overdrive: [
+          { itemId: 'ST_phiseet', partner: { script: 'คิวต่อไป ข้าวมันไก่ผสม เอาธรรมดาหรือพิเศษดีครับ?', spoken: 'khiu dtɔ̀ɔ-bpai, khâao man gài phà-sǒm, ao tham-má-daa rǒe phí-sèet dii kháp?', meaning: 'Next! Mixed chicken rice — regular or special large?' }, user: { script: 'เอาพิเศษเลยค่ะ ขอไก่ต้มกับไก่ทอดอย่างละครึ่งนะคะ', spoken: 'ao phí-sèet loei khâ, khɔ̌ɔ gài dtôm gàp gài thɔ̂ɔt yàang lá khrɯ̂ng ná khá', meaning: 'Special extra-large please, half steamed and half crispy chicken!' } },
+          { itemId: 'ST_kin_nii_hor', partner: { script: 'จานนี้ทานที่ร้านเลยนะครับ เสิร์ฟโต๊ะไหนดี?', spoken: 'jaan níi thaan thîi ráan loei ná kháp, sòep dtó nǎi dii?', meaning: 'Eating this plate here right? Which table should I bring it to?' }, user: { script: 'กินนี่ค่ะ นั่งโต๊ะริมข้างหน้านะคะ', spoken: 'gin nîi khâ, nâng dtó rim khâang-nâa ná khá', meaning: 'Eating right here, at the front corner table!' } },
+          { itemId: 'ST_phet_noi', isSpiral: true, partner: { script: 'น้ำจิ้มข้าวมันไก่ ใส่พริกขิงเพิ่มไหมครับ?', spoken: 'nám-jîm khâao man gài, sài phrík khǐng phôem mǎi kháp?', meaning: 'Extra chili and ginger in the dipping sauce?' }, user: { script: 'เอาเผ็ดน้อยค่ะ', spoken: 'ao phèt nɔ́ɔi khâ', meaning: 'Mild spice, please.' } },
+          { itemId: 'ST_sai_hor', partner: { script: 'ส่วนอีกกล่องที่สั่งไว้ ให้ใส่ห่อกลับบ้านเลยใช่ไหมครับ?', spoken: 'sùan ìik glɔ̀ng thîi sàng wái, hâi sài hɔ̀ɔ glàp bâan loei châi mǎi kháp?', meaning: 'And for the extra box you ordered, wrap it to go right?' }, user: { script: 'ใช่ค่ะ ใส่ห่อแยกน้ำจิ้มให้ด้วยนะคะ', spoken: 'châi khâ, sài hɔ̀ɔ yâek nám-jîm hâi dûai ná khá', meaning: 'Yes, wrap it to go with the sauce packed separately!' } }
+        ]
+      },
+      s2_n1: {
+        easier: [
+          { itemId: 'ST_waan_noi', partner: { script: 'ชาไทยหวานน้อยไหมคะ?', spoken: 'chaa thai wǎan nɔ́ɔi mǎi khá?', meaning: 'Thai tea less sweet?' }, user: { script: 'หวานน้อยค่ะ', spoken: 'wǎan nɔ́ɔi khâ', meaning: 'Less sweet, please.' } },
+          { itemId: 'ST_nam_kheng_plao', partner: { script: 'เอาน้ำแข็งเปล่าด้วยไหมคะ?', spoken: 'ao nám-khɛ̌ng bplào dûai mǎi khá?', meaning: 'Want plain ice too?' }, user: { script: 'ขอน้ำแข็งเปล่าค่ะ', spoken: 'khɔ̌ɔ nám-khɛ̌ng bplào khâ', meaning: 'Plain ice, please.' } }
+        ],
+        standard: [
+          { itemId: 'ST_waan_noi', partner: { script: 'ชาไทยเย็นแก้วนึงนะคะ เอาหวานปกติไหมคะ?', spoken: 'chaa thai yen gâaeo nɯng ná khá, ao wǎan bpòk-gà-dtì mǎi khá?', meaning: 'One iced Thai tea — do you want normal sweetness?' }, user: { script: 'เอาหวานน้อยค่ะ', spoken: 'ao wǎan nɔ́ɔi khâ', meaning: 'Less sweet (50% sugar), please.' } },
+          { itemId: 'ST_mai_waan', partner: { script: 'ส่วนอเมริกาโน่เย็นอีกแก้ว ใส่น้ำเชื่อมไหมคะ?', spoken: 'sùan à-mee-rí-gaa-nôo yen ìik gâaeo, sài nám-chɯ̂am mǎi khá?', meaning: 'And for the iced Americano — should I add syrup?' }, user: { script: 'ไม่หวานค่ะ', spoken: 'mâi wǎan khâ', meaning: 'Unsweetened / zero sugar, please.' } },
+          { itemId: 'ST_waan_pokati', partner: { script: 'แล้วชาเขียวเย็นของเพื่อน หวานระดับไหนดีคะ?', spoken: 'láaeo chaa khǐao yen khɔ̌ɔng phɯ̂an, wǎan rá-dàp nǎi dii khá?', meaning: 'And your friend’s iced green tea — what sweetness level?' }, user: { script: 'หวานปกติค่ะ', spoken: 'wǎan bpòk-gà-dtì khâ', meaning: 'Normal sweetness, please.' } },
+          { itemId: 'ST_nam_kheng_plao', partner: { script: 'รับน้ำแข็งเปล่าเพิ่มสักแก้วไหมคะ?', spoken: 'ráp nám-khɛ̌ng bplào phôem sàk gâaeo mǎi khá?', meaning: 'Would you like a cup of plain ice as well?' }, user: { script: 'ขอน้ำแข็งเปล่าค่ะ', spoken: 'khɔ̌ɔ nám-khɛ̌ng bplào khâ', meaning: 'May I have a cup of plain ice, please.' } }
+        ],
+        harder: [
+          { itemId: 'ST_waan_noi', partner: { script: 'ชาไทยเย็นนะคะ รับความหวานกี่เปอร์เซ็นต์ดีคะ?', spoken: 'chaa thai yen ná khá, ráp khwaam-wǎan gìi bpəə-sen dii khá?', meaning: 'Iced Thai tea — what sweetness percentage would you like?' }, user: { script: 'เอาหวานน้อยยี่สิบห้าเปอร์เซ็นต์ ใส่ถุงกลับบ้านค่ะ', spoken: 'ao wǎan nɔ́ɔi yîi-sìp hâa bpəə-sen, sài thǔng glàp bâan khâ', meaning: 'Less sweet 25% sugar, and pack it to-go please.' } },
+          { itemId: 'ST_mai_waan', partner: { script: 'อเมริกาโน่เย็นอีกแก้ว ไม่ใส่น้ำเชื่อมเลยใช่ไหมคะ?', spoken: 'à-mee-rí-gaa-nôo yen ìik gâaeo, mâi sài nám-chɯ̂am loei châi mǎi khá?', meaning: 'For the iced Americano — zero syrup added, correct?' }, user: { script: 'ไม่หวานเลยค่ะ ไม่ใส่น้ำเชื่อมศูนย์เปอร์เซ็นต์นะคะ', spoken: 'mâi wǎan loei khâ, mâi sài nám-chɯ̂am sǔun bpəə-sen ná khá', meaning: 'Zero sweetness, no syrup 0% sugar please.' } },
+          { itemId: 'ST_waan_pokati', partner: { script: 'แล้วมัทฉะลาเต้แก้วนี้ หวานน้อยหรือหวานปกติคะ?', spoken: 'láaeo mát-chà laa-dtêe gâaeo níi, wǎan nɔ́ɔi rǒe wǎan bpòk-gà-dtì khá?', meaning: 'And this matcha latte — less sweet or normal sweet?' }, user: { script: 'หวานปกติค่ะ', spoken: 'wǎan bpòk-gà-dtì khâ', meaning: 'Normal sweetness, please.' } },
+          { itemId: 'ST_nam_kheng_plao', partner: { script: 'รับแก้วน้ำแข็งเปล่าเพิ่มด้วยไหมคะ?', spoken: 'ráp gâaeo nám-khɛ̌ng bplào phôem dûai mǎi khá?', meaning: 'Would you like a cup of plain ice too?' }, user: { script: 'ขอน้ำแข็งเปล่าแก้วนึงค่ะ', spoken: 'khɔ̌ɔ nám-khɛ̌ng bplào gâaeo nɯng khâ', meaning: 'One cup of plain ice, please.' } }
+        ],
+        overdrive: [
+          { itemId: 'ST_waan_noi', partner: { script: 'สวัสดีค่ะ สั่งเครื่องดื่มอะไรดีคะ หวานมากหวานน้อยสั่งได้เลยนะคะ', spoken: 'sà-wàt-dii khá, sàng khrɯ̂ang-dɯ̀ɯm à-rai dii khá, wǎan mâak wǎan nɔ́ɔi sàng dâi loei ná khá', meaning: 'Hello! What drink can I get you? Extra sweet or less sweet, just let me know!' }, user: { script: 'ขอชาไทยเย็นหวานน้อย ใส่ถุงแยกน้ำแข็งนะคะ', spoken: 'khɔ̌ɔ chaa thai yen wǎan nɔ́ɔi, sài thǔng yâek nám-khɛ̌ng ná khá', meaning: 'Iced Thai tea less sweet, bagged with ice separated please!' } },
+          { itemId: 'ST_mai_waan', partner: { script: 'กาแฟดำเย็นอีกแก้ว รับแบบไม่หวานเลยหรือหวานนิดนึงดีคะ?', spoken: 'gaa-faae dam yen ìik gâaeo, ráp bàaep mâi wǎan loei rǒe wǎan nít-nɯng dii khá?', meaning: 'For the iced black coffee — completely unsweetened or a tiny bit sweet?' }, user: { script: 'ไม่หวานเลยค่ะ ศูนย์เปอร์เซ็นต์ ไม่ใส่น้ำเชื่อมเด็ดขาดค่ะ', spoken: 'mâi wǎan loei khâ, sǔun bpəə-sen, mâi sài nám-chɯ̂am dèt-khàat khâ', meaning: 'Zero sweetness, 0%, strictly no syrup please!' } },
+          { itemId: 'ST_waan_pokati', partner: { script: 'ส่วนโกโก้เย็น เอาหวานน้อยหรือหวานปกติคะ?', spoken: 'sùan goo-gôo yen, ao wǎan nɔ́ɔi rǒe wǎan bpòk-gà-dtì khá?', meaning: 'And for the iced cocoa — less sweet or normal sweet?' }, user: { script: 'โกโก้เอาหวานปกติค่ะ', spoken: 'goo-gôo ao wǎan bpòk-gà-dtì khâ', meaning: 'Normal sweetness for the cocoa, please.' } },
+          { itemId: 'ST_nam_kheng_plao', partner: { script: 'รับน้ำแข็งเปล่าเพิ่มด้วยไหมคะ?', spoken: 'ráp nám-khɛ̌ng bplào phôem dûai mǎi khá?', meaning: 'Want a cup of plain ice as well?' }, user: { script: 'ขอน้ำแข็งเปล่าแก้วนึงด้วยค่ะ', spoken: 'khɔ̌ɔ nám-khɛ̌ng bplào gâaeo nɯng dûai khâ', meaning: 'One cup of plain ice too, please!' } }
+        ]
+      },
+      s2_n2: {
+        easier: [
+          { itemId: 'ST_nong_staff', partner: { script: 'พร้อมสั่งหรือยังคะ?', spoken: 'phrɔ́ɔm sàng rǒe yang khá?', meaning: 'Ready to order yet?' }, user: { script: 'น้องคะ สั่งอาหารหน่อยค่ะ', spoken: 'nɔ́ɔng khá, sàng aa-hǎan nɔ̀ɔi khâ', meaning: 'Excuse me server, could I order please.' } },
+          { itemId: 'ST_gep_dtang', partner: { script: 'อิ่มแล้วใช่ไหมคะ รับอะไรเพิ่มไหมคะ?', spoken: 'ìm láaeo châi mǎi khá, ráp à-rai phôem mǎi khá?', meaning: 'All full now, right? Anything else?' }, user: { script: 'เก็บตังค์ด้วยค่ะ!', spoken: 'gèp dtang dûai khâ!', meaning: 'Check / bill please!' } }
+        ],
+        standard: [
+          { itemId: 'ST_nong_staff', partner: { script: 'สวัสดีค่ะ นั่งโต๊ะไหนดีคะ เรียกได้เลยนะคะ!', spoken: 'sà-wàt-dii khâ, nâng dtó nǎi dii khá, rîak dâi loei ná khá!', meaning: 'Hello! Pick any table, just call me when you are ready!' }, user: { script: 'น้องคะ สั่งอาหารหน่อยค่ะ', spoken: 'nɔ́ɔng khá, sàng aa-hǎan nɔ̀ɔi khâ', meaning: 'Excuse me server, could I order please.' } },
+          { itemId: 'ST_thao_rai', partner: { script: 'วันนี้มีเค้กมะพร้าวอ่อนอบใหม่ด้วยนะคะ', spoken: 'wan-níi mii khéek má-phráao ɔ̀ɔn òp mài dûai ná khá', meaning: 'Today we also have freshly baked young coconut cake.' }, user: { script: 'อันนี้เท่าไหร่คะ?', spoken: 'an-níi thâo-lài khá?', meaning: 'How much is this one?' } },
+          { itemId: 'ST_gep_dtang', partner: { script: 'ทานเสร็จแล้ว รับอะไรเพิ่มอีกไหมคะ?', spoken: 'thaan sèt láaeo, ráp à-rai phôem ìik mǎi khá?', meaning: 'All finished — would you like anything else?' }, user: { script: 'เก็บตังค์ด้วยค่ะ!', spoken: 'gèp dtang dûai khâ!', meaning: 'Check / bill please!' } },
+          { itemId: 'ST_scan_dai_mai', partner: { script: 'ทั้งหมดหกสิบบาทค่ะ จ่ายสดหรือสแกนคะ?', spoken: 'tháng-mòt hòk-sìp bàat khâ, jàai sòt rǒe sà-gaaen khá?', meaning: 'That is 60 baht total — paying cash or scanning QR?' }, user: { script: 'สแกนได้ไหมคะ?', spoken: 'sà-gaaen dâi mǎi khá?', meaning: 'Can I scan QR (PromptPay) to pay?' } }
+        ],
+        harder: [
+          { itemId: 'ST_nong_staff', partner: { script: 'สวัสดีค่ะคุณลูกค้า เมนูวางอยู่บนโต๊ะแล้วนะคะ พร้อมแล้วเรียกได้เลยค่ะ', spoken: 'sà-wàt-dii khâ khun lûuk-kháa, mee-nuu waang yùu bon dtó láaeo ná khá, phrɔ́ɔm láaeo rîak dâi loei khâ', meaning: 'Welcome! The menus are on the table, feel free to call when ready.' }, user: { script: 'น้องคะ รบกวนสั่งอาหารหน่อยค่ะ ขอชาไทยหวานน้อยหนึ่งแก้วด้วยค่ะ', spoken: 'nɔ́ɔng khá, róp-guan sàng aa-hǎan nɔ̀ɔi khâ, khɔ̌ɔ chaa-thai wǎan nɔ́ɔi nɯ̀ng gâaeo dûai khâ', meaning: 'Excuse me server! Could I order please, one iced Thai tea less sweet as well.' } },
+          { itemId: 'ST_thao_rai', partner: { script: 'รับขนมปังปิ้งสังขยาเพิ่มไหมคะ ทำสดใหม่เลยค่ะ', spoken: 'ráp khà-nǒm-bpang bpîng sǎng-khà-yǎa phôem mǎi khá, tham sòt mài loei khâ', meaning: 'Want freshly toasted bread with pandan custard too?' }, user: { script: 'ชุดนี้เท่าไหร่คะ?', spoken: 'chút níi thâo-lài khá?', meaning: 'How much is this set?' } },
+          { itemId: 'ST_gep_dtang', partner: { script: 'เรียบร้อยแล้วนะคะ รับเครื่องดื่มเพิ่มอีกไหมคะ?', spoken: 'rîap-rɔ́ɔi láaeo ná khá, ráp khrɯ̂ang-dɯ̀ɯm phôem ìik mǎi khá?', meaning: 'All done! Would you like another drink?' }, user: { script: 'ไม่แล้วค่ะ เก็บตังค์ด้วยนะคะ', spoken: 'mâi láaeo khâ, gèp dtang dûai ná khá', meaning: 'No thanks — check please!' } },
+          { itemId: 'ST_scan_dai_mai', partner: { script: 'ยอดรวมแปดสิบบาทค่ะ ชำระเงินสดหรือโอนจ่ายดีคะ?', spoken: 'yɔ̂ɔt ruam bpàaet-sìp bàat khâ, cham-rá ngən sòt rǒe oon jàai dii khá?', meaning: 'Total is 80 baht — paying cash or bank transfer?' }, user: { script: 'สแกนจ่ายคิวอาร์โค้ดได้ไหมคะ มีพร้อมเพย์ไหมคะ?', spoken: 'sà-gaaen jàai khiu-aa khôot dâi mǎi khá, mii phrɔ́ɔm-phee mǎi khá?', meaning: 'Can I pay via QR scan, do you have PromptPay?' } }
+        ],
+        overdrive: [
+          { itemId: 'ST_nong_staff', partner: { script: 'สวัสดีค่ะ วันนี้มีโต๊ะว่างริมกระจก นั่งตรงนั้นได้เลยนะคะ!', spoken: 'sà-wàt-dii khâ, wan-níi mii dtó wâang rim grà-jòk, nâng dtrong nán dâi loei ná khá', meaning: 'Hello! We have an open table by the window today, you can sit right there!' }, user: { script: 'น้องคะ ขอสั่งอาหารกับเครื่องดื่มก่อนเลยนะคะ หิวน้ำมากค่ะ', spoken: 'nɔ́ɔng khá, khɔ̌ɔ sàng aa-hǎan gàp khrɯ̂ang-dɯ̀ɯm gɔ̀ɔn loei ná khá, hǐu nám mâak khâ', meaning: 'Excuse me server! Let me order food and drinks right away, I am so thirsty!' } },
+          { itemId: 'ST_waan_noi', isSpiral: true, partner: { script: 'ชาไทยเย็นเอาหวานระดับไหนดีคะ?', spoken: 'chaa thai yen ao wǎan rá-dàp nǎi dii khá?', meaning: 'What sweetness level for your iced Thai tea?' }, user: { script: 'หวานน้อยค่ะ', spoken: 'wǎan nɔ́ɔi khâ', meaning: 'Less sweet, please.' } },
+          { itemId: 'ST_thao_rai', partner: { script: 'เค้กมะม่วงชิ้นนี้เพิ่งตัดใหม่เลยค่ะ สนใจไหมคะ?', spoken: 'khéek má-mûang chín níi phôeng dtàt mài loei khâ, sǒn-jai mǎi khá?', meaning: 'This mango cake was just sliced fresh — interested?' }, user: { script: 'ชิ้นนี้เท่าไหร่คะ?', spoken: 'chín níi thâo-lài khá?', meaning: 'How much is this slice?' } },
+          { itemId: 'ST_gep_dtang', partner: { script: 'อิ่มอร่อยแล้วนะคะ รับอะไรเพิ่มไหมคะ?', spoken: 'ìm à-rɔ̀i láaeo ná khá, ráp à-rai phôem mǎi khá?', meaning: 'All full and satisfied? Anything else?' }, user: { script: 'เก็บตังค์ด้วยค่ะ!', spoken: 'gèp dtang dûai khâ!', meaning: 'Check / bill please!' } },
+          { itemId: 'ST_scan_dai_mai', partner: { script: 'ทั้งหมดร้อยยี่สิบบาทค่ะ เงินสดหรือสแกนจ่ายสะดวกกว่ากันคะ?', spoken: 'tháng-mòt rɔ́ɔi yîi-sìp bàat khâ, ngən sòt rǒe sà-gaaen jàai sà-dùak gwàa gan khá?', meaning: '120 baht total! Is cash or QR scan more convenient?' }, user: { script: 'ขอสแกนพร้อมเพย์เลยค่ะ รบกวนเปิดคิวอาร์โค้ดให้หน่อยนะคะ', spoken: 'khɔ̌ɔ sà-gaaen phrɔ́ɔm-phee loei khâ, róp-guan bpə̀ət khiu-aa khôot hâi nɔ̀ɔi ná khá', meaning: 'PromptPay QR scan please, could you show me your QR code?' } }
+        ]
+      },
+      s2_n3: {
+        easier: [
+          { itemId: 'ST_wen_dai_mai', partner: { script: 'อุ่นร้อนไหมคะ?', spoken: 'ùn rɔ́ɔn mǎi khá?', meaning: 'Heat it up?' }, user: { script: 'เวฟได้ไหมคะ?', spoken: 'wéep dâi mǎi khá?', meaning: 'Can you microwave it, please?' } },
+          { itemId: 'ST_mai_ao_thung', partner: { script: 'รับถุงไหมคะ?', spoken: 'ráp thǔng mǎi khá?', meaning: 'Want a plastic bag?' }, user: { script: 'ไม่เอาถุงค่ะ', spoken: 'mâi ao thǔng khâ', meaning: 'No bag, thanks.' } }
+        ],
+        standard: [
+          { itemId: 'ST_wen_dai_mai', partner: { script: 'ขนมปังแฮมชีสอันนี้ รับเลยหรืออุ่นร้อนคะ?', spoken: 'khà-nǒm-bpang haaem-chiis an-níi, ráp loei rǒe ùn rɔ́ɔn khá?', meaning: 'This ham & cheese toastie — taking it cold or warming it up?' }, user: { script: 'เวฟได้ไหมคะ?', spoken: 'wéep dâi mǎi khá?', meaning: 'Can you microwave / heat it up, please?' } },
+          { itemId: 'ST_mii_hlort', partner: { script: 'น้ำอัดลมหนึ่งขวดนะคะ เอาอะไรเพิ่มไหมคะ?', spoken: 'nám-àt-lom nɯ̀ng khùat ná khá, ao à-rai phôem mǎi khá?', meaning: 'One bottle of soda too — do you need anything else with that?' }, user: { script: 'ขอหลอดด้วยค่ะ', spoken: 'khɔ̌ɔ lɔ̀ɔt dûai khâ', meaning: 'May I have a straw too, please.' } },
+          { itemId: 'ST_mai_ao_thung', partner: { script: 'ทั้งหมดสี่สิบห้าบาทค่ะ รับถุงไหมคะ?', spoken: 'tháng-mòt sìi-sìp-hâa bàat khâ, ráp thǔng mǎi khá?', meaning: 'Total is 45 baht — would you like a plastic bag?' }, user: { script: 'ไม่เอาถุงค่ะ', spoken: 'mâi ao thǔng khâ', meaning: 'No plastic bag, thanks.' } }
+        ],
+        harder: [
+          { itemId: 'ST_wen_dai_mai', partner: { script: 'แซนด์วิชแฮมชีสอันนี้ ให้อุ่นร้อนเลยไหมคะ?', spoken: 'saaen-wít haaem-chiis an-níi, hâi ùn rɔ́ɔn loei mǎi khá?', meaning: 'Should I heat up this ham & cheese sandwich?' }, user: { script: 'เวฟได้ไหมคะ? เอาแบบร้อนๆ เลยค่ะ', spoken: 'wéep dâi mǎi khá? ao bàaep rɔ́ɔn-rɔ́ɔn loei khâ', meaning: 'Can you microwave it please? Nice and hot!' } },
+          { itemId: 'ST_mii_hlort', partner: { script: 'รับช้อนหรือหลอดเพิ่มไหมคะ?', spoken: 'ráp chɔ́ɔn rǒe lɔ̀ɔt phôem mǎi khá?', meaning: 'Need a spoon or straw?' }, user: { script: 'มีหลอดไหมคะ ขอหลอดอันนึงค่ะ', spoken: 'mii lɔ̀ɔt mǎi khá, khɔ̌ɔ lɔ̀ɔt an nɯng khâ', meaning: 'Do you have a straw? One straw please.' } },
+          { itemId: 'ST_mai_ao_thung', partner: { script: 'ซื้อของสองชิ้น รับถุงพลาสติกเพิ่มไหมคะ?', spoken: 'sɯ́ɯ khɔ̌ɔng sɔ̌ɔng chín, ráp thǔng phláat-dtìk phôem mǎi khá?', meaning: 'Two items — would you like a plastic bag?' }, user: { script: 'ไม่รับถุงพลาสติกค่ะ ถือไปเองได้ ขอบคุณค่ะ', spoken: 'mâi ráp thǔng phláat-dtìk khâ, thɯ̌ɯ bpai eeng dâi, khɔ̀ɔp-khun khâ', meaning: 'No plastic bag please, I can carry them by hand, thank you.' } },
+          { itemId: 'ST_scan_dai_mai', isSpiral: true, partner: { script: 'ทั้งหมดหกสิบห้าบาทค่ะ จ่ายสดหรือสแกนคะ?', spoken: 'tháng-mòt hòk-sìp-hâa bàat khâ, jàai sòt rǒe sà-gaaen khá?', meaning: 'Total 65 baht — paying cash or scanning?' }, user: { script: 'สแกนได้ไหมคะ?', spoken: 'sà-gaaen dâi mǎi khá?', meaning: 'Can I scan QR to pay?' } }
+        ],
+        overdrive: [
+          { itemId: 'ST_wen_dai_mai', partner: { script: 'สวัสดีค่ะ มีข้าวกล่องกับขนมปัง ให้อุ่นร้อนทั้งสองอย่างเลยไหมคะ?', spoken: 'sà-wàt-dii khâ, mii khâao glɔ̀ng gàp khà-nǒm-bpang, hâi ùn rɔ́ɔn tháng sɔ̌ɔng yàang loei mǎi khá?', meaning: 'Hello! You have a rice box and toastie — heat both up?' }, user: { script: 'เวฟได้ไหมคะ แต่อุ่นแค่ขนมปังพอค่ะ', spoken: 'wéep dâi mǎi khá, dtàae ùn khâae khà-nǒm-bpang phɔɔ khâ', meaning: 'Can you microwave it please, just the toastie is enough!' } },
+          { itemId: 'ST_mii_hlort', partner: { script: 'รับซอสหรือหลอดเพิ่มด้วยไหมคะ?', spoken: 'ráp sɔ́ɔt rǒe lɔ̀ɔt phôem dûai mǎi khá?', meaning: 'Need extra sauce or a straw?' }, user: { script: 'ขอหลอดด้วยค่ะ ขอบคุณค่ะ', spoken: 'khɔ̌ɔ lɔ̀ɔt dûai khâ, khɔ̀ɔp-khun khâ', meaning: 'May I have a straw too, thank you.' } },
+          { itemId: 'ST_mai_ao_thung', partner: { script: 'ทั้งหมดเจ็ดสิบบาทค่ะ มีถุงผ้ามาไหม รับถุงเพิ่มหนึ่งบาทไหมคะ?', spoken: 'tháng-mòt jèt-sìp bàat khâ, mii thǔng phâa maa mǎi, ráp thǔng phôem nɯ̀ng bàat mǎi khá?', meaning: 'Total 70 baht — did you bring a cloth bag, or buy a bag for 1 baht?' }, user: { script: 'ไม่เอาถุงค่ะ มีถุงผ้ามาเองแล้ว', spoken: 'mâi ao thǔng khâ, mii thǔng phâa maa eeng láaeo', meaning: 'No bag thanks, I brought my own tote bag!' } },
+          { itemId: 'ST_scan_dai_mai', isSpiral: true, partner: { script: 'จ่ายเงินสดหรือสแกนพร้อมเพย์คะ?', spoken: 'jàai ngən sòt rǒe sà-gaaen phrɔ́ɔm-phee khá?', meaning: 'Paying cash or PromptPay scan?' }, user: { script: 'สแกนจ่ายได้เลยนะคะ', spoken: 'sà-gaaen jàai dâi loei ná khá', meaning: 'Can I QR-scan right away?' } }
+        ]
+      },
+      s3_n1: {
+        easier: [
+          { itemId: 'ST_phii_driver', partner: { script: 'ไปไหนครับ?', spoken: 'bpai nǎi kháp?', meaning: 'Where to?' }, user: { script: 'พี่คะ ไปสุขุมวิทค่ะ', spoken: 'phîi khá, bpai sù-khǔm-wít khâ', meaning: 'Driver, to Sukhumvit please.' } },
+          { itemId: 'ST_poet_meter', partner: { script: 'ขึ้นมาเลยครับ', spoken: 'khɯ̂n maa loei kháp', meaning: 'Hop right in!' }, user: { script: 'เปิดมิเตอร์ด้วยค่ะ', spoken: 'bpə̀ət mí-dtə̂ə dûai khâ', meaning: 'Turn on the meter please.' } }
+        ],
+        standard: [
+          { itemId: 'ST_phii_driver', partner: { script: 'สวัสดีครับ ไปส่งที่ไหนดีครับ?', spoken: 'sà-wàt-dii kháp, bpai sòng thîi-nǎi dii kháp?', meaning: 'Hello! Where can I take you today?' }, user: { script: 'พี่คะ ไปสุขุมวิทค่ะ', spoken: 'phîi khá, bpai sù-khǔm-wít khâ', meaning: 'Excuse me driver, to Sukhumvit please.' } },
+          { itemId: 'ST_poet_meter', partner: { script: 'ได้ครับผม ขึ้นมาเลยครับ', spoken: 'dâi kháp phǒm, khɯ̂n maa loei kháp', meaning: 'Sure thing! Hop right in.' }, user: { script: 'รบกวนเปิดมิเตอร์ด้วยนะคะ', spoken: 'róp-guan bpə̀ət mí-dtə̂ə dûai ná khá', meaning: 'Please turn on the meter, driver.' } }
+        ],
+        harder: [
+          { itemId: 'ST_phii_driver', partner: { script: 'สวัสดีครับพี่ วันนี้จะไปส่งแถวไหนดีครับ?', spoken: 'sà-wàt-dii kháp phîi, wan-níi jà bpai sòng thǎaeo nǎi dii kháp?', meaning: 'Hello! Where should I drive you today?' }, user: { script: 'พี่คะ ไปสุขุมวิทซอยสิบเอ็ด เข้าไปส่งหน้าโรงแรมได้เลยค่ะ', spoken: 'phîi khá, bpai sù-khǔm-wít sɔɔi sìp-èt, khâo bpai sòng nâa roong-raaem dâi loei khâ', meaning: 'Driver, Sukhumvit Soi 11 please — you can drop me right in front of the hotel.' } },
+          { itemId: 'ST_poet_meter', partner: { script: 'สุขุมวิทรถติดหน่อยนะพี่ ไปได้ครับ', spoken: 'sù-khǔm-wít rót dtìt nɔ̀ɔi ná phîi, bpai dâi kháp', meaning: 'Sukhumvit traffic is a bit heavy, but I can go!' }, user: { script: 'ได้ค่ะ รบกวนกดมิเตอร์ด้วยนะคะ ขอบคุณค่ะ', spoken: 'dâi khâ, róp-guan gòt mí-dtə̂ə dûai ná khá, khɔ̀ɔp-khun khâ', meaning: 'Sure! Please run the meter, thank you!' } },
+          { itemId: 'ST_scan_dai_mai', isSpiral: true, partner: { script: 'ถึงแล้วจ่ายเงินสดหรือโอนสแกนก็ได้นะครับ', spoken: 'thǔeng láaeo jàai ngən sòt rǒe oon sà-gaaen gɔ̂ɔ dâi ná kháp', meaning: 'When we arrive, cash or QR transfer are both fine!' }, user: { script: 'สแกนได้ไหมคะ? สะดวกดีค่ะ', spoken: 'sà-gaaen dâi mǎi khá? sà-dùak dii khâ', meaning: 'Can I scan QR? That is super convenient.' } }
+        ],
+        overdrive: [
+          { itemId: 'ST_phii_driver', partner: { script: 'สวัสดีครับ ขึ้นมาเลยครับ วันนี้รีบไหม จะไปส่งแถวไหนดีครับ?', spoken: 'sà-wàt-dii kháp, khɯ̂n maa loei kháp, wan-níi rîip mǎi, jà bpai sòng thǎaeo nǎi dii kháp?', meaning: 'Hello, hop right in! In a rush today — where are we heading?' }, user: { script: 'พี่คะ ไปสุขุมวิทซอยยี่สิบสาม ขึ้นทางด่วนได้เลยนะคะ เดี๋ยวออกค่าทางด่วนเองค่ะ', spoken: 'phîi khá, bpai sù-khǔm-wít sɔɔi yîi-sìp-sǎam, khɯ̂n thaang-dùan dâi loei ná khá, dǐao ɔ̀ɔk khâa thaang-dùan eeng khâ', meaning: 'Driver, Sukhumvit Soi 23 please — take the expressway, I will pay the toll!' } },
+          { itemId: 'ST_poet_meter', partner: { script: 'ไปสุขุมวิทซอยยี่สิบสามนะครับ ออกรถเลยนะพี่', spoken: 'bpai sù-khǔm-wít sɔɔi yîi-sìp-sǎam ná kháp, ɔ̀ɔk rót loei ná phîi', meaning: 'Sukhumvit Soi 23, got it — pulling out now!' }, user: { script: 'ขอบคุณค่ะพี่ รบกวนเปิดมิเตอร์ด้วยนะคะ', spoken: 'khɔ̀ɔp-khun khâ phîi, róp-guan bpə̀ət mí-dtə̂ə dûai ná khá', meaning: 'Thank you driver! Please turn on the meter.' } },
+          { itemId: 'ST_thao_rai', isSpiral: true, partner: { script: 'ถึงด่านทางด่วนข้างหน้าแล้วนะครับพี่', spoken: 'thǔeng dàan thaang-dùan khâang-nâa láaeo ná kháp phîi', meaning: 'Coming up to the expressway toll booth ahead!' }, user: { script: 'ค่าทางด่วนเท่าไหร่คะ?', spoken: 'khâa thaang-dùan thâo-lài khá?', meaning: 'How much is the toll?' } }
+        ]
+      },
+      s3_n2: {
+        easier: [
+          { itemId: 'ST_trong_bpai', partner: { script: 'ตรงไปไหมครับ?', spoken: 'drong bpai mǎi kháp?', meaning: 'Go straight?' }, user: { script: 'ตรงไปค่ะ', spoken: 'drong bpai khâ', meaning: 'Keep going straight ahead.' } },
+          { itemId: 'ST_liao_sai', partner: { script: 'เลี้ยวซ้ายไหมครับ?', spoken: 'líao sáai mǎi kháp?', meaning: 'Turn left?' }, user: { script: 'เลี้ยวซ้ายค่ะ', spoken: 'líao sáai khâ', meaning: 'Turn left, please.' } }
+        ],
+        standard: [
+          { itemId: 'ST_trong_bpai', partner: { script: 'พี่ครับ แยกนี้ตรงไปหรือเลี้ยวซ้ายครับ?', spoken: 'phîi kháp, yâaek níi drong bpai rǒe líao sáai kháp?', meaning: 'Excuse me, go straight or turn left at this intersection?' }, user: { script: 'ตรงไปค่ะ', spoken: 'drong bpai khâ', meaning: 'Keep going straight ahead.' } },
+          { itemId: 'ST_liao_sai', partner: { script: 'ข้างหน้าเลี้ยวซ้ายหรือเลี้ยวขวาครับ?', spoken: 'khâang-nâa líao sáai rǒe líao khwǎa kháp?', meaning: 'Up ahead, turn left or turn right?' }, user: { script: 'เลี้ยวซ้ายค่ะ', spoken: 'líao sáai khâ', meaning: 'Turn left, please.' } },
+          { itemId: 'ST_liao_kwaa', partner: { script: 'พ้นซอยนี้แล้ว ตรงไปหรือเลี้ยวขวาครับ?', spoken: 'phón sɔɔi níi láaeo, drong bpai rǒe líao khwǎa kháp?', meaning: 'Past this alley, go straight or turn right?' }, user: { script: 'เลี้ยวขวาค่ะ', spoken: 'líao khwǎa khâ', meaning: 'Turn right, please.' } }
+        ],
+        harder: [
+          { itemId: 'ST_trong_bpai', partner: { script: 'ถึงแยกไฟแดงแล้ว ไปทางไหนต่อครับ?', spoken: 'thǔeng yâaek fai-daaeng láaeo, bpai thaang nǎi dtɔ̀ɔ kháp?', meaning: 'We reached the traffic light intersection — which way next?' }, user: { script: 'ตรงไปค่ะ ผ่านไฟแดงไปเลยค่ะ', spoken: 'drong bpai khâ, phàan fai-daaeng bpai loei khâ', meaning: 'Keep going straight ahead, right past the light.' } },
+          { itemId: 'ST_liao_sai', partner: { script: 'ข้างหน้านี้ เลี้ยวซ้ายหรือเลี้ยวขวาครับ?', spoken: 'khâang-nâa níi, líao sáai rǒe líao khwǎa kháp?', meaning: 'Up ahead here, do I turn left or turn right?' }, user: { script: 'เลี้ยวซ้ายค่ะ เข้าเลนซ้ายได้เลย', spoken: 'líao sáai khâ, khâo leen sáai dâi loei', meaning: 'Turn left please, you can get in the left lane.' } },
+          { itemId: 'ST_liao_kwaa', partner: { script: 'พ้นสะพานนี้แล้ว ไปทางไหนครับ?', spoken: 'phón sà-phaan níi láaeo, bpai thaang nǎi kháp?', meaning: 'After passing this bridge, which way do I go?' }, user: { script: 'เลี้ยวขวาค่ะ', spoken: 'líao khwǎa khâ', meaning: 'Turn right, please.' } },
+          { itemId: 'ST_trong_bpai', partner: { script: 'เลี้ยวขวาแล้ว ตรงไปสุดทางเลยใช่ไหมครับ?', spoken: 'líao khwǎa láaeo, drong bpai sùt thaang loei châi mǎi kháp?', meaning: 'After turning right, go straight to the end?' }, user: { script: 'ใช่ค่ะ ตรงไปอีกหน่อยค่ะ', spoken: 'châi khâ, drong bpai ìik nɔ̀ɔi khâ', meaning: 'Yes, keep going straight a bit more.' } }
+        ],
+        overdrive: [
+          { itemId: 'ST_trong_bpai', partner: { script: 'ถึงแยกอโศกแล้วครับพี่ ตรงไปหรือเลี้ยวดี?', spoken: 'thǔeng yâaek à-sòok láaeo kháp phîi, drong bpai rǒe líao dii?', meaning: 'Reached Asok intersection! Go straight or turn?' }, user: { script: 'ตรงไปก่อนค่ะ เดี๋ยวค่อยเลี้ยวแยกหน้า', spoken: 'drong bpai gɔ̀ɔn khâ, dǐao khɔ̂i líao yâaek nâa', meaning: 'Keep going straight first, we will turn at the next intersection.' } },
+          { itemId: 'ST_liao_sai', partner: { script: 'แยกหน้านี้แล้วนะครับ เลี้ยวซ้ายเข้าซอยเลยไหมครับ?', spoken: 'yâaek nâa níi láaeo ná kháp, líao sáai khâo sɔɔi loei mǎi kháp?', meaning: 'Here is the next intersection — turn left into the street?' }, user: { script: 'เลี้ยวซ้ายเลยค่ะ', spoken: 'líao sáai loei khâ', meaning: 'Turn left right here please!' } },
+          { itemId: 'ST_liao_kwaa', partner: { script: 'พอพ้นโค้งนี้ไปแล้ว ไปทางไหนต่อครับพี่?', spoken: 'phɔɔ phón khóong níi bpai láaeo, bpai thaang nǎi dtɔ̀ɔ kháp phîi?', meaning: 'Once past this curve, which way next?' }, user: { script: 'เลี้ยวขวาค่ะ ระวังมอเตอร์ไซค์ด้วยนะคะ', spoken: 'líao khwǎa khâ, rá-wang mɔɔ-dtəə-sai dûai ná khá', meaning: 'Turn right please, watch out for motorbikes!' } },
+          { itemId: 'ST_trong_bpai', partner: { script: 'โอเคครับ ตรงไปตามทางนี้เลยนะ?', spoken: 'oo-khee kháp, drong bpai dtaam thaang níi loei ná?', meaning: 'Okay, straight along this road now?' }, user: { script: 'ใช่ค่ะ ตรงไปอีกนิดเดียวก็ถึงแล้วค่ะ', spoken: 'châi khâ, drong bpai ìik nít diao gɔ̂ɔ thǔeng láaeo khâ', meaning: 'Yes, just a little bit straight and we are there!' } }
+        ]
+      },
+      s3_n3: {
+        easier: [
+          { itemId: 'ST_soi_nii', partner: { script: 'ซอยนี้ไหมครับ?', spoken: 'sɔɔi níi mǎi kháp?', meaning: 'This alley?' }, user: { script: 'เข้าซอยนี้ค่ะ', spoken: 'khâo sɔɔi níi khâ', meaning: 'Turn into this alley, please.' } },
+          { itemId: 'ST_yut_trong_nii', partner: { script: 'จอดตรงไหนครับ?', spoken: 'jɔ̀ɔt dtrong nǎi kháp?', meaning: 'Stop where?' }, user: { script: 'จอดตรงนี้ค่ะ', spoken: 'jɔ̀ɔt dtrong níi khâ', meaning: 'Stop right here.' } }
+        ],
+        standard: [
+          { itemId: 'ST_soi_nii', partner: { script: 'พี่ครับ ซอยนี้ใช่ไหมครับ?', spoken: 'phîi kháp, sɔɔi níi châi mǎi kháp?', meaning: 'Excuse me, is it this alley (soi)?' }, user: { script: 'เข้าซอยนี้ค่ะ', spoken: 'khâo sɔɔi níi khâ', meaning: 'Turn into this alley (soi), please.' } },
+          { itemId: 'ST_khaang_naa', partner: { script: 'จอดหน้าประตูนี้ หรือเลยไปอีกหน่อยครับ?', spoken: 'jɔ̀ɔt nâa bprà-dtuu níi, rǒe loei bpai ìik nɔ̀ɔi kháp?', meaning: 'Stop at this gate or a little further ahead?' }, user: { script: 'จอดข้างหน้าค่ะ', spoken: 'jɔ̀ɔt khâang-nâa khâ', meaning: 'Stop just up ahead.' } },
+          { itemId: 'ST_yut_trong_nii', partner: { script: 'ใกล้ถึงหมุดแล้ว จอดตรงนี้เลยไหมครับ?', spoken: 'glâi thǔeng mùt láaeo, jɔ̀ɔt dtrong níi loei mǎi kháp?', meaning: 'Almost at the pin — pull over right here?' }, user: { script: 'จอดตรงนี้ค่ะ', spoken: 'jɔ̀ɔt dtrong níi khâ', meaning: 'Pull over right here, please.' } },
+          { itemId: 'ST_song_thii_nii', partner: { script: 'ด้านหน้ารถติดมาก ส่งที่นี่สะดวกไหมครับ?', spoken: 'dâan-nâa rót dtìt mâak, sòng thîi-nîi sà-dùak mǎi kháp?', meaning: 'Traffic ahead is jammed — is it convenient if I drop you here?' }, user: { script: 'ส่งที่นี่ค่ะ', spoken: 'sòng thîi-nîi khâ', meaning: 'Drop me off right here, please.' } }
+        ],
+        harder: [
+          { itemId: 'ST_soi_nii', partner: { script: 'ซอยไหนครับพี่ ซอยนี้ใช่ไหม?', spoken: 'sɔɔi nǎi kháp phîi, sɔɔi níi châi mǎi?', meaning: 'Which side-street (soi) — is it this alley right here?' }, user: { script: 'เข้าซอยนี้เลยค่ะ', spoken: 'khâo sɔɔi níi loei khâ', meaning: 'Turn right into this alley (soi), please.' } },
+          { itemId: 'ST_khaang_naa', partner: { script: 'จอดหน้าตึกนี้ หรือไปอีกหน่อยครับ?', spoken: 'jɔ̀ɔt nâa dtɯ̀k níi rǒe bpai ìik nɔ̀ɔi kháp?', meaning: 'Stop in front of this building or a little further up?' }, user: { script: 'เลยไปจอดข้างหน้าอีกนิดค่ะ', spoken: 'loei bpai jɔ̀ɔt khâang-nâa ìik nít khâ', meaning: 'Go a bit further and stop up ahead.' } },
+          { itemId: 'ST_yut_trong_nii', partner: { script: 'ถึงบริเวณนี้แล้ว สะดวกให้จอดชิดซ้ายตรงไหนครับ?', spoken: 'thǔeng bɔɔ-rí-ween níi láaeo, sà-dùak hâi jɔ̀ɔt chít sáai dtrong nǎi kháp?', meaning: 'Arrived in this area — where is convenient to pull over on the left?' }, user: { script: 'จอดตรงนี้ได้เลยค่ะ ชิดฟุตบาทตรงนี้เลยค่ะ', spoken: 'jɔ̀ɔt dtrong níi dâi loei khâ, chít fút-bàat dtrong níi loei khâ', meaning: 'Pull over right here please, right up to the curb here.' } },
+          { itemId: 'ST_song_thii_nii', partner: { script: 'ส่งตรงหน้าเซเว่นนี้เลยนะครับ?', spoken: 'sòng dtrong nâa see-wêen níi loei ná kháp?', meaning: 'Dropping you off right in front of this 7-Eleven, okay?' }, user: { script: 'ส่งที่นี่เลยค่ะ ขอบคุณค่ะ', spoken: 'sòng thîi-nîi loei khâ, khɔ̀ɔp-khun khâ', meaning: 'Drop me off right here, thank you!' } }
+        ],
+        overdrive: [
+          { itemId: 'ST_soi_nii', partner: { script: 'ใกล้ถึงซอยแล้วนะครับ ซอยนี้ทางซ้ายใช่ไหม?', spoken: 'glâi thǔeng sɔɔi láaeo ná kháp, sɔɔi níi thaang sáai châi mǎi?', meaning: 'Almost at the soi — this alley on the left, right?' }, user: { script: 'ใช่ค่ะ เข้าซอยนี้ได้เลยค่ะ', spoken: 'châi khâ, khâo sɔɔi níi dâi loei khâ', meaning: 'Yes, turn into this alley right here!' } },
+          { itemId: 'ST_khaang_naa', partner: { script: 'ข้างหน้ามีป้ายรถเมล์กับหน้าคอนโด จอดตรงป้ายหรือเลยไปข้างหน้าครับ?', spoken: 'khâang-nâa mii bpâai rót-mee gàp nâa khɔn-doo, jɔ̀ɔt dtrong bpâai rǒe loei bpai khâang-nâa kháp?', meaning: 'Ahead is a bus stop and condo front — stop at the bus stop or further ahead?' }, user: { script: 'เลยป้ายรถเมล์ไปจอดข้างหน้าค่ะ', spoken: 'loei bpâai rót-mee bpai jɔ̀ɔt khâang-nâa khâ', meaning: 'Pass the bus stop and pull over up ahead!' } },
+          { itemId: 'ST_yut_trong_nii', partner: { script: 'หน้าคอนโดแล้วครับ จอดชิดซ้ายตรงนี้เลยไหม?', spoken: 'nâa khɔn-doo láaeo kháp, jɔ̀ɔt chít sáai dtrong níi loei mǎi?', meaning: 'In front of the condo now — pull over on the left right here?' }, user: { script: 'จอดตรงนี้เลยค่ะพี่ ชิดซ้ายหน้าตึกได้เลยค่ะ', spoken: 'jɔ̀ɔt dtrong níi loei khâ phîi, chít sáai nâa dtɯ̀k dâi loei khâ', meaning: 'Stop right here driver, pull left in front of the building!' } },
+          { itemId: 'ST_song_thii_nii', partner: { script: 'ตรงนี้จอดปลอดภัยเลยครับ ส่งที่นี่นะครับ?', spoken: 'dtrong níi jɔ̀ɔt bplɔ̀ɔt-phai loei kháp, sòng thîi-nîi ná kháp?', meaning: 'Safe to stop right here — dropping you off here?' }, user: { script: 'ส่งที่นี่ค่ะ ขอบคุณมากค่ะ', spoken: 'sòng thîi-nîi khâ, khɔ̀ɔp-khun mâak khâ', meaning: 'Drop me off right here, thank you very much!' } },
+          { itemId: 'ST_scan_dai_mai', isSpiral: true, partner: { script: 'มิเตอร์แปดสิบห้าบาทครับ จ่ายสดหรือสแกนครับ?', spoken: 'mí-dtə̂ə bpàaet-sìp-hâa bàat kháp, jàai sòt rǒe sà-gaaen kháp?', meaning: 'Meter is 85 baht — cash or QR scan?' }, user: { script: 'สแกนได้ไหมคะ?', spoken: 'sà-gaaen dâi mǎi khá?', meaning: 'Can I scan QR to pay?' } }
+        ]
+      },
+      s4_n1: {
+        easier: [
+          { itemId: 'ST_arai', partner: { script: 'หิวแล้ว กินข้าวกันไหม?', spoken: 'hǐu láaeo, gin khâao gan mǎi?', meaning: "I'm hungry — want to grab food?" }, user: { script: 'กินอะไรดีคับ?', spoken: 'gin à-lai dii kháp?', meaning: 'What should we eat?' } },
+          { itemId: 'ST_aroi_aloi', partner: { script: 'ส้มตำร้านนี้อร่อยไหม?', spoken: 'sôm-dtam ráan níi à-lɔ̀i mǎi?', meaning: 'Is this shop’s papaya salad delicious?' }, user: { script: 'อร่อยมากคับ!', spoken: 'à-lɔ̀i mâak kháp!', meaning: 'Super delicious!' } }
+        ],
+        standard: [
+          { itemId: 'ST_arai', partner: { script: 'เที่ยงนี้หิวมากเลย ไปกินข้าวกันเถอะ!', spoken: 'thîang níi hǐu mâak loei, bpai gin khâao gan thə̀!', meaning: "I'm starving this noon — let's go eat!" }, user: { script: 'วันนี้กินอะไรดีคับ?', spoken: 'wan-níi gin à-lai dii kháp?', meaning: 'What should we eat today?' } },
+          { itemId: 'ST_khrap', partner: { script: 'ไปกินก๋วยเตี๋ยวร้านปากซอยกันไหม เดี๋ยวเราสั่งให้นะ?', spoken: 'bpai gin gǔai-dtǐao ráan bpàak sɔɔi gan mǎi, dǐao rao sàng hâi ná?', meaning: "Let's eat at the noodle shop at the alley mouth — I'll order for us, okay?" }, user: { script: 'ได้เลยคับ ขอบคุณคับ!', spoken: 'dâi loei kháp, khɔ̀ɔp-khun kháp!', meaning: 'Sounds good, thank you!' } },
+          { itemId: 'ST_aroi_aloi', partner: { script: 'ชิมดูสิคะ น้ำซุปร้านนี้อะหล่อยไหม?', spoken: 'chim duu sì khá, nám-súp ráan níi à-lɔ̀i mǎi?', meaning: 'Taste it! Is the broth here delicious (à-lòi)?' }, user: { script: 'อร่อยมากคับ!', spoken: 'à-lɔ̀i mâak kháp!', meaning: 'Super delicious!' } }
+        ],
+        harder: [
+          { itemId: 'ST_arai', partner: { script: 'เมื่อกี้เสียงดังมาก เธอพูดว่าอะไรนะ?', spoken: 'mɯ̂a-gíi sǐang dang mâak, thoe phûut wâa à-rai ná?', meaning: 'It was so loud just now — what did you say?' }, user: { script: 'ถามว่ากินอะไรดีคับ!', spoken: 'thǎam wâa gin à-lai dii kháp!', meaning: 'I asked what we should eat!' } },
+          { itemId: 'ST_khrap', partner: { script: 'งั้นเอาข้าวเหนียวมะม่วงมาแบ่งกันอีกจานนะ?', spoken: 'ngán ao khâao-nǐao má-mûang maa bàaeng gan ìik jaan ná?', meaning: "Then let's get a mango sticky rice to share too?" }, user: { script: 'เอาเลยคับ ขอบคุณคับ!', spoken: 'ao loei kháp, khɔ̀ɔp-khun kháp!', meaning: 'Yes, let’s get it, thank you!' } },
+          { itemId: 'ST_aroi_aloi', partner: { script: 'ชิมดูสิคะ มะม่วงหวานไหม อะหล่อยไหม?', spoken: 'chim duu sì khá, má-mûang wǎan mǎi, à-lɔ̀i mǎi?', meaning: 'Have a taste! Is the mango sweet — is it delicious (à-lòi)?' }, user: { script: 'อร่อยมากคับ หวานฉ่ำเลย!', spoken: 'à-lɔ̀i mâak kháp, wǎan chàm loei!', meaning: 'Super delicious, so sweet and juicy!' } },
+          { itemId: 'ST_mai_ao_thung', isSpiral: true, partner: { script: 'ซื้อผลไม้กลับด้วย เอาถุงพลาสติกไหมคะ?', spoken: 'sɯ́ɯ phǒn-lá-mái glàp dûai, ao thǔng phláat-dtìk mǎi khá?', meaning: 'Buying fruit to take back — want a plastic bag?' }, user: { script: 'ไม่เอาถุงคับ ถือไปเองได้!', spoken: 'mâi ao thǔng kháp, thɯ̌ɯ bpai eeng dâi!', meaning: 'No bag thanks, I can carry it!' } }
+        ],
+        overdrive: [
+          { itemId: 'ST_arai', partner: { script: 'เมื่อกี้รถวิ่งผ่านเสียงดังมาก เธอพูดว่าอะไรนะ?', spoken: 'mɯ̂a-gíi rót wîng phàan sǐang dang mâak, thoe phûut wâa à-rai ná?', meaning: 'A car just drove by so loud — what did you say?' }, user: { script: 'เราถามว่าเที่ยงนี้กินอะไรดีคับ!', spoken: 'rao thǎam wâa thîang níi gin à-lai dii kháp!', meaning: 'I asked what we should eat this noon!' } },
+          { itemId: 'ST_khrap', partner: { script: 'ร้านข้างๆ มีผัดไทยเจ้าดังด้วย เดี๋ยวเราเดินไปสั่งให้เลยนะ?', spoken: 'ráan khâang-khâang mii phàt-thai jâo dang dûai, dǐao rao doen bpai sàng hâi loei ná?', meaning: 'The stall next door has famous pad thai — I will walk over and order for us?' }, user: { script: 'รบกวนด้วยคับ ขอบคุณมากคับ!', spoken: 'róp-guan dûai kháp, khɔ̀ɔp-khun mâak kháp!', meaning: 'Please do, thank you so much!' } },
+          { itemId: 'ST_aroi_aloi', partner: { script: 'ได้มาแล้ว ลองชิมดูสิ อะหล่อยเหมือนที่เขารีวิวไหม?', spoken: 'dâi maa láaeo, lɔɔng chim duu sì, à-lɔ̀i mǔean thîi khǎo rii-wiu mǎi?', meaning: 'Got it! Try a bite — is it as delicious as the reviews?' }, user: { script: 'อร่อยมากคับ สมคำร่ำลือเลย!', spoken: 'à-lɔ̀i mâak kháp, sǒm kham râm-lɯɯ loei!', meaning: 'Super delicious, totally lives up to the hype!' } },
+          { itemId: 'ST_scan_dai_mai', isSpiral: true, partner: { script: 'เดี๋ยวเราสแกนจ่ายให้ก่อน แล้วค่อยโอนคืนนะ?', spoken: 'dǐao rao sà-gaaen jàai hâi gɔ̀ɔn, láaeo khɔ̂i oon khɯɯn ná?', meaning: "I'll scan and pay first, then you can transfer me back?" }, user: { script: 'ได้เลยคับ เดี๋ยวโอนให้คับ!', spoken: 'dâi loei kháp, dǐao oon hâi kháp!', meaning: 'Sounds good, I will transfer you right away!' } }
+        ]
+      },
+      s4_n2: {
+        easier: [
+          { itemId: 'ST_reu_plao', partner: { script: 'เลิกงานแล้ว เบื่อจัง!', spoken: 'lôek ngaan láaeo, bɯ̀a jang!', meaning: 'Just finished work, so bored!' }, user: { script: 'ว่างเปล่า? ไปกินกัน!', spoken: 'wâang bpào? bpai gin gan!', meaning: 'Are you free or not? Let’s go eat!' } },
+          { itemId: 'ST_yang_nii', partner: { script: 'ซองนี้แกะยังไงอ่ะ?', spoken: 'sɔɔng níi gàe yang-ngai à?', meaning: 'How do you open this packet?' }, user: { script: 'ทำงี้สิ!', spoken: 'tham ngíi sì!', meaning: 'Do it like this!' } }
+        ],
+        standard: [
+          { itemId: 'ST_reu_plao', partner: { script: 'เราเพิ่งเสร็จธุระแถวนี้พอดีเลย!', spoken: 'rao phôeng sèt thú-rá thǎaeo níi phɔɔ-dii loei!', meaning: 'I just finished my errands around here!' }, user: { script: 'ว่างเปล่า? ไปกินกัน!', spoken: 'wâang bpào? bpai gin gan!', meaning: 'Are you free or not? Let’s go eat!' } },
+          { itemId: 'ST_yang_nii', partner: { script: 'อ้อ ซื้อขนมมาด้วย แกะซองไม่ออกเลย!', spoken: 'ɔ̂ɔ, sɯ́ɯ khà-nǒm maa dûai, gàe sɔɔng mâi ɔ̀ɔk loei!', meaning: 'Oh, I bought snacks too — I cannot get the packet open!' }, user: { script: 'ทำงี้สิ!', spoken: 'tham ngíi sì!', meaning: 'Do it like this!' } },
+          { itemId: 'ST_yang_nan', partner: { script: 'อ้าว ฝนตกแล้ว เดินไปตลาดไม่ได้!', spoken: 'âao, fǒn dtòk láaeo, doen bpai dtà-làat mâi dâi!', meaning: 'Oh no, it’s raining — we can’t walk to the market!' }, user: { script: 'งั้นเราไปคาเฟ่กันเลย!', spoken: 'ngán rao bpai khaa-fêe gan loei!', meaning: 'In that case, let’s go to the café right now!' } }
+        ],
+        harder: [
+          { itemId: 'ST_reu_plao', partner: { script: 'วันนี้เลิกงานเร็วกว่าปกติด้วยนะ!', spoken: 'wan-níi lôek ngaan reo gwàa bpòk-gà-dtì dûai ná!', meaning: 'Got off work earlier than usual today!' }, user: { script: 'ว่างเปล่า? ไปกินข้าวด้วยกัน!', spoken: 'wâang bpào? bpai gin khâao dûai gan!', meaning: 'Are you free or not? Let’s go eat together!' } },
+          { itemId: 'ST_yang_nii', partner: { script: 'แกะถุงน้ำจิ้มไม่ออก ต้องทำยังไงอ่ะ?', spoken: 'gàe thǔng nám-jîm mâi ɔ̀ɔk, dtɔ̂ng tham yang-ngai à?', meaning: 'I cannot open the dipping sauce bag — how do you do it?' }, user: { script: 'ทำงี้สิ! ดึงตรงมุมนี้!', spoken: 'tham ngíi sì! dɯng dtrong mum níi!', meaning: 'Do it like this! Pull right at this corner!' } },
+          { itemId: 'ST_aroi_aloi', isSpiral: true, partner: { script: 'ชิมดูสิ น้ำจิ้มร้านนี้อะหล่อยไหม?', spoken: 'chim duu sì, nám-jîm ráan níi à-lɔ̀i mǎi?', meaning: 'Taste it — is this shop’s dipping sauce delicious?' }, user: { script: 'อร่อยมากค่ะ!', spoken: 'à-lɔ̀i mâak khâ!', meaning: 'Super delicious!' } },
+          { itemId: 'ST_yang_nan', partner: { script: 'ฝนเริ่มตกหนักแล้ว เดินไปตลาดไม่ไหวแน่เลย!', spoken: 'fǒn rôem dtòk nàk láaeo, doen bpai dtà-làat mâi wǎi nâae loei!', meaning: 'It is starting to rain hard — we definitely cannot walk to the market!' }, user: { script: 'งั้นเราไปคาเฟ่กันเลย!', spoken: 'ngán rao bpai khaa-fêe gan loei!', meaning: 'In that case (งั้น), let’s go to the cafe right now!' } }
+        ],
+        overdrive: [
+          { itemId: 'ST_reu_plao', partner: { script: 'บ่ายนี้ไม่มีประชุมแล้ว สบายเลย!', spoken: 'bàai níi mâi mii bprà-chum láaeo, sà-baai loei!', meaning: 'No more meetings this afternoon — so chill!' }, user: { script: 'เย็นนี้ว่างเปล่า? ไปกินหมูกระทะกัน!', spoken: 'yen níi wâang bpào? bpai gin mǔu-grà-thá gan!', meaning: 'Free this evening or not? Let’s go get Thai BBQ!' } },
+          { itemId: 'ST_yang_nii', partner: { script: 'เตาย่างมันเปิดยังไงอ่ะ กดไม่ติดเลย!', spoken: 'dtao yâang man bpə̀ət yang-ngai à, gòt mâi dtìt loei!', meaning: 'How do you turn on this grill — it won’t ignite!' }, user: { script: 'ทำงี้สิ! กดค้างไว้สามวินาที!', spoken: 'tham ngíi sì! gòt kháang wái sǎam wí-naa-thii!', meaning: 'Do it like this! Hold it down for three seconds!' } },
+          { itemId: 'ST_aroi_aloi', isSpiral: true, partner: { script: 'หมูย่างสุกแล้ว อะหล่อยไหม?', spoken: 'mǔu yâang sùk láaeo, à-lɔ̀i mǎi?', meaning: 'The grilled pork is cooked — delicious?' }, user: { script: 'อร่อยมากค่ะ!', spoken: 'à-lɔ̀i mâak khâ!', meaning: 'Super delicious!' } },
+          { itemId: 'ST_yang_nan', partner: { script: 'ข้างนอกฝนตกหนักมาก กลับตอนนี้เปียกแน่เลย!', spoken: 'khâang-nɔ̂ɔk fǒn dtòk nàk mâak, glàp dtɔɔn-níi bpìak nâae loei!', meaning: 'Pouring outside — if we head back now we will get soaked!' }, user: { script: 'งั้นนั่งรอร้านกาแฟข้างๆ กันก่อนเลย!', spoken: 'ngán nâng rɔɔ ráan gaa-faae khâang-khâang gan gɔ̀ɔn loei!', meaning: 'In that case, let’s wait at the coffee shop next door first!' } }
+        ]
+      },
+      s4_n3: {
+        easier: [
+          { itemId: 'ST_baep_nueng', partner: { script: 'เสร็จหรือยัง?', spoken: 'sèt rǒe yang?', meaning: 'Ready yet?' }, user: { script: 'แป๊บนึงนะ!', spoken: 'bpáep-nɯng ná!', meaning: 'Just one second!' } },
+          { itemId: 'ST_tham_mai', partner: { script: 'วันนี้ไม่กินก๋วยเตี๋ยวนะ!', spoken: 'wan-níi mâi gin gǔai-dtǐao ná!', meaning: 'Not eating noodles today!' }, user: { script: 'ทำไมอ่ะ?', spoken: 'tham-mai à?', meaning: 'Why is that?' } }
+        ],
+        standard: [
+          { itemId: 'ST_baep_nueng', partner: { script: 'รถมาแล้ว เสร็จยัง?', spoken: 'rót maa láaeo, sèt yang?', meaning: 'The car is here — ready yet?' }, user: { script: 'แป๊บนึงนะ!', spoken: 'bpáep-nɯng ná!', meaning: 'Just one second!' } },
+          { itemId: 'ST_tham_mai', partner: { script: 'วันนี้ไม่กินก๋วยเตี๋ยวนะ!', spoken: 'wan-níi mâi gin gǔai-dtǐao ná!', meaning: 'Not eating noodles today!' }, user: { script: 'ทำไมอ่ะ?', spoken: 'tham-mai à?', meaning: 'Why is that?' } },
+          { itemId: 'ST_chai_pa', partner: { script: 'มีร้านกาแฟเปิดใหม่อยู่ปากซอยใช่ป่ะ?', spoken: 'mii ráan gaa-faae bpə̀ət mài yùu bpàak sɔɔi châi bpà?', meaning: 'There is a new coffee shop at the alley mouth, right?' }, user: { script: 'ใช่เลย! ไปดูกัน!', spoken: 'châi loei! bpai duu gan!', meaning: 'Right! Let’s go check it out!' } }
+        ],
+        harder: [
+          { itemId: 'ST_baep_nueng', partner: { script: 'รถแท็กซี่มาจอดรอหน้าคอนโดแล้ว เสร็จยัง?', spoken: 'rót tháek-sîi maa jɔ̀ɔt rɔɔ nâa khɔn-doo láaeo, sèt yang?', meaning: 'The taxi is waiting in front of the condo — are you ready yet?' }, user: { script: 'แป๊บนึงนะ! กำลังลงลิฟต์ไปค่ะ', spoken: 'bpáep-nɯng ná! gam-lang long líp bpai khâ', meaning: 'Just one second! Heading down the elevator now.' } },
+          { itemId: 'ST_tham_mai', partner: { script: 'วันนี้เราไม่กินก๋วยเตี๋ยวร้านนั้นนะ!', spoken: 'wan-níi rao mâi gin gǔai-dtǐao ráan nán ná!', meaning: 'Today we are not eating noodles at that shop!' }, user: { script: 'ทำไมอ่ะ? ร้านปิดเหรอ?', spoken: 'tham-mai à? ráan bpìt rǒe?', meaning: 'Why is that? Is the shop closed?' } },
+          { itemId: 'ST_chai_pa', partner: { script: 'ใช่ แล้วร้านกาแฟเปิดใหม่อยู่ปากซอยนี้ก็น่านั่งมาก!', spoken: 'châi, láaeo ráan gaa-faae bpə̀ət mài yùu bpàak sɔɔi níi gɔ̂ɔ nâa nâng mâak!', meaning: 'Yes, and the new coffee shop at the mouth of this alley looks great too!' }, user: { script: 'ใช่ป่ะ? ไปดูกัน!', spoken: 'châi bpà? bpai duu gan!', meaning: 'Right?! Let’s go check it out!' } },
+          { itemId: 'ST_yang_nan', isSpiral: true, partner: { script: 'ข้างนอกแดดร้อนมาก เดินไม่ไหวเลย!', spoken: 'khâang-nɔ̂ɔk dàaet rɔ́ɔn mâak, doen mâi wǎi loei!', meaning: 'It is blazing hot outside, cannot walk!' }, user: { script: 'งั้นนั่งแท็กซี่ไปเลย!', spoken: 'ngán nâng tháek-sîi bpai loei!', meaning: 'In that case, let’s just take a taxi!' } }
+        ],
+        overdrive: [
+          { itemId: 'ST_baep_nueng', partner: { script: 'แกร็บมาจอดรอหน้าตึกแล้วนะ เสร็จยัง?', spoken: 'gráaep maa jɔ̀ɔt rɔɔ nâa dtɯ̀k láaeo ná, sèt yang?', meaning: 'Grab is waiting out front — ready yet?' }, user: { script: 'แป๊บนึงนะ! ขอหยิบกระเป๋าแป๊บเดียวค่ะ', spoken: 'bpáep-nɯng ná! khɔ̌ɔ yìp grà-bpǎo bpáep diao khâ', meaning: 'Just one second! Let me grab my bag!' } },
+          { itemId: 'ST_tham_mai', partner: { script: 'วันนี้เราไม่ไปตลาดนัดแล้วนะ!', spoken: 'wan-níi rao mâi bpai dtà-làat nát láaeo ná!', meaning: 'We are not going to the night market today!' }, user: { script: 'ทำไมอ่ะ? เมื่อกี้ยังอยากไปอยู่เลย!', spoken: 'tham-mai à? mɯ̂a-gíi yang yàak bpai yùu loei!', meaning: 'Why is that? Just now you still wanted to go!' } },
+          { itemId: 'ST_chai_pa', partner: { script: 'เห็นเขาบอกว่าร้านเปิดใหม่ริมคลองบรรยากาศดีมาก!', spoken: 'hěn khǎo bɔ̀ɔk wâa ráan bpə̀ət mài rim khlɔɔng ban-yaa-gàat dii mâak!', meaning: 'Heard the new riverside shop has an amazing vibe!' }, user: { script: 'ใช่ป่ะ? ไปดูกันเลย!', spoken: 'châi bpà? bpai duu gan loei!', meaning: 'Right?! Let’s go check it out right now!' } },
+          { itemId: 'ST_yang_nan', isSpiral: true, partner: { script: 'ร้านนี้คนน้อย แอร์เย็นด้วย!', spoken: 'ráan níi khon nɔ́ɔi, aae yen dûai!', meaning: 'Not crowded here, and the AC is cold!' }, user: { script: 'งั้นนั่งร้านนี้แหละ!', spoken: 'ngán nâng ráan níi làe!', meaning: 'In that case, let’s sit right here!' } }
+        ]
+      },
+      s5_n1: {
+        easier: [
+          { itemId: 'ST_nia', partner: { script: 'วันนี้รถติดมากเนี่ย!', spoken: 'wan-níi rót dtìt mâak nîa!', meaning: 'Traffic is so jammed today!' }, user: { script: 'ร้อนมากเนี่ย!', spoken: 'rɔ́ɔn mâak nîa!', meaning: 'And it’s so hot right now!' } },
+          { itemId: 'ST_nor', partner: { script: 'ร้านนี้อร่อยเนาะ!', spoken: 'ráan níi à-rɔ̀i nɔ́ɔ!', meaning: 'This place is delicious, isn’t it!' }, user: { script: 'ดีเนาะ! ชอบมากเลย', spoken: 'dii nɔ́ɔ! chɔ̂ɔp mâak loei', meaning: 'So nice, right! Love it.' } }
+        ],
+        standard: [
+          { itemId: 'ST_nia', partner: { script: 'วันนี้รถติดมากเนี่ย!', spoken: 'wan-níi rót dtìt mâak nîa!', meaning: 'Traffic is so jammed today!' }, user: { script: 'ร้อนมากเนี่ย!', spoken: 'rɔ́ɔn mâak nîa!', meaning: 'And it’s so hot right now!' } },
+          { itemId: 'ST_a', partner: { script: 'งั้นแวะกินข้าวร้านข้างหน้ากันไหมอ่ะ?', spoken: 'ngán wáe gin khâao ráan khâang-nâa gan mǎi à?', meaning: 'Want to stop and eat at the shop ahead?' }, user: { script: 'ก็ดีอ่ะ ไปกัน!', spoken: 'gɔ̂ɔ dii à, bpai gan!', meaning: 'Sounds good, let’s go!' } },
+          { itemId: 'ST_nor', partner: { script: 'ร้านนี้อร่อยเนาะ!', spoken: 'ráan níi à-rɔ̀i nɔ́ɔ!', meaning: 'This shop is delicious, isn’t it!' }, user: { script: 'ดีเนาะ! ชอบมากเลย', spoken: 'dii nɔ́ɔ! chɔ̂ɔp mâak loei', meaning: 'So nice, right! Love it.' } }
+        ],
+        harder: [
+          { itemId: 'ST_nia', partner: { script: 'โอ้โห วันศุกร์สิ้นเดือน รถติดมากเนี่ย!', spoken: 'ôo-hǒo wan sùk sîn dɯan, rót dtìt mâak nîa!', meaning: 'Whoa, Friday at month-end — traffic is so jammed right here!' }, user: { script: 'ร้อนมากเนี่ย!', spoken: 'rɔ́ɔn mâak nîa!', meaning: 'And it is so hot right now too!' } },
+          { itemId: 'ST_a', partner: { script: 'เย็นนี้ไปเดินตลาดนัดรถไฟกันไหมอ่ะ?', spoken: 'yen níi bpai doen dtà-làat nát rót-fai gan mǎi à?', meaning: 'Want to walk around the Night Market this evening?' }, user: { script: 'ก็ดีอ่ะ ไปกัน!', spoken: 'gɔ̂ɔ dii à, bpai gan!', meaning: 'Sounds good, let’s go!' } },
+          { itemId: 'ST_nor', partner: { script: 'ลมเย็นดีจัง อาหารร้านนี้ก็อร่อยเนาะ!', spoken: 'lom yen dii jang, aa-hǎan ráan níi gɔ̂ɔ à-rɔ̀i nɔ́ɔ!', meaning: 'The breeze is so nice, and the food here is delicious, isn’t it!' }, user: { script: 'ดีเนาะ! ชอบมากเลย', spoken: 'dii nɔ́ɔ! chɔ̂ɔp mâak loei', meaning: 'So nice, right! I love it.' } },
+          { itemId: 'ST_chai_pa', isSpiral: true, partner: { script: 'คราวหน้าชวนเพื่อนมาอีกนะ!', spoken: 'khraao nâa chuan phɯ̂an maa ìik ná!', meaning: 'Next time let’s invite friends here again!' }, user: { script: 'ใช่ป่ะ? มาอีกแน่นอน!', spoken: 'châi bpà? maa ìik nâae-nɔɔn!', meaning: 'Right?! Definitely coming back!' } }
+        ],
+        overdrive: [
+          { itemId: 'ST_nia', partner: { script: 'โอ้โห วันศุกร์เย็น รถติดไม่ขยับเลยเนี่ย!', spoken: 'ôo-hǒo wan sùk yen, rót dtìt mâi khà-yàp loei nîa!', meaning: 'Whoa, Friday evening — traffic isn’t moving at all!' }, user: { script: 'แถมอากาศร้อนมากเนี่ย!', spoken: 'thǎaem aa-gàat rɔ́ɔn mâak nîa!', meaning: 'Plus it is super hot right now!' } },
+          { itemId: 'ST_a', partner: { script: 'ลงรถไฟฟ้าแล้วแวะตลาดนัดกันไหมอ่ะ?', spoken: 'long rót-fai-fáa láaeo wáe dtà-làat nát gan mǎi à?', meaning: 'Hop off the BTS and hit the night market?' }, user: { script: 'ก็ดีอ่ะ ไปกันเลย!', spoken: 'gɔ̂ɔ dii à, bpai gan loei!', meaning: 'Sounds good, let’s go right now!' } },
+          { itemId: 'ST_nor', partner: { script: 'เดินชิลๆ ลมเย็นดีจัง อาหารก็อร่อยเนาะ!', spoken: 'doen chil-chil lom yen dii jang, aa-hǎan gɔ̂ɔ à-rɔ̀i nɔ́ɔ!', meaning: 'Strolling around, breeze is nice, and the food is delicious, isn’t it!' }, user: { script: 'ดีเนาะ! ชอบมากเลย', spoken: 'dii nɔ́ɔ! chɔ̂ɔp mâak loei', meaning: 'So nice, right! I love it.' } },
+          { itemId: 'ST_yang_nan', isSpiral: true, partner: { script: 'ทุ่มนึงแล้ว คนเริ่มเยอะขึ้นเรื่อยๆ เลย!', spoken: 'thûm nɯng láaeo, khon rôem yóe khɯ̂n rɯ̂ai-rɯ̂ai loei!', meaning: 'It’s 7 PM already, getting more crowded!' }, user: { script: 'งั้นรีบไปซื้อขนมกันก่อนเลย!', spoken: 'ngán rîip bpai sɯ́ɯ khà-nǒm gan gɔ̀ɔn loei!', meaning: 'In that case, let’s hurry and buy snacks first!' } }
+        ]
+      },
+      s5_n2: {
+        easier: [
+          { itemId: 'ST_loei', partner: { script: 'ไปกันไหม?', spoken: 'bpai gan mǎi?', meaning: 'Shall we go?' }, user: { script: 'ไปเลย!', spoken: 'bpai loei!', meaning: 'Let’s go right now!' } },
+          { itemId: 'ST_roe', partner: { script: 'วันนี้ฟรีนะ!', spoken: 'wan-níi frii ná!', meaning: "Today it's free!" }, user: { script: 'จริงเหรอ?!', spoken: 'jing rǒe?!', meaning: 'Really?!' } }
+        ],
+        standard: [
+          { itemId: 'ST_loei', partner: { script: 'กินกันเลยไหม?', spoken: 'gin gan loei mǎi?', meaning: 'Should we eat right now?' }, user: { script: 'ไปเลย!', spoken: 'bpai loei!', meaning: 'Let’s go right now!' } },
+          { itemId: 'ST_roe', partner: { script: 'วันนี้ร้านก๋วยเตี๋ยวฟรีนะ!', spoken: 'wan-níi ráan gǔai-dtǐao frii ná!', meaning: 'Today the noodle shop is free!' }, user: { script: 'จริงเหรอ?!', spoken: 'jing rǒe?!', meaning: 'Really?!' } },
+          { itemId: 'ST_si', partner: { script: 'หมูอร่อยมาก กินไหม?', spoken: 'mǔu à-rɔ̀i mâak, gin mǎi?', meaning: 'The pork is super tasty — want some?' }, user: { script: 'กินสิ! เอาอันนึง', spoken: 'gin sì! ao an nɯng', meaning: 'Of course! Give me one.' } }
+        ],
+        harder: [
+          { itemId: 'ST_roe', partner: { script: 'รู้ยัง ร้านก๋วยเตี๋ยวเจ้าดังเขาแจกฟรีวันนี้วันเดียว!', spoken: 'rúu yang, ráan gǔai-dtǐao jâo dang khǎo jàaek frii wan-níi wan diao!', meaning: 'Did you hear? The famous noodle shop is giving free bowls today only!' }, user: { script: 'จริงเหรอ?!', spoken: 'jing rǒe?!', meaning: 'Really?! Is that so?!' } },
+          { itemId: 'ST_loei', partner: { script: 'โต๊ะว่างพอดีเลย เราเข้าไปนั่งกันไหม?', spoken: 'dtó wâang phɔɔ-dii loei, rao khâo bpai nâng gan mǎi?', meaning: 'A table just opened up — should we go sit down?' }, user: { script: 'ไปเลย!', spoken: 'bpai loei!', meaning: 'Let’s go right now!' } },
+          { itemId: 'ST_si', partner: { script: 'หมูปิ้งร้อนๆ หอมมากเลย ลองชิมไม้หนึ่งไหม?', spoken: 'mǔu-bpîng rɔ́ɔn-rɔ́ɔn hɔ̌ɔm mâak loei, lɔɔng chim mái nɯ̀ng mǎi?', meaning: 'These hot grilled pork skewers smell amazing — want to try one?' }, user: { script: 'กินสิ! เอาไม้หนึ่ง', spoken: 'gin sì! ao mái nɯ̀ng', meaning: 'Of course I’ll eat it! Give me one skewer.' } },
+          { itemId: 'ST_nor', isSpiral: true, partner: { script: 'ร้านนี้อร่อยเนาะ!', spoken: 'ráan níi à-rɔ̀i nɔ́ɔ!', meaning: 'This place is delicious, isn’t it!' }, user: { script: 'ดีเนาะ! ชอบมากเลย', spoken: 'dii nɔ́ɔ! chɔ̂ɔp mâak loei', meaning: 'So nice, right! Love it.' } }
+        ],
+        overdrive: [
+          { itemId: 'ST_roe', partner: { script: 'รู้ยัง ร้านก๋วยเตี๋ยวเจ้าดังเปิดสาขาใหม่ แจกฟรีวันนี้วันเดียว!', spoken: 'rúu yang, ráan gǔai-dtǐao jâo dang bpə̀ət sǎa-khǎa mài, jàaek frii wan-níi wan diao!', meaning: 'Did you hear? The famous noodle shop opened a new branch and is giving free bowls today only!' }, user: { script: 'จริงเหรอ?! ไม่น่าเชื่อเลย!', spoken: 'jing rǒe?! mâi nâa chɯ̂a loei!', meaning: 'Really?! Hard to believe!' } },
+          { itemId: 'ST_loei', partner: { script: 'คิวยังไม่ยาว โต๊ะว่างพอดี รีบเข้าไปนั่งกันไหม?', spoken: 'khiu yang mâi yaao, dtó wâang phɔɔ-dii, rîip khâo bpai nâng gan mǎi?', meaning: 'Line isn’t long yet and a table is open — hurry and sit down?' }, user: { script: 'ไปเลย! เดี๋ยวโต๊ะเต็ม!', spoken: 'bpai loei! dǐao dtó dtem!', meaning: 'Let’s go right now before tables fill up!' } },
+          { itemId: 'ST_si', partner: { script: 'หมูปิ้งเตาถ่านหอมมากเลย ชิมสักไม้ไหม?', spoken: 'mǔu-bpîng dtao thàan hɔ̌ɔm mâak loei, chim sàk mái mǎi?', meaning: 'Charcoal-grilled pork smells amazing — try a skewer?' }, user: { script: 'กินสิ! เอาไม้หนึ่งเลย', spoken: 'gin sì! ao mái nɯ̀ng loei', meaning: 'Of course! Give me one skewer!' } },
+          { itemId: 'ST_nor', isSpiral: true, partner: { script: 'น้ำซุปร้อนๆ กลมกล่อมมากเนาะ!', spoken: 'nám-súp rɔ́ɔn-rɔ́ɔn glom-glɔ̀m mâak nɔ́ɔ!', meaning: 'Hot broth is so rich and tasty, isn’t it!' }, user: { script: 'ดีเนาะ! อร่อยสุดๆ เลย', spoken: 'dii nɔ́ɔ! à-rɔ̀i sùt-sùt loei', meaning: 'So nice, right! Super delicious!' } }
+        ]
+      },
+      s5_n3: {
+        easier: [
+          { itemId: 'ST_na', partner: { script: 'รอตรงนี้นะ!', spoken: 'rɔɔ dtrong níi ná!', meaning: 'Wait right here, okay?' }, user: { script: 'โอเคนะ เดี๋ยวรอนะ!', spoken: 'oo-khee ná, dǐao rɔɔ ná!', meaning: 'Okay, I will wait!' } },
+          { itemId: 'ST_la', partner: { script: 'เอาหวานน้อย แล้วเธอล่ะ?', spoken: 'ao wǎan nɔ́ɔi, láaeo thoe lâ?', meaning: 'I’ll take less sweet — and what about you?' }, user: { script: 'เราเอาไม่หวาน!', spoken: 'rao ao mâi wǎan!', meaning: 'I’ll take unsweetened!' } }
+        ],
+        standard: [
+          { itemId: 'ST_na', partner: { script: 'ไปซื้อน้ำนะ รอตรงนี้นะ!', spoken: 'bpai sɯ́ɯ nám ná, rɔɔ dtrong níi ná!', meaning: 'Going to buy water — wait right here, okay?' }, user: { script: 'โอเคนะ รีบมานะ!', spoken: 'oo-khee ná, rîip maa ná!', meaning: 'Okay! Come back quick!' } },
+          { itemId: 'ST_la', partner: { script: 'เราเอาชาไทยหวานน้อย แล้วเธอล่ะ?', spoken: 'rao ao chaa thai wǎan nɔ́ɔi, láaeo thoe lâ?', meaning: 'I’ll take less-sweet Thai tea — and what about you?' }, user: { script: 'เราเอาไม่หวาน! แล้วขนมล่ะ?', spoken: 'rao ao mâi wǎan! láaeo khà-nǒm lâ?', meaning: 'I’ll take unsweetened! And what about dessert?' } },
+          { itemId: 'ST_loei', isSpiral: true, partner: { script: 'ซื้อขนมปังปิ้งร้านข้างๆ เลยไหม?', spoken: 'sɯ́ɯ khà-nǒm-bpang bpîng ráan khâang-khâang loei mǎi?', meaning: 'Grab toasted bread from the stall next door right now?' }, user: { script: 'เอาเลย! หิวแล้ว', spoken: 'ao loei! hǐu láaeo', meaning: 'Let’s do it! I’m hungry.' } }
+        ],
+        harder: [
+          { itemId: 'ST_na', partner: { script: 'เดี๋ยวเราไปซื้อน้ำที่เซเว่น รอตรงนี้นะ!', spoken: 'dǐao rao bpai sɯ́ɯ nám thîi see-wêen, rɔɔ dtrong níi ná!', meaning: 'I’ll go buy water at 7-Eleven — wait right here, okay?' }, user: { script: 'โอเคนะ เดี๋ยวเราดูโต๊ะให้นะ!', spoken: 'oo-khee ná, dǐao rao duu dtó hâi ná!', meaning: 'Okay! I’ll watch the table for us!' } },
+          { itemId: 'ST_la', partner: { script: 'เราสั่งชาไทยหวานน้อยไปแล้ว แล้วเธอล่ะ?', spoken: 'rao sàng chaa thai wǎan nɔ́ɔi bpai láaeo, láaeo thoe lâ?', meaning: 'I already ordered less-sweet Thai tea — and what about you?' }, user: { script: 'เราเอาไม่หวาน! แล้วขนมล่ะ?', spoken: 'rao ao mâi wǎan! láaeo khà-nǒm lâ?', meaning: 'I’ll take unsweetened! And what about dessert?' } },
+          { itemId: 'ST_si', isSpiral: true, partner: { script: 'มีเค้กมะม่วงชิ้นสุดท้ายด้วย เอาไหม?', spoken: 'mii khéek má-mûang chín sùt-tháai dûai, ao mǎi?', meaning: 'There is one last slice of mango cake too — want it?' }, user: { script: 'เอาสิ! แบ่งกันกิน!', spoken: 'ao sì! bàaeng gan gin!', meaning: 'Of course! Let’s share it!' } },
+          { itemId: 'ST_nor', isSpiral: true, partner: { script: 'เค้กกับชาไทยเข้ากันมากเนาะ!', spoken: 'khéek gàp chaa thai khâo gan mâak nɔ́ɔ!', meaning: 'Cake and Thai tea go together so well, don’t they!' }, user: { script: 'ดีเนาะ! ชอบมากเลย', spoken: 'dii nɔ́ɔ! chɔ̂ɔp mâak loei', meaning: 'So nice, right! Love it.' } }
+        ],
+        overdrive: [
+          { itemId: 'ST_na', partner: { script: 'เดี๋ยวเราเดินไปซื้อน้ำที่เซเว่นแป๊บเดียว นั่งรอตรงนี้นะ!', spoken: 'dǐao rao doen bpai sɯ́ɯ nám thîi see-wêen bpáep diao, nâng rɔɔ dtrong níi ná!', meaning: 'I’ll walk over to 7-Eleven for drinks real quick — wait right here, okay?' }, user: { script: 'โอเคนะ ซื้อน้ำแข็งมาด้วยนะ!', spoken: 'oo-khee ná, sɯ́ɯ nám-khɛ̌ng maa dûai ná!', meaning: 'Okay! Grab some ice too, okay!' } },
+          { itemId: 'ST_la', partner: { script: 'เราหยิบอเมริกาโน่ไม่หวานแล้ว แล้วเธอล่ะ?', spoken: 'rao yìp à-mee-rí-gaa-nôo mâi wǎan láaeo, láaeo thoe lâ?', meaning: 'I grabbed an unsweetened Americano — and what about you?' }, user: { script: 'เราเอาชาไทยหวานน้อย! แล้วขนมปังล่ะ?', spoken: 'rao ao chaa thai wǎan nɔ́ɔi! láaeo khà-nǒm-bpang lâ?', meaning: 'I’ll take less-sweet Thai tea! And what about bread?' } },
+          { itemId: 'ST_si', isSpiral: true, partner: { script: 'แซนด์วิชแฮมชีสอุ่นร้อนๆ เลยไหม?', spoken: 'saaen-wít haaem-chiis ùn rɔ́ɔn-rɔ́ɔn loei mǎi?', meaning: 'Warm up a ham & cheese sandwich hot?' }, user: { script: 'กินสิ! เอาอันนึงเลย', spoken: 'gin sì! ao an nɯng loei', meaning: 'Of course! Grab one right now.' } },
+          { itemId: 'ST_nor', isSpiral: true, partner: { script: 'นั่งกินตรงนี้ลมเย็นสบายดีเนาะ!', spoken: 'nâng gin dtrong níi lom yen sà-baai dii nɔ́ɔ!', meaning: 'Eating right here, the cool breeze is so nice, isn’t it!' }, user: { script: 'ดีเนาะ! สบายสุดๆ เลย', spoken: 'dii nɔ́ɔ! sà-baai sùt-sùt loei', meaning: 'So nice, right! Super relaxing!' } }
+        ]
+      },
+      s6_n1: {
+        easier: [
+          { itemId: 'ST_rao', partner: { script: 'กินอะไรดี?', spoken: 'gin à-rai dii?', meaning: 'What should we eat?' }, user: { script: 'เราอยากกินส้มตำ!', spoken: 'rao yàak gin sôm-dtam!', meaning: 'I want to eat papaya salad!' } },
+          { itemId: 'ST_khao', partner: { script: 'คืนนี้ไปเที่ยวไหม?', spoken: 'khɯɯn níi bpai thîao mǎi?', meaning: 'Going out tonight?' }, user: { script: 'เค้าไม่ไปนะ', spoken: 'kháo mâi bpai ná', meaning: "I'm not going." } }
+        ],
+        standard: [
+          { itemId: 'ST_rao', partner: { script: 'วันนี้ใครอยากกินอะไร?', spoken: 'wan-níi khrai yàak gin à-rai?', meaning: 'Who wants to eat what today?' }, user: { script: 'เราอยากกินส้มตำ!', spoken: 'rao yàak gin sôm-dtam!', meaning: 'I want to eat papaya salad!' } },
+          { itemId: 'ST_dtua_eeng', partner: { script: 'มาถึงร้านแล้ว ตัวเองเอาอะไรดี?', spoken: 'maa thǔeng ráan láaeo, dtua-eeng ao à-rai dii?', meaning: 'We’re at the shop — what do you want?' }, user: { script: 'ตัวเองเอาอะไร เค้าเอาด้วย!', spoken: 'dtua-eeng ao à-rai, kháo ao dûai!', meaning: 'Whatever you get, I’ll get too!' } },
+          { itemId: 'ST_khao', partner: { script: 'แล้วคืนนี้ไปดาดฟ้าไหม?', spoken: 'láaeo khɯɯn níi bpai dàat-fáa mǎi?', meaning: 'And are you going to the rooftop tonight?' }, user: { script: 'เค้าไม่ไปนะ วันนี้ง่วงมาก', spoken: 'kháo mâi bpai ná, wan-níi ngûang mâak', meaning: "I'm not going, super sleepy today." } }
+        ],
+        harder: [
+          { itemId: 'ST_rao', partner: { script: 'เที่ยงนี้ใครอยากกินส้มตำไก่ย่างบ้าง?', spoken: 'thîang níi khrai yàak gin sôm-dtam gài yâang bâang?', meaning: 'Who wants to eat papaya salad and grilled chicken this noon?' }, user: { script: 'เราอยากกินส้มตำ!', spoken: 'rao yàak gin sôm-dtam!', meaning: 'I (เรา) want to eat papaya salad!' } },
+          { itemId: 'ST_dtua_eeng', partner: { script: 'ถึงร้านแล้ว ตัวเองอยากกินอะไรสั่งเลยนะ!', spoken: 'thǔeng ráan láaeo, dtua-eeng yàak gin à-rai sàng loei ná!', meaning: 'We arrived at the restaurant — order whatever you want!' }, user: { script: 'ตัวเองเอาอะไร เค้าเอาด้วย!', spoken: 'dtua-eeng ao à-rai, kháo ao dûai!', meaning: 'Whatever you (ตัวเอง) get, I’ll get too!' } },
+          { itemId: 'ST_la', isSpiral: true, partner: { script: 'เราสั่งตำไทยเผ็ดน้อยแล้ว แล้วน้ำล่ะ?', spoken: 'rao sàng dtam thai phèt nɔ́ɔi láaeo, láaeo nám lâ?', meaning: 'I ordered mild papaya salad — and what about drinks?' }, user: { script: 'เราเอาชาไทย! แล้วเธอล่ะ?', spoken: 'rao ao chaa thai! láaeo thoe lâ?', meaning: 'I’ll take Thai tea! And what about you?' } },
+          { itemId: 'ST_khao', partner: { script: 'คืนนี้เพื่อนชวนไปดาดฟ้า ตัวเองไปไหม?', spoken: 'khɯɯn níi phɯ̂an chuan bpai dàat-fáa, dtua-eeng bpai mǎi?', meaning: 'Friends invited us to the rooftop tonight — are you going?' }, user: { script: 'เค้าไม่ไปนะ วันนี้ง่วงมาก', spoken: 'kháo mâi bpai ná, wan-níi ngûang mâak', meaning: "I'm (เค้า) not going, super sleepy today." } }
+        ],
+        overdrive: [
+          { itemId: 'ST_rao', partner: { script: 'เที่ยงนี้หิวกันหรือยัง ใครอยากกินอะไรว่ามาเลย!', spoken: 'thîang níi hǐu gan rǒe yang, khrai yàak gin à-rai wâa maa loei!', meaning: 'Hungry this noon yet? Call out whatever you want to eat!' }, user: { script: 'เราอยากกินส้มตำปูปลาร้า!', spoken: 'rao yàak gin sôm-dtam bpuu bplaa-ráa!', meaning: 'I want to eat crab & fermented fish papaya salad!' } },
+          { itemId: 'ST_dtua_eeng', partner: { script: 'มาถึงร้านแล้ว ตัวเองเลือกเมนูเลยนะ เดี๋ยวเราจดให้!', spoken: 'maa thǔeng ráan láaeo, dtua-eeng lɯ̂ak mee-nuu loei ná, dǐao rao jòt hâi!', meaning: 'At the restaurant now — pick the dishes, I’ll write them down!' }, user: { script: 'ตัวเองเอาอะไร เค้าเอาด้วยเลย!', spoken: 'dtua-eeng ao à-rai, kháo ao dûai loei!', meaning: 'Whatever you get, I’m getting too!' } },
+          { itemId: 'ST_la', isSpiral: true, partner: { script: 'สั่งไก่ย่างกับข้าวเหนียวเพิ่มแล้ว ของหวานล่ะ?', spoken: 'sàng gài yâang gàp khâao-nǐao phôem láaeo, khɔ̌ɔng-wǎan lâ?', meaning: 'Ordered grilled chicken and sticky rice — what about dessert?' }, user: { script: 'เอาไอติมกะทิ! แล้วเธอล่ะ?', spoken: 'ao ai-dtim gà-thí! láaeo thoe lâ?', meaning: 'Coconut ice cream! And you?' } },
+          { itemId: 'ST_khao', partner: { script: 'คืนนี้เพื่อนชวนไปนั่งชิลที่ดาดฟ้า ตัวเองไปด้วยกันไหม?', spoken: 'khɯɯn níi phɯ̂an chuan bpai nâng chil thîi dàat-fáa, dtua-eeng bpai dûai gan mǎi?', meaning: 'Friends invited us to chill at the rooftop tonight — coming along?' }, user: { script: 'เค้าไม่ไปนะ วันนี้ง่วงมาก ขอพักอยู่บ้าน!', spoken: 'kháo mâi bpai ná, wan-níi ngûang mâak, khɔ̌ɔ phák yùu bâan!', meaning: "I'm not going, super sleepy today — resting at home!" } }
+        ]
+      },
+      s6_n2: {
+        easier: [
+          { itemId: 'ST_jing_roe', partner: { script: 'วันนี้ร้านนี้ฟรีนะ!', spoken: 'wan-níi ráan níi frii ná!', meaning: 'Today this shop is free!' }, user: { script: 'จริงดิ?!', spoken: 'jing dì?!', meaning: 'For real?!' } },
+          { itemId: 'ST_mai_pen_rai', partner: { script: 'อุ๊ย ขอโทษนะ!', spoken: 'úi khɔ̌ɔ-thôot ná!', meaning: 'Oops, sorry!' }, user: { script: 'ไม่เป็นไรเลย!', spoken: 'mâi bpen rai loei!', meaning: 'No worries!' } }
+        ],
+        standard: [
+          { itemId: 'ST_jing_roe', partner: { script: 'วันนี้ร้านนี้ฟรีนะ!', spoken: 'wan-níi ráan níi frii ná!', meaning: 'Today this shop is free!' }, user: { script: 'จริงดิ?! เลี้ยงข้าวเลย!', spoken: 'jing dì?! líang khâao loei!', meaning: 'For real?! Treat me to a meal!' } },
+          { itemId: 'ST_ao_di', partner: { script: 'งั้นเสร็จแล้วไปกินไอติมกันไหม?', spoken: 'ngán sèt láaeo bpai gin ai-dtim gan mǎi?', meaning: 'Then want to go get ice cream after?' }, user: { script: 'เอาดิ! ไปเลย', spoken: 'ao dì! bpai loei', meaning: 'I’m down! Let’s go!' } },
+          { itemId: 'ST_mai_pen_rai', partner: { script: 'อุ๊ย ขอโทษนะ เดินชนนิดนึง เจ็บไหม?', spoken: 'úi khɔ̌ɔ-thôot ná, doen chon nít-nɯng, jèp mǎi?', meaning: 'Oops sorry, bumped you a bit — are you hurt?' }, user: { script: 'ไม่เป็นไรเลย สบายมาก!', spoken: 'mâi bpen rai loei, sà-baai mâak!', meaning: 'No worries at all! Totally fine!' } }
+        ],
+        harder: [
+          { itemId: 'ST_jing_roe', partner: { script: 'แก! เราถูกหวยรางวัลเลขท้ายสองตัวด้วยแหละ!', spoken: 'gaae! rao thùuk hǔai raang-wan lêek tháai sɔ̌ɔng dtua dûai làe!', meaning: 'Dude! I just won the two-digit lottery prize!' }, user: { script: 'จริงดิ?! เลี้ยงข้าวเลย!', spoken: 'jing dì?! líang khâao loei!', meaning: 'For real (จริงดิ)?! Treat me to a meal right now!' } },
+          { itemId: 'ST_ao_di', partner: { script: 'กินข้าวเสร็จ ไปกินไอติมกะทิเจ้าเด็ดต่อไหม?', spoken: 'gin khâao sèt, bpai gin ai-dtim gà-thí jâo dèt dtɔ̀ɔ mǎi?', meaning: 'After dinner, wanna go get that legendary coconut ice cream?' }, user: { script: 'เอาดิ! ไปเลย', spoken: 'ao dì! bpai loei', meaning: "I'm down (เอาดิ)! Let's go!" } },
+          { itemId: 'ST_mai_pen_rai', partner: { script: 'อุ๊ย ขอโทษนะ เดินชนนิดนึง เจ็บไหม?', spoken: 'úi khɔ̌ɔ-thôot ná, doen chon nít-nɯng, jèp mǎi?', meaning: 'Oops, sorry I bumped into you a bit — are you hurt?' }, user: { script: 'ไม่เป็นไรเลย สบายมาก!', spoken: 'mâi bpen rai loei, sà-baai mâak!', meaning: 'No worries at all! Totally fine!' } },
+          { itemId: 'ST_rao', isSpiral: true, partner: { script: 'แล้วเย็นนี้ใครอยากกลับรถไฟฟ้าบ้าง?', spoken: 'láaeo yen níi khrai yàak glàp rót-fai-fáa bâang?', meaning: 'And who wants to take the BTS back this evening?' }, user: { script: 'เรากลับด้วย!', spoken: 'rao glàp dûai!', meaning: 'I am heading back with you!' } }
+        ],
+        overdrive: [
+          { itemId: 'ST_jing_roe', partner: { script: 'แก! เมื่อกี้เช็คผลหวย ถูกเลขท้ายสองตัวเฉยเลย!', spoken: 'gaae! mɯ̂a-gíi chék phǒn hǔai, thùuk lêek tháai sɔ̌ɔng dtua chǒei loei!', meaning: 'Dude! Just checked the lottery — actually won the two-digit prize!' }, user: { script: 'จริงดิ?! งั้นเย็นนี้เลี้ยงข้าวเลยนะ!', spoken: 'jing dì?! ngán yen níi líang khâao loei ná!', meaning: 'For real?! Then treat me to dinner tonight!' } },
+          { itemId: 'ST_ao_di', partner: { script: 'กินข้าวเสร็จไปต่อไอติมกะทิเจ้าดังข้างตลาดกันไหม?', spoken: 'gin khâao sèt bpai dtɔ̀ɔ ai-dtim gà-thí jâo dang khâang dtà-làat gan mǎi?', meaning: 'After dinner, hit that famous coconut ice cream spot by the market?' }, user: { script: 'เอาดิ! ไปเลย อยากกินพอดี!', spoken: 'ao dì! bpai loei, yàak gin phɔɔ-dii!', meaning: "I'm down! Let's go, been craving it!" } },
+          { itemId: 'ST_mai_pen_rai', partner: { script: 'อุ๊ย ขอโทษนะ รีบเดินไปหน่อย ชนแขนเจ็บไหม?', spoken: 'úi khɔ̌ɔ-thôot ná, rîip doen bpai nɔ̀ɔi, chon khǎaen jèp mǎi?', meaning: 'Oops sorry, walking too fast — did I hurt your arm?' }, user: { script: 'ไม่เป็นไรเลย สบายมาก!', spoken: 'mâi bpen rai loei, sà-baai mâak!', meaning: 'No worries at all! Totally fine!' } },
+          { itemId: 'ST_rao', isSpiral: true, partner: { script: 'เดี๋ยวเดินไปขึ้นรถไฟฟ้าด้วยกันนะ?', spoken: 'dǐao doen bpai khɯ̂n rót-fai-fáa dûai gan ná?', meaning: "Let's walk to the BTS together?" }, user: { script: 'เราเดินไปด้วย!', spoken: 'rao doen bpai dûai!', meaning: "I'll walk with you!" } }
+        ]
+      },
+      s6_n3: {
+        easier: [
+          { itemId: 'ST_ngong_maak', partner: { script: 'เอาอันนี้หรืออันนั้นดีเนี่ย?', spoken: 'ao an níi rǔue an nán dii nîa?', meaning: 'Should we get this one or that one?' }, user: { script: 'งงมากค่ะ ไม่รู้เลย!', spoken: 'ngong mâak khâ, mâi rúu loei!', meaning: 'Totally confused! No idea!' } },
+          { itemId: 'ST_khoot_dii', partner: { script: 'ร้านนี้เป็นไงบ้าง?', spoken: 'ráan níi bpen ngai bâang?', meaning: 'How is this place?' }, user: { script: 'โคตรดี!', spoken: 'khôot dii!', meaning: 'Insanely good!' } }
+        ],
+        standard: [
+          { itemId: 'ST_ngong_maak', partner: { script: 'เอาอันนี้หรืออันนั้นดีเนี่ย?', spoken: 'ao an níi rǔue an nán dii nîa?', meaning: 'Should we get this one or that one?' }, user: { script: 'งงมากค่ะ ไม่รู้เลย!', spoken: 'ngong mâak khâ, mâi rúu loei!', meaning: 'Totally confused! No idea!' } },
+          { itemId: 'ST_khoot_dii', partner: { script: 'เข้ามานั่งแล้ว ร้านนี้เป็นไงบ้าง?', spoken: 'khâo maa nâng láaeo, ráan níi bpen ngai bâang?', meaning: 'Seated now — how is this place?' }, user: { script: 'โคตรดี! ลมเย็นสุดๆ', spoken: 'khôot dii! lom yen sùt-sùt', meaning: 'Insanely good! The breeze is amazing.' } },
+          { itemId: 'ST_sut_yoot', partner: { script: 'ลองชิมดูครับ อร่อยไหม?', spoken: 'lɔɔng chim duu kháp, à-rɔ̀i mǎi?', meaning: 'Try a taste — is it good?' }, user: { script: 'สุดยอด! อร่อยมากค่ะ', spoken: 'sùt yɔ̂ɔt! à-lɔ̀i mâak khâ', meaning: 'Awesome! So delicious!' } },
+          { itemId: 'ST_chill_chill', partner: { script: 'วันอาทิตย์นี้ไปเที่ยวไหนไหม?', spoken: 'wan aa-thít níi bpai thîao nǎi mǎi?', meaning: 'Going out anywhere this Sunday?' }, user: { script: 'อยู่บ้านชิลๆ ค่ะ', spoken: 'yùu bâan chil-chil khâ', meaning: 'Just staying home chilling.', tts: 'อยู่บ้านชิลชิลค่ะ' } }
+        ],
+        harder: [
+          { itemId: 'ST_ao_ngai_dii', partner: { script: 'อ้าว ร้านแรกปิดปรับปรุงเฉยเลย! พวกเราเอาไงดี?', spoken: 'âao, ráan râaek bpìt bpràp-bprung chǒei loei! phûak rao ao ngai dii?', meaning: 'Whoa, the first shop is closed for renovation! What should we do?' }, user: { script: 'ไปกินหมี่แห้งร้านริมน้ำไหม?', spoken: 'bpai gin mìi hâeng ráan rim nám mǎi?', meaning: 'Wanna go eat dry egg noodles by the river?' } },
+          { itemId: 'ST_ngong_maak', partner: { script: 'มาถึงแล้ว ตกลงต้องกดบัตรคิวสีฟ้าหรือสีเหลืองก่อนเนี่ย?', spoken: 'maa thǔeng láaeo, dtòk-long dtɔ̂ng gòt bàt khiu sǐi fáa rǒe sǐi lɯ̌ang gɔ̀ɔn nîa?', meaning: 'We’re here — do we press the blue queue ticket or yellow queue ticket first?' }, user: { script: 'งงมากค่ะ ไม่รู้เลย!', spoken: 'ngong mâak khâ, mâi rúu loei!', meaning: 'Totally baffled! No idea!' } },
+          { itemId: 'ST_khoot_dii', partner: { script: 'ได้โต๊ะแล้ว บรรยากาศริมแม่น้ำเจ้าพระยาคืนนี้เป็นไงบ้าง?', spoken: 'dâi dtó láaeo, ban-yaa-gàat rim mâae-nám jâo-phrá-yaa khɯɯn níi bpen ngai bâang?', meaning: 'Got a table! How is the vibe by the Chao Phraya river tonight?' }, user: { script: 'โคตรดี! ลมเย็นสุดๆ', spoken: 'khôot dii! lom yen sùt-sùt', meaning: 'Insanely good! The breeze is amazing.' } },
+          { itemId: 'ST_sut_yoot', partner: { script: 'ผัดไฟลุกหอมกระทะเลยครับ ลองชิมดู!', spoken: 'phàt fai lúk hɔ̌ɔm grà-thá loei kháp, lɔɔng chim duu!', meaning: 'Stir-fried over roaring flames with wok aroma — give it a taste!' }, user: { script: 'สุดยอด! อร่อยมากค่ะ', spoken: 'sùt yɔ̂ɔt! à-lɔ̀i mâak khâ', meaning: 'Awesome! So delicious!' } },
+          { itemId: 'ST_chill_chill', partner: { script: 'วันอาทิตย์นี้มีแผนไปเที่ยวไหนหรือเปล่า?', spoken: 'wan aa-thít níi mii phǎaen bpai thîao nǎi rǒe-bpào?', meaning: 'Do you have any plans to go out this Sunday or not?' }, user: { script: 'อยู่บ้านชิลๆ ค่ะ', spoken: 'yùu bâan chil-chil khâ', meaning: 'Just staying home chilling.', tts: 'อยู่บ้านชิลชิลค่ะ' } }
+        ],
+        overdrive: [
+          { itemId: 'ST_ao_ngai_dii', partner: { script: 'อ้าว ร้านประจำปิดปรับปรุงเฉยเลย! เย็นนี้พวกเราเอาไงดี?', spoken: 'âao, ráan bprà-jam bpìt bpràp-bprung chǒei loei! yen níi phûak rao ao ngai dii?', meaning: 'Whoa, our usual spot is closed for renovation! What’s the move tonight?' }, user: { script: 'ไปร้านเปิดใหม่ริมน้ำกันไหม?', spoken: 'bpai ráan bpə̀ət mài rim nám gan mǎi?', meaning: 'Wanna try the new riverside spot?' } },
+          { itemId: 'ST_ngong_maak', partner: { script: 'ตู้กดคิวมีตั้งหลายปุ่ม ตกลงกดสีฟ้าหรือสีเหลืองก่อนเนี่ย?', spoken: 'dtûu gòt khiu mii dtâng lǎai bpùm, dtòk-long gòt sǐi fáa rǒe sǐi lɯ̌ang gɔ̀ɔn nîa?', meaning: 'The queue kiosk has so many buttons — blue or yellow first?' }, user: { script: 'งงมากค่ะ ไม่รู้เลย เดี๋ยวถามพนักงาน!', spoken: 'ngong mâak khâ, mâi rúu loei, dǐao thǎam phá-nák-ngaan!', meaning: 'Totally confused! No idea, let’s ask the staff!' } },
+          { itemId: 'ST_khoot_dii', partner: { script: 'ได้ที่นั่งริมแม่น้ำพอดีเลย บรรยากาศคืนนี้เป็นไงบ้าง?', spoken: 'dâi thîi nâng rim mâae-nám phɔɔ-dii loei, ban-yaa-gàat khɯɯn níi bpen ngai bâang?', meaning: 'Got a riverside seat right away! How’s the vibe tonight?' }, user: { script: 'โคตรดี! ลมเย็นสุดๆ เลย', spoken: 'khôot dii! lom yen sùt-sùt loei', meaning: 'Insanely good! The breeze is amazing!' } },
+          { itemId: 'ST_sut_yoot', partner: { script: 'จานเด็ดมาแล้ว ผัดหอมกระทะมาก ลองชิมดู!', spoken: 'jaan dèt maa láaeo, phàt hɔ̌ɔm grà-thá mâak, lɔɔng chim duu!', meaning: 'Signature dish is here with amazing wok aroma — try a bite!' }, user: { script: 'สุดยอด! อร่อยมากค่ะ', spoken: 'sùt yɔ̂ɔt! à-lɔ̀i mâak khâ', meaning: 'Awesome! So delicious!' } },
+          { itemId: 'ST_chill_chill', partner: { script: 'ส่วนวันอาทิตย์นี้มีแผนไปไหนต่อหรือเปล่า?', spoken: 'sùan wan aa-thít níi mii phǎaen bpai nǎi dtɔ̀ɔ rǒe-bpào?', meaning: 'And for this Sunday, any plans to go anywhere?' }, user: { script: 'อยู่บ้านชิลๆ ค่ะ พักผ่อนบ้าง!', spoken: 'yùu bâan chil-chil khâ, phák-phɔ̀ɔn bâang!', meaning: 'Just staying home chilling, getting some rest!', tts: 'อยู่บ้านชิลชิลค่ะ พักผ่อนบ้าง' } }
+        ]
       }
     };
 
@@ -10501,14 +10931,15 @@
       const isS1 = nodeId.startsWith('s1');
       const isS2 = nodeId.startsWith('s2');
       const isS3 = nodeId.startsWith('s3');
-      if (!isS1 && !isS2 && !isS3) return true;
+      const isS456 = nodeId.startsWith('s4') || nodeId.startsWith('s5') || nodeId.startsWith('s6');
       const itemObj = typeof STREET_DB !== 'undefined' ? STREET_DB.find(s => s.id === itemId) : null;
-      if (!itemObj) return true;
+      if (!itemObj) return !isS456;
       const u = itemObj.unit;
       if (!u) return true;
-      if (isS1) return u === 1 || u >= 4;
-      if (isS2) return u === 2 || u >= 4;
-      if (isS3) return u === 3 || u >= 4;
+      if (isS1) return u === 1;
+      if (isS2) return u === 2;
+      if (isS3) return u === 3;
+      if (isS456) return u >= 4;
       return true;
     }
 
@@ -10710,14 +11141,54 @@
       if (id.startsWith('s1')) {
         return { speakerA: '👨‍🍳 พ่อค้าร้านอาหาร (Street Vendor)', speakerB: '🙋‍♀️ พลอย (Ploy — Local Customer)' };
       } else if (id.startsWith('s2')) {
-        return { speakerA: '☕ พนักงานร้าน (Barista / Cashier)', speakerB: '🙋‍♂️ ต้น (Ton — Local Customer)' };
+        return { speakerA: '☕ พนักงานร้าน (Barista / Cashier)', speakerB: '🙋‍♀️ พลอย (Ploy — Local Customer)' };
       } else if (id.startsWith('s3')) {
         return { speakerA: '🚕 ลุงคนขับแท็กซี่ (Taxi Driver)', speakerB: '🙋‍♀️ พลอย (Ploy — Passenger)' };
+      } else if (id === 's4_n1') {
+        return { speakerA: '🙋‍♀️ พลอย (Ploy — Thai Friend)', speakerB: '🙋‍♂️ ต้น (Ton — Thai Friend)' };
       } else if (id.startsWith('s4') || id.startsWith('s5') || id.startsWith('s6')) {
         return { speakerA: '🙋‍♂️ ต้น (Ton — Thai Friend)', speakerB: '🙋‍♀️ พลอย (Ploy — Thai Friend)' };
       } else {
         return { speakerA: firstRole, speakerB: '🙋‍♀️ พลอย (Ploy — Local Speaker)' };
       }
+    }
+
+    function buildScriptedConvoExchange(ex, nodeItemIds) {
+      const item = ex.itemId && typeof STREET_DB !== 'undefined' ? STREET_DB.find(s => s.id === ex.itemId) : null;
+      const mapped = ex.itemId && typeof THAI_CONVO_TURNS_MAP !== 'undefined' ? THAI_CONVO_TURNS_MAP[ex.itemId] : null;
+      const isSpiral = ex.isSpiral !== undefined ? !!ex.isSpiral : (ex.itemId ? !nodeItemIds.has(ex.itemId) : false);
+      const itemThai = item?.thai || item?.display || '';
+      const itemSpoken = item?.spoken || item?.roman || '';
+      const itemMeaning = item?.meaning || (mapped ? mapped.user.meaning : '');
+      const cleanTts = s => (s || '').replace(/[?!]/g, '').trim();
+      return {
+        itemId: ex.itemId,
+        secondaryItemId: ex.secondaryItemId || null,
+        item,
+        isSpiral,
+        isCompound: !!ex.isCompound,
+        hasOldWeave: !!ex.hasOldWeave,
+        role: mapped ? mapped.role : '🙋 Local Speaker',
+        partner: {
+          script: ex.partner.script,
+          spoken: ex.partner.spoken,
+          meaning: ex.partner.meaning,
+          tts: ex.partner.tts || cleanTts(ex.partner.script)
+        },
+        user: {
+          script: ex.user.script,
+          spoken: ex.user.spoken,
+          meaning: ex.user.meaning,
+          tts: ex.user.tts || cleanTts(ex.user.script)
+        },
+        intentCue: (mapped && mapped.intentCue) || `🎯 Respond using ${itemSpoken} (${itemMeaning.split('(')[0].trim()})`,
+        earDistractors: (mapped && mapped.earDistractors) || [
+          'Do you want a plastic bag for your drinks?',
+          'Should I turn left at the next intersection?',
+          'Would you like your tea with 50% sugar?'
+        ],
+        usedWords: item ? [{ script: itemThai, spoken: itemSpoken, meaning: itemMeaning, isSpiral }] : []
+      };
     }
 
     function createLiveConversationStep(node, difficultyOverride = null, remixSeed = 0) {
@@ -10755,15 +11226,17 @@
         return 0;
       });
 
-      // 3. Build Exchange Pairs (~75% New to fit recent situation + ~25% Old/Known Spiral Recall)
-      //    - Easier (Lv.1): 2 exchanges = 4 short survival lines
-      //    - Standard (Lv.2): 3 exchanges = 6 clean single-sentence lines (2 New + 1 Known/New, no compound double-sentences)
-      //    - Harder (Lv.3): 4 exchanges = 8 rapid lines (New + Old + 1 Compound Multi-Chunk exchange)
-      //    - Overdrive (Lv.3+): 5 exchanges = 10 rapid lines (New + Bonus Theme + Old + up to 2 Compound Multi-Chunk exchanges)
+      // 3. Build Exchange Pairs: prefer coherent scene-ordered scripts when available
       const rawTurns = [];
       const coreNew = remixSeed > 0 ? [...newItems].sort(() => Math.random() - 0.5) : [...newItems];
+      const scriptedScene = node?.id && typeof THAI_CONVO_SCRIPTS_MAP !== 'undefined'
+        ? THAI_CONVO_SCRIPTS_MAP[node.id]?.[difficulty]
+        : null;
 
-      if (difficulty === 'easier') {
+      if (Array.isArray(scriptedScene) && scriptedScene.length > 0) {
+        const nodeItemIds = new Set(node.itemIds || []);
+        scriptedScene.forEach(ex => rawTurns.push(buildScriptedConvoExchange(ex, nodeItemIds)));
+      } else if (difficulty === 'easier') {
         const s0 = coreNew[1] || shuffledOld[0] || null;
         rawTurns.push(getConvoTurnDataForItem(coreNew[0], false, s0, remixSeed, 0, difficulty));
         if (coreNew.length > 1) {
@@ -10794,18 +11267,20 @@
           rawTurns.push(getConvoTurnDataForItem(shuffledOld[1], true, null, remixSeed, 5, difficulty));
         }
         if (rawTurns.length > 5) rawTurns.length = 5;
-        // Upgrade up to 2 exchanges into Compound Multi-Chunk Old+New sentences
+        // Upgrade up to 2 exchanges into Compound Multi-Chunk Old+New sentences (only when compatible, never duplicating!)
         if (coreNew.length >= 2 && rawTurns.length >= 3) {
-          const p1 = coreNew[coreNew.length - 1];
+          const p1 = rawTurns[rawTurns.length - 1]?.item || coreNew[coreNew.length - 1];
           const p2 = shuffledOld.length > 0 ? shuffledOld[0] : coreNew[0];
           if (p1 && p2 && p1.id !== p2.id) {
-            rawTurns[rawTurns.length - 1] = createCompoundOldNewTurn(p1, p2, shuffledOld.length > 0);
+            const comp1 = createCompoundOldNewTurn(p1, p2, shuffledOld.length > 0);
+            if (comp1 && comp1.isCompound) rawTurns[rawTurns.length - 1] = comp1;
           }
           if (coreNew.length >= 3 && rawTurns.length >= 4) {
-            const p3 = coreNew[1];
-            const p4 = shuffledOld.length > 1 ? shuffledOld[1] : coreNew[2];
+            const p3 = rawTurns[rawTurns.length - 2]?.item || coreNew[1];
+            const p4 = shuffledOld.length > 1 ? shuffledOld[1] : coreNew[0];
             if (p3 && p4 && p3.id !== p4.id) {
-              rawTurns[rawTurns.length - 2] = createCompoundOldNewTurn(p3, p4, shuffledOld.length > 1);
+              const comp2 = createCompoundOldNewTurn(p3, p4, shuffledOld.length > 1);
+              if (comp2 && comp2.isCompound) rawTurns[rawTurns.length - 2] = comp2;
             }
           }
         }
@@ -10818,17 +11293,30 @@
         if (coreNew.length > 2 && rawTurns.length < 4) rawTurns.push(getConvoTurnDataForItem(coreNew[2], false, null, remixSeed, 3, difficulty));
         if (coreNew.length > 3 && rawTurns.length < 4) rawTurns.push(getConvoTurnDataForItem(coreNew[3], false, null, remixSeed, 4, difficulty));
         if (rawTurns.length > 4) rawTurns.length = 4;
-        // Upgrade the final exchange into a Compound Multi-Chunk Old+New sentence
-        if (coreNew.length >= 2) {
-          const p1 = coreNew[coreNew.length - 1];
+        // Upgrade the final exchange into a Compound Multi-Chunk Old+New sentence (only when compatible)
+        if (coreNew.length >= 2 && rawTurns.length >= 2) {
+          const p1 = rawTurns[rawTurns.length - 1]?.item || coreNew[coreNew.length - 1];
           const p2 = shuffledOld.length > 0 ? shuffledOld[0] : coreNew[0];
           if (p1 && p2 && p1.id !== p2.id) {
-            rawTurns[rawTurns.length - 1] = createCompoundOldNewTurn(p1, p2, shuffledOld.length > 0);
+            const comp = createCompoundOldNewTurn(p1, p2, shuffledOld.length > 0);
+            if (comp && comp.isCompound) rawTurns[rawTurns.length - 1] = comp;
           }
         }
       }
 
       const validExchanges = rawTurns.filter(Boolean);
+      // Prevent mid-conversation re-greetings on any exchange after the opening exchange
+      validExchanges.forEach((ex, exIdx) => {
+        if (exIdx > 0 && ex.partner && ex.partner.script) {
+          const strippedScript = ex.partner.script.replace(/^(สวัสดีครับพี่|สวัสดีครับ|สวัสดีค่ะ|พี่ครับ|น้องครับ)\s*,?\s*/g, '').trim();
+          if (strippedScript.length >= 4 && strippedScript !== ex.partner.script) {
+            ex.partner.script = strippedScript;
+            ex.partner.tts = strippedScript.replace(/[?!]/g, '');
+            ex.partner.spoken = (ex.partner.spoken || '').replace(/^(sà-wàt-dii kháp phîi|sà-wàt-dii kháp|sà-wàt-dii khâ|phîi kháp|nɔ́ɔng kháp),?\s*/i, '').trim();
+            ex.partner.meaning = (ex.partner.meaning || '').replace(/^(Hello!|Excuse me,)\s*/i, '');
+          }
+        }
+      });
       const cast = getThaiTwoPersonCast(node, validExchanges);
 
       // 4. Flatten exchanges into a continuous 2-person back-and-forth dialogue (Speaker A <-> Speaker B)
@@ -14807,6 +15295,7 @@ Examples:
     function handleGeminiInputKeydown(e) {
       if (e.key === 'Enter' && !e.shiftKey) {
         e.preventDefault();
+        e.stopPropagation();
         handleGeminiSubmit(e);
       }
     }
