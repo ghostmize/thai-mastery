@@ -5147,6 +5147,7 @@
     // =========================================================================
     // 3. REAL SPEAKING AUDIO ENGINE (Thai Speech + English Scenario Narrator + Mute System)
     // =========================================================================
+    let activeSession = null;
     let currentAudio = null;
     let thaiVoice = null;
     let englishVoice = null;
@@ -5209,6 +5210,11 @@
       if (attempt === 0) ttsGeneration++;
       const gen = ttsGeneration;
       try { if ('speechSynthesis' in window) window.speechSynthesis.cancel(); } catch (e) {}
+      // Offline: skip the network clip and go straight to the on-device voice
+      if (navigator.onLine === false) {
+        if (onFail) setTimeout(onFail, 0);
+        return null;
+      }
 
       const url = `https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&tl=${lang}&q=${encodeURIComponent(text)}`;
       const audio = new Audio();
@@ -14037,6 +14043,132 @@ Return ONLY valid JSON array of 3 exchange objects with exact keys:
         ? `${window.location.origin}${window.location.pathname}`
         : 'https://ghostmize.github.io/thai-mastery/';
       return token ? `${base}#sync=${encodeURIComponent(token)}` : base;
+    }
+
+    // ---- Offline mode: save app + lessons + CDN libs/fonts into Cache Storage ----
+    const OFFLINE_CACHE_NAME = 'mastery-offline-v1';
+    const OFFLINE_EXT_CACHE_NAME = 'mastery-ext-v1';
+    const OFFLINE_META_KEY = 'offline_download_meta';
+    const OFFLINE_SHELL = [
+      './', './index.html', './thai.html', './hebrew.html',
+      './thai_reading_path_adaptive_mastery_engine.html',
+      './hebrew_reading_path_adaptive_mastery_engine.html',
+      './firebase_sync.js', './street_data.json', './hebrew_street_data.json',
+      './manifest_thai.json', './manifest_hebrew.json',
+      './thai_icon_32.png', './thai_icon_192.png', './thai_icon.png',
+      './hebrew_icon_32.png', './hebrew_icon_192.png', './hebrew_icon.png'
+    ];
+    const OFFLINE_EXT_HOSTS = ['cdn.tailwindcss.com', 'cdn.jsdelivr.net', 'fonts.googleapis.com', 'fonts.gstatic.com'];
+    let offlineBusy = false;
+
+    function offlineMeta() {
+      try { return JSON.parse(localStorage.getItem(OFFLINE_META_KEY) || 'null'); } catch (e) { return null; }
+    }
+
+    function renderOfflineStatus(msg) {
+      const st = document.getElementById('offline-status-text');
+      const dl = document.getElementById('offline-download-btn');
+      const rm = document.getElementById('offline-remove-btn');
+      if (!st || !dl || !rm) return;
+      const meta = offlineMeta();
+      if (!('caches' in window)) {
+        st.textContent = 'Not supported in this browser';
+        dl.disabled = true; dl.classList.add('opacity-50');
+        return;
+      }
+      if (msg) st.textContent = msg;
+      else if (meta) st.textContent = '✅ Ready offline · saved ' + new Date(meta.at).toLocaleDateString();
+      else st.textContent = 'Not downloaded';
+      dl.textContent = meta ? 'Update download' : 'Download for offline';
+      dl.disabled = offlineBusy;
+      dl.classList.toggle('opacity-50', offlineBusy);
+      rm.classList.toggle('hidden', !meta || offlineBusy);
+    }
+
+    function setOfflineProgress(done, total) {
+      const wrap = document.getElementById('offline-progress-wrap');
+      const bar = document.getElementById('offline-progress-bar');
+      if (!wrap || !bar) return;
+      wrap.classList.remove('hidden');
+      bar.style.width = Math.round(done / Math.max(total, 1) * 100) + '%';
+    }
+
+    async function offlineFetchPut(cache, url, opts) {
+      let res;
+      try {
+        res = await fetch(url, Object.assign({ cache: 'reload' }, opts || {}));
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+      } catch (e) {
+        if (!opts || !opts.cors) throw e;
+        // CDN without CORS headers: opaque copy still works for <script>/<link>
+        res = await fetch(url, { mode: 'no-cors' });
+      }
+      await cache.put(url, res.clone());
+      return res;
+    }
+
+    async function downloadOffline() {
+      if (offlineBusy) return;
+      if (!('caches' in window)) { showToast('Offline download not supported here'); return; }
+      if (navigator.onLine === false) { showToast('Connect to the internet to download'); return; }
+      offlineBusy = true;
+      renderOfflineStatus('Downloading...');
+      let done = 0, failed = 0, total = 0;
+      const tick = () => { done++; setOfflineProgress(done, total); };
+      try {
+        try { if (navigator.storage && navigator.storage.persist) navigator.storage.persist(); } catch (e) {}
+        const appCache = await caches.open(OFFLINE_CACHE_NAME);
+        const extCache = await caches.open(OFFLINE_EXT_CACHE_NAME);
+        const shell = Array.from(new Set(OFFLINE_SHELL.map(u => new URL(u, location.href).href)));
+        const exts = Array.from(document.querySelectorAll('script[src], link[rel="stylesheet"][href]'))
+          .map(el => el.src || el.href)
+          .filter(u => { try { return OFFLINE_EXT_HOSTS.includes(new URL(u).hostname); } catch (e) { return false; } });
+        total = shell.length + exts.length;
+        setOfflineProgress(0, total);
+
+        let coreFailed = false;
+        for (const u of shell) {
+          try { await offlineFetchPut(appCache, u); }
+          catch (e) { failed++; if (/reading_path_adaptive_mastery_engine\.html$/.test(u) && u.split('?')[0] === location.href.split('?')[0].split('#')[0]) coreFailed = true; }
+          tick();
+        }
+        for (const u of exts) {
+          try {
+            const res = await offlineFetchPut(extCache, u, { cors: true });
+            if (new URL(u).hostname === 'fonts.googleapis.com' && res.type !== 'opaque') {
+              const css = await res.clone().text();
+              const fontUrls = Array.from(new Set((css.match(/url\((https:[^)]+)\)/g) || []).map(s => s.slice(4, -1))));
+              total += fontUrls.length; setOfflineProgress(done, total);
+              for (const f of fontUrls) {
+                try { await offlineFetchPut(extCache, f, { cors: true }); } catch (e) { failed++; }
+                tick();
+              }
+            }
+          } catch (e) { failed++; }
+          tick();
+        }
+        if (coreFailed) throw new Error('core page failed');
+        localStorage.setItem(OFFLINE_META_KEY, JSON.stringify({ at: Date.now(), failed }));
+        showToast(failed ? '📥 Saved offline (' + failed + ' optional files skipped)' : '📥 Ready to use offline!');
+      } catch (e) {
+        showToast('Offline download failed — check your connection and retry');
+      } finally {
+        offlineBusy = false;
+        const wrap = document.getElementById('offline-progress-wrap');
+        if (wrap) wrap.classList.add('hidden');
+        renderOfflineStatus();
+      }
+    }
+
+    async function removeOffline() {
+      if (!confirm('Remove the offline copy from this device? Your progress is not affected.')) return;
+      try {
+        await caches.delete(OFFLINE_CACHE_NAME);
+        await caches.delete(OFFLINE_EXT_CACHE_NAME);
+        localStorage.removeItem(OFFLINE_META_KEY);
+      } catch (e) {}
+      renderOfflineStatus();
+      showToast('Offline copy removed');
     }
 
     function openCloudSyncModal() {

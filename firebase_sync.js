@@ -181,6 +181,21 @@
 
           <div id="user-modal-sync-detail" class="text-[11px] text-slate-400 bg-[#090a0e] border border-[#222634] rounded-xl px-3 py-2 hidden"></div>
 
+          <div id="offline-section" class="bg-[#0e0f12] border border-[#252934] rounded-2xl p-3.5 text-xs space-y-2.5">
+            <div class="flex items-center justify-between gap-2">
+              <div class="font-semibold text-amber-300">📥 Offline Mode</div>
+              <span id="offline-status-text" class="text-slate-400 text-[11px] text-right">Checking...</span>
+            </div>
+            <p class="text-slate-400 text-[11px] leading-snug">Save the app and all lessons on this device so it works with no internet (planes, subway, no data). Audio uses your phone's built-in voice when offline.</p>
+            <div id="offline-progress-wrap" class="hidden h-1.5 rounded-full bg-[#1e2128] overflow-hidden">
+              <div id="offline-progress-bar" class="h-full bg-amber-400 transition-all" style="width:0%"></div>
+            </div>
+            <div class="flex gap-2">
+              <button id="offline-download-btn" onclick="downloadOffline()" class="flex-1 px-3 py-2 rounded-xl bg-amber-400/20 hover:bg-amber-400/30 border border-amber-400/40 text-amber-200 font-semibold cursor-pointer">Download for offline</button>
+              <button id="offline-remove-btn" onclick="removeOffline()" class="hidden px-3 py-2 rounded-xl bg-[#1e2128] hover:bg-[#282c37] border border-[#323744] text-slate-300 cursor-pointer">Remove</button>
+            </div>
+          </div>
+
           <div class="pt-1 flex gap-2">
             <button onclick="window.masteryAuth.forceSyncNow()" class="flex-1 py-2 px-3 rounded-xl bg-sky-500/20 hover:bg-sky-500/30 border border-sky-400/30 text-sky-300 text-xs font-semibold cursor-pointer transition">
               🔄 Sync Now
@@ -310,6 +325,7 @@
       const emailEl = document.getElementById('user-modal-email');
       if (emailEl) emailEl.textContent = `${this.currentUser.email || ''} • ${this.appName}`;
       this.updateModalSyncStatus();
+      if (typeof window.renderOfflineStatus === 'function') window.renderOfflineStatus();
       m.classList.remove('hidden');
       m.classList.add('flex');
     }
