@@ -36,6 +36,7 @@
     };
   </script>
   <style>
+    html, body { overflow-x: clip; max-width: 100%; }
     /* Ground viewport, prevent rubber-band floating and horizontal slack */
     html {
       -webkit-text-size-adjust: 100%;
@@ -310,7 +311,7 @@
   <!-- TOP SLIM NAVIGATION & PACE BAR                                        -->
   <!-- ===================================================================== -->
   <header id="main-header" class="sticky top-0 z-30 bg-[#0e0f12]/95 backdrop-blur-md border-b border-[#1e2028]">
-    <div class="max-w-6xl mx-auto px-2.5 sm:px-6 h-14 flex items-center justify-between gap-1.5 sm:gap-4 overflow-x-auto overflow-y-hidden [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+    <div class="max-w-6xl mx-auto px-2.5 sm:px-6 min-h-[3.5rem] py-1.5 flex flex-wrap items-center justify-between gap-x-1.5 gap-y-1.5 sm:gap-4">
       
       <!-- Brand Logo & App Switcher -->
       <div class="flex items-center gap-1.5 sm:gap-2.5 shrink-0 whitespace-nowrap">
@@ -336,7 +337,7 @@
       </div>
 
       <!-- Right: Minimal Diagnostic Grasp, Cloud Sync & Bank Nav -->
-      <div class="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
+      <div class="flex items-center gap-1.5 sm:gap-2.5 flex-wrap">
         <div class="flex items-center gap-1.5 sm:gap-3 bg-[#14161f] border border-[#242735] rounded-xl px-2 sm:px-3.5 py-1.5 text-[11px] sm:text-xs whitespace-nowrap shrink-0 shadow-sm">
           <span class="text-emerald-400 font-bold flex items-center gap-1 shrink-0" title="Grasp Rate (1st-try accuracy)">
             <span>🎯</span>
@@ -356,6 +357,10 @@
 
         <button id="header-mute-btn" onclick="toggleAudioMute()" class="px-2.5 py-1.5 rounded-xl bg-[#14161f] hover:bg-[#202433] border border-[#242735] text-slate-300 hover:text-white text-xs font-semibold transition-all cursor-pointer flex items-center gap-1 whitespace-nowrap shrink-0" title="Audio ON (Tap to mute - Key M)">
           <span id="header-mute-icon">🔊</span>
+        </button>
+
+        <button id="offline-open-btn" onclick="openOfflineModal()" class="px-2.5 py-1.5 rounded-xl bg-[#14161f] hover:bg-[#202433] border border-[#242735] text-slate-300 hover:text-white text-xs font-semibold transition-all cursor-pointer flex items-center gap-1 whitespace-nowrap shrink-0" title="Download for offline use">
+          <span>📥</span>
         </button>
 
         <button id="cloud-sync-btn" onclick="openCloudSyncModal()" class="px-2.5 py-1.5 rounded-xl bg-[#14161f] hover:bg-[#202433] border border-[#242735] text-slate-300 hover:text-white text-xs font-semibold transition-all cursor-pointer flex items-center gap-1 whitespace-nowrap shrink-0" title="Cloud Sync Status & Phone Pairing">
@@ -564,6 +569,30 @@
       </div>
     </div>
 
+  </div>
+
+  <!-- OFFLINE MODE MODAL -->
+  <div id="offline-modal" class="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm hidden items-center justify-center p-4" onclick="if(event.target===this)closeOfflineModal()">
+    <div class="bg-[#16181d] border border-[#2a2e39] rounded-3xl max-w-sm w-full max-h-[90vh] overflow-y-auto p-5 space-y-3 shadow-2xl">
+      <div class="flex items-center justify-between">
+        <h3 class="text-base font-semibold text-white">Use without internet</h3>
+        <button onclick="closeOfflineModal()" class="text-slate-400 hover:text-white text-sm cursor-pointer">✕</button>
+      </div>
+      <div id="offline-section" class="bg-[#0e0f12] border border-[#252934] rounded-2xl p-3.5 text-xs space-y-2.5">
+        <div class="flex items-center justify-between gap-2">
+          <div class="font-semibold text-amber-300">📥 Offline Mode</div>
+          <span id="offline-status-text" class="text-slate-400 text-[11px] text-right">Checking...</span>
+        </div>
+        <p class="text-slate-400 text-[11px] leading-snug">Save the app and all lessons on this device so it works with no internet (planes, subway, no data). Audio uses your phone's built-in voice when offline.</p>
+        <div id="offline-progress-wrap" class="hidden h-1.5 rounded-full bg-[#1e2128] overflow-hidden">
+          <div id="offline-progress-bar" class="h-full bg-amber-400 transition-all" style="width:0%"></div>
+        </div>
+        <div class="flex gap-2">
+          <button id="offline-download-btn" onclick="downloadOffline()" class="flex-1 px-3 py-2 rounded-xl bg-amber-400/20 hover:bg-amber-400/30 border border-amber-400/40 text-amber-200 font-semibold cursor-pointer">Download for offline</button>
+          <button id="offline-remove-btn" onclick="removeOffline()" class="hidden px-3 py-2 rounded-xl bg-[#1e2128] hover:bg-[#282c37] border border-[#323744] text-slate-300 cursor-pointer">Remove</button>
+        </div>
+      </div>
+    </div>
   </div>
 
   <!-- ===================================================================== -->
@@ -12545,6 +12574,18 @@ Return ONLY valid JSON array of 3 exchange objects with keys:
       } catch (e) {}
       renderOfflineStatus();
       showToast('Offline copy removed');
+    }
+
+    function openOfflineModal() {
+      const m = document.getElementById('offline-modal');
+      if (!m) return;
+      renderOfflineStatus();
+      m.classList.remove('hidden');
+      m.classList.add('flex');
+    }
+    function closeOfflineModal() {
+      const m = document.getElementById('offline-modal');
+      if (m) { m.classList.add('hidden'); m.classList.remove('flex'); }
     }
 
     function openCloudSyncModal() {
