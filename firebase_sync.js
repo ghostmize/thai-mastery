@@ -161,7 +161,7 @@
       // 2. Profile Management Modal (when logged in and clicking profile button)
       const userModalHtml = `
       <div id="mastery-user-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md hidden items-center justify-center p-4">
-        <div class="bg-[#12141c] border border-[#232735] rounded-3xl max-w-sm w-full p-6 space-y-4 shadow-2xl relative text-slate-200">
+        <div class="bg-[#12141c] border border-[#232735] rounded-3xl max-w-sm w-full max-h-[90vh] overflow-y-auto p-6 space-y-4 shadow-2xl relative text-slate-200">
           <div class="flex items-center justify-between border-b border-[#20232f] pb-3">
             <h3 class="text-sm font-bold text-white tracking-wide">Learner Account</h3>
             <button onclick="window.masteryAuth.closeUserModal()" class="w-7 h-7 rounded-lg bg-[#1a1d27] hover:bg-[#252937] text-slate-400 hover:text-white text-xs flex items-center justify-center cursor-pointer transition">✕</button>
