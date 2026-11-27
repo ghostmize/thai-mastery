@@ -37,7 +37,8 @@
     };
   </script>
   <style>
-    html, body { overflow-x: clip; max-width: 100%; }
+    /* Closed Gemini panel is parked off-screen; iOS lets you pan to it unless it is hidden */
+    #gemini-panel.translate-x-full { visibility: hidden; transition: transform .3s ease-in-out, visibility 0s linear .3s; }
     /* Ground viewport, prevent rubber-band floating and horizontal slack */
     html {
       -webkit-text-size-adjust: 100%;
